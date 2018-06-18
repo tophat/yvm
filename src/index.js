@@ -5,7 +5,7 @@ const request = require('request')
 const targz = require('targz')
 
 let directoryStack = []
-const yvmPath = path.resolve(os.homedir, '.yvm')
+const yvmPath = path.resolve(os.homedir(), '.yvm')
 const versionRootPath = path.resolve(yvmPath, 'versions')
 
 const checkDirectories = () => {
