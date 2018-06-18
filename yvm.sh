@@ -1,3 +1,5 @@
+#!/bin/sh
+
 command=$1
 
 yvm_use() {
