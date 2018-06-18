@@ -16,9 +16,14 @@ module.exports = function(args) {
         })
 
     argParser
-        .command('manage <version>')
-        .action(version => {
-            console.log(`Managing yarn v${version}`)
+        .command('exec <version>')
+        .action((version) => {
+            console.log(`Executing yarn command with version ${version}`)
+            const exec = require('./commands/exec')
+            console.log(args)
+            const extraArgs = args.slice(4)  //returns args without [npm, start, exec, <version>, <command>]
+            console.log(extraArgs)
+            exec(version, extraArgs)
         })
 
     argParser.parse(args)
