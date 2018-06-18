@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -x
-
 source ./vars.sh
 
 if [ "$dev" = true ]; then
