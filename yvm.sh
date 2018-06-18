@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source ./vars.sh
+
 command=$1
 
 yvm_use() {
@@ -10,5 +12,5 @@ yvm_use() {
 if [ "$command" = "use" ]; then
 	yvm_use $2
 else
-	node yvm.js $@
+	node ${js_install_path} $@
 fi
