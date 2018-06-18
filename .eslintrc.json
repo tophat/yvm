@@ -1,0 +1,23 @@
+{
+  "env": {
+    "browser": false,
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      2,
+      {
+        "bracketSpacing": true,
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "trailingComma": "all"
+      }
+    ]
+  }
+}
