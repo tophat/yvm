@@ -1,12 +1,8 @@
 {
-  "env": {
-    "browser": false,
-    "node": true,
-    "jest": true,
-    "es6": true
-  },
+  "plugins": ["prettier"],
   "extends": [
-    "plugin:prettier/recommended"
+    "airbnb/base",
+    "prettier"
   ],
   "rules": {
     "prettier/prettier": [

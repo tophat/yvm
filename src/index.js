@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const argParser = require('commander')
 
 module.exports = function(args) {

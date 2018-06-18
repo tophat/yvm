@@ -4,9 +4,18 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
-let directoryStack = []
+const directoryStack = []
 const yvmPath = path.resolve(os.homedir(), '.yvm')
 const versionRootPath = path.resolve(yvmPath, 'versions')
+
+const getDownloadPath = version =>
+    path.resolve(versionRootPath, `v${version}.tar.gz`)
+
+const getExtractionPath = version =>
+    path.resolve(versionRootPath, `v${version}`)
+
+const getUrl = version =>
+    `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
 
 const checkDirectories = () => {
     if (!fs.existsSync(versionRootPath)) {
@@ -47,28 +56,22 @@ const extractYarn = version => {
     targz.decompress(
         {
             src: srcPath,
-            dest: destPath
+            dest: destPath,
         },
         err => {
             if (err) {
                 console.log(err)
             } else {
                 console.log(`Finished extracting yarn version ${version}`)
-                fs.renameSync(`${destPath}/yarn-v${version}`, `${destPath}/v${version}`)
+                fs.renameSync(
+                    `${destPath}/yarn-v${version}`,
+                    `${destPath}/v${version}`,
+                )
                 fs.unlinkSync(srcPath)
             }
-        }
+        },
     )
 }
-
-const getDownloadPath = version =>
-    path.resolve(versionRootPath, `v${version}.tar.gz`)
-
-const getExtractionPath = version => path.resolve(versionRootPath, `v${version}`)
-
-const getUrl = version =>
-    `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
-
 
 const installVersion = version => {
     if (checkForVersion(version)) {
