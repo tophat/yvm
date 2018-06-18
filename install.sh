@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source ./vars.sh
+source vars.sh
 
 if [ "$dev" = true ]; then
     # temp for development

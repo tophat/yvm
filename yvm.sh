@@ -2,7 +2,7 @@
 
 pwd
 ls -la
-source ./vars.sh
+source vars.sh
 
 command=$1
 
