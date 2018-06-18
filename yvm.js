@@ -1,0 +1,1 @@
+console.log('called yvm.js with args', process.argv)
