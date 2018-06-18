@@ -8,7 +8,7 @@ let directoryStack = []
 const yvmPath = path.resolve(os.homedir(), '.yvm')
 const versionRootPath = path.resolve(yvmPath, 'versions')
 
-const checkDirectories = () => {
+const checkDirectories = () => {https://circleci.com/gh/tophatmonocle
     if (!fs.existsSync(versionRootPath)) {
         fs.mkdirSync(versionRootPath)
         directoryStack.push(versionRootPath)
@@ -22,19 +22,14 @@ const cleanDirectories = () => {
 }
 
 const checkForVersion = version => {
-    const versionPath = getVersionPath(version)
+    const versionPath = getExtractionPath(version)
     checkDirectories()
     return fs.existsSync(versionPath)
 }
 
 const downloadVersion = version => {
     const url = getUrl(version)
-    const versionPath = getVersionPath(version)
-    if (!fs.existsSync(versionPath)) {
-        fs.mkdirSync(versionPath)
-        directoryStack.push(versionPath)
-    }
-    const filePath = getFilePath(version)
+    const filePath = getDownlaodPath(version)
     const file = fs.createWriteStream(filePath)
 
     return new Promise((resolve, reject) => {
@@ -47,8 +42,8 @@ const downloadVersion = version => {
 }
 
 const extractYarn = version => {
-    const destPath = getVersionPath(version)
-    const srcPath = getFilePath(version)
+    const destPath = versionRootPath
+    const srcPath = getDownlaodPath(version)
     targz.decompress(
         {
             src: srcPath,
@@ -59,19 +54,21 @@ const extractYarn = version => {
                 console.log(err)
             } else {
                 console.log(`Finished extracting yarn version ${version}`)
+                fs.renameSync(`${destPath}/yarn-v${version}`, `${destPath}/v${version}`)
                 fs.unlinkSync(srcPath)
             }
         }
     )
 }
 
-const getFilePath = version =>
-    path.resolve(getVersionPath(version), `yarn-v${version}.tar.gz`)
+const getDownlaodPath = version =>
+    path.resolve(versionRootPath, `v${version}.tar.gz`)
+
+const getExtractionPath = version => path.resolve(versionRootPath, `v${version}`)
 
 const getUrl = version =>
     `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
 
-const getVersionPath = version => path.resolve(versionRootPath, `v${version}`)
 
 const installVersion = version => {
     if (checkForVersion(version)) {
