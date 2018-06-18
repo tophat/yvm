@@ -1,5 +1,5 @@
 {
-  "name": "yvm",
+  "name": "@thm/yvm",
   "version": "1.0.0",
   "description": "Yarn version manager",
   "main": "yvm.js",
