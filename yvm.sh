@@ -2,7 +2,6 @@
 
 pwd
 ls -la
-source vars.sh
 
 command=$1
 
@@ -14,5 +13,5 @@ yvm_use() {
 if [ "$command" = "use" ]; then
 	yvm_use $2
 else
-	node ${js_install_path} $@
+	node yvm.js $@
 fi
