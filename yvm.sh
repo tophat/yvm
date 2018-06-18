@@ -4,13 +4,6 @@ command=$1
 YVM_DIR="${HOME}/.yvm" #this can be exported globally during install?
 
 
-if [ "$command" = "use" ]; then
-	yvm_use $2
-else
-	node yvm.js $@
-fi
-
-
 yvm_use() {
 	local PROVIDED_VERSION=$1
 	echo "called yvm use with version $PROVIDED_VERSION"
@@ -77,3 +70,11 @@ yvm_change_path() {
       -e "s#${YVM_DIR}/versions/[^/]*/[^/]*${2-}[^:]*#${3-}${2-}#"
   fi
 }
+
+
+
+if [ "$command" = "use" ]; then
+	yvm_use $2
+else
+	node yvm.js $@
+fi
