@@ -17,7 +17,7 @@ fi
 
 mkdir -p ${install_dir}
 
-if [ ! "$dev" = true ]; then
+if [ "$dev" = false ]; then
     # get github release zip and extract
     release_url=""
 
