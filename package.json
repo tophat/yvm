@@ -1,0 +1,17 @@
+{
+  "name": "@thm/yvm",
+  "version": "1.0.0",
+  "description": "Yarn version manager",
+  "main": "yvm.js",
+  "scripts": {
+    "start": "node yvm.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.15.1",
+    "request": "^2.87.0",
+    "targz": "^1.0.1"
+  }
+}

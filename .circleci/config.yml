@@ -5,4 +5,5 @@ jobs:
       - image: circleci/node:8.11.3
     steps:
       - checkout
+      - run: npm install
       - run: ./yvm.sh
