@@ -8,7 +8,7 @@ let directoryStack = []
 const yvmPath = path.resolve(os.homedir(), '.yvm')
 const versionRootPath = path.resolve(yvmPath, 'versions')
 
-const checkDirectories = () => {https://circleci.com/gh/tophatmonocle
+const checkDirectories = () => {
     if (!fs.existsSync(versionRootPath)) {
         fs.mkdirSync(versionRootPath)
         directoryStack.push(versionRootPath)
@@ -29,7 +29,7 @@ const checkForVersion = version => {
 
 const downloadVersion = version => {
     const url = getUrl(version)
-    const filePath = getDownlaodPath(version)
+    const filePath = getDownloadPath(version)
     const file = fs.createWriteStream(filePath)
 
     return new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ const downloadVersion = version => {
 
 const extractYarn = version => {
     const destPath = versionRootPath
-    const srcPath = getDownlaodPath(version)
+    const srcPath = getDownloadPath(version)
     targz.decompress(
         {
             src: srcPath,
@@ -61,7 +61,7 @@ const extractYarn = version => {
     )
 }
 
-const getDownlaodPath = version =>
+const getDownloadPath = version =>
     path.resolve(versionRootPath, `v${version}.tar.gz`)
 
 const getExtractionPath = version => path.resolve(versionRootPath, `v${version}`)
