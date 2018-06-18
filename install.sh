@@ -6,6 +6,7 @@ dev=true
 executable_alias_path="/usr/local/bin/yvm"
 
 install_dir="$HOME/.yvm"
+zip_install_path="${install_dir}/yvm.zip"
 sh_install_path="${install_dir}/yvm.sh"
 js_install_path="${install_dir}/yvm.js"
 
@@ -21,8 +22,9 @@ if [ "$dev" = false ]; then
     # get github release zip and extract
     release_url=""
 
-    curl -o ./yvm.zip ${release_url}
-    # unzip
+    curl -o ${zip_install_path} ${release_url}
+    unzip ${zip_install_path} -d ${install_dir}
+    rm ${zip_install_path}
 fi
 
 # Temp until the project is open source, because you need to login to see the files
