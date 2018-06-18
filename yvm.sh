@@ -10,6 +10,21 @@ yvm_use() {
 	echo "path is $(yvm_version_path $PROVIDED_VERSION)"
 
 	#change path
+
+
+    local YVM_VERSION_DIR
+    YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
+    echo "YVM_VERSION_DIR: $YVM_VERSION_DIR"
+    
+	      # Change current version
+	echo "current $PATH"
+	PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
+
+	#export PATH
+	echo "new $PATH"
+
+	
+
 }
 
 yvm_version_path() {
@@ -41,9 +56,13 @@ yvm_version_dir() {
   if [ -z "${YVM_WHICH_DIR}" ]; then
     yvm_echo "${YVM_DIR}/versions/yarn"
   else
-    nvm_err 'unknown version dir'
+    yvm_err 'unknown version dir'
     return 3
   fi
+}
+
+yvm_grep() {
+  GREP_OPTIONS='' command grep "$@"
 }
 
 yvm_change_path() {
