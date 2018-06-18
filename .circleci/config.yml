@@ -7,11 +7,11 @@ jobs:
       - checkout
       - restore_cache:
           name: Restore node_modules cache
-          key: {{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
           name: Save node_modules cache
-          key: {{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - node_modules/
       - run: node_modules/.bin/eslint
