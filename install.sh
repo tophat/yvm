@@ -27,4 +27,3 @@ rm ${zip_install_path}
 
 chmod +x ${sh_install_path}
 ln -s ${sh_install_path} ${executable_alias_path}
-
