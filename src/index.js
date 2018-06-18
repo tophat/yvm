@@ -1,20 +1,15 @@
-const path = require('path')
 const fs = require('fs')
-const request = require('request')
 const os = require('os')
-
+const path = require('path')
+const request = require('request')
+const targz = require('targz')
 
 let directoryStack = []
 
-const cleanDirectories = () => {
-    while(directoryStack.length){
-        fs.rmDirSync(directoryStack.pop())
-    }
-}
 const checkDirectories = () => {
     const homeDir = os.homedir();
-    const yvmPath = path.resolve(homeDir, './.yvm')
-    const versionPath = path.resolve(yvmPath, './versions')
+    const yvmPath = path.resolve(homeDir, './.yvm/')
+    const versionPath = path.resolve(yvmPath, './versions/')
 
     if(!fs.existsSync(yvmPath)){
         fs.mkdirSync(yvmPath)
@@ -26,9 +21,15 @@ const checkDirectories = () => {
     }
 }
 
+const cleanDirectories = () => {
+    while(directoryStack.length){
+        fs.rmdirSync(directoryStack.pop())
+    }
+}
+
 const checkForVersion = version => {
     checkDirectories()
-    return fs.existsSync(`~/.yvm/version/v${version}`)
+    return fs.existsSync(`~/.yvm/version/v${version}/`)
 }
 
 const downloadVersion = version => {
@@ -45,9 +46,24 @@ const downloadVersion = version => {
         const stream = request.get(url).pipe(file)
         stream.on('finish', () => resolve())
         stream.on('error', err => {
-            console.log(err)
-            reject()
+            reject(new Error(err))
         })
+    })
+}
+
+const extractYarn = version =>{
+    const destPath = path.resolve(os.homedir(), `./.yvm/versions/v${version}`)
+    const srcPath = path.resolve(destPath, `./yarn-v${version}.tar.gz`)
+    targz.decompress({
+        src: srcPath,
+        dest: destPath
+    }, err => {
+        if (err){
+            console.log(err)
+        } else {
+            console.log(`Finished extracting yarn version ${version}`)
+            fs.unlinkSync(srcPath)
+        }
     })
 }
 
@@ -57,12 +73,13 @@ const installVersion = version => {
     }
     downloadVersion(version)
         .then(()=>{
-            console.log(`Finished downloading yarn version ${versions}`)
+            console.log(`Finished downloading yarn version ${version}`)
+            extractYarn(version)
         })
-        .catch(() => {
+        .catch( err => {
+            console.log(`Downloading yarn failed: \n ${err}`)
             cleanDirectories()
         })
-
 }
 
 const yvmController = {
