@@ -10,5 +10,5 @@ yvm_use() {
 if [ "$command" = "use" ]; then
 	yvm_use $2
 else
-	node yvm.js $@
+	node ~/.yvm/yvm.js $@
 fi

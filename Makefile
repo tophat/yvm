@@ -1,3 +1,3 @@
 .PHONY: install
 install:
-	use_local=true ./install.sh
+	@use_local=true ./install.sh
