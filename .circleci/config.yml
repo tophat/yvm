@@ -14,5 +14,5 @@ jobs:
           key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - node_modules/
-      - run: node_modules/.bin/eslint
+      - run: node_modules/.bin/eslint .
       - run: ./yvm.sh
