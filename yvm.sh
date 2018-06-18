@@ -1,8 +1,5 @@
 #!/bin/sh
 
-pwd
-ls -la
-
 command=$1
 
 yvm_use() {
