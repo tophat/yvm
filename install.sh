@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# temp for dev
-dev=true
-
 release_url=""
 install_dir="$HOME/.yvm"
 zip_install_path="${install_dir}/yvm.zip"
@@ -11,16 +8,14 @@ js_install_path="${install_dir}/yvm.js"
 
 executable_alias_path="/usr/local/bin/yvm"
 
-if [ "$dev" = true ]; then
-    # temp for development
+if [ "$use_local" = true ]; then
     rm -f ${executable_alias_path}
     rm -r ${install_dir}
 fi
 
 mkdir -p ${install_dir}
 
-if [ "$dev" = true ]; then
-    # Temp until the project is open source, because you need to login to see the files
+if [ "$use_local" = true ]; then
     zip yvm.zip yvm.sh yvm.js
     mv yvm.zip ${install_dir}
 else
