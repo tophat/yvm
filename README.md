@@ -81,7 +81,13 @@ You can create a `.yvmrc` file containing the version number of yarn in your pro
 
 ## Contributing
 
+Thanks goes to these wonderful people ([emoji key][emojis]):
+
+dd
+
 We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](https://github.com/tophatmonocle/yvm/tree/ecf7c68e1dc3a3ced1ec23d17ca39e4ba70816d9/contributing.md) for more details.
+
+
 
 ## Copyright
 
@@ -96,4 +102,6 @@ We welcome contributions from the community, Top Hatters and non-Top Hatters ali
 
 [builds]: https://img.shields.io/circleci/project/github/tophatmonocle/yvm.svg
 [builds-url]: https://circleci.com/gh/tophatmonocle/yvm
+
+[emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 
