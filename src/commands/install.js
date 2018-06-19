@@ -1,18 +1,14 @@
 const fs = require('fs')
-const os = require('os')
 const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
+const { versionRootPath, getExtractionPath } = require('../common/utils')
+
 const directoryStack = []
-const yvmPath = path.resolve(os.homedir(), '.yvm')
-const versionRootPath = path.resolve(yvmPath, 'versions')
 
 const getDownloadPath = version =>
     path.resolve(versionRootPath, `v${version}.tar.gz`)
-
-const getExtractionPath = version =>
-    path.resolve(versionRootPath, `v${version}`)
 
 const getUrl = version =>
     `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
