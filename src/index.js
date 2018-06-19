@@ -26,5 +26,13 @@ module.exports = function dispatch(args) {
             exec(version, extraArgs)
         })
 
+    argParser
+        .command('list-remote')
+        .alias('ls-remote')
+        .action(() => {
+            const listRemote = require('./commands/listRemote')
+            listRemote()
+        })
+
     argParser.parse(args)
 }
