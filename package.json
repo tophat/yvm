@@ -2,6 +2,10 @@
   "name": "@thm/yvm",
   "version": "1.0.0",
   "description": "Yarn version manager",
+  "repository": {
+      "type": "git",
+      "url": "github:tophatmonocle/yvm"
+  },
   "main": "yvm.js",
   "scripts": {
     "precommit": "lint-staged"
