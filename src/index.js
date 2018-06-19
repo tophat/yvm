@@ -1,4 +1,3 @@
-/* eslint-disable global-require,prettier/prettier */
 const argParser = require('commander')
 
 const { getRcFileVersion, isValidVersionString } = require('./util/version')
@@ -24,6 +23,7 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
 }
 
 module.exports = function dispatch(args) {
+    /* eslint-disable global-require,prettier/prettier */
     argParser
         .command('install [version]')
         .action(withRcFileVersion(version => {
@@ -45,6 +45,7 @@ module.exports = function dispatch(args) {
             const exec = require('./commands/exec')
             exec(version, extraArgs)
         }))
+    /* eslint-enable global-require,prettier/prettier */
 
     argParser.parse(args)
 }
