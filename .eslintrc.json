@@ -5,6 +5,7 @@
     "prettier"
   ],
   "rules": {
+    "no-console": 0,
     "prettier/prettier": [
       2,
       {

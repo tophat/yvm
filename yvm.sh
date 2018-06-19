@@ -3,8 +3,6 @@
 command=$1
 YVM_DIR="${HOME}/.yvm" #this can be exported globally during install?
 
-echo "running yvm script"
-
 yvm_use() {
     local PROVIDED_VERSION=${1-$(head -n 1 .yvmrc)}
     echo "called yvm use with version $PROVIDED_VERSION"
@@ -81,7 +79,6 @@ fi
 
 
 yvm_() {
-    echo "running yvm_"
     command=$1
     if [ "$command" = "use" ]; then
         yvm_use $2
@@ -91,12 +88,9 @@ yvm_() {
 }
 
 if [ -n "$PS1" ]; then
-    echo "This shell is interactive, declaring yvm function only"
     yvm() {
-        echo "running yvm function"
         yvm_ $@
     }
 else
-    echo "This shell is not interactive, running yvm now"
     yvm_ $@
 fi
