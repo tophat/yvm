@@ -5,10 +5,9 @@
 [![dev-deps][dev-deps]][dev-deps-url]
 
 
-  <h1>BundleWatch</h1>
+  <h1>Yarn version manager</h1>
   <p>
-    BundleWatch checks file sizes, ensuring bundled browser assets don't jump in file size. <br />
-    Sharp increases in BundleWatch can signal that something is wrong - adding a package that bloats the slug, a wrong import, or forgetting to minify.
+    Pesky yarn versions got you down? Manage those versions
   </p>
 </div>
 
