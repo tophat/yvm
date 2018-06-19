@@ -2,16 +2,16 @@
 
 ## Table of Contents
 
-- [Installation](#installation)
-    - [Install via Git](#install-via-git)
-    - [Install via cURL](#install-via-curl)
-- [Usage](#usage)
-    - [Basic](#basic)
-    - [List Versions](#list-versions)
-    - [Check Current Version](#check-current-version)
-    - [.yvmrc File](#.yvmrc-file)
-- [Contributing](#contributing)
-- [Copyright](#copyright)
+* [Installation](./#installation)
+  * [Install via Git](./#install-via-git)
+  * [Install via cURL](./#install-via-curl)
+* [Usage](./#usage)
+  * [Basic](./#basic)
+  * [List Versions](./#list-versions)
+  * [Check Current Version](./#check-current-version)
+  * [.yvmrc File](./#.yvmrc-file)
+* [Contributing](./#contributing)
+* [Copyright](./#copyright)
 
 ## Installation
 
@@ -23,7 +23,7 @@ Clone this repo and run `make install`. This will create the `.yvm` directory in
 
 Execute the following in your terminal:
 
-```
+```text
 curl https://github.com/tophatmonocle/yvm/blob/master/install.sh | bash
 ```
 
@@ -33,31 +33,31 @@ curl https://github.com/tophatmonocle/yvm/blob/master/install.sh | bash
 
 To download and install a version of yarn, run:
 
-```
+```text
 yvm install <version>
 ```
 
 And then in any new shell, just use the installed version:
 
-```
+```text
 yvm use <version>
 ```
 
 Or you can execute an arbitrary command using a specific version of yarn:
 
-```
+```text
 yvm exec <version> <command>
 ```
 
 ### List Versions
 
-```
+```text
 yvm list
 ```
 
 ### Check Current Version
 
-```
+```text
 yvm which
 ```
 
@@ -65,12 +65,11 @@ yvm which
 
 You can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the `.yvmrc` file if no version number is supplied to the command.
 
-
 ## Contributing
 
-We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](CONTRIBUTING.md) for more details.
-
+We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](contributing.md) for more details.
 
 ## Copyright
 
-&copy; 2018 Tophatmonocle Corp
+© 2018 Tophatmonocle Corp
+

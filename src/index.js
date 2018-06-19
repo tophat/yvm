@@ -17,9 +17,11 @@ module.exports = function dispatch(args) {
         })
 
     argParser
-        .command('manage <version>')
-        .action(version => {
-            console.log(`Managing yarn v${version}`)
+        .command('exec <version> [extraArgs...]')
+        .action((version, extraArgs) => {
+            console.log(`Executing yarn command with version ${version}`)
+            const exec = require('./commands/exec')
+            exec(version, extraArgs)
         })
 
     argParser.parse(args)
