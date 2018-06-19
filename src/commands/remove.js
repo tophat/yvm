@@ -1,14 +1,9 @@
 const fs = require('fs-extra')
-const os = require('os')
-const path = require('path')
 
-const yvmPath = path.resolve(os.homedir(), '.yvm')
-const versionRootPath = path.resolve(yvmPath, 'versions')
-
-const getYarnPath = version => path.resolve(versionRootPath, `v${version}`)
+const { getExtractionPath } = require('../common/utils')
 
 const removeVersion = version => {
-    const versionPath = getYarnPath(version)
+    const versionPath = getExtractionPath(version)
     if (!fs.existsSync(versionPath)) {
         console.log(
             `Failed to remove yarn v${version}. Yarn version ${version} not found.`,
