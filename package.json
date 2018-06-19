@@ -4,9 +4,7 @@
   "description": "Yarn version manager",
   "main": "yvm.js",
   "scripts": {
-    "precommit": "lint-staged",
-    "start": "node yvm.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "precommit": "lint-staged"
   },
   "author": "",
   "license": "ISC",
