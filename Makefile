@@ -77,16 +77,16 @@ test: node_modules
 
 .PHONY: test-watch
 test-watch: node_modules
-	jest ${JEST_ARGS} --watch
+	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --watch
 
 .PHONY: test-coverage
 test-coverage: node_modules
-	jest ${JEST_ARGS} --coverage
+	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --coverage
 	codecov
 
 .PHONY: test-snapshots
 test-snapshots: node_modules
-	jest ${JEST_ARGS} --updateSnapshot
+	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --updateSnapshot
 
 
 # ----------------- Helpers ------------------
