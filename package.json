@@ -4,6 +4,7 @@
   "description": "Yarn version manager",
   "main": "yvm.js",
   "scripts": {
+    "precommit": "lint-staged",
     "start": "node yvm.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,5 +14,20 @@
     "commander": "^2.15.1",
     "request": "^2.87.0",
     "targz": "^1.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.0",
+    "prettier": "1.13.5"
+  },
+  "lint-staged": {
+    "*.js": [
+      "node_modules/.bin/eslint"
+    ]
   }
 }

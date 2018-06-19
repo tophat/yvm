@@ -1,0 +1,19 @@
+{
+  "plugins": ["prettier"],
+  "extends": [
+    "airbnb/base",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      2,
+      {
+        "bracketSpacing": true,
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "trailingComma": "all"
+      }
+    ]
+  }
+}

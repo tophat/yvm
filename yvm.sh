@@ -3,6 +3,7 @@
 command=$1
 YVM_DIR="${HOME}/.yvm" #this can be exported globally during install?
 
+echo "running yvm script"
 
 yvm_use() {
 	local PROVIDED_VERSION=$1
