@@ -1,8 +1,10 @@
+SHELL := /bin/bash
+export PATH := $(shell npm bin):$(PATH)
+
 .PHONY: install
 install:
 	@use_local=true ./install.sh
 
-.PHONY: node_modules
 node_modules:
 	npm install
 
@@ -14,8 +16,9 @@ yvm-test:
 
 .PHONY: lint
 lint: node_modules
-	@node_modules/.bin/eslint .
+	echo $$PATH
+	@eslint .
 
 .PHONY: lint-fix
 lint-fix: node_modules
-	@node_modules/.bin/eslint --fix .
+	@eslint --fix .
