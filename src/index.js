@@ -14,6 +14,8 @@ module.exports = function dispatch(args) {
         .command('remove <version>')
         .action(version => {
             console.log(`Removing yarn v${version}`)
+            const remove = require('./commands/remove')
+            remove(version)
         })
 
     argParser
