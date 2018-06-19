@@ -17,11 +17,10 @@ module.exports = function dispatch(args) {
         })
 
     argParser
-        .command('exec <version>')
-        .action((version) => {
+        .command('exec <version> [extraArgs...]')
+        .action((version, extraArgs) => {
             console.log(`Executing yarn command with version ${version}`)
             const exec = require('./commands/exec')
-            const extraArgs = args.slice(4)  //returns args without [npm, start, exec, <version>, <command>]
             exec(version, extraArgs)
         })
 
