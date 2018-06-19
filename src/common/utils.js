@@ -14,8 +14,16 @@ const stripVersionPrefix = tagName => {
     return tagName
 }
 
+const printVersions = (list, message) => {
+    console.log(message)
+    list.forEach(item => {
+        console.log(`  - ${item}`)
+    })
+}
+
 module.exports = {
     getExtractionPath,
+    printVersions,
     stripVersionPrefix,
     versionRootPath,
 }
