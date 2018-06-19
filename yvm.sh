@@ -9,15 +9,17 @@ yvm_use() {
 	local PROVIDED_VERSION=$1
 	echo "called yvm use with version $PROVIDED_VERSION"
 
+	if [ -z "${PROVIDED_VERSION}" ]; then
+	    yvm_err 'version is required'
+	    return 3
+	fi
+
 	if yvm_is_version_installed "$PROVIDED_VERSION"; then
 		#change path
 	    local YVM_VERSION_DIR
 	    YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
-	    echo "YVM_VERSION_DIR: $YVM_VERSION_DIR"
       	# Change current version
 		PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
-		#export PATH
-
 	else 
       	yvm_err "N/A: version \"${PROVIDED_VERSION}\" is not yet installed."
 		yvm_err ""
@@ -69,28 +71,19 @@ yvm_grep() {
 }
 
 yvm_change_path() {
-  # if there’s no initial path, just return the supplementary path
-  if [ -z "${1-}" ]; then
-    yvm_echo "${3-}${2-}"
-  # if the initial path doesn’t contain an nvm path, prepend the supplementary
-  # path
-  elif ! yvm_echo "${1-}" | yvm_grep -q "${YVM_DIR}/[^/]*${2-}" \
-    && ! yvm_echo "${1-}" | yvm_grep -q "${YVM_DIR}/versions/[^/]*/[^/]*${2-}"; then
-    yvm_echo "${3-}${2-}:${1-}"
-  # if the initial path contains BOTH an nvm path (checked for above) and
-  # that nvm path is preceded by a system binary path, just prepend the
-  # supplementary path instead of replacing it.
-  # https://github.com/creationix/nvm/issues/1652#issuecomment-342571223
-  elif yvm_echo "${1-}" | yvm_grep -Eq "(^|:)(/usr(/local)?)?${2-}:.*${YVM_DIR}/[^/]*${2-}" \
-    || yvm_echo "${1-}" | yvm_grep -Eq "(^|:)(/usr(/local)?)?${2-}:.*${YVM_DIR}/versions/[^/]*/[^/]*${2-}"; then
-    yvm_echo "${3-}${2-}:${1-}"
-  # use sed to replace the existing nvm path with the supplementary path. This
-  # preserves the order of the path.
-  else
-    yvm_echo "${1-}" | command sed \
-      -e "s#${YVM_DIR}/[^/]*${2-}[^:]*#${3-}${2-}#" \
-      -e "s#${YVM_DIR}/versions/[^/]*/[^/]*${2-}[^:]*#${3-}${2-}#"
-  fi
+	# if there’s no initial path, just return the supplementary path
+	if [ -z "${1-}" ]; then
+		yvm_echo "${3-}${2-}"
+	# if the initial path doesn’t contain an yvm path, prepend the supplementary
+	# path
+	elif ! yvm_echo "${1-}" | yvm_grep -q "${YVM_DIR}/versions/[^/]*${2-}"; then
+		yvm_echo "${3-}${2-}:${1-}"
+	# use sed to replace the existing yvm path with the supplementary path. This
+	# preserves the order of the path.
+	else
+		yvm_echo "${1-}" | command sed \
+		  -e "s#${YVM_DIR}/versions/[^/]*${2-}[^:]*#${3-}${2-}#"
+	fi
 }
 
 
