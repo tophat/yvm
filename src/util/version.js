@@ -7,7 +7,7 @@ function isValidVersionString(version) {
 function getRcFileVersion() {
     try {
         const rcFileContents = fs.readFileSync('.yvmrc', 'utf-8')
-        return rcFileContents.replace(/[v|\n]/g, '')
+        return rcFileContents.replace('\n', '')
     } catch (e) {
         if (e.code === 'ENOENT') {
             return null

@@ -3,7 +3,7 @@
 echo "running yvm script"
 
 yvm_use() {
-	version=$1
+	version=${1-$(head -n 1 .yvmrc)}
 	echo "called yvm use with version $version"
 }
 
