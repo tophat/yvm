@@ -14,7 +14,12 @@
     "testPathIgnorePatterns": [
       "/lib/",
       "/node_modules/"
-    ]
+    ],
+    "collectCoverageFrom": [
+      "*.js",
+      "!*.test.js"
+    ],
+    "coverageDirectory": "./artifacts/coverage"
   },
   "author": "",
   "license": "ISC",
