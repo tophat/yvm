@@ -47,7 +47,6 @@ module.exports = function dispatch(args) {
             const exec = require('./commands/exec')
             exec(version, extraArgs)
         }))
-    /* eslint-enable global-require,prettier/prettier */
 
     argParser
         .command('list')
@@ -56,6 +55,6 @@ module.exports = function dispatch(args) {
             const listVersions = require('./commands/list')
             listVersions()
         })
-
+    /* eslint-enable global-require,prettier/prettier */
     argParser.parse(args)
 }
