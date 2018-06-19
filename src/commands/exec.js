@@ -1,4 +1,4 @@
-/* eslint-disable global-require,prettier/prettier,import/no-dynamic-require */
+/* eslint-disable global-require,import/no-dynamic-require */
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
