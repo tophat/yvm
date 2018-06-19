@@ -1,8 +1,7 @@
 # Table of contents
 
-* [Introduction](../README.md)
-* [Yarn Version Manager](../yarn-version-manager.md)
+* [Overview](../README.md)
 * [CONTRIBUTING](../contributing.md)
-* [API](../api.md)
-* [FAQ](../faq.md)
+* [API](API.md)
+* [FAQ](FAQ.md)
 

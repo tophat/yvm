@@ -1,14 +1,36 @@
-/* eslint-disable global-require,prettier/prettier */
 const argParser = require('commander')
 
+const { getRcFileVersion, isValidVersionString } = require('./util/version')
+
+const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
+    if (maybeVersionArg) {
+        if (isValidVersionString(maybeVersionArg)) {
+            console.log(`Using provided version: ${maybeVersionArg}`)
+            action(maybeVersionArg, ...rest)
+            return
+        }
+        rest.unshift(maybeVersionArg)
+    }
+
+    const version = getRcFileVersion()
+    if (isValidVersionString(version)) {
+        console.log(`Using .yvmrc version: ${version}`)
+        action(version, ...rest)
+    } else {
+        console.warn(`Invalid .yvmrc version: ${version}`)
+        process.exit(1)
+    }
+}
+
 module.exports = function dispatch(args) {
+    /* eslint-disable global-require,prettier/prettier */
     argParser
-        .command('install <version>')
-        .action(version => {
+        .command('install [version]')
+        .action(withRcFileVersion(version => {
             console.log(`Installing yarn v${version}`)
             const install = require('./commands/install')
             install(version)
-        })
+        }))
 
     argParser
         .command('remove <version>')
@@ -19,12 +41,13 @@ module.exports = function dispatch(args) {
         })
 
     argParser
-        .command('exec <version> [extraArgs...]')
-        .action((version, extraArgs) => {
+        .command('exec [version] [extraArgs...]')
+        .action(withRcFileVersion((version, extraArgs) => {
             console.log(`Executing yarn command with version ${version}`)
             const exec = require('./commands/exec')
             exec(version, extraArgs)
-        })
+        }))
+    /* eslint-enable global-require,prettier/prettier */
 
     argParser
         .command('list')
