@@ -1,6 +1,6 @@
 const request = require('request')
 
-const { stripVersionPrefix } = require('../common/utils')
+const { printVersions, stripVersionPrefix } = require('../common/utils')
 
 const listRemoteCommand = () => {
     console.log('list-remote')
@@ -24,7 +24,7 @@ const listRemoteCommand = () => {
         const tagNames = tags.map(tag => tag.name)
         const versions = tagNames.map(stripVersionPrefix)
 
-        console.log(versions)
+        printVersions(versions, 'Versions available for install:')
     })
 }
 
