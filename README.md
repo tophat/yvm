@@ -1,3 +1,18 @@
+<div align="center">
+ 
+[![builds][builds]][builds-url]
+[![deps][deps]][deps-url]
+[![dev-deps][dev-deps]][dev-deps-url]
+
+
+  <h1>BundleWatch</h1>
+  <p>
+    BundleWatch checks file sizes, ensuring bundled browser assets don't jump in file size. <br />
+    Sharp increases in BundleWatch can signal that something is wrong - adding a package that bloats the slug, a wrong import, or forgetting to minify.
+  </p>
+</div>
+
+
 # Introduction
 
 ## Table of Contents
@@ -72,4 +87,14 @@ We welcome contributions from the community, Top Hatters and non-Top Hatters ali
 ## Copyright
 
 © 2018 Tophatmonocle Corp
+
+
+[deps]: https://david-dm.org/tophatmonocle/yvm/status.svg
+[deps-url]: https://david-dm.org/tophatmonocle/yvm
+
+[dev-deps]: https://david-dm.org/tophatmonocle/yvm/dev-status.svg
+[dev-deps-url]: https://david-dm.org/tophatmonocle/yvm?type=dev
+
+[builds]: https://img.shields.io/circleci/project/github/tophatmonocle/yvm.svg
+[builds-url]: https://circleci.com/gh/tophatmonocle/yvm
 
