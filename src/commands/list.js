@@ -4,16 +4,10 @@ const { printVersions, versionRootPath } = require('../common/utils')
 
 const getYarnVersions = () => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/
-    const validItems = []
-
     if (fs.existsSync(versionRootPath)) {
-        fs.readdirSync(versionRootPath).forEach(file => {
-            if (re.test(file)) {
-                validItems.push(file)
-            }
-        })
+        return fs.readdirSync(versionRootPath).filter(file => re.test(file))
     }
-    return validItems
+    return []
 }
 
 const listVersions = () => {
