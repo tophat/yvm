@@ -44,11 +44,6 @@ yvm_echo() {
     command printf %s\\n "$*" 2>/dev/null
 }
 
-yvm_cd() {
-  # shellcheck disable=SC1001,SC2164
-  \cd "$@"
-}
-
 yvm_err() {
     >&2 yvm_echo "$@"
 }
