@@ -51,11 +51,6 @@ yvm-test:
 
 # ---- Infrastructure for Test/Deploy ----
 
-node_modules: package.json package-lock.json .nvmrc
-	npm install
-	touch node_modules
-
-
 # TODO: finish the babel stuff
 .PHONY: build
 build: node_modules
@@ -94,6 +89,10 @@ test-snapshots: node_modules
 
 
 # ----------------- Helpers ------------------
+
+node_modules: package.json package-lock.json .nvmrc
+	npm install
+	touch node_modules
 
 .PHONY: clean
 clean:
