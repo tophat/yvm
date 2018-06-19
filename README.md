@@ -68,7 +68,7 @@ You can create a `.yvmrc` file containing the version number of yarn in your pro
 
 ## Contributing
 
-We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines]() for more details.
+We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](CONTRIBUTING.md) for more details.
 
 
 ## Copyright
