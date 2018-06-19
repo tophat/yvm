@@ -6,16 +6,13 @@ const getYarnVersions = () => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/
     const validItems = []
 
-    if (!fs.existsSync(versionRootPath)) {
-        return validItems
+    if (fs.existsSync(versionRootPath)) {
+        fs.readdirSync(versionRootPath).forEach(file => {
+            if (re.test(file)) {
+                validItems.push(file)
+            }
+        })
     }
-
-    fs.readdirSync(versionRootPath).forEach(file => {
-        if (re.test(file)) {
-            validItems.push(file)
-        }
-    })
-
     return validItems
 }
 
