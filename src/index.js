@@ -27,7 +27,7 @@ module.exports = function dispatch(args) {
     argParser
         .command('install [version]')
         .action(withRcFileVersion(version => {
-            console.log(`Installing yarn v${version}`)
+            console.error(`Installing yarn v${version}`)
             const install = require('./commands/install')
             install(version)
         }))
@@ -35,7 +35,7 @@ module.exports = function dispatch(args) {
     argParser
         .command('remove <version>')
         .action(version => {
-            console.log(`Removing yarn v${version}`)
+            console.error(`Removing yarn v${version}`)
             const remove = require('./commands/remove')
             remove(version)
         })
@@ -51,7 +51,7 @@ module.exports = function dispatch(args) {
     argParser
         .command('list')
         .action(() => {
-            console.log(`Checking for installed yarn versions...`)
+            console.error(`Checking for installed yarn versions...`)
             const listVersions = require('./commands/list')
             listVersions()
         })

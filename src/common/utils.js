@@ -8,9 +8,9 @@ const getExtractionPath = version =>
     path.resolve(versionRootPath, `v${version}`)
 
 const printVersions = (list, message) => {
-    console.log(message)
+    console.error(message)
     list.forEach(item => {
-        console.log(`  - ${item}`)
+        console.error(`  - ${item}`)
     })
 }
 

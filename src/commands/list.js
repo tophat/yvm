@@ -15,7 +15,7 @@ const listVersions = () => {
     if (installedVersions.length) {
         printVersions(installedVersions, 'Installed yarn versions:')
     } else {
-        console.log('You have no yarn versions installed.')
+        console.error('You have no yarn versions installed.')
     }
 }
 
