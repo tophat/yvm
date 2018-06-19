@@ -1,11 +1,12 @@
 const fs = require('fs-extra')
 
 const { getExtractionPath } = require('../common/utils')
+const log = require('../common/log')
 
 const removeVersion = version => {
     const versionPath = getExtractionPath(version)
     if (!fs.existsSync(versionPath)) {
-        console.error(
+        log(
             `Failed to remove yarn v${version}. Yarn version ${version} not found.`,
         )
         return
@@ -13,9 +14,9 @@ const removeVersion = version => {
 
     try {
         fs.removeSync(versionPath)
-        console.error(`Successfully removed yarn v${version}.`)
+        log(`Successfully removed yarn v${version}.`)
     } catch (err) {
-        console.error(`Failed to remove yarn v${version}. \n ${err}`)
+        log(`Failed to remove yarn v${version}. \n ${err}`)
     }
 }
 

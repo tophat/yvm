@@ -1,5 +1,6 @@
 const fs = require('fs')
 
+const log = require('../common/log')
 const { printVersions, versionRootPath } = require('../common/utils')
 
 const getYarnVersions = () => {
@@ -15,7 +16,7 @@ const listVersions = () => {
     if (installedVersions.length) {
         printVersions(installedVersions, 'Installed yarn versions:')
     } else {
-        console.error('You have no yarn versions installed.')
+        log('You have no yarn versions installed.')
     }
 }
 

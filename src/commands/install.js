@@ -3,6 +3,7 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
+const log = require('../common/log')
 const { versionRootPath, getExtractionPath } = require('../common/utils')
 
 const directoryStack = []
@@ -58,10 +59,10 @@ const extractYarn = version => {
             },
             err => {
                 if (err) {
-                    console.error(err)
+                    log(err)
                     reject(err)
                 } else {
-                    console.error(`Finished extracting yarn version ${version}`)
+                    log(`Finished extracting yarn version ${version}`)
                     fs.renameSync(
                         `${destPath}/yarn-v${version}`,
                         `${destPath}/v${version}`,
@@ -80,11 +81,11 @@ const installVersion = version => {
     }
     return downloadVersion(version)
         .then(() => {
-            console.error(`Finished downloading yarn version ${version}`)
+            log(`Finished downloading yarn version ${version}`)
             return extractYarn(version)
         })
         .catch(err => {
-            console.error(`Downloading yarn failed: \n ${err}`)
+            log(`Downloading yarn failed: \n ${err}`)
             cleanDirectories()
         })
 }
