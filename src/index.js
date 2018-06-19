@@ -26,5 +26,13 @@ module.exports = function dispatch(args) {
             exec(version, extraArgs)
         })
 
+    argParser
+        .command('list')
+        .action(() => {
+            console.log(`Checking for installed yarn versions...`)
+            const listVersions = require('./commands/list')
+            listVersions()
+        })
+
     argParser.parse(args)
 }
