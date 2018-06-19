@@ -1,5 +1,7 @@
 const request = require('request')
 
+const { stripVersionPrefix } = require('../common/utils')
+
 const listRemoteCommand = () => {
     console.log('list-remote')
     const options = {
@@ -10,13 +12,19 @@ const listRemoteCommand = () => {
     }
 
     request.get(options, (error, response, body) => {
-        if (error) {
-            console.log(error)
+        if (error || response.statusCode !== 200) {
+            console.log(
+                'Unable to fetch available Yarn versions.',
+                'Please check network connection.',
+            )
             process.exit(1)
         }
 
         const tags = JSON.parse(body)
-        console.log(tags)
+        const tagNames = tags.map(tag => tag.name)
+        const versions = tagNames.map(stripVersionPrefix)
+
+        console.log(versions)
     })
 }
 
