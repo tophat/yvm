@@ -2,16 +2,16 @@
 
 ## Table of Contents
 
-* [Installation](./#installation)
-  * [Install via Git](./#install-via-git)
-  * [Install via cURL](./#install-via-curl)
-* [Usage](./#usage)
-  * [Basic](./#basic)
-  * [List Versions](./#list-versions)
-  * [Check Current Version](./#check-current-version)
-  * [.yvmrc File](./#.yvmrc-file)
-* [Contributing](./#contributing)
-* [Copyright](./#copyright)
+* [Installation](#installation)
+  * [Install via Git](#install-via-git)
+  * [Install via cURL](#install-via-curl)
+* [Usage](#usage)
+  * [Basic](#basic)
+  * [List Versions](#list-versions)
+  * [Check Current Version](#check-current-version)
+  * [.yvmrc File](#yvmrc-file)
+* [Contributing](#contributing)
+* [Copyright](#copyright)
 
 ## Installation
 
@@ -67,7 +67,7 @@ You can create a `.yvmrc` file containing the version number of yarn in your pro
 
 ## Contributing
 
-We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](https://github.com/tophatmonocle/yvm/tree/ecf7c68e1dc3a3ced1ec23d17ca39e4ba70816d9/contributing.md) for more details.
+We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](contributing.md) for more details.
 
 ## Copyright
 
