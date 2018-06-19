@@ -5,5 +5,14 @@ jobs:
       - image: circleci/node:8.11.3
     steps:
       - checkout
+      - restore_cache:
+          name: Restore node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run: npm install
+      - save_cache:
+          name: Save node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules/
+      - run: node_modules/.bin/eslint .
       - run: ./yvm.sh

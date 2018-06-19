@@ -1,6 +1,7 @@
+/* eslint-disable global-require,prettier/prettier */
 const argParser = require('commander')
 
-module.exports = function(args) {
+module.exports = function dispatch(args) {
     argParser
         .command('install <version>')
         .action(version => {
