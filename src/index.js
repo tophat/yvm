@@ -27,6 +27,7 @@ module.exports = function dispatch(args) {
     /* eslint-disable global-require,prettier/prettier */
     argParser
         .command('install [version]')
+        .alias('i')
         .action(withRcFileVersion(version => {
             log(`Installing yarn v${version}`)
             const install = require('./commands/install')
@@ -35,6 +36,7 @@ module.exports = function dispatch(args) {
 
     argParser
         .command('remove <version>')
+        .alias('rm')
         .action(version => {
             log(`Removing yarn v${version}`)
             const remove = require('./commands/remove')
@@ -59,6 +61,7 @@ module.exports = function dispatch(args) {
 
     argParser
         .command('list')
+        .alias('ls')
         .action(() => {
             log(`Checking for installed yarn versions...`)
             const listVersions = require('./commands/list')
