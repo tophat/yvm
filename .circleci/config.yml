@@ -18,7 +18,7 @@ save_cache: &save_cache
 
 jobs:
   test:
-    <<: docker_defaults
+    <<: *docker_defaults
     steps:
       - checkout
       - *restore_cache
@@ -38,11 +38,13 @@ jobs:
 
 workflows:
   version: 2
-  test_and_maybe_deploy:
+  test_and_deploy_master:
     jobs:
       - test
       - build_and_deploy:
-        filters:
-          branches:
-            only:
-              - master
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
