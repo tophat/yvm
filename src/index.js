@@ -59,6 +59,7 @@ module.exports = function dispatch(args) {
 
     argParser
         .command('which')
+        .description('Display path to installed yarn version. Uses .yvmrc if available.')
         .action(() => {
             log(`Checking yarn version`)
             const which = require('./commands/which')
