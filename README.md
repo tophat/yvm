@@ -86,7 +86,7 @@ Thanks goes to these wonderful people ([emoji key][emojis]):
 | [<img src="https://avatars.githubusercontent.com/u/3876970?v=3" width="100px;"/><br /><sub><b>Francois Campbell</b></sub>](https://github.com/francoiscampbell)<br />[💻](https://github.com/tophatmonocle/yvm/commits?author=francoiscampbell) | [<img src="https://avatars.githubusercontent.com/u/3534236?v=3" width="100px;"/><br /><sub><b>Jake Bolam</b></sub>](https://github.com/jakebolam)<br />[📖](https://github.com/bundlewatch/bundlewatch/commits?author=jakebolam) | [<img src="https://avatars.githubusercontent.com/u/39271619?v=3" width="100px;"/><br /><sub><b>Brandon Baksh</b></sub>](https://github.com/brandonbaksh)<br />[💻](https://github.com/tophatmonocle/yvm/commits?author=brandonbaksh) | [<img src="https://avatars.githubusercontent.com/u/2070398?v=3" width="100px;"/><br /><sub><b>Milan Milojic</b></sub>](https://github.com/nepodmitljivi)<br />[💻](https://github.com/tophatmonocle/yvm/commits?author=nepodmitljivi) | [<img src="https://avatars.githubusercontent.com/u/38886386?v=3" width="100px;"/><br /><sub><b>Umar Ahmed</b></sub>](https://github.com/umar-tophat)<br />[💻](https://github.com/tophatmonocle/yvm/commits?author=umar-tophat) |
 | :---: | :---: | :---: | :---: | :---: |
 
-We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](https://github.com/tophatmonocle/yvm/tree/ecf7c68e1dc3a3ced1ec23d17ca39e4ba70816d9/contributing.md) for more details.
+We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](contributing.md) for more details.
 
 ## Copyright
 
