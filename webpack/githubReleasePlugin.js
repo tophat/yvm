@@ -30,7 +30,7 @@ module.exports = class GithubReleasePlugin {
                 ghRelease(options, (err, result) => {
                     if (err) {
                         console.error(err) // eslint-disable-line no-console
-                        throw err
+                        callback(err)
                     }
                     console.log(result) // eslint-disable-line no-console
                     callback()
