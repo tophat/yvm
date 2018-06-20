@@ -76,6 +76,11 @@ module.exports = function dispatch(args) {
             listVersions()
         })
 
+    const noParams = !process.argv.slice(2).length
+    if (noParams) {
+        argParser.outputHelp();
+    }
+
     /* eslint-enable global-require,prettier/prettier */
     argParser.parse(args)
 }
