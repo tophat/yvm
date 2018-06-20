@@ -60,7 +60,7 @@ module.exports = function dispatch(args) {
     argParser
         .command('which')
         .action(() => {
-            console.log(`Checking yarn version`)
+            log(`Checking yarn version`)
             const which = require('./commands/which')
             which()
     })
