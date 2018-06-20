@@ -3,7 +3,7 @@
 ${use_local:=false}
 
 release_url=""
-artifacts_dir="../artifacts/webpack_build"
+artifacts_dir="artifacts/webpack_build"
 
 install_dir="$HOME/.yvm"
 zip_download_path="${install_dir}/yvm.zip"
