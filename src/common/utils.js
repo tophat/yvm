@@ -1,6 +1,8 @@
 const os = require('os')
 const path = require('path')
 
+const log = require('../common/log')
+
 const yvmPath = path.resolve(os.homedir(), '.yvm')
 const versionRootPath = path.resolve(yvmPath, 'versions')
 
@@ -15,9 +17,9 @@ const stripVersionPrefix = tagName => {
 }
 
 const printVersions = (list, message) => {
-    console.log(message)
+    log(message)
     list.forEach(item => {
-        console.log(`  - ${item}`)
+        log(`  - ${item}`)
     })
 }
 
