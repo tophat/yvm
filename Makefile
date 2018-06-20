@@ -40,7 +40,7 @@ help:
 
 .PHONY: install
 install: build
-	@use_local=true ./install.sh
+	@use_local=true scripts/install.sh
 
 .PHONY: yvm-test
 yvm-test:
@@ -52,8 +52,13 @@ yvm-test:
 # ---- Infrastructure for Test/Deploy ----
 
 .PHONY: build
-build:
+build: node_modules
 	@node_modules/.bin/webpack
+
+
+.PHONY: deploy
+deploy: build
+	@./deploy.sh
 
 
 # -------------- Linting --------------
