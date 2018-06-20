@@ -1,9 +1,10 @@
 const request = require('request')
 
+const log = require('../common/log')
 const { printVersions, stripVersionPrefix } = require('../common/utils')
 
 const listRemoteCommand = () => {
-    console.log('list-remote')
+    log('list-remote')
     const options = {
         url: 'https://api.github.com/repos/yarnpkg/yarn/tags',
         headers: {
@@ -13,7 +14,7 @@ const listRemoteCommand = () => {
 
     request.get(options, (error, response, body) => {
         if (error || response.statusCode !== 200) {
-            console.log(
+            log(
                 'Unable to fetch available Yarn versions.',
                 'Please check network connection.',
             )
