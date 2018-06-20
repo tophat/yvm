@@ -19,7 +19,7 @@ fi
 mkdir -p ${install_dir}
 
 if [ "$use_local" = true ]; then
-    cp -R * ${install_dir}
+    cp yvm.sh yvm.js ${install_dir}
 else
     curl -o ${zip_install_path} ${release_url}
     unzip ${zip_install_path} -d ${install_dir}
@@ -33,5 +33,3 @@ if ! grep -q "${executable_source_string}" ~/.zshrc; then
     echo '' >> ~/.zshrc
     echo ${executable_source_string} >> ~/.zshrc
 fi
-
-cd ${install_dir} && npm install

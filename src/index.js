@@ -1,4 +1,4 @@
-const argParser = require('commander')
+import argParser from 'commander'
 
 const { getRcFileVersion, isValidVersionString } = require('./util/version')
 
@@ -22,39 +22,38 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
     }
 }
 
-module.exports = function dispatch(args) {
-    /* eslint-disable global-require,prettier/prettier */
-    argParser
-        .command('install [version]')
-        .action(withRcFileVersion(version => {
-            console.log(`Installing yarn v${version}`)
-            const install = require('./commands/install')
-            install(version)
-        }))
+/* eslint-disable global-require,prettier/prettier */
+argParser
+    .command('install [version]')
+    .action(withRcFileVersion(version => {
+        console.log(`Installing yarn v${version}`)
+        const install = require('./commands/install')
+        install(version)
+    }))
 
-    argParser
-        .command('remove <version>')
-        .action(version => {
-            console.log(`Removing yarn v${version}`)
-            const remove = require('./commands/remove')
-            remove(version)
-        })
+argParser
+    .command('remove <version>')
+    .action(version => {
+        console.log(`Removing yarn v${version}`)
+        const remove = require('./commands/remove')
+        remove(version)
+    })
 
-    argParser
-        .command('exec [version] [extraArgs...]')
-        .action(withRcFileVersion((version, extraArgs) => {
-            console.log(`Executing yarn command with version ${version}`)
-            const exec = require('./commands/exec')
-            exec(version, extraArgs)
-        }))
+argParser
+    .command('exec [version] [extraArgs...]')
+    .action(withRcFileVersion((version, extraArgs) => {
+        console.log(`Executing yarn command with version ${version}`)
+        const exec = require('./commands/exec')
+        exec(version, extraArgs)
+    }))
 
-    argParser
-        .command('list')
-        .action(() => {
-            console.log(`Checking for installed yarn versions...`)
-            const listVersions = require('./commands/list')
-            listVersions()
-        })
-    /* eslint-enable global-require,prettier/prettier */
-    argParser.parse(args)
-}
+argParser
+    .command('list')
+    .action(() => {
+        console.log(`Checking for installed yarn versions...`)
+        const listVersions = require('./commands/list')
+        listVersions()
+    })
+/* eslint-enable global-require,prettier/prettier */
+
+argParser.parse(process.argv)
