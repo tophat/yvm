@@ -26,5 +26,13 @@ module.exports = function dispatch(args) {
             exec(version, extraArgs)
         })
 
+    argParser
+        .command('which')
+        .action(() => {
+            console.log(`Checking yarn version`)
+            const which = require('./commands/which')
+            which()
+        })
+
     argParser.parse(args)
 }
