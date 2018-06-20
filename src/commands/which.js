@@ -1,4 +1,5 @@
 const { getRcFileVersion } = require('../util/version')
+const log = require('../common/log')
 
 const whichCommand = () => {
     const regex = /(\/Users)(\/)((?:[a-z][a-z0-9_]*))(\/)(\.yvm)(\/versions)(\/v\d+\.?\d+\.?\d+)(\/bin)/gm
@@ -7,24 +8,17 @@ const whichCommand = () => {
     if (matchedString !== null) {
         const matchedPath = matchedString[0]
         const matchedVersion = matchedPath.toString().match(versionRegex)
-        console.log(
-            `matched yvm version: ${matchedVersion} in PATH ${matchedPath}`
-        )
+        log(`matched yvm version: ${matchedVersion} in PATH ${matchedPath}`)
 
         const pathVersion = matchedVersion.toString().replace(/v/g, '')
         const rcVersion = getRcFileVersion()
-
         if (pathVersion === rcVersion) {
-            console.log(`your RC version matches your PATH version, good job!`)
-            return 0
+            log(`your RC version matches your PATH version, good job!`)
         } else {
-            console.log(`your RC and PATH versions don't match :(`)
-            return 1
+            log(`your RC and PATH versions don't match :(`)
         }
-    }
-    else {
-        console.log(`You don't have yvm version installed`)
-        return 1
+    } else {
+        log(`You don't have yvm version installed`)
     }
 }
 
