@@ -3,7 +3,7 @@
 [![builds][builds]][builds-url]
 [![deps][deps]][deps-url]
 [![dev-deps][dev-deps]][dev-deps-url]
-
+[![codecov](https://codecov.io/gh/tophatmonocle/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophatmonocle/yvm)
 
   <h1>Yarn version manager</h1>
   <p>
