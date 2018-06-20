@@ -4,7 +4,7 @@ const path = require('path')
 const outputPath = path.resolve(__dirname, '..', 'artifacts', 'webpack_build')
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/index.js',
     output: {
         filename: 'yvm.js',
