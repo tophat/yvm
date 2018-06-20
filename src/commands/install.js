@@ -3,6 +3,7 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
+const log = require('../common/log')
 const { versionRootPath, getExtractionPath } = require('../common/utils')
 
 const directoryStack = []
@@ -49,37 +50,42 @@ const downloadVersion = version => {
 const extractYarn = version => {
     const destPath = versionRootPath
     const srcPath = getDownloadPath(version)
-    targz.decompress(
-        {
-            src: srcPath,
-            dest: destPath,
-        },
-        err => {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log(`Finished extracting yarn version ${version}`)
-                fs.renameSync(
-                    `${destPath}/yarn-v${version}`,
-                    `${destPath}/v${version}`,
-                )
-                fs.unlinkSync(srcPath)
-            }
-        },
-    )
+
+    return new Promise((resolve, reject) => {
+        targz.decompress(
+            {
+                src: srcPath,
+                dest: destPath,
+            },
+            err => {
+                if (err) {
+                    log(err)
+                    reject(err)
+                } else {
+                    log(`Finished extracting yarn version ${version}`)
+                    fs.renameSync(
+                        `${destPath}/yarn-v${version}`,
+                        `${destPath}/v${version}`,
+                    )
+                    fs.unlinkSync(srcPath)
+                    resolve()
+                }
+            },
+        )
+    })
 }
 
 const installVersion = version => {
     if (checkForVersion(version)) {
-        return
+        return Promise.resolve()
     }
-    downloadVersion(version)
+    return downloadVersion(version)
         .then(() => {
-            console.log(`Finished downloading yarn version ${version}`)
-            extractYarn(version)
+            log(`Finished downloading yarn version ${version}`)
+            return extractYarn(version)
         })
         .catch(err => {
-            console.log(`Downloading yarn failed: \n ${err}`)
+            log(`Downloading yarn failed: \n ${err}`)
             cleanDirectories()
         })
 }

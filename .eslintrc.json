@@ -4,8 +4,13 @@
     "airbnb/base",
     "prettier"
   ],
+  "env": {
+        "browser": false,
+        "node": true,
+        "jest": true,
+        "es6": true
+  },
   "rules": {
-    "no-console": 0,
     "prettier/prettier": [
       2,
       {
