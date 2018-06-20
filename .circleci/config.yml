@@ -38,3 +38,13 @@ jobs:
       - *restore_cache
       - run: make build_and_deploy
       - *save_cache
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+  build_and_deploy:
+    jobs:
+      - test
+      - build_and_deploy
