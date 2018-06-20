@@ -26,7 +26,12 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
 module.exports = function dispatch(args) {
     /* eslint-disable global-require,prettier/prettier */
     argParser
+        .description('Yarn Version Manager')
+
+    argParser
         .command('install [version]')
+        .alias('i')
+        .description('Install the specified version of Yarn.')
         .action(withRcFileVersion(version => {
             log(`Installing yarn v${version}`)
             const install = require('./commands/install')
@@ -35,6 +40,8 @@ module.exports = function dispatch(args) {
 
     argParser
         .command('remove <version>')
+        .alias('rm')
+        .description('Uninstall the specified version of Yarn.')
         .action(version => {
             log(`Removing yarn v${version}`)
             const remove = require('./commands/remove')
@@ -43,6 +50,7 @@ module.exports = function dispatch(args) {
 
     argParser
         .command('exec [version] [extraArgs...]')
+        .description('Execute command using specified Yarn version.')
         .action(withRcFileVersion((version, extraArgs) => {
             log(`Executing yarn command with version ${version}`)
             const exec = require('./commands/exec')
@@ -52,6 +60,7 @@ module.exports = function dispatch(args) {
     argParser
         .command('list-remote')
         .alias('ls-remote')
+        .description('List Yarn versions available to install.')
         .action(() => {
             const listRemote = require('./commands/listRemote')
             listRemote()
@@ -59,11 +68,18 @@ module.exports = function dispatch(args) {
 
     argParser
         .command('list')
+        .alias('ls')
+        .description('List the currently installed versions of Yarn.')
         .action(() => {
             log(`Checking for installed yarn versions...`)
             const listVersions = require('./commands/list')
             listVersions()
         })
+
+    const noParams = !process.argv.slice(2).length
+    if (noParams) {
+        argParser.outputHelp();
+    }
 
     /* eslint-enable global-require,prettier/prettier */
     argParser.parse(args)

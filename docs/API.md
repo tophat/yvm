@@ -14,17 +14,21 @@ Activate the specified version of Yarn.
 
 ### `exec <version> <yarn commands...>`
 
-Execute a arbitrary yarn commands using the specified version of Yarn.
+Execute an arbitrary Yarn command using the specified version of Yarn.
 
 ### `list`
 
 List the currently installed versions of Yarn.
 
+### `list-remote`
+
+List Yarn versions available to install.
+
 ### `which`
 
 Display the current version of Yarn.
 
-### `uninstall <version>`
+### `remove <version>`
 
 Uninstall the specified version of Yarn.
 
