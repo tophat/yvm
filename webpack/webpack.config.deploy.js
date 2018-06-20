@@ -3,8 +3,6 @@ const GithubReleasePlugin = require('./githubReleasePlugin')
 const ZipPlugin = require('zip-webpack-plugin')
 
 const zipfileName = 'yvm.js'
-
-baseConfig.mode = 'production'
 baseConfig.plugins.push(
     new ZipPlugin({
         filename: zipfileName,
