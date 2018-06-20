@@ -19,7 +19,7 @@ module.exports = class GithubReleasePlugin {
                         )
                         return acc
                     }
-                    return [...acc, asset.existsAt]
+                    return acc.concat(asset.existsAt)
                 }, [])
                 const options = {
                     ...rest,

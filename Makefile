@@ -53,12 +53,12 @@ yvm-test:
 
 .PHONY: build
 build: node_modules
-	@node_modules/.bin/webpack
+	@webpack --config webpack/webpack.config.base.js
 
 
-.PHONY: deploy
-deploy: build
-	@./deploy.sh
+.PHONY: build_and_deploy
+build_and_deploy: node_modules
+	@webpack --config webpack/webpack.config.prod.js
 
 
 # -------------- Linting --------------
