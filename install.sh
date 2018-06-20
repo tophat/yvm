@@ -19,7 +19,7 @@ fi
 mkdir -p ${install_dir}
 
 if [ "$use_local" = true ]; then
-    cp yvm.sh yvm.js ${install_dir}
+    cp dist/* ${install_dir}
 else
     curl -o ${zip_install_path} ${release_url}
     unzip ${zip_install_path} -d ${install_dir}
