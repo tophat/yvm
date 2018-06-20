@@ -34,7 +34,6 @@ jobs:
       - checkout
       - *restore_cache
       - run: make build_and_deploy
-      - *save_cache
 
 workflows:
   version: 2
