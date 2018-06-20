@@ -1,4 +1,4 @@
-node_modules/
-dist/
+artifacts
+node_modules
 *.log
 .yvmrc

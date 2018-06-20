@@ -13,12 +13,11 @@ const runYarn = (version, extraArgs) => {
 
 const execCommand = (version, extraArgs) => {
     if (!fs.existsSync(getYarnPath(version))) {
-        console.log(
-            `Yarn v${version} not found. Please install it using: yvm install ${version}`,
-        )
-        return
+        const install = require('./install')
+        install(version).then(() => runYarn(version, extraArgs))
+    } else {
+        runYarn(version, extraArgs)
     }
-    runYarn(version, extraArgs)
 }
 
 module.exports = execCommand
