@@ -50,12 +50,21 @@ module.exports = function dispatch(args) {
         }))
 
     argParser
+        .command('list-remote')
+        .alias('ls-remote')
+        .action(() => {
+            const listRemote = require('./commands/listRemote')
+            listRemote()
+        })
+
+    argParser
         .command('list')
         .action(() => {
             log(`Checking for installed yarn versions...`)
             const listVersions = require('./commands/list')
             listVersions()
         })
+
     /* eslint-enable global-require,prettier/prettier */
     argParser.parse(args)
 }

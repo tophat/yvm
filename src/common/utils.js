@@ -9,6 +9,9 @@ const versionRootPath = path.resolve(yvmPath, 'versions')
 const getExtractionPath = version =>
     path.resolve(versionRootPath, `v${version}`)
 
+const stripVersionPrefix = tagName =>
+    tagName[0] === 'v' ? tagName.substring(1) : tagName
+
 const printVersions = (list, message) => {
     log(message)
     list.forEach(item => {
@@ -19,5 +22,6 @@ const printVersions = (list, message) => {
 module.exports = {
     getExtractionPath,
     printVersions,
+    stripVersionPrefix,
     versionRootPath,
 }
