@@ -4,7 +4,11 @@ const request = require('request')
 const targz = require('targz')
 
 const log = require('../common/log')
-const { versionRootPath, getExtractionPath } = require('../common/utils')
+const {
+    versionRootPath,
+    getExtractionPath,
+    getVersionsFromTags,
+} = require('../common/utils')
 
 const directoryStack = []
 
@@ -74,6 +78,18 @@ const extractYarn = version => {
         )
     })
 }
+
+const isValidVersion = version =>
+    new Promise((resolve, reject) => {
+        getVersionsFromTags()
+            .then(versionList => {
+                versionList.indexOf(version) !== -1 ? resolve() : reject()
+            })
+            .catch(error => {
+                log(error)
+                reject()
+            })
+    })
 
 const installVersion = version => {
     if (checkForVersion(version)) {

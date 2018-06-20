@@ -14,9 +14,9 @@ const runYarn = (version, extraArgs) => {
 const execCommand = (version, extraArgs) => {
     if (!fs.existsSync(getYarnPath(version))) {
         const install = require('./install')
-        install(version).then(() => runYarn(version, extraArgs))
+        return install(version).then(() => runYarn(version, extraArgs))
     } else {
-        runYarn(version, extraArgs)
+        return Promise.resolve(runYarn(version, extraArgs))
     }
 }
 
