@@ -58,7 +58,7 @@ build: node_modules
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
-	@webpack --config webpack/webpack.config.prod.js
+	@webpack --config webpack/webpack.config.deploy.js
 
 
 # -------------- Linting --------------
