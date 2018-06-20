@@ -9,13 +9,7 @@ const now = new Date().toISOString()
 const releaseName = `test-release_name-${now}`
 const releaseOptions = {
     auth: { token: process.env.GITHUB_TOKEN },
-    owner: 'tophatmonocle',
-    repo: 'yvm',
-    target_commitish: 'master',
     name: releaseName,
-    body: '* test\n',
-    draft: false,
-    prerelease: false,
     assets: [zipfileName],
 }
 

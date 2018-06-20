@@ -47,4 +47,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - webpack
