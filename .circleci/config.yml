@@ -30,23 +30,24 @@ jobs:
       - *restore_cache
       - run:
           name: 'Install yvm'
-          command: 'echo $PATH && curl https://raw.githubusercontent.com/tophatmonocle/yvm/curl-bash/scripts/install.sh | bash'
+          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/curl-bash/scripts/install.sh | bash'
           environment:
             YVM_DIR: '.yvm'
             YVM_ALIAS_DIR: '.'
       - *set_path
-      - run: make lint
+      - run: 'echo $PATH'
+      - run: 'make lint'
       # CODECOV_TOKEN is set by CIRCLE_CI
-      - run: make test-coverage
+      - run: 'make test-coverage'
       - store_test_results:
-          path: artifacts/reports/tests
+          path: 'artifacts/reports/tests'
       - *save_cache
   build_and_deploy:
     <<: *docker_defaults
     steps:
       - checkout
       - *restore_cache
-      - run: make build_and_deploy
+      - run: 'make build_and_deploy'
 
 workflows:
   version: 2
