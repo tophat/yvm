@@ -25,7 +25,7 @@ jobs:
       - *restore_cache
       - run:
           name: 'Install yvm'
-          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/curl-bash/scripts/install.sh | bash'
+          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | bash'
           environment:
             YVM_DIR: '.yvm'
             YVM_ALIAS_DIR: '.'
