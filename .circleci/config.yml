@@ -20,7 +20,7 @@ save_cache: &save_cache
 set_path: &set_path
   run:
     name: 'Set PATH'
-    command: 'echo export PATH=$(pwd):$PATH > setpath.sh && source setpath.sh'
+    command: 'echo export PATH=$(pwd):$PATH > setpath.sh && source setpath.sh && echo $PATH'
 
 jobs:
   test:
@@ -29,7 +29,8 @@ jobs:
       - checkout
       - *restore_cache
       - run:
-          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/curl-bash/scripts/install.sh | bash'
+          name: 'Install yvm'
+          command: 'echo $PATH && curl https://raw.githubusercontent.com/tophatmonocle/yvm/curl-bash/scripts/install.sh | bash'
           environment:
             YVM_DIR: '.yvm'
             YVM_ALIAS_DIR: '.'
