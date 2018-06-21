@@ -1,6 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-${use_local:=false}
+set -euo pipefail
+
+err_report() {
+    echo "yvm failed to install, the command that failed was: https://github.com/tophatmonocle/yvm/blob/master/scripts/install.sh#L${1}"
+}
+
+trap 'err_report $LINENO' ERR
+
+use_local=${use_local-false}
 
 release_api_url="https://api.github.com/repos/tophatmonocle/yvm/releases/latest"
 artifacts_dir="artifacts/webpack_build"
@@ -14,7 +22,7 @@ executable_alias_path="${YVM_ALIAS_DIR}/yvm"
 export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 executable_source_string="source ${executable_alias_path}"
 
-rm -f ${executable_alias_path}
+rm ${executable_alias_path}
 mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
