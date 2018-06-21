@@ -1,7 +1,12 @@
 const { getRcFileVersion } = require('../util/version')
 const log = require('../common/log')
+const shell = require('shelljs')
 
 const whichCommand = () => {
+    if (!shell.which('yarn')) {
+        shell.echo('Sorry, yarn in NOT installed.')
+        shell.exit(1)
+    }
     const regex = /(\/Users)(\/)((?:[a-z][a-z0-9_]*))(\/)(\.yvm)(\/versions)(\/v\d+\.?\d+\.?\d+)(\/bin)/gm
     const versionRegex = /(v\d+\.?\d*\.?\d*)/gm
     const matchedString = regex.exec(process.env.PATH)
@@ -12,10 +17,12 @@ const whichCommand = () => {
 
         const pathVersion = matchedVersion.toString().replace(/v/g, '')
         const rcVersion = getRcFileVersion()
-        if (pathVersion === rcVersion) {
-            log(`your RC version matches your PATH version, good job!`)
-        } else {
-            log(`your RC and PATH versions don't match :(`)
+        if (rcVersion !== null) {
+            if (pathVersion === rcVersion) {
+                log(`your RC version matches your PATH version, good job!`)
+            } else {
+                log(`your RC and PATH versions don't match :(`)
+            }
         }
     } else {
         log(`You don't have yvm version installed`)

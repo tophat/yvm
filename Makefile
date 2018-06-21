@@ -39,8 +39,8 @@ help:
 # ---- YVM Command Stuff ----
 
 .PHONY: install
-install:
-	@use_local=true ./install.sh
+install: build
+	@use_local=true scripts/install.sh
 
 .PHONY: yvm-test
 yvm-test:
@@ -51,10 +51,14 @@ yvm-test:
 
 # ---- Infrastructure for Test/Deploy ----
 
-# TODO: finish the babel stuff
 .PHONY: build
 build: node_modules
-	babel $(BABEL_FLAGS)
+	@webpack --config webpack/webpack.config.base.js
+
+
+.PHONY: build_and_deploy
+build_and_deploy: node_modules
+	@webpack --config webpack/webpack.config.deploy.js
 
 
 # -------------- Linting --------------

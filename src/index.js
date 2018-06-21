@@ -1,4 +1,4 @@
-const argParser = require('commander')
+import argParser from 'commander'
 
 const { getRcFileVersion, isValidVersionString } = require('./util/version')
 const log = require('./common/log')
@@ -23,73 +23,80 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
     }
 }
 
-module.exports = function dispatch(args) {
-    /* eslint-disable global-require,prettier/prettier */
-    argParser
-        .description('Yarn Version Manager')
+/* eslint-disable global-require,prettier/prettier */
+argParser
+    .description('Yarn Version Manager')
 
-    argParser
-        .command('install [version]')
-        .alias('i')
-        .description('Install the specified version of Yarn.')
-        .action(withRcFileVersion(version => {
-            log(`Installing yarn v${version}`)
-            const install = require('./commands/install')
-            install(version)
-        }))
+argParser
+    .command('install [version]')
+    .alias('i')
+    .description('Install the specified version of Yarn.')
+    .action(withRcFileVersion(version => {
+        log(`Installing yarn v${version}`)
+        const install = require('./commands/install')
+        install(version)
+    }))
 
-    argParser
-        .command('remove <version>')
-        .alias('rm')
-        .description('Uninstall the specified version of Yarn.')
-        .action(version => {
-            log(`Removing yarn v${version}`)
-            const remove = require('./commands/remove')
-            remove(version)
-        })
-
-    argParser
-        .command('exec [version] [extraArgs...]')
-        .description('Execute command using specified Yarn version.')
-        .action(withRcFileVersion((version, extraArgs) => {
-            log(`Executing yarn command with version ${version}`)
-            const exec = require('./commands/exec')
-            exec(version, extraArgs)
-        }))
-
-    argParser
-        .command('which')
-        .description('Display path to installed yarn version. Uses .yvmrc if available.')
-        .action(() => {
-            log(`Checking yarn version`)
-            const which = require('./commands/which')
-            which()
+argParser
+    .command('remove <version>')
+    .alias('rm')
+    .description('Uninstall the specified version of Yarn.')
+    .action(version => {
+        log(`Removing yarn v${version}`)
+        const remove = require('./commands/remove')
+        remove(version)
     })
 
-    argParser
-        .command('list-remote')
-        .alias('ls-remote')
-        .description('List Yarn versions available to install.')
-        .action(() => {
-            const listRemote = require('./commands/listRemote')
-            listRemote()
-        })
+argParser
+    .command('exec [version] [extraArgs...]')
+    .description('Execute command using specified Yarn version.')
+    .action(withRcFileVersion((version, extraArgs) => {
+        log(`Executing yarn command with version ${version}`)
+        const exec = require('./commands/exec')
+        exec(version, extraArgs)
+    }))
 
-    argParser
-        .command('list')
-        .alias('ls')
-        .description('List the currently installed versions of Yarn.')
-        .action(() => {
-            log(`Checking for installed yarn versions...`)
-            const listVersions = require('./commands/list')
-            listVersions()
-        })
+argParser
+    .command('which')
+    .description('Display path to installed yarn version. Uses .yvmrc if available.')
+    .action(() => {
+        log(`Checking yarn version`)
+        const which = require('./commands/which')
+        which()
+})
 
-    const noParams = !process.argv.slice(2).length
-    if (noParams) {
-        argParser.outputHelp();
-    }
+argParser
+    .command('list-remote')
+    .alias('ls-remote')
+    .description('List Yarn versions available to install.')
+    .action(() => {
+        const listRemote = require('./commands/listRemote')
+        listRemote()
+    })
 
-    /* eslint-enable global-require,prettier/prettier */
-    argParser.parse(args)
+argParser
+    .command('list-remote')
+    .alias('ls-remote')
+    .description('List Yarn versions available to install.')
+    .action(() => {
+        const listRemote = require('./commands/listRemote')
+        listRemote()
+    })
+
+argParser
+    .command('list')
+    .alias('ls')
+    .description('List the currently installed versions of Yarn.')
+    .action(() => {
+        log(`Checking for installed yarn versions...`)
+        const listVersions = require('./commands/list')
+        listVersions()
+    })
+
+const noParams = !process.argv.slice(2).length
+if (noParams) {
+    argParser.outputHelp();
 }
+
+/* eslint-enable global-require,prettier/prettier */
+argParser.parse(process.argv)
