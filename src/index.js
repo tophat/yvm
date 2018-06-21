@@ -28,6 +28,14 @@ argParser
     .description('Yarn Version Manager')
 
 argParser
+    .command('*', '', {noHelp: true, isDefault: true})
+    .action(invalidCommand => {
+        log(`Invalid command: ${invalidCommand}`)
+        argParser.outputHelp()
+        process.exit(1)
+    })
+
+argParser
     .command('install [version]')
     .alias('i')
     .description('Install the specified version of Yarn.')
@@ -93,9 +101,14 @@ argParser
         listVersions()
     })
 
+argParser
+    .command('help')
+    .description('Show help text')
+    .action(() => argParser.outputHelp())
+
 const noParams = !process.argv.slice(2).length
 if (noParams) {
-    argParser.outputHelp();
+    argParser.outputHelp()
 }
 
 /* eslint-enable global-require,prettier/prettier */
