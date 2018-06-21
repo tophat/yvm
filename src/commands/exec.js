@@ -9,6 +9,10 @@ const getYarnPath = (version, rootPath) =>
 const runYarn = (version, extraArgs, rootPath) => {
     process.argv = ['', ''].concat(extraArgs) // first two arguments are filler args [node version, yarn version]
     require(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
+    // eslint-disable-next-line no-undef
+    __non_webpack_require__(
+        path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'),
+    )
 }
 
 const execCommand = (version, extraArgs, rootPath = yvmPath) => {

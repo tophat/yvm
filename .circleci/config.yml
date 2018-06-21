@@ -1,24 +1,49 @@
 version: 2
+
+docker_defaults: &docker_defaults
+  docker:
+    - image: circleci/node:8.11.3
+
+restore_cache: &restore_cache
+  restore_cache:
+    name: Restore node_modules cache
+    key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
+
+save_cache: &save_cache
+  save_cache:
+    name: Save node_modules cache
+    key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
+    paths:
+      - node_modules/
+
 jobs:
-  build:
-    docker:
-      - image: circleci/node:8.11.3
+  test:
+    <<: *docker_defaults
     steps:
       - checkout
-      - restore_cache:
-          name: Restore node_modules cache
-          key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      - run: make node_modules
-      - save_cache:
-          name: Save node_modules cache
-          key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules/
+      - *restore_cache
       - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: make test-coverage
-      - run: ./yvm.sh
-      - store_artifacts:
-          path: artifacts
       - store_test_results:
           path: artifacts/reports/tests
+      - *save_cache
+  build_and_deploy:
+    <<: *docker_defaults
+    steps:
+      - checkout
+      - *restore_cache
+      - run: make build_and_deploy
+
+workflows:
+  version: 2
+  test_and_deploy_master:
+    jobs:
+      - test
+      - build_and_deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
