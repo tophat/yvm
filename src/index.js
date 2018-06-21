@@ -75,6 +75,11 @@ argParser
         listVersions()
     })
 
+argParser
+    .command('help')
+    .description('Show help text')
+    .action(() => argParser.outputHelp())
+
 const noParams = !process.argv.slice(2).length
 if (noParams) {
     argParser.outputHelp();
