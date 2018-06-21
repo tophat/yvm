@@ -32,7 +32,7 @@ Display the current version of Yarn.
 
 Uninstall the specified version of Yarn.
 
+### `help`
 
-
-
+Show the help text.
 
