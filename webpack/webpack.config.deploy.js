@@ -15,6 +15,7 @@ baseConfig.plugins.push(
         auth: { token: process.env.GITHUB_TOKEN },
         name: releaseName,
         tag_name: tagName,
+        body: ' ',
         assets: [zipfileName],
     }),
 )
