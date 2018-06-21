@@ -2,35 +2,49 @@
 
 ${use_local:=false}
 
-release_url=""
+release_api_url="https://api.github.com/repos/tophatmonocle/yvm/releases/latest"
 artifacts_dir="artifacts/webpack_build"
 
-install_dir="$HOME/.yvm"
-zip_download_path="${install_dir}/yvm.zip"
-sh_install_path="${install_dir}/yvm.sh"
+YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
+YVM_ALIAS_DIR=${YVM_ALIAS_DIR-"/usr/local/bin"}
 
-executable_alias_path="/usr/local/bin/yvm"
+zip_download_path="${YVM_DIR}/yvm.zip"
+sh_install_path="${YVM_DIR}/yvm.sh"
+
+executable_alias_path="${YVM_ALIAS_DIR}/yvm"
+export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 executable_source_string="source ${executable_alias_path}"
 
-if [ "$use_local" = true ]; then
-    rm ${executable_alias_path}
-    rm -r ${install_dir}
-fi
-
-mkdir -p ${install_dir}
+rm -f ${executable_alias_path}
+mkdir -p ${YVM_DIR}
 
 if [ "$use_local" = true ]; then
-    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" ${install_dir}
+    cp -f "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" ${YVM_DIR}
 else
-    curl -o ${zip_download_path} ${release_url}
-    unzip ${zip_download_path} -d ${install_dir}
+    download_url=$(
+        curl -s ${release_api_url} |
+        grep '"browser_download_url": ".*/yvm.zip"' |
+        sed 's/"browser_download_url"://g' |
+        sed 's/[ "]//g'
+    )
+    curl -s -L -o ${zip_download_path} ${download_url}
+    unzip -o -q ${zip_download_path} -d ${YVM_DIR}
     rm ${zip_download_path}
 fi
 
 chmod +x ${sh_install_path}
 ln -s ${sh_install_path} ${executable_alias_path}
 
-if ! grep -q "${executable_source_string}" ~/.zshrc; then
+added_newline=0
+if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
     echo '' >> ~/.zshrc
+    echo ${export_yvm_dir_string} >> ~/.zshrc
+    added_newline=1
+fi
+
+if ! grep -q "${executable_source_string}" ~/.zshrc; then
+    [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
     echo ${executable_source_string} >> ~/.zshrc
 fi
+
+echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"
