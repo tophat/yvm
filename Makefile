@@ -63,12 +63,12 @@ yvm-test:
 
 .PHONY: build
 build: node_modules
-	@webpack --config webpack/webpack.config.base.js
+	@webpack --progress --config webpack/webpack.config.base.js
 
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
-	@webpack --config webpack/webpack.config.deploy.js
+	@webpack --progress --config webpack/webpack.config.deploy.js
 
 
 # -------------- Linting --------------
@@ -105,9 +105,12 @@ test-snapshots: node_modules
 
 # ----------------- Helpers ------------------
 
-node_modules: package.json package-lock.json .nvmrc
-	npm install
+node_modules: package.json yarn.lock
 	touch node_modules
+
+yarn.lock:
+	yvm exec install
+	touch yarn.lock
 
 .PHONY: clean
 clean:
