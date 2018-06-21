@@ -87,10 +87,9 @@ yvm_() {
     fi
 }
 
-if [ -n "$PS1" ]; then
-    yvm() {
-        yvm_ $@
-    }
-else
-    yvm_ $@
-fi
+case "$-" in
+    *i*)    yvm() {
+                yvm_ $@
+            };;
+    *)	    yvm_ $@;;
+esac
