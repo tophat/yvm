@@ -1,6 +1,7 @@
 # so we can use `eslint` without ./node_modules/.bin/eslint
 SHELL := /bin/bash
 export PATH := $(shell npm bin):$(PATH)
+CURRENT_DIR = $(shell pwd)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
@@ -26,10 +27,11 @@ help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
+	@echo "make install-watch                   - runs install, and watches code for local development"
 	@echo "make yvm-test                        - runs the yvm node app"
 	@echo ""
 	@echo "----------------------- Other Commands  -------------------------"
-	@echo "make build                            - runs eslint"
+	@echo "make build                           - runs eslint"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
 	@echo "make test                            - runs the full test suite with jest"
@@ -41,6 +43,14 @@ help:
 .PHONY: install
 install: build
 	@use_local=true scripts/install.sh
+
+.PHONY: install-watch
+install-watch: node_modules
+	mkdir -p ${CURRENT_DIR}/artifacts/webpack_build/
+	rm -rf ~/.yvm
+	ln -s ${CURRENT_DIR}/artifacts/webpack_build/ ${HOME}/.yvm
+	chmod +x ${HOME}/.yvm/yvm.sh
+	webpack --config webpack/webpack.config.base.js --watch
 
 .PHONY: yvm-test
 yvm-test:
