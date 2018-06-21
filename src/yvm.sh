@@ -1,7 +1,7 @@
 #!/bin/sh
 
 command=$1
-YVM_DIR="${HOME}/.yvm" #this can be exported globally during install?
+YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
     local PROVIDED_VERSION=${1-$(head -n 1 .yvmrc)}
@@ -83,7 +83,7 @@ yvm_() {
     if [ "$command" = "use" ]; then
         yvm_use $2
     else
-        node ~/.yvm/yvm.js $@
+        node "${YVM_DIR}/yvm.js" $@
     fi
 }
 
