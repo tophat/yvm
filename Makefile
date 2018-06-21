@@ -1,6 +1,6 @@
 # so we can use `eslint` without ./node_modules/.bin/eslint
 SHELL := /bin/bash
-export PATH := $(shell npm bin):$(PATH)
+export PATH := $(shell yvm exec bin):$(PATH)
 CURRENT_DIR = $(shell pwd)
 
 ARTIFACT_DIR?=artifacts
@@ -105,12 +105,10 @@ test-snapshots: node_modules
 
 # ----------------- Helpers ------------------
 
-node_modules: package.json yarn.lock
-	touch node_modules
-
-yarn.lock:
+.PHONY: node_modules
+node_modules:
 	yvm exec install
-	touch yarn.lock
+	touch node_modules
 
 .PHONY: clean
 clean:
