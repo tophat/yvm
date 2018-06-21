@@ -3,11 +3,11 @@ const fs = require('fs-extra')
 const install = require('../../src/commands/install')
 const { getExtractionPath, versionRootPath } = require('../../src/common/utils')
 
-describe.skip('yvm install', () => {
+describe('yvm install', () => {
     const rootPath = '/tmp/yvmInstall'
 
     beforeAll(() => {
-        fs.mkdirp(rootPath)
+        fs.mkdirsSync(rootPath)
     })
 
     afterEach(() => {

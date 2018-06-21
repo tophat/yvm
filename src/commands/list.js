@@ -20,6 +20,7 @@ const listVersions = (rootPath = yvmPath) => {
     } else {
         log('You have no yarn versions installed.')
     }
+    return installedVersions
 }
 
 module.exports = listVersions

@@ -3,11 +3,11 @@ const fs = require('fs-extra')
 const remove = require('../../src/commands/remove')
 const { getExtractionPath, versionRootPath } = require('../../src/common/utils')
 
-describe.only('yvm remove', () => {
+describe('yvm remove', () => {
     const rootPath = '/tmp/yvmRemove'
 
     beforeAll(() => {
-        fs.mkdirp(rootPath)
+        fs.mkdirsSync(rootPath)
     })
 
     afterEach(() => {
@@ -17,7 +17,7 @@ describe.only('yvm remove', () => {
     it('Removes installed version specified', () => {
         const version = '1.7.0'
         const versionInstallationPath = getExtractionPath(version, rootPath)
-        fs.mkdirs(versionInstallationPath)
+        fs.mkdirsSync(versionInstallationPath)
         remove(version, rootPath)
         expect(
             fs.readdirSync(versionRootPath(rootPath)).indexOf(`v${version}`),
