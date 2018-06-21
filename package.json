@@ -19,7 +19,8 @@
       "*.js",
       "!*.test.js"
     ],
-    "coverageDirectory": "./artifacts/coverage"
+    "coverageDirectory": "./artifacts/coverage",
+    "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
   },
   "author": "",
   "license": "ISC",
