@@ -6,15 +6,21 @@ docker_defaults: &docker_defaults
 
 restore_cache: &restore_cache
   restore_cache:
-    name: Restore node_modules cache
+    name: Restore cache
     key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
 save_cache: &save_cache
   save_cache:
-    name: Save node_modules cache
+    name: Save cache
     key: yvm-{{ .Branch }}-{{ checksum "package-lock.json" }}
     paths:
+      - .yvm/
       - node_modules/
+
+set_path: &set_path
+  run:
+    name: 'Set PATH'
+    command: 'echo export PATH=$(pwd):$PATH > setpath.sh && source setpath.sh'
 
 jobs:
   test:
@@ -22,6 +28,12 @@ jobs:
     steps:
       - checkout
       - *restore_cache
+      - run:
+          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/curl-bash/scripts/install.sh | bash'
+          environment:
+            YVM_DIR: '.yvm'
+            YVM_ALIAS_DIR: '.'
+      - *set_path
       - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: make test-coverage
