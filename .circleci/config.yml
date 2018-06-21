@@ -14,7 +14,6 @@ save_cache: &save_cache
     name: Save cache
     key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
     paths:
-      - .yvm/
       - node_modules/
 
 jobs:
@@ -23,23 +22,18 @@ jobs:
     steps:
       - checkout
       - *restore_cache
-      - run:
-          name: 'Install yvm'
-          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | bash'
-          environment:
-            YVM_ALIAS_DIR: '.'
-      - run: 'make lint'
+      - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: 'make test-coverage'
       - store_test_results:
-          path: 'artifacts/reports/tests'
+          path: artifacts/reports/tests
       - *save_cache
   build_and_deploy:
     <<: *docker_defaults
     steps:
       - checkout
       - *restore_cache
-      - run: 'make build_and_deploy'
+      - run: make build_and_deploy
 
 workflows:
   version: 2

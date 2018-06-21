@@ -4,16 +4,6 @@ CURRENT_DIR = $(shell pwd)
 
 YVM_LOCAL_EXECUTABLE := src/yvm.sh
 
-ifdef CI
-ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
-JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
-JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
-else
-ESLINT_EXTRA_ARGS=
-JEST_ENV_VARIABLES=
-JEST_ARGS=
-endif
-
 export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
@@ -22,6 +12,16 @@ BUILD_DIR?=$(ARTIFACT_DIR)/build
 
 IGNORE = test.js,js.snap,.md,__tests__,mockdata,__mocks__
 BABEL_FLAGS = src --out-dir $(BUILD_DIR) --copy-files --ignore $(IGNORE)
+
+ifdef CI
+    ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
+    JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
+    JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
+else
+    ESLINT_EXTRA_ARGS=
+    JEST_ENV_VARIABLES=
+    JEST_ARGS=
+endif
 
 ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
 
