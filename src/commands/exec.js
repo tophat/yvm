@@ -1,24 +1,28 @@
 /* eslint-disable global-require,import/no-dynamic-require */
 const fs = require('fs')
-const os = require('os')
 const path = require('path')
+const { yvmPath } = require('../common/utils')
 
-const getYarnPath = version =>
-    path.resolve(os.homedir(), `.yvm/versions/v${version}`)
+const getYarnPath = (version, rootPath) =>
+    path.resolve(rootPath, `versions/v${version}`)
 
-const runYarn = (version, extraArgs) => {
+const runYarn = (version, extraArgs, rootPath) => {
     process.argv = ['', ''].concat(extraArgs) // first two arguments are filler args [node version, yarn version]
+    require(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
     // eslint-disable-next-line no-undef
-    __non_webpack_require__(path.resolve(getYarnPath(version), 'bin/yarn.js'))
+    __non_webpack_require__(
+        path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'),
+    )
 }
 
-const execCommand = (version, extraArgs) => {
-    if (!fs.existsSync(getYarnPath(version))) {
+const execCommand = (version, extraArgs, rootPath = yvmPath) => {
+    if (!fs.existsSync(getYarnPath(version, rootPath))) {
         const install = require('./install')
-        install(version).then(() => runYarn(version, extraArgs))
-    } else {
-        runYarn(version, extraArgs)
+        return install(version, rootPath).then(() =>
+            runYarn(version, extraArgs, rootPath),
+        )
     }
+    return Promise.resolve(runYarn(version, extraArgs, rootPath))
 }
 
 module.exports = execCommand

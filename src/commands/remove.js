@@ -1,10 +1,10 @@
 const fs = require('fs-extra')
 
-const { getExtractionPath } = require('../common/utils')
+const { getExtractionPath, yvmPath } = require('../common/utils')
 const log = require('../common/log')
 
-const removeVersion = version => {
-    const versionPath = getExtractionPath(version)
+const removeVersion = (version, rootPath = yvmPath) => {
+    const versionPath = getExtractionPath(version, rootPath)
     if (!fs.existsSync(versionPath)) {
         log(
             `Failed to remove yarn v${version}. Yarn version ${version} not found.`,
