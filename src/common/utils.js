@@ -5,10 +5,10 @@ const request = require('request')
 const log = require('../common/log')
 
 const yvmPath = path.resolve(os.homedir(), '.yvm')
-const versionRootPath = path.resolve(yvmPath, 'versions')
+const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
-const getExtractionPath = version =>
-    path.resolve(versionRootPath, `v${version}`)
+const getExtractionPath =(version, rootPath) =>
+    path.resolve(rootPath, 'versions', `v${version}`)
 
 const getVersionsFromTags = () => {
     const options = {
@@ -48,4 +48,5 @@ module.exports = {
     printVersions,
     stripVersionPrefix,
     versionRootPath,
+    yvmPath,
 }
