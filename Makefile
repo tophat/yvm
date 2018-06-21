@@ -2,8 +2,9 @@
 SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
 
+YVM_LOCAL_EXECUTABLE := src/yvm.sh
+
 ifdef CI
-export PATH := $(CURRENT_DIR):$(PATH)
 ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
 JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
 JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
@@ -13,7 +14,7 @@ JEST_ENV_VARIABLES=
 JEST_ARGS=
 endif
 
-export PATH := $(shell yvm exec bin):$(PATH)
+export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
@@ -26,6 +27,7 @@ ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
 
 .PHONY: help
 help:
+	@echo $(PATH)
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
@@ -109,7 +111,7 @@ test-snapshots: node_modules
 
 .PHONY: node_modules
 node_modules:
-	yvm exec install
+	$(YVM_LOCAL_EXECUTABLE) exec install
 	touch node_modules
 
 .PHONY: clean
