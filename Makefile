@@ -3,7 +3,7 @@ SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
 
 ifdef CI
-export PATH := $(CURRENT_DIR)/.yvm:$(PATH)
+export PATH := $(CURRENT_DIR):$(PATH)
 ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
 JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
 JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
