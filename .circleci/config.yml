@@ -17,11 +17,6 @@ save_cache: &save_cache
       - .yvm/
       - node_modules/
 
-set_path: &set_path
-  run:
-    name: 'Set PATH'
-    command: 'echo export PATH=$(pwd):$PATH > setpath.sh && source setpath.sh && echo $PATH'
-
 jobs:
   test:
     <<: *docker_defaults
@@ -34,8 +29,6 @@ jobs:
           environment:
             YVM_DIR: '.yvm'
             YVM_ALIAS_DIR: '.'
-      - *set_path
-      - run: 'echo $PATH'
       - run: 'make lint'
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: 'make test-coverage'
