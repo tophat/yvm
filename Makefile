@@ -1,10 +1,8 @@
-# so we can use `eslint` without ./node_modules/.bin/eslint
-SHELL := /bin/bash
-CURRENT_DIR = $(shell pwd)
-
 YVM_LOCAL_EXECUTABLE := src/yvm.sh
 
+SHELL := /bin/bash
 export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
+CURRENT_DIR = $(shell pwd)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
@@ -27,7 +25,6 @@ ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
 
 .PHONY: help
 help:
-	@echo $(PATH)
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
