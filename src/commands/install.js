@@ -7,7 +7,6 @@ const log = require('../common/log')
 const {
     versionRootPath,
     getExtractionPath,
-    getVersionsFromTags,
     yvmPath,
 } = require('../common/utils')
 
@@ -79,18 +78,6 @@ const extractYarn = (version, rootPath) => {
         )
     })
 }
-
-const isValidVersion = version =>
-    new Promise((resolve, reject) => {
-        getVersionsFromTags()
-            .then(versionList => {
-                versionList.indexOf(version) !== -1 ? resolve() : reject()
-            })
-            .catch(error => {
-                log(error)
-                reject()
-            })
-    })
 
 const installVersion = (version, rootPath = yvmPath) => {
     if (checkForVersion(version, rootPath)) {

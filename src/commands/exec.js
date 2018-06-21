@@ -11,13 +11,14 @@ const runYarn = (version, extraArgs, rootPath) => {
     require(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
 }
 
-const execCommand = (version, extraArgs, rootPath=yvmPath) => {
+const execCommand = (version, extraArgs, rootPath = yvmPath) => {
     if (!fs.existsSync(getYarnPath(version, rootPath))) {
         const install = require('./install')
-        return install(version, rootPath).then(() => runYarn(version, extraArgs, rootPath))
-    } else {
-        return Promise.resolve(runYarn(version, extraArgs, rootPath))
+        return install(version, rootPath).then(() =>
+            runYarn(version, extraArgs, rootPath),
+        )
     }
+    return Promise.resolve(runYarn(version, extraArgs, rootPath))
 }
 
 module.exports = execCommand

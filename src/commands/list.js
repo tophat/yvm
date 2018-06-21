@@ -1,18 +1,20 @@
 const fs = require('fs')
 
 const log = require('../common/log')
-const { printVersions, versionRootPath } = require('../common/utils')
+const { printVersions, versionRootPath, yvmPath } = require('../common/utils')
 
-const getYarnVersions = () => {
+const getYarnVersions = rootPath => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/
-    if (fs.existsSync(versionRootPath)) {
-        return fs.readdirSync(versionRootPath).filter(file => re.test(file))
+    if (fs.existsSync(versionRootPath(rootPath))) {
+        return fs
+            .readdirSync(versionRootPath(rootPath))
+            .filter(file => re.test(file))
     }
     return []
 }
 
-const listVersions = () => {
-    const installedVersions = getYarnVersions()
+const listVersions = (rootPath = yvmPath) => {
+    const installedVersions = getYarnVersions(rootPath)
     if (installedVersions.length) {
         printVersions(installedVersions, 'Installed yarn versions:')
     } else {
