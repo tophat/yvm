@@ -63,12 +63,12 @@ yvm-test:
 
 .PHONY: build
 build: node_modules
-	@webpack --progress --config webpack/webpack.config.base.js
+	@webpack --config webpack/webpack.config.base.js
 
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
-	@webpack --progress --config webpack/webpack.config.deploy.js
+	@webpack --config webpack/webpack.config.deploy.js
 
 
 # -------------- Linting --------------
