@@ -1,7 +1,7 @@
 #!/bin/sh
 
 command=$1
-${YVM_DIR:="${HOME}/.yvm"}
+YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
     local PROVIDED_VERSION=${1-$(head -n 1 .yvmrc)}

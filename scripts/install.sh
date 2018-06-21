@@ -6,17 +6,17 @@ release_api_url="https://api.github.com/repos/tophatmonocle/yvm/releases/latest"
 artifacts_dir="artifacts/webpack_build"
 
 YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
-YVM_ALIAS_DIR=${YVM_ALIAS_DIR-"/usr/local/bin"}
-
 zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 
+YVM_ALIAS_DIR=${YVM_ALIAS_DIR-"/usr/local/bin"}
 executable_alias_path="${YVM_ALIAS_DIR}/yvm"
 export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 executable_source_string="source ${executable_alias_path}"
 
 rm -f ${executable_alias_path}
 mkdir -p ${YVM_DIR}
+mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
     cp -f "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" ${YVM_DIR}
