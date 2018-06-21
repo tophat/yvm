@@ -38,7 +38,7 @@ Clone this repo and run `make install`. This will create the `.yvm` directory in
 Execute the following in your terminal:
 
 ```text
-curl https://github.com/tophatmonocle/yvm/blob/master/scripts/install.sh | bash
+curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | bash
 ```
 
 ## Usage

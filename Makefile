@@ -51,7 +51,7 @@ install-watch: node_modules
 	rm -rf ~/.yvm
 	ln -s ${CURRENT_DIR}/artifacts/webpack_build/ ${HOME}/.yvm
 	chmod +x ${HOME}/.yvm/yvm.sh
-	webpack --config webpack/webpack.config.base.js --watch
+	webpack --progress --config webpack/webpack.config.dev.js --watch
 
 .PHONY: yvm-test
 yvm-test:
@@ -64,12 +64,12 @@ yvm-test:
 
 .PHONY: build
 build: node_modules
-	@webpack --config webpack/webpack.config.base.js
+	@webpack --progress --config webpack/webpack.config.base.js
 
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
-	@webpack --config webpack/webpack.config.deploy.js
+	@webpack --progress --config webpack/webpack.config.deploy.js
 
 
 # -------------- Linting --------------
