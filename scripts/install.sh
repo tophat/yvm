@@ -22,7 +22,7 @@ executable_alias_path="${YVM_ALIAS_DIR}/yvm"
 export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 executable_source_string="source ${executable_alias_path}"
 
-rm ${executable_alias_path}
+rm -f ${executable_alias_path}
 mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
