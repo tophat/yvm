@@ -52,7 +52,7 @@ argParser
     .action(version => {
         log(`Removing yarn v${version}`)
         const remove = require('./commands/remove')
-        remove(version)
+        process.exit(remove(version))
     })
 
 argParser
