@@ -7,6 +7,7 @@ const log = require('../common/log')
 const {
     versionRootPath,
     getExtractionPath,
+    getVersionsFromTags,
     yvmPath,
 } = require('../common/utils')
 
@@ -81,16 +82,29 @@ const extractYarn = (version, rootPath) => {
 
 const installVersion = (version, rootPath = yvmPath) => {
     if (checkForVersion(version, rootPath)) {
+        log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()
     }
-    return downloadVersion(version, rootPath)
-        .then(() => {
-            log(`Finished downloading yarn version ${version}`)
-            return extractYarn(version, rootPath)
+    return getVersionsFromTags()
+        .then(versions => {
+            if (versions.indexOf(version) === -1) {
+                log(
+                    'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
+                )
+                return Promise.resolve()
+            }
+            return downloadVersion(version, rootPath)
+                .then(() => {
+                    log(`Finished downloading yarn version ${version}`)
+                    return extractYarn(version, rootPath)
+                })
+                .catch(err => {
+                    log(`Downloading yarn failed: \n ${err}`)
+                    cleanDirectories()
+                })
         })
-        .catch(err => {
-            log(`Downloading yarn failed: \n ${err}`)
-            cleanDirectories()
+        .catch(error => {
+            log(error)
         })
 }
 
