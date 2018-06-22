@@ -29,6 +29,7 @@
     "fs-extra": "^6.0.1",
     "gh-release": "^3.2.1",
     "request": "^2.87.0",
+    "shelljs": "^0.8.2",
     "targz": "^1.0.1"
   },
   "devDependencies": {
