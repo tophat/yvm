@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
 
-YVM_EXECUTABLE := YVM_DIR=$(CURRENT_DIR)/.yvm $(CURRENT_DIR)/yvm
+YVM_DIR?=$(HOME)/.yvm
+YVM_EXECUTABLE := YVM_DIR=$(YVM_DIR) $(YVM_DIR)/yvm.sh
 export PATH := $(shell $(YVM_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
