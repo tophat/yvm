@@ -1,7 +1,12 @@
 const fs = require('fs')
 
 const log = require('../common/log')
-const { printVersions, versionRootPath, yvmPath } = require('../common/utils')
+const {
+    printVersions,
+    stripVersionPrefix,
+    versionRootPath,
+    yvmPath,
+} = require('../common/utils')
 
 const getYarnVersions = rootPath => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/
@@ -9,6 +14,7 @@ const getYarnVersions = rootPath => {
         return fs
             .readdirSync(versionRootPath(rootPath))
             .filter(file => re.test(file))
+            .map(stripVersionPrefix)
     }
     return []
 }
