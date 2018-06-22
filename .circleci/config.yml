@@ -23,8 +23,11 @@ jobs:
       - checkout
       - *restore_cache
       - run:
+          name: Set YVM_DIR
+          command: 'echo "export YVM_DIR=$(pwd)/.yvm" > setenv.sh && source setenv.sh'
+      - run:
           name: 'Install yvm release version'
-          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_DIR=$(pwd)/.yvm YVM_INSTALL_DIR=$(pwd)/.yvm YVM_ALIAS_DIR=$(pwd) bash'
+          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=$(pwd)/.yvm YVM_ALIAS_DIR=$(pwd) bash'
       - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: make test-coverage
