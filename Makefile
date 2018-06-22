@@ -28,7 +28,8 @@ help:
 	@echo "make yvm-test                        - runs the yvm node app"
 	@echo ""
 	@echo "----------------------- Other Commands  -------------------------"
-	@echo "make build                           - runs eslint"
+	@echo "make build                           - builds a bundle with production settings"
+	@echo "make build-dev                       - builds a bundle with development settings"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
 	@echo "make test                            - runs the full test suite with jest"
@@ -56,6 +57,9 @@ install-watch: node_modules
 build: node_modules
 	@webpack --progress --config webpack/webpack.config.base.js
 
+.PHONY: build-dev
+build-dev: node_modules
+	@webpack --progress --config webpack/webpack.config.dev.js
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
