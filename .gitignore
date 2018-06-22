@@ -2,3 +2,4 @@ artifacts
 node_modules
 *.log
 .yvm
+yvm
