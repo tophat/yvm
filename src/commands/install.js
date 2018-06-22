@@ -92,7 +92,7 @@ const installVersion = (version, rootPath = yvmPath) => {
                 log(
                     'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
                 )
-                return Promise.resolve()
+                return Promise.reject()
             }
             return downloadVersion(version, rootPath)
                 .then(() => {
@@ -100,12 +100,14 @@ const installVersion = (version, rootPath = yvmPath) => {
                     return extractYarn(version, rootPath)
                 })
                 .catch(err => {
-                    log(`Downloading yarn failed: \n ${err}`)
                     cleanDirectories()
+                    return Promise.reject(err)
                 })
         })
         .catch(error => {
-            log(error)
+            if (error) {
+                log(error)
+            }
         })
 }
 
