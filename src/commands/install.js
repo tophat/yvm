@@ -81,6 +81,7 @@ const extractYarn = (version, rootPath) => {
 }
 
 const installVersion = (version, rootPath = yvmPath) => {
+    log(`Installing yarn v${version} in ${rootPath}`)
     if (checkForVersion(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()

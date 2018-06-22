@@ -1,27 +1,25 @@
-# so we can use `eslint` without ./node_modules/.bin/eslint
 SHELL := /bin/bash
-export PATH := $(shell npm bin):$(PATH)
 CURRENT_DIR = $(shell pwd)
+
+YVM_DIR?=$(HOME)/.yvm
+YVM_EXECUTABLE := $(YVM_DIR)/yvm.sh
+export PATH := $(shell $(YVM_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
 BUILD_DIR?=$(ARTIFACT_DIR)/build
 
-IGNORE = test.js,js.snap,.md,__tests__,mockdata,__mocks__
-BABEL_FLAGS = src --out-dir $(BUILD_DIR) --copy-files --ignore $(IGNORE)
-
 ifdef CI
-	ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
-	JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
-	JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
+    ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
+    JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
+    JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
 else
-	ESLINT_EXTRA_ARGS=
-	JEST_ENV_VARIABLES=
-	JEST_ARGS=
+    ESLINT_EXTRA_ARGS=
+    JEST_ENV_VARIABLES=
+    JEST_ARGS=
 endif
 
 ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
-
 .PHONY: help
 help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
@@ -31,7 +29,8 @@ help:
 	@echo "make yvm-test                        - runs the yvm node app"
 	@echo ""
 	@echo "----------------------- Other Commands  -------------------------"
-	@echo "make build                           - runs eslint"
+	@echo "make build                           - builds a bundle with production settings"
+	@echo "make build-dev                       - builds a bundle with development settings"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
 	@echo "make test                            - runs the full test suite with jest"
@@ -52,12 +51,6 @@ install-watch: node_modules
 	chmod +x ${HOME}/.yvm/yvm.sh
 	webpack --progress --config webpack/webpack.config.dev.js --watch
 
-.PHONY: yvm-test
-yvm-test:
-	@yvm
-	echo $$-
-	echo $$PS1
-
 
 # ---- Infrastructure for Test/Deploy ----
 
@@ -65,6 +58,9 @@ yvm-test:
 build: node_modules
 	@webpack --progress --config webpack/webpack.config.base.js
 
+.PHONY: build-dev
+build-dev: node_modules
+	@webpack --progress --config webpack/webpack.config.dev.js
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
@@ -105,8 +101,9 @@ test-snapshots: node_modules
 
 # ----------------- Helpers ------------------
 
-node_modules: package.json package-lock.json .nvmrc
-	npm install
+.PHONY: node_modules
+node_modules:
+	$(YVM_EXECUTABLE) exec install
 	touch node_modules
 
 .PHONY: clean

@@ -1,4 +1,4 @@
-import argParser from 'commander'
+const argParser = require('commander')
 
 const { getRcFileVersion, isValidVersionString } = require('./util/version')
 const log = require('./common/log')
@@ -40,7 +40,6 @@ argParser
     .alias('i')
     .description('Install the specified version of Yarn.')
     .action(withRcFileVersion(version => {
-        log(`Installing yarn v${version}`)
         const install = require('./commands/install')
         install(version)
     }))
