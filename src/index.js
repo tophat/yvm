@@ -70,7 +70,7 @@ argParser
     .action(() => {
         log(`Checking yarn version`)
         const which = require('./commands/which')
-        which()
+        process.exit(which())
 })
 
 argParser
