@@ -88,15 +88,6 @@ argParser
     })
 
 argParser
-    .command('list-remote')
-    .alias('ls-remote')
-    .description('List Yarn versions available to install.')
-    .action(() => {
-        const listRemote = require('./commands/listRemote')
-        listRemote()
-    })
-
-argParser
     .command('list')
     .alias('ls')
     .description('List the currently installed versions of Yarn.')
