@@ -18,7 +18,17 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
         log(`Using .yvmrc version: ${version}`)
         action(version, ...rest)
     } else {
-        log(`Invalid .yvmrc version: ${version}`)
+        if (version !== null) {
+            log(`Invalid .yvmrc version: ${version}`)
+        } else {
+            log(
+                `
+                No version supplied, no .yvmrc
+                Perhaps you wanted to specify your version like?
+                yvm exec 1.2.0 list
+                `,
+            )
+        }
         process.exit(1)
     }
 }
