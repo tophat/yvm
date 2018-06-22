@@ -16,15 +16,18 @@ save_cache: &save_cache
     paths:
       - node_modules/
 
+install_yvm: &install_yvm
+  run:
+    name: 'Install yvm release version'
+    command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+
 jobs:
   test:
     <<: *docker_defaults
     steps:
       - checkout
       - *restore_cache
-      - run:
-          name: 'Install yvm release version'
-          command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+      - *install_yvm
       - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: make test-coverage
@@ -36,6 +39,7 @@ jobs:
     steps:
       - checkout
       - *restore_cache
+      - *install_yvm
       - run: make build_and_deploy
 
 workflows:
