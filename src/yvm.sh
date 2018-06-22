@@ -5,7 +5,6 @@ YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
     local PROVIDED_VERSION=${1-$(head -n 1 .yvmrc)}
-    echo "called yvm use with version $PROVIDED_VERSION"
 
     if [ -z "${PROVIDED_VERSION}" ]; then
         yvm_err 'version is required'
@@ -16,11 +15,10 @@ yvm_use() {
         local YVM_VERSION_DIR
         YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
         PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
+        echo "Using yvm version ${PROVIDED_VERSION}"
     else
-        yvm_err "N/A: version \"${PROVIDED_VERSION}\" is not yet installed."
-        yvm_err ""
-        yvm_err "You need to run \"yvm install ${PROVIDED_VERSION}\" to install it before using it."
-        return 1
+        yvm_ install ${PROVIDED_VERSION}
+        yvm_use ${PROVIDED_VERSION}
     fi
 }
 
@@ -77,19 +75,31 @@ else
 fi
 }
 
+case "$-" in
+    *i*) interactive=1;;
+    *) interactive=0;;
+esac
 
 yvm_() {
+    mode=$1
+    shift 1
+
     command=$1
-    if [ "$command" = "use" ]; then
+    if [ "${command}" = "use" ]; then
+        if [ "${mode}" = 'script' ]; then
+            yvm_err '"yvm use" can only be used when yvm is a shell function, not a script. Did you forget to source yvm?'
+            exit 1
+        fi
         yvm_use $2
     else
         node "${YVM_DIR}/yvm.js" $@
     fi
 }
 
-case "$-" in
-    *i*)    yvm() {
-                yvm_ $@
-            };;
-    *)	    yvm_ $@;;
-esac
+if [ ${interactive} = 1 ]; then
+    yvm() {
+        yvm_ 'function' $@
+    }
+else
+    yvm_ 'script' $@
+fi
