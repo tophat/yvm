@@ -1,8 +1,7 @@
-YVM_LOCAL_EXECUTABLE := src/yvm.sh
-
 SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
-export YVM_DIR := $(CURRENT_DIR)/src
+
+YVM_LOCAL_EXECUTABLE := YVM_DIR=$(CURRENT_DIR)/src src/yvm.sh
 export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
@@ -40,7 +39,6 @@ help:
 
 .PHONY: install
 install: build
-
 	@use_local=true scripts/install.sh
 
 .PHONY: install-watch
