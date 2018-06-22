@@ -45,11 +45,7 @@ install: build
 
 .PHONY: install-watch
 install-watch: node_modules
-	mkdir -p ${CURRENT_DIR}/artifacts/webpack_build/
-	rm -rf ~/.yvm
-	ln -s ${CURRENT_DIR}/artifacts/webpack_build/ ${HOME}/.yvm
-	chmod +x ${HOME}/.yvm/yvm.sh
-	webpack --progress --config webpack/webpack.config.dev.js --watch
+	scripts/install-watch.sh
 
 
 # ---- Infrastructure for Test/Deploy ----
