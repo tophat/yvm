@@ -64,6 +64,24 @@ argParser
     }))
 
 argParser
+    .command('which')
+    .description('Display path to installed yarn version. Uses .yvmrc if available.')
+    .action(() => {
+        log(`Checking yarn version`)
+        const which = require('./commands/which')
+        process.exit(which())
+})
+
+argParser
+    .command('list-remote')
+    .alias('ls-remote')
+    .description('List Yarn versions available to install.')
+    .action(() => {
+        const listRemote = require('./commands/listRemote')
+        listRemote()
+    })
+
+argParser
     .command('list-remote')
     .alias('ls-remote')
     .description('List Yarn versions available to install.')

@@ -55,4 +55,9 @@ if ! grep -q "${executable_source_string}" ~/.zshrc; then
     echo ${executable_source_string} >> ~/.zshrc
 fi
 
+if ! grep -q "${executable_source_string}" ~/.bash_profile; then
+    [ -z "${added_newline}" ] && echo '' >> ~/.bash_profile
+    echo ${executable_source_string} >> ~/.bash_profile
+fi
+
 echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"
