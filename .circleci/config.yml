@@ -22,6 +22,7 @@ jobs:
     steps:
       - checkout
       - *restore_cache
+      - run: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | bash'
       - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
       - run: make test-coverage

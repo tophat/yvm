@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
 
-YVM_LOCAL_EXECUTABLE := YVM_DIR=$(CURRENT_DIR)/src src/yvm.sh
-export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
+YVM_EXECUTABLE := $(HOME)/.yvm/yvm.sh
+export PATH := $(shell $(YVM_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
@@ -98,7 +98,7 @@ test-snapshots: node_modules
 
 .PHONY: node_modules
 node_modules:
-	$(YVM_LOCAL_EXECUTABLE) exec install
+	$(YVM_EXECUTABLE) exec install
 	touch node_modules
 
 .PHONY: clean
