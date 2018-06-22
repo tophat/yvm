@@ -11,15 +11,14 @@ yvm_use() {
         return 3
     fi
 
-    if yvm_is_version_installed "$PROVIDED_VERSION"; then
-        local YVM_VERSION_DIR
-        YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
-        PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
-        echo "Using yvm version ${PROVIDED_VERSION}"
-    else
-        yvm_ install ${PROVIDED_VERSION}
-        yvm_use ${PROVIDED_VERSION}
+    if ! yvm_is_version_installed "$PROVIDED_VERSION"; then
+        yvm_ 'function' install ${PROVIDED_VERSION}
     fi
+
+    local YVM_VERSION_DIR
+    YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
+    PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
+    echo "Using yvm version ${PROVIDED_VERSION}"
 }
 
 yvm_is_version_installed() {
