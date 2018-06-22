@@ -35,7 +35,9 @@ const getVersionsFromTags = () => {
             } else {
                 const tags = JSON.parse(body)
                 const tagNames = tags.map(tag => tag.name)
-                const versions = tagNames.map(stripVersionPrefix)
+                const versions = tagNames
+                    .map(stripVersionPrefix)
+                    .filter(version => version[0] > 0)
                 resolve(versions)
             }
         })
