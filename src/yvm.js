@@ -51,7 +51,7 @@ argParser
     .action(version => {
         log(`Removing yarn v${version}`)
         const remove = require('./commands/remove')
-        remove(version)
+        process.exit(remove(version))
     })
 
 argParser
@@ -64,6 +64,11 @@ argParser
     }))
 
 argParser
+    .command('use [version]')
+    .description('Activate specified Yarn version, or use .yvmrc if present.')
+    .action(() => log('Do not call yvm.js directly! Instead, run `yvm use`.'))
+
+argParser
     .command('which')
     .description('Display path to installed yarn version. Uses .yvmrc if available.')
     .action(() => {
@@ -71,15 +76,6 @@ argParser
         const which = require('./commands/which')
         process.exit(which())
 })
-
-argParser
-    .command('list-remote')
-    .alias('ls-remote')
-    .description('List Yarn versions available to install.')
-    .action(() => {
-        const listRemote = require('./commands/listRemote')
-        listRemote()
-    })
 
 argParser
     .command('list-remote')
