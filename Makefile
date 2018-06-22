@@ -67,12 +67,6 @@ build_and_deploy: node_modules
 
 .PHONY: lint
 lint: node_modules
-	@echo YVM_LOCAL_EXECUTABLE:
-	@echo $(YVM_LOCAL_EXECUTABLE)
-	@echo $(YVM_LOCAL_EXECUTABLE) exec bin:
-	@$(YVM_LOCAL_EXECUTABLE) exec bin
-	@echo PATH:
-	@echo $(PATH)
 	eslint $(ESLINT_ARGS) .
 
 .PHONY: lint-fix
