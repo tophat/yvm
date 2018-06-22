@@ -1,15 +1,13 @@
 YVM_LOCAL_EXECUTABLE := src/yvm.sh
 
 SHELL := /bin/bash
-export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
 CURRENT_DIR = $(shell pwd)
+export YVM_DIR := $(CURRENT_DIR)/src
+export PATH := $(shell $(YVM_LOCAL_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
 BUILD_DIR?=$(ARTIFACT_DIR)/build
-
-IGNORE = test.js,js.snap,.md,__tests__,mockdata,__mocks__
-BABEL_FLAGS = src --out-dir $(BUILD_DIR) --copy-files --ignore $(IGNORE)
 
 ifdef CI
     ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
@@ -22,7 +20,6 @@ else
 endif
 
 ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
-
 .PHONY: help
 help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
@@ -43,6 +40,7 @@ help:
 
 .PHONY: install
 install: build
+
 	@use_local=true scripts/install.sh
 
 .PHONY: install-watch
@@ -52,12 +50,6 @@ install-watch: node_modules
 	ln -s ${CURRENT_DIR}/artifacts/webpack_build/ ${HOME}/.yvm
 	chmod +x ${HOME}/.yvm/yvm.sh
 	webpack --progress --config webpack/webpack.config.dev.js --watch
-
-.PHONY: yvm-test
-yvm-test:
-	@yvm
-	echo $$-
-	echo $$PS1
 
 
 # ---- Infrastructure for Test/Deploy ----

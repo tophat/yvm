@@ -1,4 +1,4 @@
-import argParser from 'commander'
+const argParser = require('commander')
 
 const { getRcFileVersion, isValidVersionString } = require('./util/version')
 const log = require('./common/log')

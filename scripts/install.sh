@@ -13,7 +13,7 @@ use_local=${use_local-false}
 release_api_url="https://api.github.com/repos/tophatmonocle/yvm/releases/latest"
 artifacts_dir="artifacts/webpack_build"
 
-YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
+YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
 zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 

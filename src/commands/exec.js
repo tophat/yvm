@@ -6,13 +6,16 @@ const { yvmPath } = require('../common/utils')
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
 
+/* eslint-disable no-undef, camelcase */
+const execFile =
+    typeof __webpack_require__ === 'function'
+        ? __non_webpack_require__
+        : require
+/* eslint-enable no-undef, camelcase */
+
 const runYarn = (version, extraArgs, rootPath) => {
     process.argv = ['', ''].concat(extraArgs) // first two arguments are filler args [node version, yarn version]
-    require(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
-    // eslint-disable-next-line no-undef
-    __non_webpack_require__(
-        path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'),
-    )
+    execFile(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
 }
 
 const execCommand = (version, extraArgs, rootPath = yvmPath) => {
