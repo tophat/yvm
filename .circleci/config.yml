@@ -6,12 +6,12 @@ docker_defaults: &docker_defaults
 
 restore_cache: &restore_cache
   restore_cache:
-    name: Restore cache
+    name: Restore node_modules cache
     key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
 save_cache: &save_cache
   save_cache:
-    name: Save cache
+    name: Save node_modules cache
     key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
     paths:
       - node_modules/
@@ -24,7 +24,7 @@ jobs:
       - *restore_cache
       - run: make lint
       # CODECOV_TOKEN is set by CIRCLE_CI
-      - run: 'make test-coverage'
+      - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
       - *save_cache
