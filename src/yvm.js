@@ -60,7 +60,9 @@ argParser
     .action(withRcFileVersion((version, extraArgs) => {
         log(`Executing yarn command with version ${version}`)
         const exec = require('./commands/exec')
-        exec(version, extraArgs)
+        exec(version, extraArgs).catch(()=>{
+            process.exit(-1)
+        })
     }))
 
 argParser

@@ -21,9 +21,9 @@ const runYarn = (version, extraArgs, rootPath) => {
 const execCommand = (version, extraArgs, rootPath = yvmPath) => {
     if (!fs.existsSync(getYarnPath(version, rootPath))) {
         const install = require('./install')
-        return install(version, rootPath).then(() =>
-            runYarn(version, extraArgs, rootPath),
-        )
+        return install(version, rootPath)
+            .then(() => runYarn(version, extraArgs, rootPath))
+            .catch(() => Promise.reject())
     }
     return Promise.resolve(runYarn(version, extraArgs, rootPath))
 }
