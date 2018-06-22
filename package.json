@@ -15,10 +15,6 @@
       "./artifacts/",
       "./node_modules/"
     ],
-    "collectCoverageFrom": [
-      "*.js",
-      "!*.test.js"
-    ],
     "coverageDirectory": "./artifacts/coverage",
     "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
   },
