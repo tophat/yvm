@@ -89,11 +89,10 @@ const installVersion = (version, rootPath = yvmPath) => {
     return getVersionsFromTags()
         .then(versions => {
             if (versions.indexOf(version) === -1) {
-                return Promise.reject(
-                    new Error(
-                        'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
-                    ),
+                log(
+                    'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
                 )
+                return Promise.reject()
             }
             return downloadVersion(version, rootPath)
                 .then(() => {
@@ -106,7 +105,9 @@ const installVersion = (version, rootPath = yvmPath) => {
                 })
         })
         .catch(error => {
-            log(error)
+            if (error) {
+                log(error)
+            }
         })
 }
 
