@@ -11,13 +11,17 @@ const {
     yvmPath,
 } = require('../common/utils')
 
+const LATEST_VERSION_TAG = 'latest'
+
 const directoryStack = []
 
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
 
 const getUrl = version =>
-    `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
+    version === LATEST_VERSION_TAG
+        ? 'https://yarnpkg.com/latest.tar.gz'
+        : `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
 
 const checkDirectories = rootPath => {
     if (!fs.existsSync(versionRootPath(rootPath))) {
@@ -91,19 +95,16 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = ({
-    version,
-    rootPath = yvmPath,
-    skipValidVersionCheck = false,
-}) => {
+const installVersion = (version, rootPath = yvmPath) => {
     log(`Installing yarn v${version} in ${rootPath}`)
     if (checkForVersion(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()
     }
-    const versionCheck = skipValidVersionCheck
-        ? Promise.resolve()
-        : validateVersion(version)
+    const versionCheck =
+        version === LATEST_VERSION_TAG
+            ? validateVersion(version)
+            : Promise.resolve()
     return versionCheck
         .then(() => downloadVersion(version, rootPath))
         .then(() => {

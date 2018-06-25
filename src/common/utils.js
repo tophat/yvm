@@ -47,14 +47,8 @@ const getVersionsFromTags = () =>
             .filter(version => version[0] > 0)
     })
 
-const getLatestVersion = (owner, repo) =>
-    githubApiRequest(`repos/${owner}/${repo}/releases/latest`).then(
-        releaseInfo => stripVersionPrefix(releaseInfo.tag_name),
-    )
-
 module.exports = {
     getExtractionPath,
-    getLatestVersion,
     getVersionsFromTags,
     printVersions,
     stripVersionPrefix,
