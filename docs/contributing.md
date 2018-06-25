@@ -3,6 +3,7 @@
 ## Testing your code
 
 ### Manual testing command contributions
+
 If you are adding a command to `yvm` that utilizes node, you can test it by executing the following in your terminal:
 
 ```text
@@ -15,3 +16,4 @@ Upon completing your command you can test it through the `yvm` CLI by running th
 make install
 yvm <your-command-here>
 ```
+
