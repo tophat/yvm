@@ -28,9 +28,11 @@ jobs:
       - checkout
       - *restore_cache
       - *install_yvm
-      - run: ~/.yvm/yvm.sh exec install
+      - run: source ~/.yvm/yvm.sh
+      - run: yvm exec install
       - *save_cache
-      - run: ~/.yvm/yvm.sh use && make lint
+      - run: yvm use
+      - run: make lint
       - run: ~/.yvm/yvm.sh use && make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
