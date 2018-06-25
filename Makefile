@@ -1,7 +1,9 @@
 SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
 
-export PATH := $(shell yarn bin):$(PATH)
+YVM_DIR?=$(HOME)/.yvm
+YVM_EXECUTABLE := $(YVM_DIR)/yvm.sh
+export PATH := $(shell $(YVM_EXECUTABLE) exec bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
@@ -40,6 +42,7 @@ help:
 .PHONY: install
 install: build
 	@use_local=true scripts/install.sh
+
 
 .PHONY: install-watch
 install-watch: node_modules
@@ -98,7 +101,7 @@ test-snapshots: node_modules
 
 .PHONY: node_modules
 node_modules:
-	yarn install
+	$(YVM_EXECUTABLE) exec install
 	touch node_modules
 
 .PHONY: clean
