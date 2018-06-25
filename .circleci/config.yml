@@ -19,7 +19,9 @@ save_cache: &save_cache
 install_yvm: &install_yvm
   run:
     name: 'Install yvm release version'
-    command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+    command: |
+      'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+      echo 'export PATH=$HOME/.yvm:$PATH' >> $BASH_ENV
 
 jobs:
   test:
@@ -28,10 +30,10 @@ jobs:
       - checkout
       - *restore_cache
       - *install_yvm
-      - run: source ~/.yvm/yvm.sh && yvm exec install
+      - run: yvm exec install
       - *save_cache
-      - run: source ~/.yvm/yvm.sh && yvm use && make lint
-      - run: source ~/.yvm/yvm.sh && yvm use && make test-coverage
+      - run: yvm use && make lint
+      - run: yvm use && make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
   build_and_deploy:
@@ -40,7 +42,7 @@ jobs:
       - checkout
       - *restore_cache
       - *install_yvm
-      - run: ./home/circleci/.yvm use && make build_and_deploy
+      - run: yvm use && make build_and_deploy
 
 workflows:
   version: 2
