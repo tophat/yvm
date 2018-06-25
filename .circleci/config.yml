@@ -28,10 +28,10 @@ jobs:
       - checkout
       - *restore_cache
       - *install_yvm
-      - run: yvm exec install
+      - run: ./home/circleci/.yvm exec install
       - *save_cache
-      - run: nvm use && make lint
-      - run: nvm use && make test-coverage
+      - run: ./home/circleci/.yvm use && make lint
+      - run: ./home/circleci/.yvm use && make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
   build_and_deploy:
@@ -40,7 +40,7 @@ jobs:
       - checkout
       - *restore_cache
       - *install_yvm
-      - run: nvm use && make build_and_deploy
+      - run: ./home/circleci/.yvm use && make build_and_deploy
 
 workflows:
   version: 2
