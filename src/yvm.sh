@@ -90,6 +90,8 @@ yvm_() {
             exit 1
         fi
         yvm_use $2
+    elif [ "${command}" = "update-self" ]; then
+        curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
     else
         node "${YVM_DIR}/yvm.js" $@
     fi
