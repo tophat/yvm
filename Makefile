@@ -24,17 +24,20 @@ ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
 help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
-	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make install-watch                   - runs install, and watches code for local development"
-	@echo "make yvm-test                        - runs the yvm node app"
 	@echo ""
 	@echo "----------------------- Other Commands  -------------------------"
-	@echo "make build                           - builds a bundle with production settings"
-	@echo "make build-dev                       - builds a bundle with development settings"
+	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
 	@echo "make test                            - runs the full test suite with jest"
+	@echo "make test-watch                      - runs tests as you develop"
 	@echo "make test-coverage                   - creates a coverage report and opens it in your browser"
+	@echo "make test-snapshots                  - runs test, updating snapshots"
+	@echo "----------------------- CI Commands  -------------------------"
+	@echo "make build                           - builds a bundle with production settings"
+	@echo "make build-dev                       - builds a bundle with development settings"
+	@echo "make build_and_deploy                - builds and deploys the production bundle"
 
 
 # ---- YVM Command Stuff ----
@@ -42,7 +45,6 @@ help:
 .PHONY: install
 install: build
 	@use_local=true scripts/install.sh
-
 
 .PHONY: install-watch
 install-watch: node_modules
