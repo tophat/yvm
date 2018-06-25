@@ -43,13 +43,10 @@ help:
 install: build
 	@use_local=true scripts/install.sh
 
+
 .PHONY: install-watch
 install-watch: node_modules
-	mkdir -p ${CURRENT_DIR}/artifacts/webpack_build/
-	rm -rf ~/.yvm
-	ln -s ${CURRENT_DIR}/artifacts/webpack_build/ ${HOME}/.yvm
-	chmod +x ${HOME}/.yvm/yvm.sh
-	webpack --progress --config webpack/webpack.config.dev.js --watch
+	scripts/install-watch.sh
 
 
 # ---- Infrastructure for Test/Deploy ----
@@ -89,6 +86,7 @@ test: node_modules
 test-watch: node_modules
 	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --watch
 
+# CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
 test-coverage: node_modules
 	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --coverage
