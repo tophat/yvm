@@ -1,9 +1,7 @@
 SHELL := /bin/bash
 CURRENT_DIR = $(shell pwd)
 
-YVM_DIR?=$(HOME)/.yvm
-YVM_EXECUTABLE := $(YVM_DIR)/yvm.sh
-export PATH := $(shell $(YVM_EXECUTABLE) exec bin):$(PATH)
+export PATH := $(shell yarn bin):$(PATH)
 
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
@@ -85,6 +83,7 @@ test: node_modules
 test-watch: node_modules
 	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --watch
 
+# CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
 test-coverage: node_modules
 	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --coverage
@@ -99,7 +98,7 @@ test-snapshots: node_modules
 
 .PHONY: node_modules
 node_modules:
-	$(YVM_EXECUTABLE) exec install
+	yarn install
 	touch node_modules
 
 .PHONY: clean
