@@ -20,32 +20,41 @@ const printVersions = (list, message) => {
     })
 }
 
-const getVersionsFromTags = () => {
+const githubApiRequest = apiPath => {
     const options = {
-        url: 'https://api.github.com/repos/yarnpkg/yarn/tags',
+        url: `https://api.github.com/${apiPath}`,
         headers: {
             'User-Agent': 'YVM',
         },
     }
 
     return new Promise((resolve, reject) => {
-        request.get(options, (error, response, body) => {
+        request.get(options, (error, response) => {
             if (error || response.statusCode !== 200) {
-                reject(error)
+                reject(error || response.body)
             } else {
-                const tags = JSON.parse(body)
-                const tagNames = tags.map(tag => tag.name)
-                const versions = tagNames
-                    .map(stripVersionPrefix)
-                    .filter(version => version[0] > 0)
-                resolve(versions)
+                resolve(JSON.parse(response.body))
             }
         })
     })
 }
 
+const getVersionsFromTags = () =>
+    githubApiRequest('repos/yarnpkg/yarn/tags').then(tags => {
+        const tagNames = tags.map(tag => tag.name)
+        return tagNames
+            .map(stripVersionPrefix)
+            .filter(version => version[0] > 0)
+    })
+
+const getLatestVersion = (owner, repo) =>
+    githubApiRequest(`repos/${owner}/${repo}/releases/latest`).then(
+        releaseInfo => stripVersionPrefix(releaseInfo.tag_name),
+    )
+
 module.exports = {
     getExtractionPath,
+    getLatestVersion,
     getVersionsFromTags,
     printVersions,
     stripVersionPrefix,

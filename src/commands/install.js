@@ -38,6 +38,17 @@ const checkForVersion = (version, rootPath) => {
     return fs.existsSync(versionPath)
 }
 
+const validateVersion = version =>
+    getVersionsFromTags().then(versions => {
+        if (versions.indexOf(version) === -1) {
+            log(
+                'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
+            )
+            return Promise.reject()
+        }
+        return Promise.resolve()
+    })
+
 const downloadVersion = (version, rootPath) => {
     const url = getUrl(version)
     const filePath = getDownloadPath(version, rootPath)
@@ -80,31 +91,27 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = (version, rootPath = yvmPath) => {
+const installVersion = ({
+    version,
+    rootPath = yvmPath,
+    skipValidVersionCheck = false,
+}) => {
     log(`Installing yarn v${version} in ${rootPath}`)
     if (checkForVersion(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()
     }
-    return getVersionsFromTags()
-        .then(versions => {
-            if (versions.indexOf(version) === -1) {
-                log(
-                    'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
-                )
-                return Promise.reject()
-            }
-            return downloadVersion(version, rootPath)
-                .then(() => {
-                    log(`Finished downloading yarn version ${version}`)
-                    return extractYarn(version, rootPath)
-                })
-                .catch(err => {
-                    cleanDirectories()
-                    return Promise.reject(err)
-                })
+    const versionCheck = skipValidVersionCheck
+        ? Promise.resolve()
+        : validateVersion(version)
+    return versionCheck
+        .then(() => downloadVersion(version, rootPath))
+        .then(() => {
+            log(`Finished downloading yarn version ${version}`)
+            return extractYarn(version, rootPath)
         })
         .catch(error => {
+            cleanDirectories()
             if (error) {
                 log(error)
             }
