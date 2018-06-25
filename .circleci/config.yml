@@ -1,6 +1,8 @@
 version: 2
 
 docker_defaults: &docker_defaults
+  environment:
+    BASH_ENV: ~/.bashrc
   docker:
     - image: circleci/node:8.11.3
 
