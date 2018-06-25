@@ -20,7 +20,7 @@ install_yvm: &install_yvm
   run:
     name: 'Install yvm release version'
     command: |
-      'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+      curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash
       echo 'export PATH=$HOME/.yvm:$PATH' >> $BASH_ENV
 
 jobs:
