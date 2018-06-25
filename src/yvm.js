@@ -10,9 +10,9 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
             action(maybeVersionArg, ...rest)
             return
         }
-        rest.unshift(maybeVersionArg)
     }
 
+    rest.unshift(maybeVersionArg)
     const version = getRcFileVersion()
     if (isValidVersionString(version)) {
         log(`Using .yvmrc version: ${version}`)
@@ -65,12 +65,16 @@ argParser
     })
 
 argParser
-    .command('exec [version] [extraArgs...]')
+    .command('exec [version] [command]')
+    .allowUnknownOption(true)
     .description('Execute command using specified Yarn version.')
-    .action(withRcFileVersion((version, extraArgs) => {
+    .action(withRcFileVersion((version, command) => {
         log(`Executing yarn command with version ${version}`)
+        const args = process.argv
+        const commandArgIndex = args.indexOf(command)
+        const commandWithArgs = args.slice(commandArgIndex)
         const exec = require('./commands/exec')
-        exec(version, extraArgs).catch(()=>{
+        exec(version, commandWithArgs).catch(()=>{
             process.exit(-1)
         })
     }))
