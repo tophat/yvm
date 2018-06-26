@@ -102,7 +102,7 @@ const installVersion = (desiredVersion, rootPath = yvmPath) => {
     }
     const versionPromise =
         desiredVersion === LATEST_VERSION_TAG
-            ? getLatestVersion('yarnpkg', 'yarn')
+            ? getLatestVersion()
             : validateVersion(desiredVersion)
     return versionPromise
         .then(version => {

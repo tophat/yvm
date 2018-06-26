@@ -47,8 +47,8 @@ const getVersionsFromTags = () =>
             .filter(version => version[0] > 0)
     })
 
-const getLatestVersion = (owner, repo) =>
-    githubApiRequest(`repos/${owner}/${repo}/releases/latest`).then(
+const getLatestVersion = () =>
+    githubApiRequest(`repos/yarnpkg/yarn/releases/latest`).then(
         releaseInfo => stripVersionPrefix(releaseInfo.tag_name),
     )
 
