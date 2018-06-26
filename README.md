@@ -1,7 +1,3 @@
----
-description: Yarn version management
----
-
 # Overview
 
 [![Builds](https://img.shields.io/circleci/project/github/tophatmonocle/yvm.svg)](https://circleci.com/gh/tophatmonocle/yvm) [![codecov](https://codecov.io/gh/tophatmonocle/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophatmonocle/yvm) [![Deps](https://david-dm.org/tophatmonocle/yvm/status.svg)](https://david-dm.org/tophatmonocle/yvm) [![Dev Deps](https://david-dm.org/tophatmonocle/yvm/dev-status.svg)](https://david-dm.org/tophatmonocle/yvm?type=dev)
