@@ -94,17 +94,23 @@ const extractYarn = (version, rootPath) => {
 }
 
 const installVersion = (desiredVersion, rootPath = yvmPath) => {
-    if (checkForVersion(desiredVersion, rootPath)) {
-        log(
-            `It looks like you already have yarn ${desiredVersion} installed...`,
-        )
-        return Promise.resolve()
-    }
     const versionPromise =
         desiredVersion === LATEST_VERSION_TAG
-            ? getLatestVersion()
+            ? getLatestVersion().then(version => {
+                  log(`Latest version of Yarn is ${version}`)
+                  return version
+              })
             : validateVersion(desiredVersion)
     return versionPromise
+        .then(version => {
+            if (checkForVersion(version, rootPath)) {
+                log(
+                    `It looks like you already have yarn ${version} installed...`,
+                )
+                return Promise.reject()
+            }
+            return Promise.resolve(version)
+        })
         .then(version => {
             log(`Installing yarn v${version} in ${rootPath}`)
             return downloadVersion(version, rootPath)

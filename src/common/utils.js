@@ -48,8 +48,8 @@ const getVersionsFromTags = () =>
     })
 
 const getLatestVersion = () =>
-    githubApiRequest(`repos/yarnpkg/yarn/releases/latest`).then(
-        releaseInfo => stripVersionPrefix(releaseInfo.tag_name),
+    githubApiRequest(`repos/yarnpkg/yarn/releases/latest`).then(releaseInfo =>
+        stripVersionPrefix(releaseInfo.tag_name),
     )
 
 module.exports = {

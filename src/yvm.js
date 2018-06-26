@@ -3,6 +3,8 @@ const argParser = require('commander')
 const { getRcFileVersion, isValidVersionString } = require('./util/version')
 const log = require('./common/log')
 
+log(process.argv)
+
 const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
         if (isValidVersionString(maybeVersionArg)) {
