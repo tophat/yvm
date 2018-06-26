@@ -51,7 +51,7 @@ argParser
     .description('Install the specified version of Yarn.')
     .action(withRcFileVersion(version => {
         const install = require('./commands/install')
-        install(version)
+        install({ version })
     }))
 
 argParser

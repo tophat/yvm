@@ -1,7 +1,9 @@
 const fs = require('fs')
 
+const LATEST_VERSION_TAG = 'latest'
+
 function isValidVersionString(version) {
-    return /\d+\.\d+\.\d+/.test(version)
+    return version === LATEST_VERSION_TAG || /\d+\.\d+\.\d+/.test(version)
 }
 
 function getRcFileVersion() {
@@ -19,4 +21,5 @@ function getRcFileVersion() {
 module.exports = {
     getRcFileVersion,
     isValidVersionString,
+    LATEST_VERSION_TAG,
 }

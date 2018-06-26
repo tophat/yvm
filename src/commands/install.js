@@ -3,15 +3,15 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
+const { LATEST_VERSION_TAG } = require('../util/version')
 const log = require('../common/log')
 const {
     versionRootPath,
     getExtractionPath,
+    getLatestVersion,
     getVersionsFromTags,
     yvmPath,
 } = require('../common/utils')
-
-const LATEST_VERSION_TAG = 'latest'
 
 const directoryStack = []
 
@@ -19,9 +19,7 @@ const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
 
 const getUrl = version =>
-    version === LATEST_VERSION_TAG
-        ? 'https://yarnpkg.com/latest.tar.gz'
-        : `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
+    `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
 
 const checkDirectories = rootPath => {
     if (!fs.existsSync(versionRootPath(rootPath))) {
@@ -95,21 +93,24 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = (version, rootPath = yvmPath) => {
-    log(`Installing yarn v${version} in ${rootPath}`)
-    if (checkForVersion(version, rootPath)) {
-        log(`It looks like you already have yarn ${version} installed...`)
+const installVersion = ({ version: desiredVersion, rootPath = yvmPath }) => {
+    if (checkForVersion(desiredVersion, rootPath)) {
+        log(
+            `It looks like you already have yarn ${desiredVersion} installed...`,
+        )
         return Promise.resolve()
     }
-    const versionCheck =
-        version === LATEST_VERSION_TAG
-            ? validateVersion(version)
-            : Promise.resolve()
-    return versionCheck
-        .then(() => downloadVersion(version, rootPath))
-        .then(() => {
-            log(`Finished downloading yarn version ${version}`)
-            return extractYarn(version, rootPath)
+    const versionPromise =
+        desiredVersion === LATEST_VERSION_TAG
+            ? getLatestVersion('yarnpkg', 'yarn')
+            : validateVersion(desiredVersion)
+    return versionPromise
+        .then(version => {
+            log(`Installing yarn v${version} in ${rootPath}`)
+            return downloadVersion(version, rootPath).then(() => {
+                log(`Finished downloading yarn version ${version}`)
+                return extractYarn(version, rootPath)
+            })
         })
         .catch(error => {
             cleanDirectories()
