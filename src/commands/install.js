@@ -93,7 +93,7 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = ({ version: desiredVersion, rootPath = yvmPath }) => {
+const installVersion = (desiredVersion, rootPath = yvmPath) => {
     if (checkForVersion(desiredVersion, rootPath)) {
         log(
             `It looks like you already have yarn ${desiredVersion} installed...`,
