@@ -61,7 +61,7 @@ You can create a `.yvmrc` file containing the version number of yarn in your pro
 ### Additional reference
 A full list of commands is on the [api reference page](docs/api.md)
 
-Have questions? [List of common questions and answers] (docs/faq.md)
+Have questions? [List of common questions and answers](docs/faq.md)
 
 
 ## Contributing
