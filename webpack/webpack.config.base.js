@@ -21,7 +21,9 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         cacheDirectory: true,
-                        presets: ['@babel/preset-env'],
+                        presets: [
+                            ['@babel/preset-env', { targets: { node: '4.8' } }],
+                        ],
                     },
                 },
             },

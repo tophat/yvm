@@ -8,6 +8,8 @@ Pesky yarn versions got you down? Manage those versions
 
 
 ## Installation
+Node: >=4.8.0
+
 
 Execute the following in your terminal:
 
