@@ -17,6 +17,11 @@ Execute the following in your terminal:
 curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | bash
 ```
 
+Or if already installed, to update to the latest version
+```bash
+yvm update-self
+```
+
 ## Usage
 
 ### Basic

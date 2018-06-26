@@ -33,6 +33,10 @@ Display the current version of Yarn.
 
 Uninstall the specified version of Yarn.
 
+## `update-self`
+
+Updates yvm to the latest version.
+
 ## `help`
 
 Show the help text.

@@ -113,6 +113,11 @@ argParser
     })
 
 argParser
+    .command('update-self')
+    .description('Updates yvm to the latest version')
+    .action(() => log('Do not call yvm.js directly! Instead, run `yvm update-self`.'))
+
+argParser
     .command('help')
     .description('Show help text')
     .action(() => argParser.outputHelp())
