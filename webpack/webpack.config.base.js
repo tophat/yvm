@@ -16,12 +16,13 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
                     options: {
                         cacheDirectory: true,
-                        presets: ['@babel/preset-env'],
+                        presets: [
+                            ['@babel/preset-env', { targets: { node: '4.8' } }],
+                        ],
                     },
                 },
             },
