@@ -107,13 +107,17 @@ const installVersion = (desiredVersion, rootPath = yvmPath) => {
     return versionPromise
         .then(version => {
             log(`Installing yarn v${version} in ${rootPath}`)
-            return downloadVersion(version, rootPath).then(() => {
-                log(`Finished downloading yarn version ${version}`)
-                return extractYarn(version, rootPath)
-            })
+            return downloadVersion(version, rootPath)
+                .then(() => {
+                    log(`Finished downloading yarn version ${version}`)
+                    return extractYarn(version, rootPath)
+                })
+                .catch(err => {
+                    cleanDirectories()
+                    return Promise.reject(err)
+                })
         })
         .catch(error => {
-            cleanDirectories()
             if (error) {
                 log(error)
             }
