@@ -10,9 +10,9 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
             action(maybeVersionArg, ...rest)
             return
         }
-        rest.unshift(maybeVersionArg)
     }
 
+    rest.unshift(maybeVersionArg)
     const version = getRcFileVersion()
     if (isValidVersionString(version)) {
         log(`Using .yvmrc version: ${version}`)
@@ -65,12 +65,16 @@ argParser
     })
 
 argParser
-    .command('exec [version] [extraArgs...]')
+    .command('exec [version] [command]')
+    .allowUnknownOption(true)
     .description('Execute command using specified Yarn version.')
-    .action(withRcFileVersion((version, extraArgs) => {
+    .action(withRcFileVersion((version, command) => {
         log(`Executing yarn command with version ${version}`)
+        const args = process.argv
+        const commandArgIndex = args.indexOf(command)
+        const commandWithArgs = args.slice(commandArgIndex)
         const exec = require('./commands/exec')
-        exec(version, extraArgs).catch(()=>{
+        exec(version, commandWithArgs).catch(()=>{
             process.exit(-1)
         })
     }))
@@ -78,7 +82,7 @@ argParser
 argParser
     .command('use [version]')
     .description('Activate specified Yarn version, or use .yvmrc if present.')
-    .action(() => log('Do not call yvm.js directly! Instead, run `yvm use`.'))
+    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
 
 argParser
     .command('which')
@@ -107,6 +111,11 @@ argParser
         const listVersions = require('./commands/list')
         listVersions()
     })
+
+argParser
+    .command('update-self')
+    .description('Updates yvm to the latest version')
+    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
 
 argParser
     .command('help')

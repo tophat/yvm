@@ -27,7 +27,8 @@ mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
-    cp -f "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" ${YVM_DIR}
+    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js"
+    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" ${YVM_DIR}
 else
     download_url=$(
         curl -s ${release_api_url} |
@@ -61,3 +62,4 @@ if ! grep -q "${executable_source_string}" ~/.bash_profile; then
 fi
 
 echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"
+echo "Open another terminal window to start using it, or type `source /usr/local/bin/yvm`"
