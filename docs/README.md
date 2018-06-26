@@ -1,6 +1,6 @@
 # Table of contents
 
 * [Read Me](../README.md)
-* [API](api.md)
+* [API Reference](api.md)
 * [FAQ](faq.md)
 
