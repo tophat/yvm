@@ -1,7 +1,6 @@
 # Table of contents
 
-* [Overview](../README.md)
-* [CONTRIBUTING](contributing.md)
+* [Read Me](../README.md)
 * [API](api.md)
 * [FAQ](faq.md)
 

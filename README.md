@@ -8,76 +8,67 @@ description: Yarn version management
 
 Yarn version manager
 
- Pesky yarn versions got you down? Manage those versions
+Pesky yarn versions got you down? Manage those versions
 
-## Introduction
 
-### Table of Contents
-
-* [Installation](./#installation)
-  * [Install via Git](./#install-via-git)
-  * [Install via cURL](./#install-via-curl)
-* [Usage](./#usage)
-  * [Basic](./#basic)
-  * [List Versions](./#list-versions)
-  * [Check Current Version](./#check-current-version)
-  * [.yvmrc File](./#yvmrc-file)
-* [Contributing](./#contributing)
-* [Copyright](./#copyright)
-
-### Installation
-
-#### Install via Git
-
-Clone this repo and run `make install`. This will create the `.yvm` directory in your home directory and copy the required files. It will also add a symlink to yvm in `/usr/local/bin`.
-
-#### Install via cURL
+## Installation
 
 Execute the following in your terminal:
 
-```text
+```bash
 curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | bash
 ```
 
-### Usage
+## Usage
 
-#### Basic
+### Basic
 
 To download and install a version of yarn, run:
 
-```text
+```bash
 yvm install <version>
 ```
 
-And then in any new shell, just use the installed version:
+Execute an arbitrary command using a specific version of yarn:
 
-```text
-yvm use <version>
-```
-
-Or you can execute an arbitrary command using a specific version of yarn:
-
-```text
+```bash
 yvm exec <version> <command>
 ```
 
-#### List Versions
+### Additional commands
+Switch the current yarn versions, using:
 
-```text
+```bash
+yvm use <version>
+yarn --version
+```
+
+List Versions
+```bash
 yvm list
 ```
 
-#### Check Current Version
-
-```text
+Check Current Version
+```bash
 yvm which
 ```
 
-#### .yvmrc File
+Full list of available commands
+```bash
+yvm help
+```
 
+### Using a .yvmrc File
 You can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the `.yvmrc` file if no version number is supplied to the command.
 
-### Contributing
+
+### Additional reference
+A full list of commands is on the [api reference page](docs/api.md)
+
+Have questions? [List of common questions and answers] (docs/faq.md)
+
+
+## Contributing
 
 Thanks goes to these wonderful people [emoji key](https://github.com/kentcdodds/all-contributors#emoji-key):
 
@@ -87,7 +78,7 @@ Thanks goes to these wonderful people [emoji key](https://github.com/kentcdodds/
 
 We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](docs/contributing.md) for more details.
 
-### Copyright
+## Copyright
 
 © 2018 Tophatmonocle Corp
 
