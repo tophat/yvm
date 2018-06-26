@@ -31,7 +31,7 @@ help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
 	@echo "make install-watch                   - runs install, and watches code for local development"
-	@echo ""
+	@echo "make build-dev                       - builds a bundle with development settings"
 	@echo "----------------------- Other Commands  -------------------------"
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
@@ -40,9 +40,9 @@ help:
 	@echo "make test-watch                      - runs tests as you develop"
 	@echo "make test-coverage                   - creates a coverage report and opens it in your browser"
 	@echo "make test-snapshots                  - runs test, updating snapshots"
+	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
 	@echo "make build                           - builds a bundle with production settings"
-	@echo "make build-dev                       - builds a bundle with development settings"
 	@echo "make build_and_deploy                - builds and deploys the production bundle"
 
 
@@ -113,6 +113,7 @@ node_modules: $(YVM)
 	touch node_modules
 
 $(YVM):
+	@echo "Installing the latest yvm release"
 	@scripts/install.sh
 
 .PHONY: clean
