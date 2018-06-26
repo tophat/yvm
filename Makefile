@@ -17,13 +17,17 @@ endif
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
 YVM_DIR?=$(HOME)/.yvm
 
-ESLINT := node_modules/.bin/eslint $(ESLINT_ARGS)
-JEST := $(JEST_ENV_VARIABLES) node_modules/.bin/jest $(JEST_ARGS)
-WEBPACK := node_modules/.bin/webpack $(WEBPACK_ARGS)
+NODE_MODULES_BIN := node_modules/.bin
+
+CODECOV := $(NODE_MODULES_BIN)/codecov
+ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
+JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
+WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
 YVM := $(YVM_DIR)/yvm.sh
 
 .PHONY: help
 help:
+	echo $(JEST)
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
 	@echo "make install-watch                   - runs install, and watches code for local development"
@@ -94,7 +98,7 @@ test-watch: node_modules
 .PHONY: test-coverage
 test-coverage: node_modules
 	$(JEST) --coverage
-	codecov
+	$(CODECOV)
 
 .PHONY: test-snapshots
 test-snapshots: node_modules
