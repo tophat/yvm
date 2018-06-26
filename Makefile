@@ -1,10 +1,3 @@
-SHELL := /bin/bash
-CURRENT_DIR = $(shell pwd)
-
-YVM_DIR?=$(HOME)/.yvm
-YVM_EXECUTABLE := $(YVM_DIR)/yvm.sh
-export PATH := $(shell $(YVM_EXECUTABLE) exec bin):$(PATH)
-
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
 BUILD_DIR?=$(ARTIFACT_DIR)/build
@@ -13,13 +6,22 @@ ifdef CI
     ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
+    WEBPACK_ARGS=
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
+    WEBPACK_ARGS=--progress
 endif
 
-ESLINT_ARGS=--max-warnings 0 ${ESLINT_EXTRA_ARGS}
+ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
+YVM_DIR?=$(HOME)/.yvm
+
+ESLINT := node_modules/.bin/eslint $(ESLINT_ARGS)
+JEST := $(JEST_ENV_VARIABLES) node_modules/.bin/jest $(JEST_ARGS)
+WEBPACK := node_modules/.bin/webpack $(WEBPACK_ARGS)
+YVM := $(YVM_DIR)/yvm.sh
+
 .PHONY: help
 help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
@@ -55,15 +57,15 @@ install-watch: node_modules
 
 .PHONY: build
 build: node_modules
-	@webpack --progress --config webpack/webpack.config.base.js
+	$(WEBPACK) --config webpack/webpack.config.base.js
 
 .PHONY: build-dev
 build-dev: node_modules
-	@webpack --progress --config webpack/webpack.config.dev.js
+	$(WEBPACK) --config webpack/webpack.config.dev.js
 
 .PHONY: build_and_deploy
 build_and_deploy: node_modules
-	@webpack --progress --config webpack/webpack.config.deploy.js
+	$(WEBPACK) --config webpack/webpack.config.deploy.js
 
 
 # -------------- Linting --------------
@@ -71,40 +73,43 @@ build_and_deploy: node_modules
 
 .PHONY: lint
 lint: node_modules
-	eslint $(ESLINT_ARGS) .
+	$(ESLINT) .
 
 .PHONY: lint-fix
 lint-fix: node_modules
-	eslint $(ESLINT_ARGS) --fix .
+	$(ESLINT) --fix .
 
 
 # -------------- Testing --------------
 
 .PHONY: test
 test: node_modules
-	${JEST_ENV_VARIABLES} jest ${JEST_ARGS}
+	$(JEST)
 
 .PHONY: test-watch
 test-watch: node_modules
-	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --watch
+	$(JEST) --watch
 
 # CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
 test-coverage: node_modules
-	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --coverage
+	$(JEST) --coverage
 	codecov
 
 .PHONY: test-snapshots
 test-snapshots: node_modules
-	${JEST_ENV_VARIABLES} jest ${JEST_ARGS} --updateSnapshot
+	$(JEST) --updateSnapshot
 
 
 # ----------------- Helpers ------------------
 
 .PHONY: node_modules
-node_modules:
-	$(YVM_EXECUTABLE) exec install
+node_modules: $(YVM)
+	$(YVM) exec install
 	touch node_modules
+
+$(YVM):
+	@scripts/install.sh
 
 .PHONY: clean
 clean:
