@@ -82,7 +82,7 @@ argParser
 argParser
     .command('use [version]')
     .description('Activate specified Yarn version, or use .yvmrc if present.')
-    .action(() => log('Do not call yvm.js directly! Instead, run `yvm use`.'))
+    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
 
 argParser
     .command('which')
@@ -111,6 +111,11 @@ argParser
         const listVersions = require('./commands/list')
         listVersions()
     })
+
+argParser
+    .command('update-self')
+    .description('Updates yvm to the latest version')
+    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
 
 argParser
     .command('help')

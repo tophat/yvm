@@ -62,3 +62,4 @@ if ! grep -q "${executable_source_string}" ~/.bash_profile; then
 fi
 
 echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"
+echo "Open another terminal window to start using it, or type `source /usr/local/bin/yvm`"
