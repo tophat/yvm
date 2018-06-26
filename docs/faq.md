@@ -10,5 +10,5 @@ description: Common questions and answers
 
 ## I get the message `Do not call yvm.js directly!`
 This means you're running the yvm.js script directly and not the shell function.
-Try opening another terminal window, or source your `$YVM_DIR`, e.g. `source ~/.yvm/yvm.sh`
+Try opening another terminal window, or type `source /usr/local/bin/yvm`
 
