@@ -56,6 +56,13 @@ if ! grep -q "${executable_source_string}" ~/.zshrc; then
     echo ${executable_source_string} >> ~/.zshrc
 fi
 
+added_newline=0
+if ! grep -q "${export_yvm_dir_string}" ~/.bash_profile; then
+    echo '' >> ~/.bash_profile
+    echo ${export_yvm_dir_string} >> ~/.bash_profile
+    added_newline=1
+fi
+
 if ! grep -q "${executable_source_string}" ~/.bash_profile; then
     [ -z "${added_newline}" ] && echo '' >> ~/.bash_profile
     echo ${executable_source_string} >> ~/.bash_profile
