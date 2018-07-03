@@ -79,7 +79,7 @@ Thanks goes to these wonderful people [emoji key](https://github.com/kentcdodds/
 | :---: | :---: | :---: | :---: | :---: |
 
 
-We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](docs/contributing.md) for more details.
+We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](CONTRIBUTING.md) for more details.
 
 ## Copyright
 

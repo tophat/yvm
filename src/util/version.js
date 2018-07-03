@@ -1,19 +1,18 @@
-const fs = require('fs')
+const cosmiconfig = require('cosmiconfig')
+const log = require('../common/log')
 
 function isValidVersionString(version) {
     return /\d+\.\d+\.\d+/.test(version)
 }
 
 function getRcFileVersion() {
-    try {
-        const rcFileContents = fs.readFileSync('.yvmrc', 'utf-8')
-        return rcFileContents.replace('\n', '')
-    } catch (e) {
-        if (e.code === 'ENOENT') {
-            return null
-        }
-        throw e
+    const explorer = cosmiconfig('yvm')
+    const result = explorer.searchSync()
+    if (!result || result.isEmpty || !result.config) {
+        return null
     }
+    log(`Found config ${result.filepath}`)
+    return result.config
 }
 
 module.exports = {
