@@ -45,19 +45,31 @@ const execCommand = (version, extraArgs = ['-v'], rootPath = yvmPath) =>
         return resolve(runYarn(version, extraArgs, rootPath))
     })
 
-if (require.main === module) {
-    const [, , maybeVersionArg, maybeCommand, ...rest] = process.argv
-    const versionArgValid = isValidVersionString(maybeVersionArg)
-    const rcVersion = getRcFileVersion()
-    const version = versionArgValid ? maybeVersionArg : rcVersion
-    const command = versionArgValid ? maybeCommand : maybeVersionArg
-    if (command === maybeVersionArg && maybeCommand !== undefined) {
-        rest.unshift(maybeCommand)
-    }
-    execCommand(version, [command, ...rest]).catch(err => {
-        log(err.message)
-        process.exit(1)
+const getVersionAndYarnFromProcessArgs = () =>
+    new Promise(resolve => {
+        const [, , maybeVersionArg, ...args] = process.argv
+        const versionArgValid = isValidVersionString(maybeVersionArg)
+        const rcVersion = getRcFileVersion()
+
+        const version = versionArgValid ? maybeVersionArg : rcVersion
+
+        if (!versionArgValid && maybeVersionArg !== undefined) {
+            args.unshift(maybeVersionArg)
+        }
+
+        resolve({
+            version,
+            args,
+        })
     })
+
+if (require.main === module) {
+    getVersionAndYarnFromProcessArgs()
+        .then(({ version, args }) => execCommand(version, args))
+        .catch(err => {
+            log(err.message)
+            process.exit(1)
+        })
 }
 
 module.exports = execCommand

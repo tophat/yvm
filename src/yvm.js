@@ -33,15 +33,15 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
 argParser
     .description('Yarn Version Manager')
 
-    /*
-argParser
-    .command('*', '', {noHelp: true, isDefault: true})
-    .action(invalidCommand => {
-        log(`Invalid command: ${invalidCommand}`)
-        argParser.outputHelp()
-        process.exit(1)
-    })
-    */
+if (!process.argv.includes('exec')) {
+    argParser
+        .command('*', '', {noHelp: true, isDefault: true})
+        .action(invalidCommand => {
+            log(`Invalid command: ${invalidCommand}`)
+            argParser.outputHelp()
+            process.exit(1)
+        })
+}
 
 argParser
     .command('install [version]')
