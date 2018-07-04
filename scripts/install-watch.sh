@@ -11,13 +11,15 @@ then
 fi
 
 # Save existing files
-echo "Saving yvm.sh and yvm.js"
+echo "Saving yvm.sh, yvm.js, yvm-exec.js"
 mv "${HOME}/.yvm/yvm.sh" "${HOME}/.yvm/yvm_save.sh"
 mv "${HOME}/.yvm/yvm.js" "${HOME}/.yvm/yvm_save.js"
+mv "${HOME}/.yvm/yvm-exec.js" "${HOME}/.yvm/yvm-exec_save.js"
 
 # Link
 ln -s ${CURRENT_DIR}/artifacts/webpack_build/yvm.sh "${HOME}/.yvm/yvm.sh"
 ln -s ${CURRENT_DIR}/artifacts/webpack_build/yvm.js "${HOME}/.yvm/yvm.js"
+ln -s ${CURRENT_DIR}/artifacts/webpack_build/yvm-exec.js "${HOME}/.yvm/yvm-exec.js"
 chmod +x "${HOME}/.yvm/yvm.sh"
 
 # Trap interrupt signal
@@ -34,6 +36,7 @@ echo "Cleaning up"
 
 rm "${HOME}/.yvm/yvm.sh"
 rm "${HOME}/.yvm/yvm.js"
+rm "${HOME}/.yvm/yvm-exec.js"
 
 # Try to recover
 if [ -f "${HOME}/.yvm/yvm_save.sh" ]
@@ -46,4 +49,10 @@ if [ -f "${HOME}/.yvm/yvm_save.js" ]
 then
     mv "${HOME}/.yvm/yvm_save.js" "${HOME}/.yvm/yvm.js"
     echo "Restored yvm.js"
+fi
+
+if [ -f "${HOME}/.yvm/yvm-exec_save.js" ]
+then
+    mv "${HOME}/.yvm/yvm-exec_save.js" "${HOME}/.yvm/yvm-exec.js"
+    echo "Restored yvm-exec.js"
 fi
