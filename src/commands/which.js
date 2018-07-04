@@ -1,34 +1,6 @@
-const shell = require('shelljs')
-
-const { getRcFileVersion } = require('../util/version')
 const { error, log, success } = require('../common/log')
-const { versionRootPath, yvmPath } = require('../common/utils')
-
-const extractYarnVersionsFromPath = envPath => {
-    if (!shell.which('yarn')) {
-        return null
-    }
-
-    if (envPath === null || envPath === '') {
-        return null
-    }
-
-    const pathVariables = envPath.split(':')
-    const possibleVersionPaths = pathVariables.filter(entry =>
-        entry.startsWith(versionRootPath(yvmPath)),
-    )
-
-    const versionRegex = /v(\d+\.?\d*\.?\d*)/gm
-    const versions = possibleVersionPaths.map(path => {
-        const versionNumber = versionRegex.exec(path)[1]
-        return {
-            number: versionNumber,
-            path,
-        }
-    })
-
-    return versions
-}
+const { extractYarnVersionsFromPath } = require('../util/version')
+const { getRcFileVersion } = require('../util/version')
 
 const whichCommand = inputPath => {
     const envPath = inputPath || process.env.PATH
@@ -58,6 +30,7 @@ const whichCommand = inputPath => {
         error(
             `Your RC version: ${rcVersion} and PATH version: ${number} don't match :(`,
         )
+
         return 2
     }
 
