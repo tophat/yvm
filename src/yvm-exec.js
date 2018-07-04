@@ -23,12 +23,13 @@ const runYarn = (version, extraArgs, rootPath) => {
     execFile(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
 }
 
-const execCommand = () => {
-    const version = getRcFileVersion()
+const execCommand = (
+    version = getRcFileVersion(),
+    extraArgs = ['-v'],
+    rootPath = yvmPath,
+) => {
     if (isValidVersionString(version)) {
         log(`Using .yvmrc version: ${version}`)
-        const rootPath = yvmPath
-        const extraArgs = process.argv.slice(2)
         const yarnBinDir = getYarnPath(version, rootPath)
 
         if (!fs.existsSync(yarnBinDir)) {
@@ -52,8 +53,18 @@ const execCommand = () => {
 }
 
 if (require.main === module) {
-    execCommand().catch(err => {
+    const [, , maybeVersion, maybeCommand, ...rest] = process.argv
+    const version = isValidVersionString(maybeVersion)
+        ? maybeVersion
+        : undefined
+    const command = isValidVersionString(maybeVersion)
+        ? maybeCommand
+        : maybeVersion
+    const args = [command, maybeCommand, ...rest].filter(x => x !== undefined)
+    execCommand(version, args).catch(err => {
         log(err)
         process.exit(1)
     })
 }
+
+module.exports = execCommand
