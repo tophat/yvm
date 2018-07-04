@@ -30,7 +30,6 @@ const whichCommand = inputPath => {
         error(
             `Your RC version: ${rcVersion} and PATH version: ${number} don't match :(`,
         )
-
         return 2
     }
 
