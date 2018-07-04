@@ -1,6 +1,10 @@
 const argParser = require('commander')
 
-const { getRcFileVersion, isValidVersionString } = require('./util/version')
+const {
+    getRcFileVersion,
+    isValidVersionString,
+    validateVersionString,
+} = require('./util/version')
 const log = require('./common/log')
 
 const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
@@ -13,22 +17,14 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
     }
 
     rest.unshift(maybeVersionArg)
-    const version = getRcFileVersion()
-    if (isValidVersionString(version)) {
-        log(`Using .yvmrc version: ${version}`)
+
+    try {
+        const version = getRcFileVersion()
+        validateVersionString(version)
+        log(`Using yarn version: ${version}`)
         action(version, ...rest)
-    } else {
-        if (version !== null) {
-            log(`Invalid .yvmrc version: ${version}`)
-        } else {
-            log(
-                `
-                No version supplied, no .yvmrc
-                Perhaps you wanted to specify your version like?
-                yvm exec 1.2.0 list
-                `,
-            )
-        }
+    } catch (e) {
+        log(e.message)
         process.exit(1)
     }
 }
@@ -37,13 +33,15 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
 argParser
     .description('Yarn Version Manager')
 
-argParser
-    .command('*', '', {noHelp: true, isDefault: true})
-    .action(invalidCommand => {
-        log(`Invalid command: ${invalidCommand}`)
-        argParser.outputHelp()
-        process.exit(1)
-    })
+if (!process.argv.includes('exec')) {
+    argParser
+        .command('*', '', {noHelp: true, isDefault: true})
+        .action(invalidCommand => {
+            log(`Invalid command: ${invalidCommand}`)
+            argParser.outputHelp()
+            process.exit(1)
+        })
+}
 
 argParser
     .command('install [version]')
@@ -65,19 +63,7 @@ argParser
     })
 
 argParser
-    .command('exec [version] [command]')
-    .allowUnknownOption(true)
-    .description('Execute command using specified Yarn version.')
-    .action(withRcFileVersion((version, command) => {
-        log(`Executing yarn command with version ${version}`)
-        const args = process.argv
-        const commandArgIndex = args.indexOf(command)
-        const commandWithArgs = args.slice(commandArgIndex)
-        const exec = require('./commands/exec')
-        exec(version, commandWithArgs).catch(()=>{
-            process.exit(-1)
-        })
-    }))
+    .command('exec [version] [command]', 'Execute command using specified Yarn version.')
 
 argParser
     .command('use [version]')
