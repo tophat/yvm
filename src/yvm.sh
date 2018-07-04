@@ -18,7 +18,7 @@ yvm_use() {
     local YVM_VERSION_DIR
     YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
     PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
-    echo "Using yvm version ${PROVIDED_VERSION}"
+    echo "Set yarn version to ${PROVIDED_VERSION}"
 }
 
 yvm_is_version_installed() {
