@@ -4,46 +4,60 @@ const { getRcFileVersion } = require('../util/version')
 const { error, log, success } = require('../common/log')
 const { versionRootPath, yvmPath } = require('../common/utils')
 
-const whichCommand = inputPath => {
+const extractYarnVersionsFromPath = envPath => {
     if (!shell.which('yarn')) {
-        shell.echo('Sorry, yarn in NOT installed.')
-        shell.exit(1)
+        return null
     }
-    const envPath = inputPath || process.env.PATH
+
     if (envPath === null || envPath === '') {
+        return null
+    }
+
+    const pathVariables = envPath.split(':')
+    const possibleVersionPaths = pathVariables.filter(entry =>
+        entry.startsWith(versionRootPath(yvmPath)),
+    )
+
+    const versionRegex = /v(\d+\.?\d*\.?\d*)/gm
+    const versions = possibleVersionPaths.map(path => {
+        const versionNumber = versionRegex.exec(path)[1]
+        return {
+            number: versionNumber,
+            path,
+        }
+    })
+
+    return versions
+}
+
+const whichCommand = inputPath => {
+    const envPath = inputPath || process.env.PATH
+    const versions = extractYarnVersionsFromPath(envPath)
+
+    if (versions.length === 0) {
+        error("Yarn version not detected in PATH. Please run 'yvm use'")
         return 1
     }
 
-    let foundVersion = false
+    if (versions.length > 1) {
+        error(
+            'More than one Yarn version detected in PATH! Manually edit the PATH to remove the extra versions',
+        )
+        return 1
+    }
+
+    const { number, path } = versions[0]
+    log(`Found yvm version: ${number} in PATH ${path}`)
 
     const rcVersion = getRcFileVersion()
-    const pathVariables = envPath.split(':')
-
-    pathVariables.forEach(element => {
-        if (element.startsWith(versionRootPath(yvmPath))) {
-            const versionRegex = /(v\d+\.?\d*\.?\d*)/gm
-            const matchedVersion = element.match(versionRegex)
-            log(`Found yvm version: ${matchedVersion} in PATH ${element}`)
-
-            const pathVersion = matchedVersion.toString().replace(/v/g, '')
-            if (rcVersion !== null) {
-                if (pathVersion === rcVersion) {
-                    success(
-                        'Your RC version matches your PATH version, good job!',
-                    )
-                } else {
-                    error(
-                        `Your RC version: ${rcVersion} and PATH version: ${pathVersion} don't match :(`,
-                    )
-                }
-            }
-            foundVersion = true
+    if (rcVersion !== null) {
+        if (number === rcVersion) {
+            success('Your RC version matches your PATH version, good job!')
+            return 0
         }
-        return 0
-    })
-
-    if (!foundVersion) {
-        log("You don't have yvm version installed")
+        error(
+            `Your RC version: ${rcVersion} and PATH version: ${number} don't match :(`,
+        )
         return 2
     }
 
