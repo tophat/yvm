@@ -3,7 +3,11 @@ const fs = require('fs')
 const path = require('path')
 
 const { yvmPath } = require('./common/utils')
-const { getRcFileVersion, isValidVersionString } = require('./util/version')
+const {
+    getRcFileVersion,
+    isValidVersionString,
+    validateVersionString,
+} = require('./util/version')
 const log = require('./common/log')
 const installVersion = require('./commands/install')
 
@@ -20,49 +24,38 @@ const execFile =
 const runYarn = (version, extraArgs, rootPath) => {
     // first two arguments are filler args [node version, yarn version]
     process.argv = ['', ''].concat(extraArgs)
+    log(`yarn ${extraArgs.join(' ')}`)
     execFile(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
 }
 
-const execCommand = (
-    version = getRcFileVersion(),
-    extraArgs = ['-v'],
-    rootPath = yvmPath,
-) => {
-    if (isValidVersionString(version)) {
-        log(`Using .yvmrc version: ${version}`)
+const execCommand = (version, extraArgs = ['-v'], rootPath = yvmPath) =>
+    new Promise(resolve => {
+        validateVersionString(version)
+        log(`Using yarn version: ${version}`)
         const yarnBinDir = getYarnPath(version, rootPath)
 
         if (!fs.existsSync(yarnBinDir)) {
-            return installVersion(version, rootPath).then(() =>
-                runYarn(version, extraArgs, rootPath),
+            return resolve(
+                installVersion(version, rootPath).then(() =>
+                    runYarn(version, extraArgs, rootPath),
+                ),
             )
         }
-        return Promise.resolve(runYarn(version, extraArgs, rootPath))
-    } else if (version !== null) {
-        return Promise.reject(new Error(`Invalid .yvmrc version: ${version}`))
-    }
-    return Promise.reject(
-        new Error(
-            `
-            No version supplied, no .yvmrc
-            Perhaps you wanted to specify your version like?
-            yvm exec 1.2.0 list
-            `,
-        ),
-    )
-}
+
+        return resolve(runYarn(version, extraArgs, rootPath))
+    })
 
 if (require.main === module) {
-    const [, , maybeVersion, maybeCommand, ...rest] = process.argv
-    const version = isValidVersionString(maybeVersion)
-        ? maybeVersion
-        : undefined
-    const command = isValidVersionString(maybeVersion)
-        ? maybeCommand
-        : maybeVersion
-    const args = [command, maybeCommand, ...rest].filter(x => x !== undefined)
-    execCommand(version, args).catch(err => {
-        log(err)
+    const [, , maybeVersionArg, maybeCommand, ...rest] = process.argv
+    const versionArgValid = isValidVersionString(maybeVersionArg)
+    const rcVersion = getRcFileVersion()
+    const version = versionArgValid ? maybeVersionArg : rcVersion
+    const command = versionArgValid ? maybeCommand : maybeVersionArg
+    if (command === maybeVersionArg && maybeCommand !== undefined) {
+        rest.unshift(maybeCommand)
+    }
+    execCommand(version, [command, ...rest]).catch(err => {
+        log(err.message)
         process.exit(1)
     })
 }

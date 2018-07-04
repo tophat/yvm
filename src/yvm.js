@@ -1,6 +1,10 @@
 const argParser = require('commander')
 
-const { getRcFileVersion, isValidVersionString } = require('./util/version')
+const {
+    getRcFileVersion,
+    isValidVersionString,
+    validateVersionString,
+} = require('./util/version')
 const log = require('./common/log')
 
 const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
@@ -13,22 +17,14 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
     }
 
     rest.unshift(maybeVersionArg)
-    const version = getRcFileVersion()
-    if (isValidVersionString(version)) {
-        log(`Using .yvmrc version: ${version}`)
+
+    try {
+        const version = getRcFileVersion()
+        validateVersionString(version)
+        log(`Using yarn version: ${version}`)
         action(version, ...rest)
-    } else {
-        if (version !== null) {
-            log(`Invalid .yvmrc version: ${version}`)
-        } else {
-            log(
-                `
-                No version supplied, no .yvmrc
-                Perhaps you wanted to specify your version like?
-                yvm exec 1.2.0 list
-                `,
-            )
-        }
+    } catch (e) {
+        log(e.message)
         process.exit(1)
     }
 }
