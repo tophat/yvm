@@ -18,7 +18,7 @@
     "coverageDirectory": "./artifacts/coverage",
     "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
   },
-  "author": "",
+  "author": "Top Hat <opensource@tophat.com>",
   "license": "Apache-2.0",
   "dependencies": {
     "commander": "^2.15.1",
