@@ -63,7 +63,7 @@ yvm help
 
 ### Using a .yvmrc File
 You can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the `.yvmrc` file if no version number is supplied to the command.
-
+You can also [declare the version using other configuration files](docs/faq.md)
 
 ### Additional reference
 A full list of commands is on the [api reference page](docs/api.md)
@@ -79,7 +79,7 @@ Thanks goes to these wonderful people [emoji key](https://github.com/kentcdodds/
 | :---: | :---: | :---: | :---: | :---: |
 
 
-We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](docs/contributing.md) for more details.
+We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](CONTRIBUTING.md) for more details.
 
 ## Copyright
 
