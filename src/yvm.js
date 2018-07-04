@@ -37,6 +37,7 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
 argParser
     .description('Yarn Version Manager')
 
+    /*
 argParser
     .command('*', '', {noHelp: true, isDefault: true})
     .action(invalidCommand => {
@@ -44,6 +45,7 @@ argParser
         argParser.outputHelp()
         process.exit(1)
     })
+    */
 
 argParser
     .command('install [version]')
@@ -65,19 +67,7 @@ argParser
     })
 
 argParser
-    .command('exec [version] [command]')
-    .allowUnknownOption(true)
-    .description('Execute command using specified Yarn version.')
-    .action(withRcFileVersion((version, command) => {
-        log(`Executing yarn command with version ${version}`)
-        const args = process.argv
-        const commandArgIndex = args.indexOf(command)
-        const commandWithArgs = args.slice(commandArgIndex)
-        const exec = require('./commands/exec')
-        exec(version, commandWithArgs).catch(()=>{
-            process.exit(-1)
-        })
-    }))
+    .command('exec [version] [command]', 'Execute command using specified Yarn version.')
 
 argParser
     .command('use [version]')
