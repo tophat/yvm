@@ -19,7 +19,7 @@
     "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "commander": "^2.15.1",
     "cosmiconfig": "^5.0.5",
