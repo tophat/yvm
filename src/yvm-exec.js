@@ -1,7 +1,11 @@
 /* eslint-disable global-require,import/no-dynamic-require */
 const fs = require('fs')
 const path = require('path')
+
 const { yvmPath } = require('./common/utils')
+const { getRcFileVersion, isValidVersionString } = require('./util/version')
+const log = require('./common/log')
+const installVersion = require('./commands/install')
 
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
@@ -20,21 +24,36 @@ const runYarn = (version, extraArgs, rootPath) => {
 }
 
 const execCommand = () => {
-    const version = '1.0.2'
-    const rootPath = yvmPath
-    const extraArgs = process.argv.slice(2)
+    const version = getRcFileVersion()
+    if (isValidVersionString(version)) {
+        log(`Using .yvmrc version: ${version}`)
+        const rootPath = yvmPath
+        const extraArgs = process.argv.slice(2)
+        const yarnBinDir = getYarnPath(version, rootPath)
 
-    if (!fs.existsSync(getYarnPath(version, rootPath))) {
-        /*
-         const install = require('./install')
-        return install(version, rootPath)
-            .then(() => runYarn(version, extraArgs, rootPath))
-            .catch(() => Promise.reject())
-            */
+        if (!fs.existsSync(yarnBinDir)) {
+            return installVersion(version, rootPath).then(() =>
+                runYarn(version, extraArgs, rootPath),
+            )
+        }
+        return Promise.resolve(runYarn(version, extraArgs, rootPath))
+    } else if (version !== null) {
+        return Promise.reject(new Error(`Invalid .yvmrc version: ${version}`))
     }
-    return Promise.resolve(runYarn(version, extraArgs, rootPath))
+    return Promise.reject(
+        new Error(
+            `
+            No version supplied, no .yvmrc
+            Perhaps you wanted to specify your version like?
+            yvm exec 1.2.0 list
+            `,
+        ),
+    )
 }
 
 if (require.main === module) {
-    execCommand()
+    execCommand().catch(err => {
+        log(err)
+        process.exit(1)
+    })
 }
