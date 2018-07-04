@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const log = require('../common/log')
+const { log } = require('../common/log')
 const {
     printVersions,
     stripVersionPrefix,

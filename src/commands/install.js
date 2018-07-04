@@ -3,7 +3,7 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
-const log = require('../common/log')
+const { log } = require('../common/log')
 const {
     versionRootPath,
     getExtractionPath,

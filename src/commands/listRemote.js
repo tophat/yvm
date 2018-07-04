@@ -1,5 +1,5 @@
-const log = require('../common/log')
 const { getVersionsFromTags, printVersions } = require('../common/utils')
+const { log } = require('../common/log')
 
 const listRemoteCommand = () => {
     log('list-remote')
