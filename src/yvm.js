@@ -99,6 +99,14 @@ argParser
     })
 
 argParser
+    .command('get-path [version]')
+    .description('Activate specified Yarn version, or use .yvmrc if present.')
+    .action(version => {
+        const getPath = require('./commands/getPath')
+        log.capturable(getPath(version))
+    })
+
+argParser
     .command('update-self')
     .description('Updates yvm to the latest version')
     .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
