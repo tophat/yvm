@@ -100,14 +100,13 @@ argParser
 
 argParser
     .command('get-path [version]')
-    .description('Activate specified Yarn version, or use .yvmrc if present.')
+    .description('Internal command: Gets a new PATH string for "yvm use"')
     .action(version => {
         if (!version) {
             log('Version missing')
         } else {
             const getPath = require('./commands/getPath')
             log.capturable(getPath(version))
-            log(`Set yarn version to ${version}`)
         }
     })
 
