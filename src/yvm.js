@@ -101,14 +101,15 @@ argParser
 argParser
     .command('get-path [version]')
     .description('Internal command: Gets a new PATH string for "yvm use"')
-    .action(version => {
+    .action(withRcFileVersion(version => {
         if (!version) {
             log('Version missing')
+            process.exit(1)
         } else {
             const getPath = require('./commands/getPath')
             log.capturable(getPath(version))
         }
-    })
+    }))
 
 argParser
     .command('update-self')
