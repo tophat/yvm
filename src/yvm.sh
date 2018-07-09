@@ -4,9 +4,13 @@ command=$1
 YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
-    local PROVIDED_VERSION=${1-$(head -n 1 .yvmrc)}
-    PATH=$(yvm get-path ${PROVIDED_VERSION})
-    echo "Set yarn version to ${PROVIDED_VERSION}"
+    local PROVIDED_VERSION=${1}
+    NEW_PATH=$(yvm get-path ${PROVIDED_VERSION})
+    if [ -z "${NEW_PATH}" ]; then
+        yvm_err "Could not get new path from yvm"
+    else
+        PATH=${NEW_PATH}
+    fi
 }
 
 yvm_echo() {
