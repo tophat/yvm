@@ -10,7 +10,6 @@ yvm_use() {
         yvm_err "Could not get new path from yvm"
     else
         PATH=${NEW_PATH}
-        yvm_echo "Set yarn version to ${PROVIDED_VERSION}"
     fi
 }
 

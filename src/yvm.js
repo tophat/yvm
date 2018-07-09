@@ -108,6 +108,7 @@ argParser
         } else {
             const getPath = require('./commands/getPath')
             log.capturable(getPath(version))
+            log(`Set yarn version to ${version}`)
         }
     }))
 
