@@ -5,7 +5,7 @@ YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
     local PROVIDED_VERSION=${1}
-    NEW_PATH=$(yvm get-path ${PROVIDED_VERSION})
+    NEW_PATH=$(yvm_call_node_script get-path ${PROVIDED_VERSION})
     if [ -z "${NEW_PATH}" ]; then
         yvm_err "Could not get new path from yvm"
     else
@@ -19,6 +19,11 @@ yvm_echo() {
 
 yvm_err() {
     >&2 yvm_echo "$@"
+}
+
+yvm_call_node_script() {
+    # do not add anything that outputs stuff to stdout in function, its output is stored in a variable
+    node "${YVM_DIR}/yvm.js" $@
 }
 
 case "$-" in
@@ -40,7 +45,7 @@ yvm_() {
     elif [ "${command}" = "update-self" ]; then
         curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
     else
-        node "${YVM_DIR}/yvm.js" $@
+        yvm_call_node_script $@
     fi
 }
 
