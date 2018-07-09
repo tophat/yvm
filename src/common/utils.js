@@ -7,7 +7,7 @@ const log = require('../common/log')
 const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
-const getExtractionPath = (version, rootPath) =>
+const getExtractionPath = (version, rootPath = yvmPath) =>
     path.resolve(rootPath, 'versions', `v${version}`)
 
 const stripVersionPrefix = tagName =>
