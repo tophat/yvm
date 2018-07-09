@@ -4,35 +4,16 @@ command=$1
 YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
-    local PROVIDED_VERSION=${1-$(head -n 1 .yvmrc)}
+    local EXTRACTION_PATH="$(node "${YVM_DIR}/yvm.js" get-extraction-path $1)"
 
-    if [ -z "${PROVIDED_VERSION}" ]; then
-        yvm_err 'version is required'
+    if [ -z "${EXTRACTION_PATH}" ]; then
+        yvm_err 'Version is required'
         return 3
     fi
 
-    if ! yvm_is_version_installed "$PROVIDED_VERSION"; then
-        yvm_ 'function' install ${PROVIDED_VERSION}
-    fi
-
-    local YVM_VERSION_DIR
-    YVM_VERSION_DIR="$(yvm_version_path "$PROVIDED_VERSION")"
+    local YVM_VERSION_DIR="$EXTRACTION_PATH/bin/yarn"
     PATH="$(yvm_change_path "$PATH" "/bin" "$YVM_VERSION_DIR")"
-    echo "Set yarn version to ${PROVIDED_VERSION}"
-}
-
-yvm_is_version_installed() {
-    [ -n "${1-}" ] && [ -x "$(yvm_version_path "$1" 2> /dev/null)"/bin/yarn ]
-}
-
-yvm_version_path() {
-    local VERSION
-    VERSION="${1-}"
-    if [ -z "${VERSION}" ]; then
-        yvm_err 'version is required'
-        return 3
-    else yvm_echo "$(yvm_version_dir)/v${VERSION}"
-    fi
+    echo "Set yarn to ${EXTRACTION_PATH}"
 }
 
 yvm_echo() {
@@ -41,17 +22,6 @@ yvm_echo() {
 
 yvm_err() {
     >&2 yvm_echo "$@"
-}
-
-yvm_version_dir() {
-    local YVM_WHICH_DIR
-    YVM_WHICH_DIR="${1-}"
-    if [ -z "${YVM_WHICH_DIR}" ]; then
-        yvm_echo "${YVM_DIR}/versions"
-    else
-        yvm_err 'unknown version dir'
-        return 3
-    fi
 }
 
 yvm_grep() {

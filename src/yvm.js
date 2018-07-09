@@ -1,5 +1,6 @@
 const argParser = require('commander')
 
+const { getExtractionPath } = require('./common/utils')
 const {
     getRcFileVersion,
     isValidVersionString,
@@ -102,6 +103,28 @@ argParser
     .command('update-self')
     .description('Updates yvm to the latest version')
     .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
+
+argParser
+    .command('get-extraction-path [version]')
+    .description('Returns the yarn path for the supplied version')
+    .action(version => {
+        // TODO: says whether installed or not
+        if (version) {
+            const path = getExtractionPath(version)
+            log.capturable(path)
+            return
+        }
+
+        const configVersion = getRcFileVersion()
+        if (configVersion) {
+            const path = getExtractionPath(configVersion)
+            log.capturable(path)
+            return
+        }
+
+        log('No yarn version found or supplied')
+        process.exit(1)
+    })
 
 argParser
     .command('help')
