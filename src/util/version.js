@@ -11,7 +11,7 @@ function getRcFileVersion() {
     if (!result || result.isEmpty || !result.config) {
         return null
     }
-    log(`Found config ${result.filepath}`)
+    log.info(`Found config ${result.filepath}`)
     return result.config
 }
 
