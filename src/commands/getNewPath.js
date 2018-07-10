@@ -2,8 +2,12 @@ const path = require('path')
 
 const { versionRootPath, yvmPath } = require('../common/utils')
 
-const getPath = (version, rootPath = yvmPath) => {
-    const splitPath = process.env.PATH.split(path.delimiter)
+const getNewPath = (
+    version,
+    rootPath = yvmPath,
+    pathString = process.env.PATH,
+) => {
+    const splitPath = pathString.split(path.delimiter)
     const destPath = versionRootPath(rootPath)
 
     const newPathSegment = `${destPath}/v${version}/bin`
@@ -25,4 +29,4 @@ const getPath = (version, rootPath = yvmPath) => {
     return splitPath.join(path.delimiter)
 }
 
-module.exports = getPath
+module.exports = getNewPath

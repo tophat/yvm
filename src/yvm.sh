@@ -5,7 +5,7 @@ YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
 
 yvm_use() {
     local PROVIDED_VERSION=${1}
-    NEW_PATH=$(yvm_call_node_script get-path ${PROVIDED_VERSION})
+    NEW_PATH=$(yvm_call_node_script get-new-path ${PROVIDED_VERSION})
     if [ -z "${NEW_PATH}" ]; then
         yvm_err "Could not get new path from yvm"
     else

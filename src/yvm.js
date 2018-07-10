@@ -105,12 +105,12 @@ argParser
     })
 
 argParser
-    .command('get-path [version]')
+    .command('get-new-path [version]')
     .description('Internal command: Gets a new PATH string for "yvm use"')
     .action(maybeVersion => {
         const [version] = getYarnVersion(maybeVersion)
-        const getPath = require('./commands/getPath')
-        log.capturable(getPath(version))
+        const getNewPath = require('./commands/getNewPath')
+        log.capturable(getNewPath(version))
     })
 
 argParser
