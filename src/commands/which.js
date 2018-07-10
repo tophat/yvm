@@ -20,7 +20,9 @@ const whichCommand = inputPath => {
         if (element.startsWith(versionRootPath(yvmPath))) {
             const versionRegex = /(v\d+\.?\d*\.?\d*)/gm
             const matchedVersion = element.match(versionRegex)
-            log(`matched yvm version: ${matchedVersion} in PATH ${element}`)
+            log.info(
+                `matched yvm version: ${matchedVersion} in PATH ${element}`,
+            )
 
             const pathVersion = matchedVersion.toString().replace(/v/g, '')
             const rcVersion = getRcFileVersion()

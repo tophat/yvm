@@ -9,4 +9,10 @@ log.capturable = function capturableLog(...args) {
     capturableLogger(...args)
 }
 
+log.info = function errorLog(...args) {
+    if (process.env.YVM_VERBOSE) {
+        log(...args)
+    }
+}
+
 module.exports = log
