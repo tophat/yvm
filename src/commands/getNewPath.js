@@ -1,6 +1,6 @@
 const path = require('path')
 
-const { versionRootPath, yvmPath } = require('../common/utils')
+const { versionRootPath, yvmPath } = require('../util/utils')
 
 const getNewPath = (
     version,

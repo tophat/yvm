@@ -2,14 +2,10 @@
 const fs = require('fs')
 const path = require('path')
 
-const { yvmPath } = require('./common/utils')
-const {
-    getRcFileVersion,
-    isValidVersionString,
-    validateVersionString,
-} = require('./util/version')
-const log = require('./common/log')
-const installVersion = require('./commands/install')
+const { ensureVersionInstalled } = require('./util/utils')
+const { getSplitVersionAndArgs } = require('./util/version')
+const log = require('./util/log')
+const { yvmPath } = require('./util/utils')
 
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
@@ -29,47 +25,17 @@ const runYarn = (version, extraArgs, rootPath) => {
 }
 
 const execCommand = (version, extraArgs = ['-v'], rootPath = yvmPath) =>
-    new Promise(resolve => {
-        validateVersionString(version)
-        log(`Using yarn version: ${version}`)
-        const yarnBinDir = getYarnPath(version, rootPath)
-
-        if (!fs.existsSync(yarnBinDir)) {
-            return resolve(
-                installVersion(version, rootPath).then(() =>
-                    runYarn(version, extraArgs, rootPath),
-                ),
-            )
-        }
-
-        return resolve(runYarn(version, extraArgs, rootPath))
-    })
-
-const getVersionAndYarnFromProcessArgs = () =>
-    new Promise(resolve => {
-        const [, , maybeVersionArg, ...args] = process.argv
-        const versionArgValid = isValidVersionString(maybeVersionArg)
-        const rcVersion = getRcFileVersion()
-
-        const version = versionArgValid ? maybeVersionArg : rcVersion
-
-        if (!versionArgValid && maybeVersionArg !== undefined) {
-            args.unshift(maybeVersionArg)
-        }
-
-        resolve({
-            version,
-            args,
-        })
-    })
+    ensureVersionInstalled(version, rootPath).then(() =>
+        runYarn(version, extraArgs, rootPath),
+    )
 
 if (require.main === module) {
-    getVersionAndYarnFromProcessArgs()
-        .then(({ version, args }) => execCommand(version, args))
-        .catch(err => {
-            log(err.message)
-            process.exit(1)
-        })
+    const [, , maybeVersionArg, ...rest] = process.argv
+    const [version, args] = getSplitVersionAndArgs(maybeVersionArg, ...rest)
+    execCommand(version, args).catch(err => {
+        log(err.message)
+        process.exit(1)
+    })
 }
 
 module.exports = execCommand

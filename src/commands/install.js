@@ -3,13 +3,13 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
-const log = require('../common/log')
+const log = require('../util/log')
 const {
     versionRootPath,
     getExtractionPath,
     getVersionsFromTags,
     yvmPath,
-} = require('../common/utils')
+} = require('../util/utils')
 
 const directoryStack = []
 

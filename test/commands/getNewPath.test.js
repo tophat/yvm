@@ -18,7 +18,7 @@ describe('getNewPath', () => {
         )
     })
 
-    it('Returns a new PATH string with they yarn dir edited if it was already present', () => {
+    it('Returns a new PATH string with the yarn dir edited if it was already present', () => {
         const mockVersion = '1.7.0'
         const mockRootPath = '/some/path'
         const mockSplitPath = [

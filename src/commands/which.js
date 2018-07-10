@@ -1,6 +1,6 @@
 const { getRcFileVersion } = require('../util/version')
-const log = require('../common/log')
-const { yvmPath, versionRootPath } = require('../common/utils')
+const log = require('../util/log')
+const { yvmPath, versionRootPath } = require('../util/utils')
 const shell = require('shelljs')
 
 const whichCommand = inputPath => {

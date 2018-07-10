@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 
 const install = require('../../src/commands/install')
-const { getExtractionPath, versionRootPath } = require('../../src/common/utils')
+const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
 
 describe('yvm install', () => {
     const rootPath = '/tmp/yvmInstall'

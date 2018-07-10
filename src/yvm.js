@@ -1,33 +1,8 @@
 const argParser = require('commander')
 
-const {
-    getRcFileVersion,
-    isValidVersionString,
-    validateVersionString,
-} = require('./util/version')
-const log = require('./common/log')
-
-// eslint-disable-next-line consistent-return
-const getYarnVersion = (maybeVersionArg, ...rest) => {
-    if (maybeVersionArg) {
-        if (isValidVersionString(maybeVersionArg)) {
-            log(`Using provided version: ${maybeVersionArg}`)
-            return [maybeVersionArg, ...rest]
-        }
-    }
-
-    rest.unshift(maybeVersionArg)
-
-    try {
-        const version = getRcFileVersion()
-        validateVersionString(version)
-        log(`Using yarn version: ${version}`)
-        return [version, ...rest]
-    } catch (e) {
-        log(e.message)
-        process.exit(1)
-    }
-}
+const { ensureVersionInstalled } = require('./util/utils')
+const { getSplitVersionAndArgs } = require('./util/version')
+const log = require('./util/log')
 
 const invalidCommandLog = () =>
     log(
@@ -53,7 +28,7 @@ argParser
     .alias('i')
     .description('Install the specified version of Yarn.')
     .action(maybeVersion => {
-        const [version] = getYarnVersion(maybeVersion)
+        const [version] = getSplitVersionAndArgs(maybeVersion)
         const install = require('./commands/install')
         install(version)
     })
@@ -106,11 +81,11 @@ argParser
 
 argParser
     .command('get-new-path [version]')
-    .description('Internal command: Gets a new PATH string for "yvm use"')
+    .description('Internal command: Gets a new PATH string for "yvm use", installing the version if necessary')
     .action(maybeVersion => {
-        const [version] = getYarnVersion(maybeVersion)
+        const [version] = getSplitVersionAndArgs(maybeVersion)
         const getNewPath = require('./commands/getNewPath')
-        log.capturable(getNewPath(version))
+        ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version)))
     })
 
 argParser

@@ -1,5 +1,5 @@
 const cosmiconfig = require('cosmiconfig')
-const log = require('../common/log')
+const log = require('./log')
 
 function isValidVersionString(version) {
     return /\d+\.\d+\.\d+/.test(version)
@@ -26,8 +26,30 @@ function validateVersionString(versionString) {
     }
 }
 
+// eslint-disable-next-line consistent-return
+const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
+    if (maybeVersionArg) {
+        if (isValidVersionString(maybeVersionArg)) {
+            log(`Using provided version: ${maybeVersionArg}`)
+            return [maybeVersionArg, rest]
+        }
+    }
+
+    rest.unshift(maybeVersionArg)
+
+    try {
+        const version = getRcFileVersion()
+        validateVersionString(version)
+        log(`Using yarn version: ${version}`)
+        return [version, rest]
+    } catch (e) {
+        log(e.message)
+        process.exit(1)
+    }
+}
+
 module.exports = {
-    isValidVersionString,
     getRcFileVersion,
+    getSplitVersionAndArgs,
     validateVersionString,
 }
