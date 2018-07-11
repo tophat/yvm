@@ -20,7 +20,7 @@ const execFile =
 const runYarn = (version, extraArgs, rootPath) => {
     // first two arguments are filler args [node version, yarn version]
     process.argv = ['', ''].concat(extraArgs)
-    log(`yarn ${extraArgs.join(' ')}`)
+    log.info(`yarn ${extraArgs.join(' ')}`)
     execFile(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
 }
 

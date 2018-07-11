@@ -38,7 +38,7 @@ argParser
     .alias('rm')
     .description('Uninstall the specified version of Yarn.')
     .action(version => {
-        log(`Removing yarn v${version}`)
+        log.info(`Removing yarn v${version}`)
         const remove = require('./commands/remove')
         process.exit(remove(version))
     })
@@ -55,7 +55,7 @@ argParser
     .command('which')
     .description('Display path to installed yarn version. Uses .yvmrc if available.')
     .action(() => {
-        log(`Checking yarn version`)
+        log.info(`Checking yarn version`)
         const which = require('./commands/which')
         process.exit(which())
 })
@@ -74,7 +74,7 @@ argParser
     .alias('ls')
     .description('List the currently installed versions of Yarn.')
     .action(() => {
-        log(`Checking for installed yarn versions...`)
+        log.info(`Checking for installed yarn versions...`)
         const listVersions = require('./commands/list')
         listVersions()
     })
