@@ -7,12 +7,12 @@ const {
 } = require('./util/version')
 const log = require('./common/log')
 
-const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
+// eslint-disable-next-line consistent-return
+const getYarnVersion = (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
         if (isValidVersionString(maybeVersionArg)) {
             log.info(`Using provided version: ${maybeVersionArg}`)
-            action(maybeVersionArg, ...rest)
-            return
+            return [maybeVersionArg, ...rest]
         }
     }
 
@@ -22,12 +22,17 @@ const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
         const version = getRcFileVersion()
         validateVersionString(version)
         log.info(`Using yarn version: ${version}`)
-        action(version, ...rest)
+        return [version, ...rest]
     } catch (e) {
         log(e.message)
         process.exit(1)
     }
 }
+
+const invalidCommandLog = () =>
+    log(
+        'You need to source yvm to use this command. run `source /usr/local/bin/yvm`',
+    )
 
 /* eslint-disable global-require,prettier/prettier */
 argParser
@@ -47,10 +52,11 @@ argParser
     .command('install [version]')
     .alias('i')
     .description('Install the specified version of Yarn.')
-    .action(withRcFileVersion(version => {
+    .action(maybeVersion => {
+        const [version] = getYarnVersion(maybeVersion)
         const install = require('./commands/install')
         install(version)
-    }))
+    })
 
 argParser
     .command('remove <version>')
@@ -68,7 +74,7 @@ argParser
 argParser
     .command('use [version]')
     .description('Activate specified Yarn version, or use .yvmrc if present.')
-    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
+    .action(invalidCommandLog)
 
 argParser
     .command('which')
@@ -99,9 +105,18 @@ argParser
     })
 
 argParser
+    .command('get-new-path [version]')
+    .description('Internal command: Gets a new PATH string for "yvm use"')
+    .action(maybeVersion => {
+        const [version] = getYarnVersion(maybeVersion)
+        const getNewPath = require('./commands/getNewPath')
+        log.capturable(getNewPath(version))
+    })
+
+argParser
     .command('update-self')
     .description('Updates yvm to the latest version')
-    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
+    .action(invalidCommandLog)
 
 argParser
     .command('help')
