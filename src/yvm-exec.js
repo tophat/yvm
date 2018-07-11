@@ -24,14 +24,14 @@ const execFile =
 const runYarn = (version, extraArgs, rootPath) => {
     // first two arguments are filler args [node version, yarn version]
     process.argv = ['', ''].concat(extraArgs)
-    log(`yarn ${extraArgs.join(' ')}`)
+    log.info(`yarn ${extraArgs.join(' ')}`)
     execFile(path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js'))
 }
 
 const execCommand = (version, extraArgs = ['-v'], rootPath = yvmPath) =>
     new Promise(resolve => {
         validateVersionString(version)
-        log(`Using yarn version: ${version}`)
+        log.info(`Using yarn version: ${version}`)
         const yarnBinDir = getYarnPath(version, rootPath)
 
         if (!fs.existsSync(yarnBinDir)) {
