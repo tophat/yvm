@@ -123,10 +123,5 @@ argParser
     .description('Show help text')
     .action(() => argParser.outputHelp())
 
-const noParams = !process.argv.slice(2).length
-if (noParams) {
-    argParser.outputHelp()
-}
-
 /* eslint-enable global-require,prettier/prettier */
 argParser.parse(process.argv)
