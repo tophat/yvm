@@ -2,7 +2,7 @@ const fs = require('fs-extra')
 const shell = require('shelljs')
 
 const { getExtractionPath, yvmPath } = require('../common/utils')
-const { log } = require('../common/log')
+const log = require('../common/log')
 
 const removeVersion = (version, rootPath = yvmPath) => {
     const versionPath = getExtractionPath(version, rootPath)

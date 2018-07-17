@@ -2,7 +2,7 @@ const os = require('os')
 const path = require('path')
 const request = require('request')
 
-const { log } = require('../common/log')
+const log = require('../common/log')
 
 const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
