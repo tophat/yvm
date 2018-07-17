@@ -18,8 +18,8 @@
     "coverageDirectory": "./artifacts/coverage",
     "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Top Hat <opensource@tophat.com>",
+  "license": "Apache-2.0",
   "dependencies": {
     "chalk": "^2.4.1",
     "commander": "^2.15.1",

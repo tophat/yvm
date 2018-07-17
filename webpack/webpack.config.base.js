@@ -5,9 +5,12 @@ const outputPath = path.resolve(__dirname, '..', 'artifacts', 'webpack_build')
 
 module.exports = {
     mode: 'production',
-    entry: './src/yvm.js',
+    entry: {
+        yvm: './src/yvm.js',
+        'yvm-exec': './src/yvm-exec.js',
+    },
     output: {
-        filename: 'yvm.js',
+        filename: '[name].js',
         path: outputPath,
     },
     target: 'node',

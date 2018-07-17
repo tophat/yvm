@@ -1,94 +1,86 @@
 const argParser = require('commander')
 
-const { getRcFileVersion, isValidVersionString } = require('./util/version')
-const { log } = require('./common/log')
+const {
+    getRcFileVersion,
+    isValidVersionString,
+    validateVersionString,
+} = require('./util/version')
+const log = require('./common/log')
 
-const withRcFileVersion = action => (maybeVersionArg, ...rest) => {
+// eslint-disable-next-line consistent-return
+const getYarnVersion = (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
         if (isValidVersionString(maybeVersionArg)) {
-            log(`Using provided version: ${maybeVersionArg}`)
-            action(maybeVersionArg, ...rest)
-            return
+            log.info(`Using provided version: ${maybeVersionArg}`)
+            return [maybeVersionArg, ...rest]
         }
     }
 
     rest.unshift(maybeVersionArg)
-    const version = getRcFileVersion()
-    if (isValidVersionString(version)) {
-        log(`Using .yvmrc version: ${version}`)
-        action(version, ...rest)
-    } else {
-        if (version !== null) {
-            log(`Invalid .yvmrc version: ${version}`)
-        } else {
-            log(
-                `
-                No version supplied, no .yvmrc
-                Perhaps you wanted to specify your version like?
-                yvm exec 1.2.0 list
-                `,
-            )
-        }
+
+    try {
+        const version = getRcFileVersion()
+        validateVersionString(version)
+        log.info(`Using yarn version: ${version}`)
+        return [version, ...rest]
+    } catch (e) {
+        log(e.message)
         process.exit(1)
     }
 }
+
+const invalidCommandLog = () =>
+    log(
+        'You need to source yvm to use this command. run `source /usr/local/bin/yvm`',
+    )
 
 /* eslint-disable global-require,prettier/prettier */
 argParser
     .description('Yarn Version Manager')
 
-argParser
-    .command('*', '', {noHelp: true, isDefault: true})
-    .action(invalidCommand => {
-        log(`Invalid command: ${invalidCommand}`)
-        argParser.outputHelp()
-        process.exit(1)
-    })
+if (!process.argv.includes('exec')) {
+    argParser
+        .command('*', '', {noHelp: true, isDefault: true})
+        .action(invalidCommand => {
+            log(`Invalid command: ${invalidCommand}`)
+            argParser.outputHelp()
+            process.exit(1)
+        })
+}
 
 argParser
     .command('install [version]')
     .alias('i')
     .description('Install the specified version of Yarn.')
-    .action(withRcFileVersion(version => {
+    .action(maybeVersion => {
+        const [version] = getYarnVersion(maybeVersion)
         const install = require('./commands/install')
         install(version)
-    }))
+    })
 
 argParser
     .command('remove <version>')
     .alias('rm')
     .description('Uninstall the specified version of Yarn.')
     .action(version => {
-        log(`Removing yarn v${version}`)
+        log.info(`Removing yarn v${version}`)
         const remove = require('./commands/remove')
         process.exit(remove(version))
     })
 
 argParser
-    .command('exec [version] [command]')
-    .allowUnknownOption(true)
-    .description('Execute command using specified Yarn version.')
-    .action(withRcFileVersion((version, command) => {
-        log(`Executing yarn command with version ${version}`)
-        const args = process.argv
-        const commandArgIndex = args.indexOf(command)
-        const commandWithArgs = args.slice(commandArgIndex)
-        const exec = require('./commands/exec')
-        exec(version, commandWithArgs).catch(()=>{
-            process.exit(-1)
-        })
-    }))
+    .command('exec [version] [command]', 'Execute command using specified Yarn version.')
 
 argParser
     .command('use [version]')
     .description('Activate specified Yarn version, or use .yvmrc if present.')
-    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
+    .action(invalidCommandLog)
 
 argParser
     .command('which')
     .description('Display path to installed yarn version. Uses .yvmrc if available.')
     .action(() => {
-        log(`Checking yarn version`)
+        log.info(`Checking yarn version`)
         const which = require('./commands/which')
         process.exit(which())
 })
@@ -107,15 +99,24 @@ argParser
     .alias('ls')
     .description('List the currently installed versions of Yarn.')
     .action(() => {
-        log(`Checking for installed yarn versions...`)
+        log.info(`Checking for installed yarn versions...`)
         const listVersions = require('./commands/list')
         listVersions()
     })
 
 argParser
+    .command('get-new-path [version]')
+    .description('Internal command: Gets a new PATH string for "yvm use"')
+    .action(maybeVersion => {
+        const [version] = getYarnVersion(maybeVersion)
+        const getNewPath = require('./commands/getNewPath')
+        log.capturable(getNewPath(version))
+    })
+
+argParser
     .command('update-self')
     .description('Updates yvm to the latest version')
-    .action(() => log('You need to source yvm to use this command. run `source /usr/local/bin/yvm`'))
+    .action(invalidCommandLog)
 
 argParser
     .command('help')

@@ -11,11 +11,14 @@ log.capturable = function capturableLog(...args) {
     capturableLogger(...args)
 }
 
-const error = msg => log(chalk.red(msg))
-const success = msg => log(chalk.green(msg))
+log.error = (...args) => log(chalk.red(...args))
 
-module.exports = {
-    log,
-    success,
-    error,
+log.success = (...args) => log(chalk.green(...args))
+
+log.info = function errorLog(...args) {
+    if (process.env.YVM_VERBOSE) {
+        log(...args)
+    }
 }
+
+module.exports = log

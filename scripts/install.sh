@@ -27,8 +27,8 @@ mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
-    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js"
-    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" ${YVM_DIR}
+    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
+    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" ${YVM_DIR}
 else
     download_url=$(
         curl -s ${release_api_url} |

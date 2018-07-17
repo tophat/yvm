@@ -2,7 +2,7 @@ const { getVersionsFromTags, printVersions } = require('../common/utils')
 const { log } = require('../common/log')
 
 const listRemoteCommand = () => {
-    log('list-remote')
+    log.info('list-remote')
 
     return getVersionsFromTags()
         .then(versions => {

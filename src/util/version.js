@@ -14,7 +14,7 @@ function getRcFileVersion() {
     if (!result || result.isEmpty || !result.config) {
         return null
     }
-    log(`Found config ${result.filepath}`)
+    log.info(`Found config ${result.filepath}`)
     return result.config
 }
 
@@ -44,8 +44,20 @@ const extractYarnVersionsFromPath = envPath => {
     return versions
 }
 
+function validateVersionString(versionString) {
+    if (versionString === null) {
+        throw new Error(
+            `No yarn version supplied!\nTry adding a config file (.yvmrc) or specify your version in the command like this:\nyvm exec 1.0.2 install`,
+        )
+    }
+    if (!isValidVersionString(versionString) && versionString !== null) {
+        throw new Error(`Invalid yarn version supplied: ${versionString}`)
+    }
+}
+
 module.exports = {
     extractYarnVersionsFromPath,
     getRcFileVersion,
     isValidVersionString,
+    validateVersionString,
 }
