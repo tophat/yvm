@@ -1,7 +1,7 @@
 const cosmiconfig = require('cosmiconfig')
 const shell = require('shelljs')
 
-const { log } = require('../common/log')
+const log = require('../common/log')
 const { versionRootPath, yvmPath } = require('../common/utils')
 
 function isValidVersionString(version) {

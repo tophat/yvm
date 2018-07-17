@@ -1,4 +1,4 @@
-const { error, log, success } = require('../common/log')
+const log = require('../common/log')
 const { extractYarnVersionsFromPath } = require('../util/version')
 const { getRcFileVersion } = require('../util/version')
 
@@ -7,12 +7,12 @@ const whichCommand = inputPath => {
     const versions = extractYarnVersionsFromPath(envPath)
 
     if (versions.length === 0) {
-        error("Yarn version not detected in PATH. Please run 'yvm use'")
+        log.error("Yarn version not detected in PATH. Please run 'yvm use'")
         return 1
     }
 
     if (versions.length > 1) {
-        error(
+        log.error(
             'More than one Yarn version detected in PATH! Manually edit the PATH to remove the extra versions',
         )
         return 1
@@ -24,10 +24,10 @@ const whichCommand = inputPath => {
     const rcVersion = getRcFileVersion()
     if (rcVersion !== null) {
         if (number === rcVersion) {
-            success('Your RC version matches your PATH version, good job!')
+            log.success('Your RC version matches your PATH version, good job!')
             return 0
         }
-        error(
+        log.error(
             `Your RC version: ${rcVersion} and PATH version: ${number} don't match :(`,
         )
         return 2
