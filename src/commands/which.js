@@ -1,6 +1,8 @@
+const {
+    extractYarnVersionsFromPath,
+    getRcFileVersion,
+} = require('../util/version')
 const log = require('../common/log')
-const { extractYarnVersionsFromPath } = require('../util/version')
-const { getRcFileVersion } = require('../util/version')
 
 const whichCommand = inputPath => {
     const envPath = inputPath || process.env.PATH
@@ -30,6 +32,7 @@ const whichCommand = inputPath => {
         log.error(
             `Your RC version: ${rcVersion} and PATH version: ${number} don't match :(`,
         )
+        log('Run `yvm use` to switch to RC version')
         return 2
     }
 
