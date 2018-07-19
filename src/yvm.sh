@@ -43,7 +43,7 @@ yvm_() {
         fi
         yvm_use $2
     elif [ "${command}" = "update-self" ]; then
-        curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
+        curl -fsSL https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
     else
         yvm_call_node_script $@
     fi
