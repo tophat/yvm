@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 
 const exec = require('../../src/yvm-exec')
-const { getExtractionPath, versionRootPath } = require('../../src/common/utils')
+const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
 
 // TODO implement tests here once the "strict mode" stuff works on jest (ie require(yarn cli.js) fails)
 describe.skip('yvm exec', () => {

@@ -1,5 +1,5 @@
 const cosmiconfig = require('cosmiconfig')
-const log = require('../common/log')
+const log = require('./log')
 
 function isValidVersionString(version) {
     return /\d+\.\d+\.\d+/.test(version)

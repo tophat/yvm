@@ -5,7 +5,7 @@ const {
     isValidVersionString,
     validateVersionString,
 } = require('./util/version')
-const log = require('./common/log')
+const log = require('./util/log')
 
 // eslint-disable-next-line consistent-return
 const getYarnVersion = (maybeVersionArg, ...rest) => {
