@@ -1,6 +1,6 @@
 const argParser = require('commander')
 
-const { ensureVersionInstalled } = require('./util/utils')
+const { ensureVersionInstalled } = require('./util/install')
 const { getSplitVersionAndArgs } = require('./util/version')
 const log = require('./util/log')
 

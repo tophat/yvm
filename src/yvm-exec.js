@@ -1,8 +1,7 @@
 /* eslint-disable global-require,import/no-dynamic-require */
-const fs = require('fs')
 const path = require('path')
 
-const { ensureVersionInstalled } = require('./util/utils')
+const { ensureVersionInstalled } = require('./util/install')
 const { getSplitVersionAndArgs } = require('./util/version')
 const log = require('./util/log')
 const { yvmPath } = require('./util/utils')

@@ -1,9 +1,7 @@
-const fs = require('fs')
 const os = require('os')
 const path = require('path')
 const request = require('request')
 
-const installVersion = require('../commands/install')
 const log = require('./log')
 
 const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
@@ -46,16 +44,7 @@ const getVersionsFromTags = () => {
     })
 }
 
-const ensureVersionInstalled = (version, rootPath = yvmPath) => {
-    const yarnBinDir = getExtractionPath(version, rootPath)
-    if (fs.existsSync(yarnBinDir)) {
-        return Promise.resolve()
-    }
-    return installVersion(version, rootPath)
-}
-
 module.exports = {
-    ensureVersionInstalled,
     getExtractionPath,
     getVersionsFromTags,
     printVersions,
