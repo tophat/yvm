@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 
 const remove = require('../../src/commands/remove')
-const { getExtractionPath, versionRootPath } = require('../../src/common/utils')
+const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
 
 describe('yvm remove', () => {
     const rootPath = '/tmp/yvmRemove'

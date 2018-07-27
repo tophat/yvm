@@ -5,7 +5,7 @@ const {
     getExtractionPath,
     stripVersionPrefix,
     versionRootPath,
-} = require('../../src/common/utils')
+} = require('../../src/util/utils')
 
 describe('yvm list', () => {
     const rootPath = '/tmp/yvmList'

@@ -1,12 +1,12 @@
 const fs = require('fs')
 
-const log = require('../common/log')
+const log = require('../util/log')
 const {
     printVersions,
     stripVersionPrefix,
     versionRootPath,
     yvmPath,
-} = require('../common/utils')
+} = require('../util/utils')
 
 const getYarnVersions = rootPath => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/

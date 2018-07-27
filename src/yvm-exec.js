@@ -2,13 +2,13 @@
 const fs = require('fs')
 const path = require('path')
 
-const { yvmPath } = require('./common/utils')
+const { yvmPath } = require('./util/utils')
 const {
     getRcFileVersion,
     isValidVersionString,
     validateVersionString,
 } = require('./util/version')
-const log = require('./common/log')
+const log = require('./util/log')
 const installVersion = require('./commands/install')
 
 const getYarnPath = (version, rootPath) =>
