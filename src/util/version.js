@@ -18,7 +18,7 @@ function getRcFileVersion() {
 function validateVersionString(versionString) {
     if (versionString === null) {
         throw new Error(
-            `No yarn version supplied!\nTry adding a config file (.yvmrc) or specify your version in the command like this:\nyvm exec 1.0.2 install`,
+            `No yarn version supplied!\nTry adding a config file (.yvmrc) or specify your version in the command like this: "yvm install 1.7.0"`,
         )
     }
     if (!isValidVersionString(versionString) && versionString !== null) {
@@ -30,7 +30,7 @@ function validateVersionString(versionString) {
 const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
         if (isValidVersionString(maybeVersionArg)) {
-            log(`Using provided version: ${maybeVersionArg}`)
+            log.info(`Using provided version: ${maybeVersionArg}`)
             return [maybeVersionArg, rest]
         }
     }
@@ -40,7 +40,7 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
     try {
         const version = getRcFileVersion()
         validateVersionString(version)
-        log(`Using yarn version: ${version}`)
+        log.info(`Using yarn version: ${version}`)
         return [version, rest]
     } catch (e) {
         log(e.message)
@@ -51,5 +51,4 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
 module.exports = {
     getRcFileVersion,
     getSplitVersionAndArgs,
-    validateVersionString,
 }
