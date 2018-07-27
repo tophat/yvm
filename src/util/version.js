@@ -18,7 +18,7 @@ function getRcFileVersion() {
 function validateVersionString(versionString) {
     if (versionString === null) {
         throw new Error(
-            `No yarn version supplied!\nTry adding a config file (.yvmrc) or specify your version in the command like this:\nyvm exec 1.0.2 install`,
+            `No yarn version supplied!\nTry adding a config file (.yvmrc) or specify your version in the command like this: "yvm install 1.7.0"`,
         )
     }
     if (!isValidVersionString(versionString) && versionString !== null) {
@@ -26,8 +26,29 @@ function validateVersionString(versionString) {
     }
 }
 
+// eslint-disable-next-line consistent-return
+const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
+    if (maybeVersionArg) {
+        if (isValidVersionString(maybeVersionArg)) {
+            log.info(`Using provided version: ${maybeVersionArg}`)
+            return [maybeVersionArg, rest]
+        }
+    }
+
+    rest.unshift(maybeVersionArg)
+
+    try {
+        const version = getRcFileVersion()
+        validateVersionString(version)
+        log.info(`Using yarn version: ${version}`)
+        return [version, rest]
+    } catch (e) {
+        log(e.message)
+        process.exit(1)
+    }
+}
+
 module.exports = {
-    isValidVersionString,
     getRcFileVersion,
-    validateVersionString,
+    getSplitVersionAndArgs,
 }
