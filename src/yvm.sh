@@ -10,6 +10,7 @@ yvm_use() {
         yvm_err "Could not get new path from yvm"
     else
         PATH=${NEW_PATH}
+        yvm_echo "Now using yarn version $(yarn --version)"
     fi
 }
 
