@@ -1,4 +1,5 @@
 const fs = require('fs')
+const openpgp = require('openpgp')
 const path = require('path')
 const request = require('request')
 const targz = require('targz')
@@ -16,8 +17,15 @@ const directoryStack = []
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
 
+const getSignatureDownloadPath = (version, rootPath) =>
+    `${getDownloadPath(version, rootPath)}.asc`
+
+const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
+
 const getUrl = version =>
     `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
+
+const getSignatureUrl = version => `${getUrl(version)}.asc`
 
 const checkDirectories = rootPath => {
     if (!fs.existsSync(versionRootPath(rootPath))) {
@@ -50,6 +58,61 @@ const downloadVersion = (version, rootPath) => {
             reject(new Error(err))
         })
     })
+}
+
+// TODO dedupe with above
+const downloadSignature = (version, rootPath) => {
+    const url = getSignatureUrl(version)
+    const filePath = getSignatureDownloadPath(version, rootPath)
+    const file = fs.createWriteStream(filePath)
+
+    return new Promise((resolve, reject) => {
+        const stream = request.get(url).pipe(file)
+        stream.on('finish', () => resolve())
+        stream.on('error', err => {
+            reject(new Error(err))
+        })
+    })
+}
+
+const getPublicKey = rootPath => {
+    const publicKeyPath = getPublicKeyPath(rootPath)
+
+    return new Promise((resolve, reject) => {
+        if (fs.existsSync(publicKeyPath)) {
+            log('GPG signature file already downloaded')
+            resolve()
+        } else {
+            log('Downloading GPG signature file')
+            const file = fs.createWriteStream(publicKeyPath)
+            const stream = request
+                .get('https://dl.yarnpkg.com/debian/pubkey.gpg')
+                .pipe(file)
+            stream.on('finish', () => resolve())
+            stream.on('error', err => {
+                reject(new Error(err))
+            })
+        }
+    }).then(() => fs.readFileSync(publicKeyPath))
+}
+
+const verifySignature = async (version, rootPath) => {
+    await downloadSignature(version, rootPath)
+
+    const filePath = getDownloadPath(version, rootPath)
+    const signatureFilePath = getSignatureDownloadPath(version, rootPath)
+    const publicKey = await getPublicKey(rootPath)
+
+    const file = fs.readFileSync(filePath)
+    const sig = fs.readFileSync(signatureFilePath)
+
+    const verified = await openpgp.verify({
+        message: await openpgp.message.fromBinary(file), // parse armored message
+        signature: await openpgp.signature.readArmored(sig), // parse detached signature
+        publicKeys: (await openpgp.key.readArmored(publicKey)).keys, // for verification
+    })
+
+    return verified.signatures.length && verified.signatures[0].valid
 }
 
 const extractYarn = (version, rootPath) => {
@@ -97,6 +160,10 @@ const installVersion = (version, rootPath = yvmPath) => {
             return downloadVersion(version, rootPath)
                 .then(() => {
                     log(`Finished downloading yarn version ${version}`)
+                    return verifySignature(version, rootPath)
+                })
+                .then(() => {
+                    log('GPG signature validated')
                     return extractYarn(version, rootPath)
                 })
                 .catch(err => {
