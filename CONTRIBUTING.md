@@ -2,7 +2,7 @@
 
 ## Basic development flow
 
-1. Ensure the problem you are solving [is an issue](https://github.com/tophatmonocle/yvm/issues) or you've created one
+1. Ensure the problem you are solving [is an issue](https://github.com/tophat/yvm/issues) or you've created one
 1. Clone the repo
 1. We use make, `make help` will show you a list of development commands
 1. `make install-watch` will install yvm on your shell, and update when you make changes

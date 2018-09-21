@@ -4,7 +4,7 @@
   "description": "Yarn version manager",
   "repository": {
     "type": "git",
-    "url": "github:tophatmonocle/yvm"
+    "url": "github:tophat/yvm"
   },
   "main": "yvm.js",
   "scripts": {
