@@ -3,14 +3,14 @@
 set -euo pipefail
 
 err_report() {
-    echo "yvm failed to install, the command that failed was: https://github.com/tophatmonocle/yvm/blob/master/scripts/install.sh#L${1}"
+    echo "yvm failed to install, the command that failed was: https://github.com/tophat/yvm/blob/master/scripts/install.sh#L${1}"
 }
 
 trap 'err_report $LINENO' ERR
 
 use_local=${use_local-false}
 
-release_api_url="https://api.github.com/repos/tophatmonocle/yvm/releases/latest"
+release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
 artifacts_dir="artifacts/webpack_build"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}

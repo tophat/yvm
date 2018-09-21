@@ -21,7 +21,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
- - YVM Release, see [releases](https://github.com/tophatmonocle/yvm/releases)
+ - YVM Release, see [releases](https://github.com/tophat/yvm/releases)
 
 
 **Additional context**

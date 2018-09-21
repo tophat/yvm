@@ -19,7 +19,7 @@ save_cache: &save_cache
 install_yvm: &install_yvm
   run:
     name: 'Install yvm release version'
-    command: 'curl https://raw.githubusercontent.com/tophatmonocle/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+    command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
 
 jobs:
   test:
