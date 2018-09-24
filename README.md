@@ -83,7 +83,6 @@ Thanks goes to these wonderful people [emoji key](https://github.com/kentcdodds/
 
 We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Check out our [contributing guidelines](CONTRIBUTING.md) for more details.
 
-## Copyright
-
-© 2018 Tophatmonocle Corp
+## Credits
+Thanks to [Carol Skelly](https://github.com/iatek) for donating the github organization!
 
