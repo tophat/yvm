@@ -4,6 +4,7 @@ const path = require('path')
 const request = require('request')
 const targz = require('targz')
 
+const { downloadFile } = require('../util/download')
 const log = require('../util/log')
 const {
     versionRootPath,
@@ -49,30 +50,13 @@ const checkForVersion = (version, rootPath) => {
 const downloadVersion = (version, rootPath) => {
     const url = getUrl(version)
     const filePath = getDownloadPath(version, rootPath)
-    const file = fs.createWriteStream(filePath)
-
-    return new Promise((resolve, reject) => {
-        const stream = request.get(url).pipe(file)
-        stream.on('finish', () => resolve())
-        stream.on('error', err => {
-            reject(new Error(err))
-        })
-    })
+    return downloadFile(url, filePath)
 }
 
-// TODO dedupe with above
 const downloadSignature = (version, rootPath) => {
     const url = getSignatureUrl(version)
     const filePath = getSignatureDownloadPath(version, rootPath)
-    const file = fs.createWriteStream(filePath)
-
-    return new Promise((resolve, reject) => {
-        const stream = request.get(url).pipe(file)
-        stream.on('finish', () => resolve())
-        stream.on('error', err => {
-            reject(new Error(err))
-        })
-    })
+    return downloadFile(url, filePath)
 }
 
 const getPublicKey = rootPath => {
@@ -80,10 +64,10 @@ const getPublicKey = rootPath => {
 
     return new Promise((resolve, reject) => {
         if (fs.existsSync(publicKeyPath)) {
-            log('GPG signature file already downloaded')
+            log('GPG public key file already downloaded')
             resolve()
         } else {
-            log('Downloading GPG signature file')
+            log('Downloading GPG public key file')
             const file = fs.createWriteStream(publicKeyPath)
             const stream = request
                 .get('https://dl.yarnpkg.com/debian/pubkey.gpg')
@@ -105,11 +89,12 @@ const verifySignature = async (version, rootPath) => {
 
     const file = fs.readFileSync(filePath)
     const sig = fs.readFileSync(signatureFilePath)
+    // fs.unlinkSync(signatureFilePath)
 
     const verified = await openpgp.verify({
-        message: await openpgp.message.fromBinary(file), // parse armored message
-        signature: await openpgp.signature.readArmored(sig), // parse detached signature
-        publicKeys: (await openpgp.key.readArmored(publicKey)).keys, // for verification
+        message: await openpgp.message.fromBinary(file),
+        signature: await openpgp.signature.readArmored(sig),
+        publicKeys: (await openpgp.key.readArmored(publicKey)).keys,
     })
 
     return verified.signatures.length && verified.signatures[0].valid
