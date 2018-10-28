@@ -1,14 +1,17 @@
-const CopyPlugin = require('copy-webpack-plugin')
 const path = require('path')
+
+const CopyPlugin = require('copy-webpack-plugin')
+const nodeExternals = require('webpack-node-externals')
 
 const outputPath = path.resolve(__dirname, '..', 'artifacts', 'webpack_build')
 
 module.exports = {
     mode: 'production',
     entry: {
-        yvm: './src/yvm.js',
-        'yvm-exec': './src/yvm-exec.js',
+        yvm: ['@babel/polyfill', './src/yvm.js'],
+        'yvm-exec': ['@babel/polyfill', './src/yvm-exec.js'],
     },
+    externals: [nodeExternals()],
     output: {
         filename: '[name].js',
         path: outputPath,
