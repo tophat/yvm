@@ -23,12 +23,13 @@ export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 executable_source_string="source ${executable_alias_path}"
 
 rm -f ${executable_alias_path}
-mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
-    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
-    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" ${YVM_DIR}
+    rm -rf "${YVM_DIR}"
+    mkdir -p ${YVM_DIR}
+    unzip artifacts/webpack_build/yvm.zip -d ${YVM_DIR} > /dev/null
+    chmod +x ${YVM_DIR}/yvm.sh
 else
     download_url=$(
         curl -s ${release_api_url} |
@@ -37,6 +38,7 @@ else
         sed 's/[ "]//g'
     )
     curl -s -L -o ${zip_download_path} ${download_url}
+    mkdir -p ${YVM_DIR}
     unzip -o -q ${zip_download_path} -d ${YVM_DIR}
     rm ${zip_download_path}
 fi
