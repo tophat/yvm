@@ -2,7 +2,7 @@ const fs = require('fs')
 const request = require('request')
 
 const downloadFile = (url, filePath) => {
-	const file = fs.createWriteStream(filePath)
+    const file = fs.createWriteStream(filePath)
 
     return new Promise((resolve, reject) => {
         const stream = request.get(url).pipe(file)
@@ -14,5 +14,5 @@ const downloadFile = (url, filePath) => {
 }
 
 module.exports = {
-	downloadFile,
+    downloadFile,
 }
