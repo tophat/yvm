@@ -89,7 +89,7 @@ const verifySignature = async (version, rootPath) => {
 
     const file = fs.readFileSync(filePath)
     const sig = fs.readFileSync(signatureFilePath)
-    // fs.unlinkSync(signatureFilePath)
+    fs.unlinkSync(signatureFilePath)
 
     const verified = await openpgp.verify({
         message: await openpgp.message.fromBinary(file),
