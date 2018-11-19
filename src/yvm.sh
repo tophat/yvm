@@ -47,6 +47,9 @@ yvm_() {
         curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
     else
         yvm_call_node_script $@
+        if [ "${command}" = "install" ]; then
+            yvm_use $2
+        fi
     fi
 }
 
