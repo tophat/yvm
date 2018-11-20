@@ -29,6 +29,7 @@ commands:
 jobs:
   test:
     <<: *docker_defaults
+    working_directory: ~/repo
     steps:
       - prep_env
       - run: make lint
@@ -50,6 +51,7 @@ jobs:
             - build/
   build_and_deploy:
     <<: *docker_defaults
+    working_directory: ~/repo
     steps:
       - prep_env
       - run: make build_and_deploy
