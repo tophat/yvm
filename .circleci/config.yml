@@ -29,24 +29,23 @@ jobs:
             - node_modules/
   website:
     <<: *docker_defaults
-    working_directory: website
     steps:
       - checkout
       - restore_cache:
           name: Restore node_modules cache
           key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - *install_yvm
-      - run: yvm exec install
+      - run: cd website && yvm exec install
       - save_cache:
           name: Save node_modules cache
           key: yvm-website-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules/
-      - run: yvm exec build
+      - run: cd website && yvm exec build
       - persist_to_workspace:
           root: ./
           paths:
-            - build/
+            - website/build/
   build_and_deploy:
     <<: *docker_defaults
     steps:
@@ -65,12 +64,13 @@ jobs:
           name: Restore node_modules cache
           key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - *install_yvm
-      - run: yvm exec install
+      - run: cd website && yvm exec install
       - attach_workspace:
           at: ./
       - run:
           name: Setup Git user and deploy website
           command: |
+            cd website
             git config --global user.email "circleci-yvm@users.noreply.github.com"
             git config --global user.name "CircleCI YVM"
             echo "machine github.com login $GITHUB_USERNAME password $GITHUB_TOKEN" > ~/.netrc
