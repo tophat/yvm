@@ -36,7 +36,7 @@ jobs:
           path: artifacts/reports/tests
   website:
     <<: *docker_defaults
-    working_directory: website
+    working_directory: ~/repo/website
     steps:
       - prep_env
       - run: yarn install
@@ -53,7 +53,7 @@ jobs:
       - run: make build_and_deploy
   deploy_website:
     <<: *docker_defaults
-    working_directory: website
+    working_directory: ~/repo/website
     steps:
       - prep_env
       - attach_workspace:
