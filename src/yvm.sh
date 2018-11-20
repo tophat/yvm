@@ -29,16 +29,18 @@ save_last_used_yarn_version() {
 
 yvm_use() {
     local PROVIDED_VERSION=${1}
-    echo ${PROVIDED_VERSION}
     NEW_PATH=$(yvm_call_node_script get-new-path ${PROVIDED_VERSION})
-    echo ${NEW_PATH}
     if [ -z "${NEW_PATH}" ]; then
         yvm_err "Could not get new path from yvm"
     else
         PATH=${NEW_PATH}
+        YARN_VERSION="$(yarn --version)"
+        CURRENT_GLOBAL_YARN_VERSION="${LAST_USED_YARN_VERSION:-}"
         yvm_echo "Now using yarn version $(yarn --version)"
+        if [ ! -e .yvmrc ] && [ "$YARN_VERSION" != "$CURRENT_GLOBAL_YARN_VERSION" ]; then
+            save_last_used_yarn_version ${1}
+        fi
     fi
-    save_last_used_yarn_version ${1}
 }
 
 yvm_echo() {
@@ -88,7 +90,12 @@ if [ ${interactive} = 1 ]; then
     if [ -z "$last_used_yarn" ]; then
         yvm_echo "No default yarn version set. Use yvm install <version> or yvm use <version> to fix this"
     else
-        yvm_use ${last_used_yarn}
+        if ! type "node" > /dev/null; then
+            yvm_echo "YVM Could not automatically set yarn version."
+            yvm_echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bash_profile"
+        else
+            yvm_use ${last_used_yarn}
+        fi
     fi
 else
     yvm_ 'script' $@
