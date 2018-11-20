@@ -23,4 +23,4 @@ Add SSH key
 hostname github.com
 Private key contents
 
-Add the fingerprint tot he circleci file e.g. 'e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb'
+Add the fingerprint to the circleci file e.g. 'e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb'
