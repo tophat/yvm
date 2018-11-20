@@ -1,0 +1,36 @@
+{
+  "plugins": ["react", "prettier"],
+  "extends": [
+    "airbnb/base",
+    "prettier",
+    "prettier/react"
+  ],
+  "env": {
+        "browser": false,
+        "node": true,
+        "jest": true,
+        "es6": true
+  },
+  "rules": {
+    "prettier/prettier": [
+      2,
+      {
+        "bracketSpacing": true,
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "trailingComma": "all"
+      }
+    ]
+  },
+  "parserOptions": {
+    "comma-dangle": ["error", "always"],
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "experimentalObjectRestSpread": true
+    }
+  }
+}

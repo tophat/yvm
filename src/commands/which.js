@@ -28,7 +28,7 @@ const whichCommand = inputPath => {
             const rcVersion = getRcFileVersion()
             if (rcVersion !== null) {
                 if (pathVersion === rcVersion) {
-                    log(`your RC version matches your PATH version, good job!`)
+                    log('your RC version matches your PATH version, good job!')
                 } else {
                     log(
                         `your RC version: ${rcVersion} and PATH version: ${pathVersion} don't match :(`,
@@ -41,7 +41,7 @@ const whichCommand = inputPath => {
     })
 
     if (!foundVersion) {
-        log(`You don't have yvm version installed`)
+        log("You don't have yvm version installed")
         return 2
     }
 
