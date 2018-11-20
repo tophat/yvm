@@ -4,10 +4,16 @@ docker_defaults: &docker_defaults
   docker:
     - image: circleci/node:8.11.3
 
-restore_cache: &restore_cache
+prep_env: &prep_env
+  checkout:
+    path: ~/repo
   restore_cache:
     name: Restore node_modules cache
     key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  run:
+    name: 'Install yvm release version'
+    command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+
 save_cache: &save_cache
   save_cache:
     name: Save node_modules cache
@@ -15,31 +21,23 @@ save_cache: &save_cache
     paths:
       - node_modules/
 
-install_yvm: &install_yvm
-  run:
-    name: 'Install yvm release version'
-    command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
 
 jobs:
   test:
     <<: *docker_defaults
     steps:
-      - checkout
-      - *restore_cache
-      - *install_yvm
+      - *prep_env
+      - run: yvm exec install
+      - *save_cache
       - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-      - *save_cache
   website:
     <<: *docker_defaults
     working_directory: website
     steps:
-      - checkout:
-          path: ~/repo
-      - *restore_cache
-      - *install_yvm
+      - *prep_env
       - run: yvm exec install
       - *save_cache
       - run: yvm exec build
@@ -50,19 +48,13 @@ jobs:
   build_and_deploy:
     <<: *docker_defaults
     steps:
-      - checkout
-      - *restore_cache
-      - *install_yvm
+      - *prep_env
       - run: make build_and_deploy
   deploy_website:
     <<: *docker_defaults
     working_directory: website
     steps:
-      - checkout:
-          path: ~/repo
-      - *restore_cache
-      - *install_yvm
-      - run: yvm exec install
+      - *prep_env
       - attach_workspace:
           at: ./
       - run:
