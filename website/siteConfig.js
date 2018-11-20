@@ -4,7 +4,7 @@ const siteConfig = {
     // For deploy
     // cname: 'yvm.js.org', TEMP DISABLED
     url: 'https://tophat.github.io',
-    baseUrl: '/yvm',
+    baseUrl: '/yvm/',
     projectName: 'yvm',
     organizationName: 'tophat',
     // End deploy options
