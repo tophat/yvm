@@ -27,7 +27,6 @@ jobs:
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules/
-
   website:
     <<: *docker_defaults
     working_directory: website
@@ -47,7 +46,6 @@ jobs:
         paths:
           - build/
       - *save_cache
-
   build_and_deploy:
     <<: *docker_defaults
     steps:
@@ -55,7 +53,6 @@ jobs:
       - *restore_cache
       - *install_yvm
       - run: make build_and_deploy
-
   deploy_website:
     <<: *docker_defaults
     working_directory: website
