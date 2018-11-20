@@ -7,10 +7,8 @@
 
 const React = require('react')
 
-const siteConfig = require(`website/website`)
-
 function docUrl(doc, language) {
-    return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`
+    return `docs/${language ? `${language}/` : ''}${doc}`
 }
 
 class Help extends React.Component {
@@ -34,7 +32,7 @@ class Help extends React.Component {
 
         return (
             <div className="docMainWrapper wrapper">
-                <Container className="mainContainer documentContainer postContainer">
+                <div className="mainContainer documentContainer postContainer">
                     <div className="post">
                         <header className="postHeader">
                             <h1>Need help?</h1>
@@ -43,12 +41,12 @@ class Help extends React.Component {
                             This project is maintained by a dedicated group of
                             people.
                         </p>
-                        <GridBlock
+                        <div
                             contents={supportLinks}
                             layout="threeColumn"
                         />
                     </div>
-                </Container>
+                </div>
             </div>
         )
     }

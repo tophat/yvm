@@ -3,3 +3,4 @@ node_modules
 translated_docs
 build
 i18n
+yarn-error.log
