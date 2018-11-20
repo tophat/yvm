@@ -7,7 +7,7 @@
 
 const React = require('react')
 
-const siteConfig = require(`docs/website/siteConfig.js`)
+const siteConfig = require(`website/website`)
 
 function docUrl(doc, language) {
     return `${siteConfig.baseUrl}docs/${language ? `${language}/` : ''}${doc}`
