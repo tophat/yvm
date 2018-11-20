@@ -20,10 +20,10 @@ commands:
     description: "Saves environment cache"
     steps:
       - save_cache:
-        name: Save node_modules cache
-        key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-        paths:
-          - node_modules/
+          name: Save node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
 
 
 jobs:
