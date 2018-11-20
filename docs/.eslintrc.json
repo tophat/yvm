@@ -1,7 +1,9 @@
 {
-  "plugins": ["react"],
+  "plugins": ["react", "prettier"],
   "extends": [
-    "airbnb/base"
+    "airbnb/base",
+    "prettier",
+    "prettier/react"
   ],
   "env": {
         "browser": false,
@@ -20,5 +22,15 @@
         "trailingComma": "all"
       }
     ]
+  },
+  "parserOptions": {
+    "comma-dangle": ["error", "always"],
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "experimentalObjectRestSpread": true
+    }
   }
 }
