@@ -11,7 +11,7 @@
 // List of projects/orgs using your project for the users page.
 
 const siteConfig = {
-    title: 'Test Site', // Title for your website.
+    title: 'YVM', // Title for your website.
     tagline: 'A website for testing',
     url: 'https://your-docusaurus-test-site.com', // Your website URL
     baseUrl: '/', // Base URL for your project */
@@ -36,8 +36,8 @@ const siteConfig = {
     // If you have users set above, you add it here:
 
     /* path to images for header/footer */
-    headerIcon: 'img/docusaurus.svg',
-    footerIcon: 'img/docusaurus.svg',
+    headerIcon: 'img/yarn.png',
+    footerIcon: 'img/yarn.png',
     favicon: 'img/favicon.png',
 
     /* Colors for website */
