@@ -31,7 +31,7 @@ jobs:
     <<: *docker_defaults
     steps:
       - prep_env
-      - run: yvm exec install
+      - run: ~/.yvm/yvm.js exec install
       - save_env_cache
       - run: make lint
       - run: make test-coverage
@@ -42,9 +42,9 @@ jobs:
     working_directory: website
     steps:
       - prep_env
-      - run: yvm exec install
+      - run: ~/.yvm/yvm.js exec install
       - save_env_cache
-      - run: yvm exec build
+      - run: ~/.yvm/yvm.js exec build
       - persist_to_workspace:
           root: ./
           paths:
