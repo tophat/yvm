@@ -61,12 +61,14 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ./
+      - add_ssh_keys:
+        fingerprints:
+          - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
       - run:
-          name: Setup Git user and deploy website
+          name: Setup git user and deploy website
           command: |
             git config --global user.email "circleci-yvm@users.noreply.github.com"
             git config --global user.name "CircleCI YVM"
-            echo "machine github.com login $GITHUB_USERNAME password $GITHUB_TOKEN" > ~/.netrc
             GIT_USER=$GITHUB_USERNAME USE_SSH=true yarn publish-gh-pages
 
 workflows:
