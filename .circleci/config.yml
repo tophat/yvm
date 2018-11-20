@@ -42,9 +42,9 @@ jobs:
           key: yvm-website-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run: yvm exec build
       - persist_to_workspace:
-        root: ./
-        paths:
-          - build/
+          root: ./
+          paths:
+            - build/
       - *save_cache
   build_and_deploy:
     <<: *docker_defaults
