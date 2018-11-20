@@ -13,9 +13,6 @@ commands:
       - restore_cache:
           name: Restore node_modules cache
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      - run:
-          name: 'Install yvm release version'
-          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
   save_env_cache:
     description: "Saves environment cache"
     steps:
@@ -42,9 +39,9 @@ jobs:
     working_directory: website
     steps:
       - prep_env
-      - run: ~/.yvm/yvm.js exec install
+      - run: yarn install
       - save_env_cache
-      - run: ~/.yvm/yvm.js exec build
+      - run: yarn build
       - persist_to_workspace:
           root: ./
           paths:
@@ -67,7 +64,7 @@ jobs:
             git config --global user.email "circleci-yvm@users.noreply.github.com"
             git config --global user.name "CircleCI YVM"
             echo "machine github.com login $GITHUB_USERNAME password $GITHUB_TOKEN" > ~/.netrc
-            GIT_USER=$GITHUB_USERNAME USE_SSH=true yvm exec publish-gh-pages
+            GIT_USER=$GITHUB_USERNAME USE_SSH=true yarn publish-gh-pages
 
 workflows:
   version: 2
