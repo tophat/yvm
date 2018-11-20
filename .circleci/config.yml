@@ -28,7 +28,7 @@ jobs:
     <<: *docker_defaults
     steps:
       - prep_env
-      - run: ~/.yvm/yvm.js exec install
+      - run: yarn install
       - save_env_cache
       - run: make lint
       - run: make test-coverage
