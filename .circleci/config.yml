@@ -62,8 +62,8 @@ jobs:
       - attach_workspace:
           at: ./
       - add_ssh_keys:
-        fingerprints:
-          - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
+          fingerprints:
+            - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
       - run:
           name: Setup git user and deploy website
           command: |
