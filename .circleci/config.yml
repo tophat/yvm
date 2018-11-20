@@ -49,7 +49,9 @@ jobs:
     <<: *docker_defaults
     steps:
       - checkout
-      - *restore_cache
+      - restore_cache:
+        name: Restore node_modules cache
+        key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - *install_yvm
       - run: make build_and_deploy
   deploy_website:
