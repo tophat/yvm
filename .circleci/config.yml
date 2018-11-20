@@ -40,6 +40,8 @@ jobs:
       - save_cache:
           name: Save node_modules cache
           key: yvm-website-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
       - run: yvm exec build
       - persist_to_workspace:
           root: ./
