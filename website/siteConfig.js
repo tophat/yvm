@@ -3,8 +3,8 @@ const siteConfig = {
     tagline: 'Yarn Version Manager',
     // For deploy
     // cname: 'yvm.js.org', TEMP DISABLED
-    url: 'https://yvm.js.org',
-    baseUrl: '/',
+    url: 'https://tophat.github.io',
+    baseUrl: '/yvm',
     projectName: 'yvm',
     organizationName: 'tophat',
     // End deploy options
