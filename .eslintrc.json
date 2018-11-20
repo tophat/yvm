@@ -1,7 +1,8 @@
 {
-  "plugins": ["react"],
+  "plugins": ["prettier"],
   "extends": [
-    "airbnb/base"
+    "airbnb/base",
+    "prettier"
   ],
   "env": {
         "browser": false,
