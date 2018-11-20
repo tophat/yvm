@@ -13,6 +13,9 @@ commands:
       - restore_cache:
           name: Restore node_modules cache
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+        name: 'Install yvm release version'
+        command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
   save_env_cache:
     description: "Saves environment cache"
     steps:
@@ -28,12 +31,11 @@ jobs:
     <<: *docker_defaults
     steps:
       - prep_env
-      - run: yarn install
-      - save_env_cache
       - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
+      - save_env_cache
   website:
     <<: *docker_defaults
     working_directory: ~/repo/website
@@ -68,7 +70,7 @@ jobs:
 
 workflows:
   version: 2
-  test_and_deploy_master:
+  yvm_and_website:
     jobs:
       - test
       - website
