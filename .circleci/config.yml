@@ -32,7 +32,7 @@ jobs:
     working_directory: website
     steps:
       - checkout:
-        path: ~/repo
+          path: ~/repo
       - restore_cache:
           name: Restore node_modules cache
           key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
@@ -62,7 +62,7 @@ jobs:
     working_directory: website
     steps:
       - checkout:
-        path: ~/repo
+          path: ~/repo
       - restore_cache:
           name: Restore node_modules cache
           key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
