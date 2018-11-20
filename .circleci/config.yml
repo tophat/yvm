@@ -4,18 +4,6 @@ docker_defaults: &docker_defaults
   docker:
     - image: circleci/node:8.11.3
 
-restore_cache: &restore_cache
-  restore_cache:
-    name: Restore node_modules cache
-    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-
-save_cache: &save_cache
-  save_cache:
-    name: Save node_modules cache
-    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-    paths:
-      - node_modules/
-
 install_yvm: &install_yvm
   run:
     name: 'Install yvm release version'
@@ -26,13 +14,40 @@ jobs:
     <<: *docker_defaults
     steps:
       - checkout
-      - *restore_cache
+      - restore_cache:
+          name: Restore node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - *install_yvm
       - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
+      - save_cache:
+          name: Save node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
+
+  website:
+    <<: *docker_defaults
+    working_directory: website
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node_modules cache
+          key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - *install_yvm
+      - run: yvm exec install
+      - save_cache:
+          name: Save node_modules cache
+          key: yvm-website-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run: yvm exec build
+      - persist_to_workspace:
+        root: ./
+        paths:
+          - build/
       - *save_cache
+
   build_and_deploy:
     <<: *docker_defaults
     steps:
@@ -41,14 +56,40 @@ jobs:
       - *install_yvm
       - run: make build_and_deploy
 
+  deploy_website:
+    <<: *docker_defaults
+    working_directory: website
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node_modules cache
+          key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - *install_yvm
+      - run: yvm exec install
+      - attach_workspace:
+          at: ./
+      - run: |
+        git config --global user.email "circleci-yvm@users.noreply.github.com"
+        git config --global user.name "CircleCI YVM"
+        echo "machine github.com login $GITHUB_USERNAME password $GITHUB_TOKEN" > ~/.netrc
+        GIT_USER=$GITHUB_USERNAME USE_SSH=true yvm exec publish-gh-pages
+
 workflows:
   version: 2
   test_and_deploy_master:
     jobs:
       - test
+      - website
       - build_and_deploy:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_website:
+          requires:
+            - website
           filters:
             branches:
               only:

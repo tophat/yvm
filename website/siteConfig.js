@@ -1,11 +1,13 @@
 const siteConfig = {
     title: 'YVM',
     tagline: 'Yarn Version Manager',
-    url: 'https://yvm.js.org',
+    // For deploy
     cname: 'yvm.js.org',
+    url: 'https://yvm.js.org',
     baseUrl: '/',
     projectName: 'yvm',
     organizationName: 'tophat',
+    // End deploy options
     headerLinks: [
         { doc: 'readme', label: 'Docs' },
         { doc: 'doc4', label: 'API' },
