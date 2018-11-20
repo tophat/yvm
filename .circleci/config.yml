@@ -4,6 +4,17 @@ docker_defaults: &docker_defaults
   docker:
     - image: circleci/node:8.11.3
 
+restore_cache: &restore_cache
+  restore_cache:
+    name: Restore node_modules cache
+    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+save_cache: &save_cache
+  save_cache:
+    name: Save node_modules cache
+    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+    paths:
+      - node_modules/
+
 install_yvm: &install_yvm
   run:
     name: 'Install yvm release version'
@@ -14,35 +25,23 @@ jobs:
     <<: *docker_defaults
     steps:
       - checkout
-      - restore_cache:
-          name: Restore node_modules cache
-          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - *restore_cache
       - *install_yvm
       - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-      - save_cache:
-          name: Save node_modules cache
-          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
+      - *save_cache
   website:
     <<: *docker_defaults
     working_directory: website
     steps:
       - checkout:
           path: ~/repo
-      - restore_cache:
-          name: Restore node_modules cache
-          key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - *restore_cache
       - *install_yvm
       - run: yvm exec install
-      - save_cache:
-          name: Save node_modules cache
-          key: yvm-website-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
+      - *save_cache
       - run: yvm exec build
       - persist_to_workspace:
           root: ./
@@ -52,9 +51,7 @@ jobs:
     <<: *docker_defaults
     steps:
       - checkout
-      - restore_cache:
-        name: Restore node_modules cache
-        key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - *restore_cache
       - *install_yvm
       - run: make build_and_deploy
   deploy_website:
@@ -63,9 +60,7 @@ jobs:
     steps:
       - checkout:
           path: ~/repo
-      - restore_cache:
-          name: Restore node_modules cache
-          key: yvm-webiste-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - *restore_cache
       - *install_yvm
       - run: yvm exec install
       - attach_workspace:
