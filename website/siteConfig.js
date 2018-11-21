@@ -1,5 +1,5 @@
 const siteConfig = {
-    title: 'YVM',
+    title: 'Yarn Version Manager',
     tagline: 'Yarn Version Manager',
     // For deploy
     // cname: 'yvm.js.org', TEMP DISABLED
@@ -10,15 +10,14 @@ const siteConfig = {
     // End deploy options
     headerLinks: [
         { doc: 'readme', label: 'Docs' },
-        { doc: 'doc4', label: 'API' },
-        { page: 'help', label: 'Help' },
+        { href: "https://github.com/tophat/yvm", label: "GitHub" },
     ],
-    headerIcon: 'img/docusaurus.svg',
-    footerIcon: 'img/docusaurus.svg',
+    headerIcon: 'img/yarn.png',
+    footerIcon: 'img/yarn.png',
     favicon: 'img/favicon.png',
     colors: {
-        primaryColor: '#2E8555',
-        secondaryColor: '#205C3B',
+        primaryColor: '#f9316d',
+        secondaryColor: '#f9316d',
     },
     customDocsPath: 'website/docs',
     gaTrackingId: '',
@@ -49,8 +48,8 @@ const siteConfig = {
     cleanUrl: true, // No .html extensions for paths.
 
     // Open Graph and Twitter card images.
-    ogImage: 'img/docusaurus.png',
-    twitterImage: 'img/docusaurus.png',
+    ogImage: 'img/yarn.png',
+    twitterImage: 'img/yarn.png',
 
     // Show documentation's last contributor's name.
     enableUpdateBy: true,
