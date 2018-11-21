@@ -1,6 +1,5 @@
 {
   "scripts": {
-    "examples": "docusaurus-examples",
     "start": "docusaurus-start",
     "build": "docusaurus-build",
     "publish-gh-pages": "docusaurus-publish",
@@ -9,8 +8,7 @@
     "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
-    "docusaurus": "^1.5.1",
-    "eslint-plugin-react": "^7.11.1"
+    "docusaurus": "^1.5.1"
   },
   "dependencies": {
     "react": "^16.6.3"
