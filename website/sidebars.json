@@ -1,8 +1,5 @@
 {
   "docs": {
-    "Getting Started": ["readme", "api", "faq"]
-  },
-  "docs-other": {
-    "First Category": ["doc4", "doc5"]
+    "Getting Started": ["overview", "api", "faq"]
   }
 }
