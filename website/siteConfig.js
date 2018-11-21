@@ -22,7 +22,7 @@ const siteConfig = {
     customDocsPath: 'docs',
     gaTrackingId: '',
 
-    copyright: `Copyright © ${new Date().getFullYear()} Tophatmonocle Corp.`,
+    copyright: 'Top Hat Open Source',
 
     highlight: {
         // Highlight.js theme to use for syntax highlighting in code blocks.
