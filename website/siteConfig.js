@@ -9,7 +9,7 @@ const siteConfig = {
     organizationName: 'tophat',
     // End deploy options
     headerLinks: [
-        { doc: 'readme', label: 'Docs' },
+        { doc: 'overview', label: 'Docs' },
         { doc: 'doc4', label: 'API' },
         { page: 'help', label: 'Help' },
     ],
