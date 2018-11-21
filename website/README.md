@@ -11,7 +11,7 @@ in the root directory
 
 Then run the server using 
 ```
-npm start 
+yarn start 
 ```
 
 and go to http://localhost:3000
