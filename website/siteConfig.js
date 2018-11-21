@@ -19,22 +19,9 @@ const siteConfig = {
         primaryColor: '#f9316d',
         secondaryColor: '#f9316d',
     },
-    customDocsPath: 'website/docs',
+    customDocsPath: 'docs',
     gaTrackingId: '',
 
-    /* Custom fonts for website */
-    /*
-  fonts: {
-    myFont: [
-      "Times New Roman",
-      "Serif"
-    ],
-    myOtherFont: [
-      "-apple-system",
-      "system-ui"
-    ]
-  },
-  */
     copyright: `Copyright © ${new Date().getFullYear()} Tophatmonocle Corp.`,
 
     highlight: {
@@ -53,13 +40,6 @@ const siteConfig = {
 
     // Show documentation's last contributor's name.
     enableUpdateBy: true,
-
-    // Show documentation's last update time.
-    // enableUpdateTime: true,
-
-    // You may provide arbitrary config keys to be used as needed by your
-    // template. For example, if you need your repo's URL...
-    //   repoUrl: 'https://github.com/facebook/test-site',
 }
 
 module.exports = siteConfig
