@@ -9,7 +9,7 @@ const siteConfig = {
     organizationName: 'tophat',
     // End deploy options
     headerLinks: [
-        { doc: 'readme', label: 'Docs' },
+        { doc: 'overview', label: 'Docs' },
         { href: "https://github.com/tophat/yvm", label: "GitHub" },
     ],
     headerIcon: 'img/yarn.png',
