@@ -3,11 +3,11 @@ id: overview
 title: Overview
 ---
 
-[![Builds](https://img.shields.io/circleci/project/github/tophat/yvm.svg)](https://circleci.com/gh/tophat/yvm) [![codecov](https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophat/yvm) [![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm) [![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm?type=dev)
+[![Builds](https://img.shields.io/circleci/project/github/tophat/yvm/master.svg)](https://circleci.com/gh/tophat/yvm) [![codecov](https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophat/yvm) [![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm) [![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm?type=dev)
 
-Yarn version manager
+Pesky yarn versions got you down? Automatically and easilly manage those versions.
 
-Pesky yarn versions got you down? Manage those versions
+YVM will automatically use the correct yarn version when you run any yarn commands in any folder with a `.yvmrc` file. Otherwise, it will use you a globally set version of yarn.
 
 
 ## Installation
@@ -26,6 +26,9 @@ yvm update-self
 ```
 
 ## Usage
+
+### Automatic magic
+Run any yarn command and watch it magically use the correct version of yarn
 
 ### Basic
 
@@ -66,4 +69,4 @@ yvm help
 
 ### Using a .yvmrc File
 You can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the `.yvmrc` file if no version number is supplied to the command.
-You can also [declare the version using other configuration files](docs/faq.md)
+You can also [declare the version using other configuration files](/docs/faq)
