@@ -4,8 +4,15 @@ title: FAQ
 ---
 
 ## Why should I use yvm?
+YVM will automaticaly select the correct version of yarn for you whenever you run any yarn commands. If there is a `.yvmrc` file, it will use that version. If no .yvmrc file exists, it will use a globally set default version. 
+
+YVM also has many useful commands. Refer to the API documentation for more details.
+
 
 ## How does yvm work?
+YVM is essentially a shim which will intercept yarn commands. It will determine the correct version of yarn, and append it to the path.
+YVM has all installed versions of yarn in `.yvm/versions`.
+
 
 ## I get the message `You need to source yvm to use this command.`
 This means you're running the yvm.js script directly and not the shell function.
