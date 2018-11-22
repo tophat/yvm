@@ -1,7 +1,7 @@
+const shell = require('shelljs')
 const { getRcFileVersion } = require('../util/version')
 const log = require('../util/log')
 const { yvmPath, versionRootPath } = require('../util/utils')
-const shell = require('shelljs')
 
 const whichCommand = inputPath => {
     if (!shell.which('yarn')) {
