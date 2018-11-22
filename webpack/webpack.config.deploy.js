@@ -1,6 +1,6 @@
+const ZipPlugin = require('zip-webpack-plugin')
 const baseConfig = require('./webpack.config.base')
 const GithubReleasePlugin = require('./githubReleasePlugin')
-const ZipPlugin = require('zip-webpack-plugin')
 
 const zipfileName = 'yvm.zip'
 
