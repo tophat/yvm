@@ -16,18 +16,20 @@ save_last_used_yarn_version() {
     
     if [ -e ~/.zshrc ]; then
         if ! grep -q "LAST_USED_YARN_VERSION" ~/.zshrc; then
-            sed -i '' 's/.*YVM_DIR.*/export LAST_USED_YARN_VERSION='"${yarn_version}"'\'$'\n&/g' ~/.zshrc
+            sed -itmp 's/.*YVM_DIR.*/export LAST_USED_YARN_VERSION='"${yarn_version}"'\'$'\n&/g' ~/.zshrc
         else
-            sed -i '' "s/LAST_USED_YARN_VERSION.*/LAST_USED_YARN_VERSION=${yarn_version}/" ~/.zshrc
+            sed -itmp "s/LAST_USED_YARN_VERSION.*/LAST_USED_YARN_VERSION=${yarn_version}/" ~/.zshrc
         fi
+        rm ~/.zshrctmp
     fi
 
     if [ -e ~/.bash_profile ]; then
         if ! grep -q "LAST_USED_YARN_VERSION" ~/.bash_profile; then
-            sed -i '' 's/.*YVM_DIR.*/export LAST_USED_YARN_VERSION='"${yarn_version}"'\'$'\n&/g' ~/.bash_profile
+            sed -itmp 's/.*YVM_DIR.*/export LAST_USED_YARN_VERSION='"${yarn_version}"'\'$'\n&/g' ~/.bash_profile
         else
-            sed -i '' "s/LAST_USED_YARN_VERSION.*/LAST_USED_YARN_VERSION=${yarn_version}/" ~/.bash_profile
+            sed -itmp "s/LAST_USED_YARN_VERSION.*/LAST_USED_YARN_VERSION=${yarn_version}/" ~/.bash_profile
         fi
+        rm ~/.bash_profiletmp
     fi
 }
 
