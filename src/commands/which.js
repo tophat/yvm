@@ -26,12 +26,15 @@ const whichCommand = inputPath => {
 
             const pathVersion = matchedVersion.toString().replace(/v/g, '')
             const rcVersion = getRcFileVersion()
+            log(`Currently on yarn version ${pathVersion}`)
             if (rcVersion !== null) {
                 if (pathVersion === rcVersion) {
-                    log('your RC version matches your PATH version, good job!')
+                    log(
+                        'Your .yvmrc version matches your PATH version, good job!',
+                    )
                 } else {
                     log(
-                        `your RC version: ${rcVersion} and PATH version: ${pathVersion} don't match :(`,
+                        `Your .yvmrc version: ${rcVersion} and PATH version: ${pathVersion} don't match :(`,
                     )
                 }
             }
