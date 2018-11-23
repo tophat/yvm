@@ -45,7 +45,7 @@ describe('yvm list', () => {
 
     it('Correctly highlights active yarn version', () => {
         const listOutput = getList()
-        const versionsMap = printVersions(listOutput, '1.7.0', 'test')
+        const versionsMap = printVersions(listOutput, 'test', '1.7.0')
         expect(versionsMap['1.7.0']).toBe(` \u2713 1.7.0`)
         expect(versionsMap['1.6.0']).toBe(` - 1.6.0`)
     })
