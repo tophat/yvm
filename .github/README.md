@@ -2,6 +2,7 @@
     <a href="https://github.com/tophat/yvm">
         <img width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png">
     </a>
+    <br />
     <a href="https://circleci.com/gh/tophat/yvm">
         <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
     </a>
@@ -17,7 +18,6 @@
     <a href="#contributors">
         <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square"/>
     </a>
-    
 </div>
 
 # Overview
