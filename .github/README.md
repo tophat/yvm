@@ -2,13 +2,22 @@
     <a href="https://github.com/tophat/yvm">
         <img width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png">
     </a>
-
-    [![Builds](https://img.shields.io/circleci/project/github/tophat/yvm/master.svg)](https://circleci.com/gh/tophat/yvm)
-    [![codecov](https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophat/yvm)
-    [![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm)
-    [![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm?type=dev)
-    [![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors)
-
+    <a href="https://circleci.com/gh/tophat/yvm">
+        <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
+    </a>
+    <a href="https://codecov.io/gh/tophat/yvm">
+        <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
+    </a>
+    <a href="https://david-dm.org/tophat/yvm">
+        <img alt="Deps" src="https://david-dm.org/tophat/yvm/status.svg"/>
+    </a>
+    <a href="https://david-dm.org/tophat/yvm">
+        <img alt="Dev Deps" src="https://david-dm.org/tophat/yvm/dev-status.svg"/>
+    </a>
+    <a href="#contributors">
+        <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square"/>
+    </a>
+    
 </div>
 
 # Overview
