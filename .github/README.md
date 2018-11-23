@@ -15,8 +15,15 @@
     <a href="https://david-dm.org/tophat/yvm">
         <img alt="Dev Deps" src="https://david-dm.org/tophat/yvm/dev-status.svg"/>
     </a>
+    <br />
     <a href="#contributors">
         <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square"/>
+    </a>
+    <a href="https://opensource.tophat.com/#join-slack">
+        <img alt="Slack workspace" src="https://slackinvite.dev.tophat.com/badge.svg"/>
+    </a>    
+    <a href="https://github.com/tophat/getting-started/blob/master/scorecard.md">
+        <img alt="Maturity badge - level 3" src="https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg"/>
     </a>
 </div>
 
