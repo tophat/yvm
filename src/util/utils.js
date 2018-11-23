@@ -18,13 +18,21 @@ const printVersions = (list, versionInUse, message) => {
 
     versionInUse = versionInUse.trim()
 
+    const versionsMap = {}
+
     list.forEach(item => {
-        if (item.trim() === versionInUse) {
-            log('\x1b[32m%s\x1b[0m', ` \u2713 ${item}`)
+        const itemTrimmed = item.trim()
+        let toLog = ` - ${item}`
+
+        if (itemTrimmed === versionInUse) {
+            toLog = ` \u2713 ${item}`
+            log('\x1b[32m%s\x1b[0m', toLog)
         } else {
-            log(` - ${item}`)
+            log(toLog)
         }
+        versionsMap[itemTrimmed] = toLog
     })
+    return versionsMap
 }
 
 const getVersionsFromTags = () => {
