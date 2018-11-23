@@ -126,6 +126,8 @@ We welcome contributions from the community, Top Hatters and non-Top Hatters ali
 Make sure all changes are well documented. Our documentation can be found inside the `docs` section of this repo. Be sure to read it carefully and make modifications wherever necessary.
 You can also access the documentation on our [website](https://yvm.js.org)
 
+Please make sure to look over our [Code of Conduct](https://github.com/tophat/getting-started/blob/master/code-of-conduct.md) as well!
+
 
 ### Manual testing command contributions
 
