@@ -1,51 +1,82 @@
-version: 2
+version: 2.1
 
 docker_defaults: &docker_defaults
   docker:
     - image: circleci/node:8.11.3
 
-restore_cache: &restore_cache
-  restore_cache:
-    name: Restore node_modules cache
-    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-
-save_cache: &save_cache
-  save_cache:
-    name: Save node_modules cache
-    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-    paths:
-      - node_modules/
-
-install_yvm: &install_yvm
-  run:
-    name: 'Install yvm release version'
-    command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+commands:
+  prep_env:
+    description: "Prepapres environment with cache and yvm"
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          name: Restore node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: 'Install yvm release version'
+          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+  save_env_cache:
+    description: "Saves environment cache"
+    steps:
+      - save_cache:
+          name: Save node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
 
 jobs:
   test:
     <<: *docker_defaults
+    working_directory: ~/repo
     steps:
-      - checkout
-      - *restore_cache
-      - *install_yvm
+      - prep_env
       - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-      - *save_cache
+      - save_env_cache
+  website:
+    <<: *docker_defaults
+    working_directory: ~/repo/website
+    steps:
+      - prep_env
+      - run: yarn install
+      - save_env_cache
+      - run: yarn build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build/
   build_and_deploy:
     <<: *docker_defaults
+    working_directory: ~/repo
     steps:
-      - checkout
-      - *restore_cache
-      - *install_yvm
+      - prep_env
       - run: make build_and_deploy
+  deploy_website:
+    <<: *docker_defaults
+    working_directory: ~/repo/website
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ./
+      - add_ssh_keys:
+          fingerprints:
+            - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
+      - run:
+          name: Setup git user and deploy website
+          command: |
+            git config --global user.email "circleci-yvm@users.noreply.github.com"
+            git config --global user.name "CircleCI YVM"
+            USE_SSH=true yarn publish-gh-pages
 
 workflows:
   version: 2
-  test_and_deploy_master:
+  yvm_and_website:
     jobs:
       - test
+      - website
       - build_and_deploy:
           requires:
             - test
@@ -53,3 +84,16 @@ workflows:
             branches:
               only:
                 - master
+      - deploy_website:
+          requires:
+            - website
+          filters:
+            branches:
+              only:
+                - master
+
+experimental:
+  notify:
+    branches:
+      only:
+        - master

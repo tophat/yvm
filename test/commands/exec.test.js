@@ -4,6 +4,7 @@ const exec = require('../../src/yvm-exec')
 const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
 
 // TODO implement tests here once the "strict mode" stuff works on jest (ie require(yarn cli.js) fails)
+// eslint-disable-next-line jest/no-disabled-tests
 describe.skip('yvm exec', () => {
     const rootPath = '/tmp/yvmExec'
 

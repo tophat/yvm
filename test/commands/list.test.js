@@ -35,6 +35,5 @@ describe('yvm list', () => {
         garbageInDirectory.forEach(item => {
             expect(listOutput.indexOf(item)).toBe(-1)
         })
-        expect(listOutput.indexOf(garbageInDirectory))
     })
 })
