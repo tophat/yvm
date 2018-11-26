@@ -3,7 +3,6 @@ const argParser = require('commander')
 const { ensureVersionInstalled } = require('./util/install')
 const { getSplitVersionAndArgs } = require('./util/version')
 const log = require('./util/log')
-const { yvmPath } = require('./util/utils')
 
 const invalidCommandLog = () =>
     log(
@@ -81,15 +80,25 @@ argParser
   });
 
 argParser
-  .command('get-new-path [version] [customPathString]')
+  .command('get-new-path [version]')
   .description('Internal command: Gets a new PATH string for "yvm use", installing the version if necessary')
   .action((maybeVersion) => {
-    const [version, customPathString] = getSplitVersionAndArgs(maybeVersion);
+    const [version] = getSplitVersionAndArgs(maybeVersion);
     const getNewPath = require('./commands/getNewPath');
     ensureVersionInstalled(version).then(() => {
-        const newPath = customPathString ?
-            getNewPath(version, yvmPath, customPathString) :
-            getNewPath(version)
+        const newPath = getNewPath(version)
+        log.capturable(newPath)
+    });
+  });
+
+argParser
+  .command('get-new-fish-user-path [version]')
+  .description('Internal command: Gets a new fish_user_paths string for "yvm use", installing the version if necessary')
+  .action((maybeVersion) => {
+    const [version] = getSplitVersionAndArgs(maybeVersion);
+    const getNewFishUserPaths = require('./commands/getNewFishUserPaths');
+    ensureVersionInstalled(version).then(() => {
+        const newPath = getNewFishUserPaths(version)
         log.capturable(newPath)
     });
   });
