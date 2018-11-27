@@ -22,7 +22,6 @@ const printVersions = (list, message, versionInUse = '') => {
 
     list.forEach(item => {
         const itemTrimmed = item.trim()
-        //let toLog = ` - ${item}`
 
         const toLog =
             itemTrimmed === versionInUse ? ` \u2713 ${item}` : ` - ${item}`

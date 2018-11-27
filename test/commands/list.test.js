@@ -49,4 +49,9 @@ describe('yvm list', () => {
         expect(versionsMap['1.7.0']).toBe(` \u2713 1.7.0`)
         expect(versionsMap['1.6.0']).toBe(` - 1.6.0`)
     })
+
+    it('Returns nothing if nothing installed', () => {
+        const versions = list(rootPath)
+        expect(versions).toEqual([])
+    })
 })
