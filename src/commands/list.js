@@ -27,11 +27,7 @@ const listVersions = (rootPath = yvmPath) => {
         exec(
             'yarn --version',
             { async: true, silent: true },
-            (code, stdout, stderr) => {
-                if (stderr) {
-                    printVersions(installedVersions, message)
-                    return
-                }
+            (code, stdout) => {
                 const versionInUse = stdout
                 printVersions(installedVersions, message, versionInUse)
             },
