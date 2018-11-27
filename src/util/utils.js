@@ -13,11 +13,28 @@ const getExtractionPath = (version, rootPath) =>
 const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-const printVersions = (list, message) => {
+const printVersions = (list, message, versionInUse = '') => {
     log(message)
+
+    versionInUse = versionInUse.trim()
+
+    const versionsMap = {}
+
     list.forEach(item => {
-        log(`  - ${item}`)
+        const itemTrimmed = item.trim()
+
+        const toLog =
+            itemTrimmed === versionInUse ? ` \u2713 ${item}` : ` - ${item}`
+
+        if (itemTrimmed === versionInUse) {
+            log('\x1b[32m%s\x1b[0m', toLog)
+        } else {
+            log(toLog)
+        }
+
+        versionsMap[itemTrimmed] = toLog
     })
+    return versionsMap
 }
 
 const getVersionsFromTags = () => {
