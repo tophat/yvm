@@ -20,7 +20,7 @@ const siteConfig = {
         secondaryColor: '#f9316d',
     },
     customDocsPath: 'docs',
-    gaTrackingId: '',
+    gaTrackingId: 'UA-129741728-1',
 
     copyright: 'Top Hat Open Source',
 
