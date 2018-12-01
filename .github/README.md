@@ -29,6 +29,8 @@
 
 # Overview
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/tophat/yvm.svg)](https://greenkeeper.io/)
+
 Yarn Version Manager
 
 Pesky yarn versions got you down? Automatically and easilly manage those versions.
