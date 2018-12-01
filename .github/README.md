@@ -15,6 +15,9 @@
     <a href="https://david-dm.org/tophat/yvm">
         <img alt="Dev Deps" src="https://david-dm.org/tophat/yvm/dev-status.svg"/>
     </a>
+    <a href="https://greenkeeper.io">
+        <img alt="Green Keeper" src="https://badges.greenkeeper.io/tophat/yvm.svg"/>
+    </a>
     <br />
     <a href="#contributors">
         <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square"/>
