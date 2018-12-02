@@ -11,7 +11,7 @@ const yvmInstalledVersion = (inYvmPath = yvmPath) => {
         const versionJSON = JSON.parse(versionJSONString)
         const version = versionJSON.version
         if (!version) {
-            throw new `Version JSON exists but contains no key 'version'`
+            throw new `Version JSON exists but contains no key 'version'`()
         }
         return version
     } catch (e) {
