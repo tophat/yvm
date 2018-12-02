@@ -7,11 +7,13 @@ ifdef CI
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
+    YARN_INSTALL_ARGS=--frozen-lockfile --ci
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
+    YARN_INSTALL_ARGS=
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
@@ -109,7 +111,7 @@ test-snapshots: node_modules
 
 .PHONY: node_modules
 node_modules: $(YVM)
-	$(YVM) exec install
+	$(YVM) exec install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
 $(YVM):
