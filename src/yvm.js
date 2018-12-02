@@ -90,7 +90,7 @@ argParser
 
 argParser
   .command('version')
-  .description('Outputs version information on the installed yvm')
+  .description('Outputs the version of yvm that is installed')
   .action(() => {
     const yvmVersion = require('./commands/yvmVersion');
     process.exit(yvmVersion());
