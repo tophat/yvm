@@ -1,41 +1,43 @@
 const mockFS = require('mock-fs')
-const { yvmInstalledVersion } = require('../../src/util/yvmInstalledVersion')
+const {
+    getDefaultVersion,
+    setDefaultVersion,
+    isValidVersionString,
+} = require('../../src/util/version')
 
-describe('yvm installed version', () => {
+describe('yvm default version', () => {
     const mockYVMDir = '/mock-yvm-root-dir'
+    beforeEach(() => {
+        mockFS({
+            [mockYVMDir]: {},
+        })
+    })
     afterEach(mockFS.restore)
 
-    it('Finds version if installed', () => {
-        const mockVersion = 'v1.2.3'
-        mockFS({
-            [mockYVMDir]: {
-                '.version': `{ "version": "${mockVersion}" }`,
-            },
+    it('Returns default version if one is set, when there is none', () => {
+        const mockVersion = '1.32.34'
+        setDefaultVersion({
+            version: mockVersion,
+            yvmPath: mockYVMDir,
         })
-        expect(yvmInstalledVersion(mockYVMDir)).toEqual(mockVersion)
+
+        expect(getDefaultVersion(mockYVMDir)).toEqual(mockVersion)
     })
 
-    it('fails to find version if no file', () => {
-        expect(yvmInstalledVersion(mockYVMDir)).toBeUndefined()
+    it('Returns no version if one is not set, when there is none', () => {
+        expect(getDefaultVersion(mockYVMDir)).toBeUndefined()
+    })
+})
+
+describe('yvm valid version', () => {
+    it('Valid versions', () => {
+        expect(isValidVersionString('1.9.2')).toBe(true)
     })
 
-    it('fails to find version if file does not contain valid json', () => {
-        const mockVersion = 'v1.2.3'
-        mockFS({
-            [mockYVMDir]: {
-                '.version': `{ "${mockVersion}" }`,
-            },
-        })
-        expect(yvmInstalledVersion(mockYVMDir)).toBeUndefined()
-    })
-
-    it('fails to find version if file does not valid json with "version" key', () => {
-        const mockVersion = 'v1.2.3'
-        mockFS({
-            [mockYVMDir]: {
-                '.version': `{ "version_not_key": "${mockVersion}" }`,
-            },
-        })
-        expect(yvmInstalledVersion(mockYVMDir)).toBeUndefined()
+    it('Invalid versions', () => {
+        expect(isValidVersionString('v1.9.2')).toBe(false)
+        expect(isValidVersionString('1.9.x')).toBe(false)
+        expect(isValidVersionString('1.9')).toBe(false)
+        expect(isValidVersionString('1.9.2 ')).toBe(false)
     })
 })

@@ -122,7 +122,8 @@ argParser
         }
     });
 
-command('version')
+argParser
+    .command('version')
     .description('Outputs the version of yvm that is installed')
     .action(() => {
         const yvmVersion = require('./commands/yvmVersion');
