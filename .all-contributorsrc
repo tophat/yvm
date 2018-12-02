@@ -100,6 +100,33 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "syavash",
+      "name": "Siavash Mahmoudian",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/445636?v=4",
+      "profile": "https://breezio.com",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
+      "login": "greenkeeper[bot]",
+      "name": "greenkeeper[bot]",
+      "avatar_url": "https://avatars3.githubusercontent.com/in/505?v=4",
+      "profile": "https://github.com/apps/greenkeeper",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
+      "login": "jcrumb",
+      "name": "Jay Crumb",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7827407?v=4",
+      "profile": "https://github.com/jcrumb",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
