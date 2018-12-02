@@ -22,6 +22,8 @@ If applicable, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - YVM Release, see [releases](https://github.com/tophat/yvm/releases)
+ - Shell: [e.g. bash/sh/zsh/fish]
+ - Node version: [e.g. v8.10.0], see `node --version`
 
 
 **Additional context**
