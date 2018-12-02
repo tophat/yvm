@@ -30,14 +30,19 @@ if [ "$use_local" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
     cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" ${YVM_DIR}
 else
+    release_api_contents=$(curl -s ${release_api_url} )
     download_url=$(
-        curl -s ${release_api_url} |
-        grep '"browser_download_url": ".*/yvm.zip"' |
-        sed 's/"browser_download_url"://g' |
-        sed 's/[ "]//g'
+        echo ${release_api_contents} |
+        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
     )
+    version_tag=$(
+        echo ${release_api_contents} |
+        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
+    )
+    echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
     unzip -o -q ${zip_download_path} -d ${YVM_DIR}
+    echo "{ \"version\": \"${version_tag}\" }" > "${YVM_DIR}/.version"
     rm ${zip_download_path}
 fi
 
