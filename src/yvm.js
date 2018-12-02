@@ -102,7 +102,7 @@ argParser
             process.exit(1)
             return
         }
-        if (setDefaultVersion({ version })) {
+        if (setDefaultVersion({version})) {
             log('Default version set!')
         } else {
             process.exit(2)
@@ -120,6 +120,13 @@ argParser
             log('No default yarn version set')
             process.exit(1)
         }
+    });
+
+command('version')
+    .description('Outputs the version of yvm that is installed')
+    .action(() => {
+        const yvmVersion = require('./commands/yvmVersion');
+        process.exit(yvmVersion());
     });
 
 argParser
