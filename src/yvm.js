@@ -89,6 +89,14 @@ argParser
   });
 
 argParser
+  .command('version')
+  .description('Outputs the version of yvm that is installed')
+  .action(() => {
+    const yvmVersion = require('./commands/yvmVersion');
+    process.exit(yvmVersion());
+  });
+
+argParser
   .command('update-self')
   .description('Updates yvm to the latest version')
   .action(invalidCommandLog);
