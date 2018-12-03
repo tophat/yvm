@@ -15,7 +15,7 @@ function getDefaultVersion(yvmPath = defaultYvmPath) {
         const versionJSON = JSON.parse(versionJSONString)
         const version = versionJSON.defaultVersion
         if (!version) {
-            throw new Error(`Version JSON exists but contains no key 'version'`)
+            throw new Error(`Version JSON exists but contains no key 'defaultVersion'`)
         }
         return version
     } catch (e) {
