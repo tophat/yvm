@@ -135,10 +135,5 @@ argParser
     .description('Updates yvm to the latest version')
     .action(invalidCommandLog);
 
-argParser
-    .command('help')
-    .description('Show help text')
-    .action(() => argParser.outputHelp());
-
 /* eslint-enable global-require,prettier/prettier */
 argParser.parse(process.argv)
