@@ -22,7 +22,7 @@
     <a href="#contributors">
         <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square"/>
     </a>
-    <a href="https://opensource.tophat.com/#join-slack">
+    <a href="https://opensource.tophat.com/slack">
         <img alt="Slack workspace" src="https://slackinvite.dev.tophat.com/badge.svg"/>
     </a>
     <a href="https://github.com/tophat/getting-started/blob/master/scorecard.md">
