@@ -3,8 +3,9 @@ const path = require('path')
 const request = require('request')
 
 const log = require('./log')
-
+const { getDefaultVersion } = require('./version')
 const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
+const GLOBAL_DEFAULT_VERSION_TEXT = 'Global Default'
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
 const getExtractionPath = (version, rootPath) =>
@@ -19,13 +20,16 @@ const printVersions = (list, message, versionInUse = '') => {
     versionInUse = versionInUse.trim()
 
     const versionsMap = {}
+    const defaultVersion = getDefaultVersion(yvmPath)
 
     list.forEach(item => {
         const itemTrimmed = item.trim()
 
-        const toLog =
+        let toLog =
             itemTrimmed === versionInUse ? ` \u2713 ${item}` : ` - ${item}`
 
+        if (itemTrimmed === defaultVersion)
+            toLog += ` (${GLOBAL_DEFAULT_VERSION_TEXT})`
         if (itemTrimmed === versionInUse) {
             log('\x1b[32m%s\x1b[0m', toLog)
         } else {
