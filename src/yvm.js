@@ -22,7 +22,9 @@ if (!process.argv.includes('exec')) {
     argParser
         .command('*', '', {noHelp: true, isDefault: true})
         .action((invalidCommand) => {
-            log(`Invalid command: ${invalidCommand}`);
+            if (!process.argv.includes('help')) {
+                log(`Invalid command: ${invalidCommand}`);
+            }
             argParser.outputHelp();
             process.exit(1);
         });
