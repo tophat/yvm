@@ -42,7 +42,12 @@ jobs:
     working_directory: ~/repo/website
     steps:
       - prep_env
-      - run: yarn install --frozen-lockfile
+      - run: |
+          if [[ ${CIRCLE_BRANCH} == greenkeeper* ]]; then
+            yarn install
+          else
+            yarn install --frozen-lockfile
+          fi
       - save_env_cache
       - run: yarn build
       - persist_to_workspace:
