@@ -7,11 +7,7 @@ ifdef CI
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
-ifneq (,$(findstring greenkeeper,$(CIRCLE_BRANCH)))
-    YARN_INSTALL_ARGS=
-else
     YARN_INSTALL_ARGS=--frozen-lockfile --ci
-endif
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
