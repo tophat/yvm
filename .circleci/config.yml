@@ -98,32 +98,22 @@ workflows:
   version: 2
   yvm_and_website:
     jobs:
-      - node_modules:
-          filters:
-            tags:
-              only: /^v.*/
+      - node_modules
       - test:
           requires:
             - node_modules
-          filters:
-            tags:
-              only: /^v.*/
       - build:
           requires:
             - node_modules
-          filters:
-            tags:
-              only: /^v.*/
       - deploy:
           requires:
             - node_modules
             - test
             - build
           filters:
-            tags:
-              only: /^v.*/
             branches:
-              ignore: /.*/
+              only:
+                - master
       - website
       - deploy_website:
           requires:
