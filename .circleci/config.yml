@@ -65,11 +65,7 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ~/repo
-      - run:
-          name: Publish release
-          command: |
-              VERSION=`cat artifacts/version.txt`
-              node scripts/release.js
+      - run: VERSION=`cat artifacts/version.txt` node scripts/release.js
   website:
     <<: *docker_defaults
     working_directory: ~/repo/website
