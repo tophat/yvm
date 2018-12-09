@@ -61,7 +61,7 @@ install-watch: node_modules
 # ---- Webpack ----
 
 .PHONY: build-production
-build: node_modules
+build-production: node_modules
 	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
