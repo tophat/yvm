@@ -47,8 +47,7 @@ jobs:
     steps:
       - prep_env
       - run: make install
-      - run: yvm install 1.7.0
-      - run: yvm exec version
+      - run: test/sanit-test.sh
   lint:
     <<: *docker_defaults
     working_directory: ~/repo
