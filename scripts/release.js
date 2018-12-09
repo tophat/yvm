@@ -15,7 +15,7 @@ if (!taggedVersion || taggedVersion.length < 1) {
     process.exit(1)
 }
 
-const releaseVersion = 'v' + taggedVersion
+const releaseVersion = `v${taggedVersion}`
 
 const options = {
     auth: { token: process.env.GITHUB_TOKEN },
