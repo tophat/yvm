@@ -1,11 +1,25 @@
 const fs = require('fs')
 const path = require('path')
 const cosmiconfig = require('cosmiconfig')
+const shell = require('shelljs')
+
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./utils')
 
 function isValidVersionString(version) {
     return /^\d+\.\d+\.\d+$/.test(version)
+}
+
+function getActiveVersion() {
+    return new Promise((resolve, reject) => {
+        shell.exec('yarn --version', { silent: true }, (code, stdout) => {
+            if (code === 0) {
+                resolve(stdout.trim())
+            } else {
+                reject(code)
+            }
+        })
+    })
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
@@ -95,6 +109,7 @@ Try:
 }
 
 module.exports = {
+    getActiveVersion,
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
