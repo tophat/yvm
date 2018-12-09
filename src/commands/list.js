@@ -1,6 +1,6 @@
 const fs = require('fs')
-const { exec } = require('shelljs')
 
+const { getActiveVersion } = require('../util/version')
 const log = require('../util/log')
 const {
     printVersions,
@@ -24,18 +24,14 @@ const listVersions = (rootPath = yvmPath) => {
     const installedVersions = getYarnVersions(rootPath)
     if (installedVersions.length) {
         const message = 'Installed yarn versions:'
-        exec(
-            'yarn --version',
-            { async: true, silent: true },
-            (code, stdout) => {
-                const versionInUse = stdout
-                printVersions(installedVersions, message, versionInUse)
-            },
-        )
+        getActiveVersion()
+            .catch(() => printVersions(installedVersions, message))
+            .then(activeVersion =>
+                printVersions(installedVersions, message, activeVersion),
+            )
     } else {
         log('You have no yarn versions installed.')
     }
-    return installedVersions
 }
 
 module.exports = listVersions
