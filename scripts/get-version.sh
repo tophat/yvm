@@ -58,8 +58,6 @@ last_published_version=$(
 
 print "Last published version is $last_published_version"
 
-last_published_version="0.0.0"
-
 packaged_version="$(jq '.version' --raw-output package.json)"
 print "Version in package.json is $packaged_version"
 
