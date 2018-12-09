@@ -7,11 +7,13 @@ ifdef CI
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
+    YARN_INSTALL_ARGS=--frozen-lockfile --ci
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
+    YARN_INSTALL_ARGS=
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
@@ -42,14 +44,13 @@ help:
 	@echo "make test-snapshots                  - runs test, updating snapshots"
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
-	@echo "make build                           - builds a bundle with production settings"
-	@echo "make build_and_deploy                - builds and deploys the production bundle"
+	@echo "make build-production                - builds a bundle with production settings"
 
 
 # ---- YVM Command Stuff ----
 
 .PHONY: install
-install: build
+install: build-production
 	@use_local=true scripts/install.sh
 
 .PHONY: install-watch
@@ -57,19 +58,15 @@ install-watch: node_modules
 	scripts/install-watch.sh
 
 
-# ---- Infrastructure for Test/Deploy ----
+# ---- Webpack ----
 
-.PHONY: build
-build: node_modules
-	$(WEBPACK) --config webpack/webpack.config.base.js
+.PHONY: build-production
+build-production: node_modules
+	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
 build-dev: node_modules
-	$(WEBPACK) --config webpack/webpack.config.dev.js
-
-.PHONY: build_and_deploy
-build_and_deploy: node_modules
-	$(WEBPACK) --config webpack/webpack.config.deploy.js
+	$(WEBPACK) --config webpack/webpack.config.development.js
 
 
 # -------------- Linting --------------
@@ -109,7 +106,7 @@ test-snapshots: node_modules
 
 .PHONY: node_modules
 node_modules: $(YVM)
-	$(YVM) exec install
+	$(YVM) exec install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
 $(YVM):

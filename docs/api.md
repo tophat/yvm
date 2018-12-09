@@ -1,9 +1,7 @@
 ---
-description: A complete documentation of the set of commands and options that yvm provides.
+id: api
+title: API
 ---
-
-
-# API
 
 ## `install <version>`
 

@@ -23,23 +23,28 @@ export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 executable_source_string="source ${executable_alias_path}"
 
 rm -f ${executable_alias_path}
+mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
-    rm -rf "${YVM_DIR}"
-    mkdir -p ${YVM_DIR}
-    unzip artifacts/webpack_build/yvm.zip -d ${YVM_DIR} > /dev/null
+    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
+    rm -rf "${YVM_DIR}/node_modules"
+    unzip -q artifacts/webpack_build/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
 else
+    release_api_contents=$(curl -s ${release_api_url} )
     download_url=$(
-        curl -s ${release_api_url} |
-        grep '"browser_download_url": ".*/yvm.zip"' |
-        sed 's/"browser_download_url"://g' |
-        sed 's/[ "]//g'
+        echo ${release_api_contents} |
+        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
     )
+    version_tag=$(
+        echo ${release_api_contents} |
+        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
+    )
+    echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
-    mkdir -p ${YVM_DIR}
     unzip -o -q ${zip_download_path} -d ${YVM_DIR}
+    echo "{ \"version\": \"${version_tag}\" }" > "${YVM_DIR}/.version"
     rm ${zip_download_path}
 fi
 

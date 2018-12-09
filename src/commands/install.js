@@ -1,7 +1,6 @@
 const fs = require('fs')
 const openpgp = require('openpgp')
 const path = require('path')
-const request = require('request')
 const targz = require('targz')
 
 const { downloadFile } = require('../util/download')
@@ -12,8 +11,6 @@ const {
     getVersionsFromTags,
     yvmPath,
 } = require('../util/utils')
-
-const directoryStack = []
 
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
@@ -28,22 +25,8 @@ const getUrl = version =>
 
 const getSignatureUrl = version => `${getUrl(version)}.asc`
 
-const checkDirectories = rootPath => {
-    if (!fs.existsSync(versionRootPath(rootPath))) {
-        fs.mkdirSync(versionRootPath(rootPath))
-        directoryStack.push(versionRootPath(rootPath))
-    }
-}
-
-const cleanDirectories = () => {
-    while (directoryStack.length) {
-        fs.rmdirSync(directoryStack.pop())
-    }
-}
-
-const checkForVersion = (version, rootPath) => {
+const isVersionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
-    checkDirectories(rootPath)
     return fs.existsSync(versionPath)
 }
 
@@ -59,25 +42,19 @@ const downloadSignature = (version, rootPath) => {
     return downloadFile(url, filePath)
 }
 
-const getPublicKey = rootPath => {
+const getPublicKey = async rootPath => {
     const publicKeyPath = getPublicKeyPath(rootPath)
 
-    return new Promise((resolve, reject) => {
-        if (fs.existsSync(publicKeyPath)) {
-            log('GPG public key file already downloaded')
-            resolve()
-        } else {
-            log('Downloading GPG public key file')
-            const file = fs.createWriteStream(publicKeyPath)
-            const stream = request
-                .get('https://dl.yarnpkg.com/debian/pubkey.gpg')
-                .pipe(file)
-            stream.on('finish', () => resolve())
-            stream.on('error', err => {
-                reject(new Error(err))
-            })
-        }
-    }).then(() => fs.readFileSync(publicKeyPath))
+    if (fs.existsSync(publicKeyPath)) {
+        log.info('GPG public key file already downloaded')
+    } else {
+        log.info('Downloading GPG public key file')
+        await downloadFile(
+            'https://dl.yarnpkg.com/debian/pubkey.gpg',
+            publicKeyPath,
+        )
+    }
+    return fs.readFileSync(publicKeyPath)
 }
 
 const verifySignature = async (version, rootPath) => {
@@ -128,39 +105,32 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = (version, rootPath = yvmPath) => {
-    if (checkForVersion(version, rootPath)) {
-        log(`It looks like you already have yarn ${version} installed...`)
-        return Promise.resolve()
+const installVersion = async (version, rootPath = yvmPath) => {
+    if (!fs.existsSync(versionRootPath(rootPath))) {
+        fs.mkdirSync(versionRootPath(rootPath))
     }
-    return getVersionsFromTags()
-        .then(versions => {
-            if (versions.indexOf(version) === -1) {
-                log(
-                    'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
-                )
-                return Promise.reject()
-            }
-            log(`Installing yarn v${version} in ${rootPath}`)
-            return downloadVersion(version, rootPath)
-                .then(() => {
-                    log(`Finished downloading yarn version ${version}`)
-                    return verifySignature(version, rootPath)
-                })
-                .then(() => {
-                    log('GPG signature validated')
-                    return extractYarn(version, rootPath)
-                })
-                .catch(err => {
-                    cleanDirectories()
-                    return Promise.reject(err)
-                })
-        })
-        .catch(error => {
-            if (error) {
-                log(error)
-            }
-        })
+
+    if (isVersionInstalled(version, rootPath)) {
+        log(`It looks like you already have yarn ${version} installed...`)
+        return
+    }
+
+    const versions = await getVersionsFromTags()
+    if (versions.indexOf(version) === -1) {
+        log(
+            'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
+        )
+        throw new Error('Invalid version number provided')
+    }
+
+    log(`Installing yarn v${version} in ${rootPath}`)
+    await downloadVersion(version, rootPath)
+
+    log(`Finished downloading yarn version ${version}`)
+    await verifySignature(version, rootPath)
+
+    log('GPG signature validated')
+    return extractYarn(version, rootPath)
 }
 
 module.exports = installVersion

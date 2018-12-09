@@ -2,6 +2,7 @@
 
 command=$1
 YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}
+export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
 
 yvm_use() {
     local PROVIDED_VERSION=${1}
@@ -54,6 +55,17 @@ if [ ${interactive} = 1 ]; then
     yvm() {
         yvm_ 'function' $@
     }
+    local DEFAULT_YARN_VERSION=$(yvm_call_node_script get-default-version)
+    if [ "x" = "x${DEFAULT_YARN_VERSION}" ]; then
+        yvm_echo "Use yvm set-default <version>"
+    else
+        if ! type "node" > /dev/null; then
+            yvm_echo "YVM Could not automatically set yarn version."
+            yvm_echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bash_profile"
+        else
+            yvm_use
+        fi
+    fi
 else
     yvm_ 'script' $@
 fi

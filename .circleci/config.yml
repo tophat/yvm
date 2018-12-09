@@ -1,55 +1,148 @@
-version: 2
+version: 2.1
 
 docker_defaults: &docker_defaults
   docker:
-    - image: circleci/node:8.11.3
+    - image: circleci/node:8.14.0
 
-restore_cache: &restore_cache
-  restore_cache:
-    name: Restore node_modules cache
-    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-
-save_cache: &save_cache
-  save_cache:
-    name: Save node_modules cache
-    key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
-    paths:
-      - node_modules/
-
-install_yvm: &install_yvm
-  run:
-    name: 'Install yvm release version'
-    command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+commands:
+  prep_env:
+    description: "Prepapres environment with cache and yvm"
+    steps:
+      - checkout:
+          path: ~/repo
+      - restore_cache:
+          name: Restore node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: 'Install yvm release version'
+          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+  save_env_cache:
+    description: "Saves environment cache"
+    steps:
+      - save_cache:
+          name: Save node_modules cache
+          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
 
 jobs:
-  test:
+  node_modules:
     <<: *docker_defaults
+    working_directory: ~/repo
     steps:
-      - checkout
-      - *restore_cache
-      - *install_yvm
-      - run: make lint
+      - prep_env
+      - run: make node_modules
+      - save_env_cache
+  unit_test:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-      - *save_cache
-  build_and_deploy:
+  sanity_test:
     <<: *docker_defaults
+    working_directory: ~/repo
     steps:
-      - checkout
-      - *restore_cache
-      - *install_yvm
-      - run: make build_and_deploy
+      - prep_env
+      - run: make install
+      - run: yvm install 1.7.0
+      - run: yvm exec version
+  lint:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - run: make lint
+  build:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - run: make build-production
+      - run: ./scripts/get-version.sh > artifacts/version.txt
+      - run: cat artifacts/version.txt
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - artifacts/
+  deploy:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: VERSION=`cat artifacts/version.txt` node scripts/release.js
+  website:
+    <<: *docker_defaults
+    working_directory: ~/repo/website
+    steps:
+      - prep_env
+      - run: yarn install --frozen-lockfile
+      - save_env_cache
+      - run: yarn build
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build/
+  deploy_website:
+    <<: *docker_defaults
+    working_directory: ~/repo/website
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ./
+      - add_ssh_keys:
+          fingerprints:
+            - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
+      - run:
+          name: Setup git user and deploy website
+          command: |
+            git config --global user.email "circleci-yvm@users.noreply.github.com"
+            git config --global user.name "CircleCI YVM"
+            USE_SSH=true yarn publish-gh-pages
 
 workflows:
   version: 2
-  test_and_deploy_master:
+  yvm_and_website:
     jobs:
-      - test
-      - build_and_deploy:
+      - node_modules
+      - unit_test:
           requires:
-            - test
+            - node_modules
+      - sanity_test:
+          requires:
+            - node_modules
+      - lint:
+          requires:
+            - node_modules
+      - build:
+          requires:
+            - node_modules
+      - deploy:
+          requires:
+            - node_modules
+            - lint
+            - unit_test
+            - sanity_test
+            - build
           filters:
             branches:
               only:
                 - master
+      - website
+      - deploy_website:
+          requires:
+            - website
+          filters:
+            branches:
+              only:
+                - master
+
+experimental:
+  notify:
+    branches:
+      only:
+        - master
