@@ -98,7 +98,7 @@ workflows:
   version: 2
   yvm_and_website:
     jobs:
-      - node_modules:
+      - node_modules
       - test:
           requires:
             - node_modules
