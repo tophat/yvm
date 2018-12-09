@@ -31,6 +31,11 @@ save_and_link_file "yvm.sh"
 save_and_link_file "yvm.js"
 save_and_link_file "yvm-exec.js"
 
+# Save and Link Node Modules
+echo "Saving+Linking node_modules"
+mv "${HOME}/.yvm/node_modules" "${HOME}/.yvm/node_modules.bak"
+ln -s ${CURRENT_DIR}/node_modules "${HOME}/.yvm/node_modules"
+
 # Trap interrupt signal
 int_trap() {
     echo "Stopped Webpack"
@@ -44,3 +49,8 @@ trap int_trap INT
 restore_file "yvm.sh"
 restore_file "yvm.js"
 restore_file "yvm-exec.js"
+
+# Restore Node Modules
+rm "${HOME}/.yvm/node_modules"
+mv "${HOME}/.yvm/node_modules.bak" "${HOME}/.yvm/node_modules"
+echo "Restored node_modules"
