@@ -15,10 +15,12 @@ if (!releaseVersion || releaseVersion.length < 1) {
     process.exit(1)
 }
 
+const releaseVersionWithV = `v${releaseVersion}`
+
 const options = {
     auth: { token: process.env.GITHUB_TOKEN },
-    name: releaseVersion,
-    tag_name: releaseVersion,
+    name: releaseVersionWithV,
+    tag_name: releaseVersionWithV,
     body: ' ',
     assets: [YVM_ZIP_FILE],
     workpath: '',
