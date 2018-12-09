@@ -8,16 +8,17 @@ ifdef CI
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--frozen-lockfile --ci
+    YARN=$(HOME)/.yvm/yvm.sh exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
     YARN_INSTALL_ARGS=
+    YARN=yarn
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
-YVM_DIR?=$(HOME)/.yvm
 
 NODE_MODULES_BIN := node_modules/.bin
 
@@ -25,7 +26,6 @@ CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
-YVM := $(YVM_DIR)/yvm.sh
 
 .PHONY: help
 help:
@@ -50,7 +50,7 @@ help:
 # ---- YVM Command Stuff ----
 
 .PHONY: install
-install: build
+install: build-production
 	@use_local=true scripts/install.sh
 
 .PHONY: install-watch
@@ -105,13 +105,9 @@ test-snapshots: node_modules
 # ----------------- Helpers ------------------
 
 .PHONY: node_modules
-node_modules: $(YVM)
-	$(YVM) exec install ${YARN_INSTALL_ARGS}
+node_modules:
+	$(YARN) install ${YARN_INSTALL_ARGS}
 	touch node_modules
-
-$(YVM):
-	@echo "Installing the latest yvm release"
-	@scripts/install.sh
 
 .PHONY: clean
 clean:
