@@ -35,9 +35,14 @@ argParser
     .alias('i')
     .description('Install the specified version of Yarn.')
     .action((maybeVersion) => {
-        const [version] = getSplitVersionAndArgs(maybeVersion);
         const install = require('./commands/install');
-        install(version);
+        if (maybeVersion) {
+            install(maybeVersion)
+            return
+        }
+        const [defaultVersion] = getSplitVersionAndArgs();
+        install(defaultVersion)
+
     });
 
 argParser
@@ -50,6 +55,7 @@ argParser
         process.exit(remove(version));
     });
 
+// commander has support for sub commands, and will load the file yvm-exec when this is run
 argParser
     .command('exec [version] [command]', 'Execute command using specified Yarn version.');
 
