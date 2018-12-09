@@ -3,12 +3,19 @@
         <img width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png">
     </a>
     <br />
+    <a href="https://github.com/tophat/yvm/releases">
+        <img alt="YVM Latest Version" src="https://img.shields.io/github/release/tophat/yvm.svg"/>
+    </a>
+    <a href="https://nodejs.org">
+        <img alt="Minimum Node Version" src="https://img.shields.io/node/v/bundlewatch.svg"/>
+    </a>
     <a href="https://circleci.com/gh/tophat/yvm">
         <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
     </a>
     <a href="https://codecov.io/gh/tophat/yvm">
         <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
     </a>
+    <br />
     <a href="https://david-dm.org/tophat/yvm">
         <img alt="Deps" src="https://david-dm.org/tophat/yvm/status.svg"/>
     </a>
