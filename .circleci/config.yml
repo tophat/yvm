@@ -26,17 +26,40 @@ commands:
             - node_modules/
 
 jobs:
-  test:
+  node_modules:
     <<: *docker_defaults
     working_directory: ~/repo
     steps:
       - prep_env
       - run: make node_modules
+      - save_env_cache
+  test:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
       - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-      - save_env_cache
+  build:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - run: make build-production
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - artifacts/
+  deploy:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: node scripts/release.js
   website:
     <<: *docker_defaults
     working_directory: ~/repo/website
@@ -49,12 +72,6 @@ jobs:
           root: ./
           paths:
             - build/
-  build_and_deploy:
-    <<: *docker_defaults
-    working_directory: ~/repo
-    steps:
-      - prep_env
-      - run: make build_and_deploy
   deploy_website:
     <<: *docker_defaults
     working_directory: ~/repo/website
@@ -76,15 +93,33 @@ workflows:
   version: 2
   yvm_and_website:
     jobs:
-      - test
-      - website
-      - build_and_deploy:
-          requires:
-            - test
+      - node_modules:
           filters:
+            tags:
+              only: /^v.*/
+      - test:
+          requires:
+            - node_modules
+          filters:
+            tags:
+              only: /^v.*/
+      - build:
+          requires:
+            - node_modules
+          filters:
+            tags:
+              only: /^v.*/
+      - deploy:
+          requires:
+            - node_modules
+            - test
+            - build
+          filters:
+            tags:
+              only: /^v.*/
             branches:
-              only:
-                - master
+              ignore: /.*/
+      - website
       - deploy_website:
           requires:
             - website
