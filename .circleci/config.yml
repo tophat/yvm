@@ -47,7 +47,7 @@ jobs:
     steps:
       - prep_env
       - run: YVM_ALIAS_DIR=~/bin make install
-      - run: YVM_DIR=~/.yvm test/sanity-test.sh
+      - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
   lint:
     <<: *docker_defaults
     working_directory: ~/repo
