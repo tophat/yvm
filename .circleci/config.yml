@@ -38,10 +38,15 @@ jobs:
     working_directory: ~/repo
     steps:
       - prep_env
-      - run: make lint
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
+  lint:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - run: make lint
   build:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -102,12 +107,16 @@ workflows:
       - test:
           requires:
             - node_modules
+      - lint:
+          requires:
+            - node_modules
       - build:
           requires:
             - node_modules
       - deploy:
           requires:
             - node_modules
+            - lint
             - test
             - build
           filters:

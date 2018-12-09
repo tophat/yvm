@@ -10,7 +10,7 @@ const YVM_ZIP_FILE = path.join(
 
 const releaseVersion = process.env.VERSION
 
-if (!VERSION || VERSION.length < 1) {
+if (!releaseVersion || releaseVersion.length < 1) {
     console.log('No release version set, not deploying')
     process.exit(1)
 }
