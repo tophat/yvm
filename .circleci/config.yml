@@ -48,7 +48,7 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
-      - run: node scripts/get-version.js > artifacts/version.txt
+      - run: ./scripts/get-version.sh > artifacts/version.txt
       - persist_to_workspace:
           root: ~/repo
           paths:

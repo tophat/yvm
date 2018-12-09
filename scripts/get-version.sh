@@ -1,4 +1,5 @@
 #!/bin/bash -e
+# TODO: switch to semantic-release
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
