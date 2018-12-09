@@ -8,14 +8,12 @@ const YVM_ZIP_FILE = path.join(
     '/artifacts/webpack_build/yvm.zip',
 )
 
-const taggedVersion = process.env.CIRCLE_TAG
+const releaseVersion = process.env.VERSION
 
-if (!taggedVersion || taggedVersion.length < 1) {
-    console.log('No release tag set, not deploying')
+if (!VERSION || VERSION.length < 1) {
+    console.log('No release version set, not deploying')
     process.exit(1)
 }
-
-const releaseVersion = `v${taggedVersion}`
 
 const options = {
     auth: { token: process.env.GITHUB_TOKEN },
