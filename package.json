@@ -23,6 +23,7 @@
   "author": "Top Hat <opensource@tophat.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "chalk": "^2.4.1",
     "commander": "^2.15.1",
     "cosmiconfig": "^5.0.5",
     "fs-extra": "^7.0.1",
