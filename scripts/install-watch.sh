@@ -10,17 +10,31 @@ then
     exit 1
 fi
 
-# Save existing files
-echo "Saving yvm.sh, yvm.js, yvm-exec.js"
-mv "${HOME}/.yvm/yvm.sh" "${HOME}/.yvm/yvm_save.sh"
-mv "${HOME}/.yvm/yvm.js" "${HOME}/.yvm/yvm_save.js"
-mv "${HOME}/.yvm/yvm-exec.js" "${HOME}/.yvm/yvm-exec_save.js"
+save_and_link_file() {
+    echo "Saving+Linking ${1}"
+    mv "${HOME}/.yvm/${1}" "${HOME}/.yvm/${1}.bak"
+    ln -s ${CURRENT_DIR}/artifacts/webpack_build/${1} "${HOME}/.yvm/${1}"
+    chmod +x "${HOME}/.yvm/${1}"
+}
 
-# Link
-ln -s ${CURRENT_DIR}/artifacts/webpack_build/yvm.sh "${HOME}/.yvm/yvm.sh"
-ln -s ${CURRENT_DIR}/artifacts/webpack_build/yvm.js "${HOME}/.yvm/yvm.js"
-ln -s ${CURRENT_DIR}/artifacts/webpack_build/yvm-exec.js "${HOME}/.yvm/yvm-exec.js"
-chmod +x "${HOME}/.yvm/yvm.sh"
+restore_file() {
+    rm "${HOME}/.yvm/${1}"
+    if [ -f "${HOME}/.yvm/${1}.bak" ]
+    then
+        mv "${HOME}/.yvm/${1}.bak" "${HOME}/.yvm/${1}"
+        echo "Restored ${1}"
+    fi
+}
+
+# Save and link files
+save_and_link_file "yvm.sh"
+save_and_link_file "yvm.js"
+save_and_link_file "yvm-exec.js"
+
+# Save and Link Node Modules
+echo "Saving+Linking node_modules"
+mv "${HOME}/.yvm/node_modules" "${HOME}/.yvm/node_modules.bak"
+ln -s ${CURRENT_DIR}/node_modules "${HOME}/.yvm/node_modules"
 
 # Trap interrupt signal
 int_trap() {
@@ -29,30 +43,14 @@ int_trap() {
 trap int_trap INT
 
 # Start Webpack in watch mode
-./node_modules/.bin/webpack --progress --config webpack/webpack.config.dev.js --watch
+./node_modules/.bin/webpack --progress --config webpack/webpack.config.development.js --watch
 
-# Clean up
-echo "Cleaning up"
+# Clean up and recover
+restore_file "yvm.sh"
+restore_file "yvm.js"
+restore_file "yvm-exec.js"
 
-rm "${HOME}/.yvm/yvm.sh"
-rm "${HOME}/.yvm/yvm.js"
-rm "${HOME}/.yvm/yvm-exec.js"
-
-# Try to recover
-if [ -f "${HOME}/.yvm/yvm_save.sh" ]
-then
-    mv "${HOME}/.yvm/yvm_save.sh" "${HOME}/.yvm/yvm.sh"
-    echo "Restored yvm.sh"
-fi
-
-if [ -f "${HOME}/.yvm/yvm_save.js" ]
-then
-    mv "${HOME}/.yvm/yvm_save.js" "${HOME}/.yvm/yvm.js"
-    echo "Restored yvm.js"
-fi
-
-if [ -f "${HOME}/.yvm/yvm-exec_save.js" ]
-then
-    mv "${HOME}/.yvm/yvm-exec_save.js" "${HOME}/.yvm/yvm-exec.js"
-    echo "Restored yvm-exec.js"
-fi
+# Restore Node Modules
+rm "${HOME}/.yvm/node_modules"
+mv "${HOME}/.yvm/node_modules.bak" "${HOME}/.yvm/node_modules"
+echo "Restored node_modules"
