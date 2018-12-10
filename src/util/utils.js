@@ -22,21 +22,23 @@ const printVersions = (list, message, versionInUse = '') => {
     const versionsMap = {}
     const defaultVersion = getDefaultVersion(yvmPath)
 
-    list.forEach(item => {
-        const itemTrimmed = item.trim()
+    list.forEach(versionPadded => {
+        const version = versionPadded.trim()
 
         let toLog =
-            itemTrimmed === versionInUse ? ` \u2713 ${item}` : ` - ${item}`
+            version === versionInUse
+                ? ` \u2713 ${versionPadded}`
+                : ` - ${versionPadded}`
 
-        if (itemTrimmed === defaultVersion)
+        if (version === defaultVersion)
             toLog += ` (${GLOBAL_DEFAULT_VERSION_TEXT})`
-        if (itemTrimmed === versionInUse) {
+        if (version === versionInUse) {
             log('\x1b[32m%s\x1b[0m', toLog)
         } else {
             log(toLog)
         }
 
-        versionsMap[itemTrimmed] = toLog
+        versionsMap[version] = toLog
     })
     return versionsMap
 }
