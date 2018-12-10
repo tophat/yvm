@@ -28,7 +28,9 @@ mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
-    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" ${YVM_DIR}
+    rm -rf "${YVM_DIR}/node_modules"
+    unzip -q artifacts/webpack_build/yvm.zip -d ${YVM_DIR}
+    chmod +x ${YVM_DIR}/yvm.sh
 else
     release_api_contents=$(curl -s ${release_api_url} )
     download_url=$(
@@ -41,6 +43,7 @@ else
     )
     echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
+    rm -rf "${YVM_DIR}/node_modules"
     unzip -o -q ${zip_download_path} -d ${YVM_DIR}
     echo "{ \"version\": \"${version_tag}\" }" > "${YVM_DIR}/.version"
     rm ${zip_download_path}
