@@ -51,7 +51,7 @@ help:
 
 .PHONY: install
 install: build-production
-	@use_local=true scripts/install.sh
+	@USE_LOCAL=true scripts/install.sh
 
 .PHONY: install-watch
 install-watch: node_modules
