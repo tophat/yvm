@@ -6,7 +6,7 @@ docker_defaults: &docker_defaults
 
 commands:
   prep_env:
-    description: "Prepapres environment with cache and yvm"
+    description: "Prepares environment with cache and yvm"
     steps:
       - checkout:
           path: ~/repo
