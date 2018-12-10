@@ -52,6 +52,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - prep_env
+      - run: rm -rf node_modules && yarn install --production --frozen-lockfile
       - run: make build-production
       - run: ./scripts/get-version.sh > artifacts/version.txt
       - run: cat artifacts/version.txt
