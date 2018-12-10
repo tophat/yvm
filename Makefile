@@ -61,12 +61,9 @@ install-watch: node_modules
 # ---- Webpack ----
 
 .PHONY: build-production
-ifdef CI
-build-production:
-else
 build-production: node_modules
-	$(YARN) install --modules-folder node_modules_production --production $(YARN_INSTALL_ARGS)
-endif
+	$(YARN) install --modules-folder node_modules_production --production
+	make node_modules
 	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
