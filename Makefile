@@ -51,7 +51,7 @@ help:
 
 .PHONY: install
 install: build-production
-	@use_local=true scripts/install.sh
+	@USE_LOCAL=true scripts/install.sh
 
 .PHONY: install-watch
 install-watch: node_modules
@@ -62,6 +62,10 @@ install-watch: node_modules
 
 .PHONY: build-production
 build-production: node_modules
+	$(YARN) install --modules-folder node_modules_production --production
+	make node_modules
+	du -hs node_modules
+	du -hs node_modules_production
 	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev

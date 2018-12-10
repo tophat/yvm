@@ -41,13 +41,6 @@ jobs:
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-  sanity_test:
-    <<: *docker_defaults
-    working_directory: ~/repo
-    steps:
-      - prep_env
-      - run: YVM_ALIAS_DIR=~/bin make install
-      - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
   lint:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -66,6 +59,15 @@ jobs:
           root: ~/repo
           paths:
             - artifacts/
+  sanity_test:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: YVM_ALIAS_DIR=~/bin USE_LOCAL=true ./scripts/install.sh
+      - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
   deploy:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -111,15 +113,16 @@ workflows:
       - unit_test:
           requires:
             - node_modules
-      - sanity_test:
-          requires:
-            - node_modules
       - lint:
           requires:
             - node_modules
       - build:
           requires:
             - node_modules
+      - sanity_test:
+          requires:
+            - node_modules
+            - build
       - deploy:
           requires:
             - node_modules

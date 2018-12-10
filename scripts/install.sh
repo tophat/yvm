@@ -8,7 +8,7 @@ err_report() {
 
 trap 'err_report $LINENO' ERR
 
-use_local=${use_local-false}
+USE_LOCAL=${USE_LOCAL-false}
 
 release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
 artifacts_dir="artifacts/webpack_build"
@@ -26,7 +26,7 @@ rm -f ${executable_alias_path}
 mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
-if [ "$use_local" = true ]; then
+if [ "$USE_LOCAL" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
     rm -rf "${YVM_DIR}/node_modules"
     unzip -q artifacts/webpack_build/yvm.zip -d ${YVM_DIR}
