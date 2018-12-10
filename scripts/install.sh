@@ -43,6 +43,7 @@ else
     )
     echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
+    rm -rf "${YVM_DIR}/node_modules"
     unzip -o -q ${zip_download_path} -d ${YVM_DIR}
     echo "{ \"version\": \"${version_tag}\" }" > "${YVM_DIR}/.version"
     rm ${zip_download_path}

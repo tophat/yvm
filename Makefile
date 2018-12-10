@@ -114,4 +114,3 @@ clean:
 	rm -rf ${ARTIFACT_DIR}
 	rm -f ~/.babel.json
 	rm -rf node_modules
-
