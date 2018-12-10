@@ -55,7 +55,7 @@ if [ ${interactive} = 1 ]; then
     yvm() {
         yvm_ 'function' $@
     }
-    local DEFAULT_YARN_VERSION=$(yvm_call_node_script get-default-version)
+    DEFAULT_YARN_VERSION=$(yvm_call_node_script get-default-version)
     if [ "x" = "x${DEFAULT_YARN_VERSION}" ]; then
         yvm_echo "Use yvm set-default <version>"
     else
