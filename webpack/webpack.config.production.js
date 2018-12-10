@@ -4,6 +4,7 @@ const ZipFilesPlugin = require('webpack-zip-files-plugin')
 const baseConfig = require('./webpack.config.base')
 
 const outputPath = baseConfig.output.path
+const artifactsPath = path.resolve(outputPath, '..')
 const nodeModulesProductionPath = path.resolve(
     __dirname,
     '..',
@@ -16,7 +17,7 @@ baseConfig.plugins.push(
             { src: outputPath, dist: '.' },
             { src: nodeModulesProductionPath, dist: 'node_modules' },
         ],
-        output: path.join(outputPath, 'yvm'),
+        output: path.join(artifactsPath, 'yvm'),
         format: 'zip',
     }),
 )

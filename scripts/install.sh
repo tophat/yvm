@@ -29,7 +29,7 @@ mkdir -p ${YVM_ALIAS_DIR}
 if [ "$USE_LOCAL" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
     rm -rf "${YVM_DIR}/node_modules"
-    unzip -q artifacts/webpack_build/yvm.zip -d ${YVM_DIR}
+    unzip -o -q artifacts/webpack_build/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
 else
     release_api_contents=$(curl -s ${release_api_url} )
