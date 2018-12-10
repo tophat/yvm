@@ -64,6 +64,8 @@ install-watch: node_modules
 build-production: node_modules
 	$(YARN) install --modules-folder node_modules_production --production
 	make node_modules
+	du -hs node_modules
+	du -hs node_modules_production
 	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
