@@ -8,16 +8,17 @@ ifdef CI
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--frozen-lockfile --ci
+    YARN=$(HOME)/.yvm/yvm.sh exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
     YARN_INSTALL_ARGS=
+    YARN=yarn
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
-YVM_DIR?=$(HOME)/.yvm
 
 NODE_MODULES_BIN := node_modules/.bin
 
@@ -25,7 +26,6 @@ CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
-YVM := $(YVM_DIR)/yvm.sh
 
 .PHONY: help
 help:
@@ -44,34 +44,29 @@ help:
 	@echo "make test-snapshots                  - runs test, updating snapshots"
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
-	@echo "make build                           - builds a bundle with production settings"
-	@echo "make build_and_deploy                - builds and deploys the production bundle"
+	@echo "make build-production                - builds a bundle with production settings"
 
 
 # ---- YVM Command Stuff ----
 
 .PHONY: install
-install: build
-	@use_local=true scripts/install.sh
+install: build-production
+	@USE_LOCAL=true scripts/install.sh
 
 .PHONY: install-watch
 install-watch: node_modules
 	scripts/install-watch.sh
 
 
-# ---- Infrastructure for Test/Deploy ----
+# ---- Webpack ----
 
-.PHONY: build
-build: node_modules
-	$(WEBPACK) --config webpack/webpack.config.base.js
+.PHONY: build-production
+build-production: node_modules_production node_modules
+	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
 build-dev: node_modules
-	$(WEBPACK) --config webpack/webpack.config.dev.js
-
-.PHONY: build_and_deploy
-build_and_deploy: node_modules
-	$(WEBPACK) --config webpack/webpack.config.deploy.js
+	$(WEBPACK) --config webpack/webpack.config.development.js
 
 
 # -------------- Linting --------------
@@ -110,17 +105,17 @@ test-snapshots: node_modules
 # ----------------- Helpers ------------------
 
 .PHONY: node_modules
-node_modules: $(YVM)
-	$(YVM) exec install ${YARN_INSTALL_ARGS}
+node_modules:
+	$(YARN) install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
-$(YVM):
-	@echo "Installing the latest yvm release"
-	@scripts/install.sh
+.PHONY: node_modules_production
+node_modules_production:
+	$(YARN) install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
+	touch node_modules_production
 
 .PHONY: clean
 clean:
 	rm -rf ${ARTIFACT_DIR}
 	rm -f ~/.babel.json
 	rm -rf node_modules
-

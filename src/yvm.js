@@ -22,7 +22,9 @@ if (!process.argv.includes('exec')) {
     argParser
         .command('*', '', {noHelp: true, isDefault: true})
         .action((invalidCommand) => {
-            log(`Invalid command: ${invalidCommand}`);
+            if (!process.argv.includes('help')) {
+                log(`Invalid command: ${invalidCommand}`);
+            }
             argParser.outputHelp();
             process.exit(1);
         });
@@ -48,6 +50,7 @@ argParser
         process.exit(remove(version));
     });
 
+// commander has support for sub commands, and will load the file yvm-exec when this is run
 argParser
     .command('exec [version] [command]', 'Execute command using specified Yarn version.');
 
@@ -134,11 +137,6 @@ argParser
     .command('update-self')
     .description('Updates yvm to the latest version')
     .action(invalidCommandLog);
-
-argParser
-    .command('help')
-    .description('Show help text')
-    .action(() => argParser.outputHelp());
 
 /* eslint-enable global-require,prettier/prettier */
 argParser.parse(process.argv)

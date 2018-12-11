@@ -8,10 +8,9 @@ err_report() {
 
 trap 'err_report $LINENO' ERR
 
-use_local=${use_local-false}
+USE_LOCAL=${USE_LOCAL-false}
 
 release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
-artifacts_dir="artifacts/webpack_build"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
 zip_download_path="${YVM_DIR}/yvm.zip"
@@ -26,9 +25,11 @@ rm -f ${executable_alias_path}
 mkdir -p ${YVM_DIR}
 mkdir -p ${YVM_ALIAS_DIR}
 
-if [ "$use_local" = true ]; then
+if [ "$USE_LOCAL" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
-    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" ${YVM_DIR}
+    rm -rf "${YVM_DIR}/node_modules"
+    unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
+    chmod +x ${YVM_DIR}/yvm.sh
 else
     release_api_contents=$(curl -s ${release_api_url} )
     download_url=$(
@@ -41,6 +42,7 @@ else
     )
     echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
+    rm -rf "${YVM_DIR}/node_modules"
     unzip -o -q ${zip_download_path} -d ${YVM_DIR}
     echo "{ \"version\": \"${version_tag}\" }" > "${YVM_DIR}/.version"
     rm ${zip_download_path}

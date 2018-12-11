@@ -1,34 +1,39 @@
-<div align="center">
-    <a href="https://github.com/tophat/yvm">
-        <img width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png">
-    </a>
-    <br />
-    <a href="https://circleci.com/gh/tophat/yvm">
-        <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
-    </a>
-    <a href="https://codecov.io/gh/tophat/yvm">
-        <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
-    </a>
-    <a href="https://david-dm.org/tophat/yvm">
-        <img alt="Deps" src="https://david-dm.org/tophat/yvm/status.svg"/>
-    </a>
-    <a href="https://david-dm.org/tophat/yvm">
-        <img alt="Dev Deps" src="https://david-dm.org/tophat/yvm/dev-status.svg"/>
-    </a>
-    <a href="https://greenkeeper.io">
-        <img alt="Green Keeper" src="https://badges.greenkeeper.io/tophat/yvm.svg"/>
-    </a>
-    <br />
-    <a href="#contributors">
-        <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square"/>
-    </a>
-    <a href="https://opensource.tophat.com/slack">
-        <img alt="Slack workspace" src="https://slackinvite.dev.tophat.com/badge.svg"/>
-    </a>
-    <a href="https://github.com/tophat/getting-started/blob/master/scorecard.md">
-        <img alt="Maturity badge - level 3" src="https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg"/>
-    </a>
-</div>
+# Yarn Version Manager (yvm)
+
+<span><img align="right" width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png" alt="Logo"></span>
+
+<a href="https://github.com/tophat/yvm/releases">
+    <img alt="YVM Latest Version" src="https://img.shields.io/github/release/tophat/yvm.svg"/>
+</a>
+<a href="https://nodejs.org">
+    <img alt="Minimum Node Version" src="https://img.shields.io/badge/node-%3E%3D%204.8-brightgreen.svg"/>
+</a>
+<a href="https://circleci.com/gh/tophat/yvm">
+    <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
+</a>
+<a href="https://codecov.io/gh/tophat/yvm">
+    <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
+</a>
+<br />
+<a href="https://david-dm.org/tophat/yvm">
+    <img alt="Deps" src="https://david-dm.org/tophat/yvm/status.svg"/>
+</a>
+<a href="https://david-dm.org/tophat/yvm">
+    <img alt="Dev Deps" src="https://david-dm.org/tophat/yvm/dev-status.svg"/>
+</a>
+<a href="https://greenkeeper.io">
+    <img alt="Green Keeper" src="https://badges.greenkeeper.io/tophat/yvm.svg"/>
+</a>
+<br />
+<a href="#contributors">
+    <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat-square"/>
+</a>
+<a href="https://opensource.tophat.com/slack">
+    <img alt="Slack workspace" src="https://slackinvite.dev.tophat.com/badge.svg"/>
+</a>
+<a href="https://github.com/tophat/getting-started/blob/master/scorecard.md">
+    <img alt="Maturity badge - level 3" src="https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg"/>
+</a>
 
 # Overview
 
@@ -148,7 +153,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/3876970?v=4" width="100px;"/><br /><sub><b>Francois Campbell</b></sub>](https://github.com/francoiscampbell)<br />[💻](https://github.com/tophat/yvm/commits?author=francoiscampbell "Code") | [<img src="https://avatars2.githubusercontent.com/u/3534236?v=4" width="100px;"/><br /><sub><b>Jake Bolam</b></sub>](https://jakebolam.com)<br />[📖](https://github.com/tophat/yvm/commits?author=jakebolam "Documentation") [💻](https://github.com/tophat/yvm/commits?author=jakebolam "Code") [🚇](#infra-jakebolam "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars1.githubusercontent.com/u/39271619?v=4" width="100px;"/><br /><sub><b>Brandon Baksh</b></sub>](https://www.linkedin.com/in/brandonbaksh/)<br />[💻](https://github.com/tophat/yvm/commits?author=brandonbaksh "Code") | [<img src="https://avatars3.githubusercontent.com/u/2070398?v=4" width="100px;"/><br /><sub><b>Milan Milojic</b></sub>](https://github.com/nepodmitljivi)<br />[💻](https://github.com/tophat/yvm/commits?author=nepodmitljivi "Code") | [<img src="https://avatars2.githubusercontent.com/u/38886386?v=4" width="100px;"/><br /><sub><b>Umar Ahmed</b></sub>](https://github.com/umar-tophat)<br />[💻](https://github.com/tophat/yvm/commits?author=umar-tophat "Code") | [<img src="https://avatars0.githubusercontent.com/u/3258756?v=4" width="100px;"/><br /><sub><b>Nicholas Dujay</b></sub>](https://github.com/dat2)<br />[💻](https://github.com/tophat/yvm/commits?author=dat2 "Code") | [<img src="https://avatars0.githubusercontent.com/u/3996927?v=4" width="100px;"/><br /><sub><b>Aser Eldamaty</b></sub>](https://github.com/aeldamaty)<br />[💻](https://github.com/tophat/yvm/commits?author=aeldamaty "Code") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars3.githubusercontent.com/u/3495264?v=4" width="100px;"/><br /><sub><b>Michael Rose</b></sub>](http://msrose.github.io)<br />[💻](https://github.com/tophat/yvm/commits?author=msrose "Code") | [<img src="https://avatars0.githubusercontent.com/u/8632167?v=4" width="100px;"/><br /><sub><b>Sanchit Gera</b></sub>](http://www.sanchitgera.ca)<br />[📖](https://github.com/tophat/yvm/commits?author=sanchitgera "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/6020693?v=4" width="100px;"/><br /><sub><b>sdcosta</b></sub>](https://github.com/sdcosta)<br />[📖](https://github.com/tophat/yvm/commits?author=sdcosta "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/445636?v=4" width="100px;"/><br /><sub><b>Siavash Mahmoudian</b></sub>](https://breezio.com)<br />[🚇](#infra-syavash "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars3.githubusercontent.com/in/505?v=4" width="100px;"/><br /><sub><b>greenkeeper[bot]</b></sub>](https://github.com/apps/greenkeeper)<br />[🚇](#infra-greenkeeper[bot] "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars0.githubusercontent.com/u/7827407?v=4" width="100px;"/><br /><sub><b>Jay Crumb</b></sub>](https://github.com/jcrumb)<br />[📖](https://github.com/tophat/yvm/commits?author=jcrumb "Documentation") |
+| [<img src="https://avatars3.githubusercontent.com/u/3495264?v=4" width="100px;"/><br /><sub><b>Michael Rose</b></sub>](http://msrose.github.io)<br />[💻](https://github.com/tophat/yvm/commits?author=msrose "Code") | [<img src="https://avatars0.githubusercontent.com/u/8632167?v=4" width="100px;"/><br /><sub><b>Sanchit Gera</b></sub>](http://www.sanchitgera.ca)<br />[📖](https://github.com/tophat/yvm/commits?author=sanchitgera "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/6020693?v=4" width="100px;"/><br /><sub><b>sdcosta</b></sub>](https://github.com/sdcosta)<br />[📖](https://github.com/tophat/yvm/commits?author=sdcosta "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/445636?v=4" width="100px;"/><br /><sub><b>Siavash Mahmoudian</b></sub>](https://breezio.com)<br />[🚇](#infra-syavash "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars3.githubusercontent.com/in/505?v=4" width="100px;"/><br /><sub><b>greenkeeper[bot]</b></sub>](https://github.com/apps/greenkeeper)<br />[🚇](#infra-greenkeeper[bot] "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars0.githubusercontent.com/u/7827407?v=4" width="100px;"/><br /><sub><b>Jay Crumb</b></sub>](https://github.com/jcrumb)<br />[📖](https://github.com/tophat/yvm/commits?author=jcrumb "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/1097941?v=4" width="100px;"/><br /><sub><b>Michael Lunøe</b></sub>](http://m.lunoe.dk)<br />[📖](https://github.com/tophat/yvm/commits?author=mlunoe "Documentation") |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

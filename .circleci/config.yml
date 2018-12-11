@@ -6,7 +6,7 @@ docker_defaults: &docker_defaults
 
 commands:
   prep_env:
-    description: "Prepapres environment with cache and yvm"
+    description: "Prepares environment with cache and yvm"
     steps:
       - checkout:
           path: ~/repo
@@ -26,17 +26,56 @@ commands:
             - node_modules/
 
 jobs:
-  test:
+  node_modules:
     <<: *docker_defaults
     working_directory: ~/repo
     steps:
       - prep_env
       - run: make node_modules
-      - run: make lint
+      - save_env_cache
+  unit_test:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
-      - save_env_cache
+  lint:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - run: make lint
+  build:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - run: make build-production
+      - run: ./scripts/get-version.sh > artifacts/version.txt
+      - run: cat artifacts/version.txt
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - artifacts/
+  sanity_test:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: YVM_ALIAS_DIR=~/bin USE_LOCAL=true ./scripts/install.sh
+      - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
+  deploy:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: VERSION=`cat artifacts/version.txt` node scripts/release.js
   website:
     <<: *docker_defaults
     working_directory: ~/repo/website
@@ -49,12 +88,6 @@ jobs:
           root: ./
           paths:
             - build/
-  build_and_deploy:
-    <<: *docker_defaults
-    working_directory: ~/repo
-    steps:
-      - prep_env
-      - run: make build_and_deploy
   deploy_website:
     <<: *docker_defaults
     working_directory: ~/repo/website
@@ -76,15 +109,32 @@ workflows:
   version: 2
   yvm_and_website:
     jobs:
-      - test
-      - website
-      - build_and_deploy:
+      - node_modules
+      - unit_test:
           requires:
-            - test
+            - node_modules
+      - lint:
+          requires:
+            - node_modules
+      - build:
+          requires:
+            - node_modules
+      - sanity_test:
+          requires:
+            - node_modules
+            - build
+      - deploy:
+          requires:
+            - node_modules
+            - lint
+            - unit_test
+            - sanity_test
+            - build
           filters:
             branches:
               only:
                 - master
+      - website
       - deploy_website:
           requires:
             - website
