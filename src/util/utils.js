@@ -14,12 +14,12 @@ const getExtractionPath = (version, rootPath) =>
 const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-const printVersions = (
+const printVersions = ({
     list,
     message,
     versionInUse = '',
     defaultVersion = getDefaultVersion(yvmPath),
-) => {
+}) => {
     log(message)
 
     versionInUse = versionInUse.trim()
