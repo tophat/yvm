@@ -11,7 +11,7 @@ const log = require('./util/log')
 
 const invalidCommandLog = () =>
     log(
-        'You need to source yvm to use this command. run `source /usr/local/bin/yvm`',
+        'You need to source yvm to use this command. run `source ~/.yvm/yvm.sh`',
     )
 
 /* eslint-disable global-require,prettier/prettier */
