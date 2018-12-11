@@ -61,7 +61,7 @@ if [ ${interactive} = 1 ]; then
     else
         if ! type "node" > /dev/null; then
             yvm_echo "YVM Could not automatically set yarn version."
-            yvm_echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bash_profile"
+            yvm_echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bashrc"
         else
             yvm_use
         fi
