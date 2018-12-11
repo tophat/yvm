@@ -3,9 +3,8 @@ const path = require('path')
 const request = require('request')
 
 const log = require('./log')
-const { getDefaultVersion } = require('./version')
+
 const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
-const DEFAULT_VERSION_TEXT = 'Global Default'
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
 const getExtractionPath = (version, rootPath) =>
@@ -14,34 +13,26 @@ const getExtractionPath = (version, rootPath) =>
 const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-const printVersions = ({
-    list,
-    message,
-    versionInUse = '',
-    defaultVersion = getDefaultVersion(yvmPath),
-}) => {
+const printVersions = (list, message, versionInUse = '') => {
     log(message)
 
     versionInUse = versionInUse.trim()
 
     const versionsMap = {}
 
-    list.forEach(versionPadded => {
-        const version = versionPadded.trim()
+    list.forEach(item => {
+        const itemTrimmed = item.trim()
 
-        let toLog =
-            version === versionInUse
-                ? ` \u2713 ${versionPadded}`
-                : ` - ${versionPadded}`
+        const toLog =
+            itemTrimmed === versionInUse ? ` \u2713 ${item}` : ` - ${item}`
 
-        if (version === defaultVersion) toLog += ` (${DEFAULT_VERSION_TEXT})`
-        if (version === versionInUse) {
+        if (itemTrimmed === versionInUse) {
             log('\x1b[32m%s\x1b[0m', toLog)
         } else {
             log(toLog)
         }
 
-        versionsMap[version] = toLog
+        versionsMap[itemTrimmed] = toLog
     })
     return versionsMap
 }
