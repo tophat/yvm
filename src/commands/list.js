@@ -29,7 +29,11 @@ const listVersions = (rootPath = yvmPath) => {
             { async: true, silent: true },
             (code, stdout) => {
                 const versionInUse = stdout
-                printVersions(installedVersions, message, versionInUse)
+                printVersions({
+                    list: installedVersions,
+                    message,
+                    versionInUse,
+                })
             },
         )
     } else {
