@@ -47,6 +47,7 @@ jobs:
     steps:
       - prep_env
       - run: make lint
+      - run: make lint-defend-circular
   build:
     <<: *docker_defaults
     working_directory: ~/repo
