@@ -6,7 +6,10 @@ const listRemoteCommand = () => {
 
     return getVersionsFromTags()
         .then(versions => {
-            printVersions(versions, 'Versions available for install:')
+            printVersions({
+                list: versions,
+                message: 'Versions available for install:',
+            })
         })
         .catch(error => {
             log(error)
