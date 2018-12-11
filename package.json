@@ -10,6 +10,7 @@
   "scripts": {
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
+    "contributors:check": "all-contributors check",
     "precommit": "lint-staged"
   },
   "jest": {
