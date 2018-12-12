@@ -6,8 +6,8 @@ const {
     printVersions,
     stripVersionPrefix,
     versionRootPath,
-    yvmPath,
 } = require('../util/utils')
+const { yvmPath } = require('../util/path')
 
 const getYarnVersions = rootPath => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/

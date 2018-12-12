@@ -1,10 +1,8 @@
-const os = require('os')
 const path = require('path')
 const request = require('request')
-
+const { yvmPath } = require('./path')
 const log = require('./log')
 const { getDefaultVersion } = require('./version')
-const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
 const DEFAULT_VERSION_TEXT = 'Global Default'
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
@@ -76,5 +74,4 @@ module.exports = {
     printVersions,
     stripVersionPrefix,
     versionRootPath,
-    yvmPath,
 }

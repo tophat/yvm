@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const { yvmPath } = require('./utils')
+const { yvmPath } = require('./path')
 const log = require('./log')
 
 const yvmInstalledVersion = (inYvmPath = yvmPath) => {

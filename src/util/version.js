@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const cosmiconfig = require('cosmiconfig')
 const log = require('./log')
-const { yvmPath: defaultYvmPath } = require('./utils')
+const { yvmPath: defaultYvmPath } = require('./path')
 
 function isValidVersionString(version) {
     return /^\d+\.\d+\.\d+$/.test(version)

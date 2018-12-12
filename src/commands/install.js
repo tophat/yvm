@@ -8,8 +8,8 @@ const {
     versionRootPath,
     getExtractionPath,
     getVersionsFromTags,
-    yvmPath,
 } = require('../util/utils')
+const { yvmPath } = require('../util/path')
 
 const directoryStack = []
 
