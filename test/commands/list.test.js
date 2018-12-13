@@ -3,10 +3,10 @@ const fs = require('fs-extra')
 const list = require('../../src/commands/list')
 const {
     getExtractionPath,
-    printVersions,
     stripVersionPrefix,
     versionRootPath,
 } = require('../../src/util/utils')
+const { printVersions } = require('../../src/util/version')
 
 describe('yvm list', () => {
     const garbageInDirectory = ['haxor']

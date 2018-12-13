@@ -1,4 +1,4 @@
-const { printVersions } = require('../../src/util/utils')
+const { printVersions } = require('../../src/util/version')
 
 const DEFAULT_VERSION_TEXT = 'Global Default'
 const VERSION_IN_USE_SYMBOL = `\u2713`
