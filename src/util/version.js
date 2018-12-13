@@ -80,7 +80,7 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
                     `Invalid yarn version found in .yarnrc: ${rcVersion}`,
                 )
             }
-            versionToUse = rcVersion
+            versionToUse = getValidVersionString(rcVersion)
         } else {
             versionToUse = getDefaultVersion()
         }
@@ -108,4 +108,5 @@ module.exports = {
     getDefaultVersion,
     setDefaultVersion,
     isValidVersionString,
+    getValidVersionString,
 }
