@@ -5,7 +5,7 @@ const {
     getSplitVersionAndArgs,
     setDefaultVersion,
     getDefaultVersion,
-    isValidVersionString,
+    getValidVersionString,
 } = require('./util/version')
 const log = require('./util/log')
 
@@ -100,7 +100,8 @@ argParser
     .command('set-default <version>')
     .description('Sets the default fallback yarn version, if not supplied and no .yvmrc found')
     .action(version => {
-        if (!isValidVersionString(version)) {
+        const parsedVersionString = getValidVersionString(version)
+        if (!parsedVersionString) {
             log('Error: Invalid version string supplied.')
             process.exit(1)
             return
