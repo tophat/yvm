@@ -64,8 +64,6 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
         if (parsedVersionString) {
             log.info(`Using provided version: ${maybeVersionArg}`)
             return [maybeVersionArg, rest]
-        } else {
-            return []
         }
     }
 
