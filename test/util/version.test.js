@@ -32,12 +32,12 @@ describe('yvm default version', () => {
 describe('yvm valid version', () => {
     it('Valid versions', () => {
         expect(isValidVersionString('1.9.2')).toBe(true)
+        expect(isValidVersionString('v1.9.2')).toBe(true)
+        expect(isValidVersionString('1.9.2 ')).toBe(true)
     })
 
     it('Invalid versions', () => {
-        expect(isValidVersionString('v1.9.2')).toBe(false)
         expect(isValidVersionString('1.9.x')).toBe(false)
         expect(isValidVersionString('1.9')).toBe(false)
-        expect(isValidVersionString('1.9.2 ')).toBe(false)
     })
 })
