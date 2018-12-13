@@ -3,6 +3,7 @@ const {
     getDefaultVersion,
     setDefaultVersion,
     isValidVersionString,
+    getValidVersionString,
 } = require('../../src/util/version')
 
 describe('yvm default version', () => {
@@ -39,5 +40,10 @@ describe('yvm valid version', () => {
     it('Invalid versions', () => {
         expect(isValidVersionString('1.9.x')).toBe(false)
         expect(isValidVersionString('1.9')).toBe(false)
+    })
+
+    it('Parse versions', () => {
+        expect(getValidVersionString('1.9.0')).toBe('1.9.0')
+        expect(getValidVersionString('v1.9.0')).toBe('1.9.0')
     })
 })
