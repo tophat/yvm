@@ -4,7 +4,7 @@ const { exec } = require('shelljs')
 const { ensureVersionInstalled } = require('./util/install')
 const { getSplitVersionAndArgs } = require('./util/version')
 const log = require('./util/log')
-const { yvmPath } = require('./util/utils')
+const { yvmPath } = require('./util/path')
 
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)

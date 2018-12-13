@@ -1,10 +1,6 @@
-const os = require('os')
 const path = require('path')
 const request = require('request')
 
-const log = require('./log')
-
-const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
 const getExtractionPath = (version, rootPath) =>
@@ -12,30 +8,6 @@ const getExtractionPath = (version, rootPath) =>
 
 const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
-
-const printVersions = (list, message, versionInUse = '') => {
-    log(message)
-
-    versionInUse = versionInUse.trim()
-
-    const versionsMap = {}
-
-    list.forEach(item => {
-        const itemTrimmed = item.trim()
-
-        const toLog =
-            itemTrimmed === versionInUse ? ` \u2713 ${item}` : ` - ${item}`
-
-        if (itemTrimmed === versionInUse) {
-            log('\x1b[32m%s\x1b[0m', toLog)
-        } else {
-            log(toLog)
-        }
-
-        versionsMap[itemTrimmed] = toLog
-    })
-    return versionsMap
-}
 
 const getVersionsFromTags = () => {
     const options = {
@@ -64,8 +36,6 @@ const getVersionsFromTags = () => {
 module.exports = {
     getExtractionPath,
     getVersionsFromTags,
-    printVersions,
     stripVersionPrefix,
     versionRootPath,
-    yvmPath,
 }
