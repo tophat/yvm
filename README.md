@@ -114,6 +114,29 @@ A full list of commands is on the [api reference page](../docs/api.md)
 
 Have questions? [List of common questions and answers](../docs/faq.md)
 
+## Removing
+
+To remove yvm simply execute
+
+```bash
+rm -rf $YVM_DIR
+```
+
+Next, edit `$HOME/.bashrc` and `$HOME/.zshrc` and remove those lines:
+
+```bash
+export YVM_DIR=/home/joe_user/.yvm
+[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
+```
+
+In case you had older version of yvm installed, there could also be a line like
+
+```bash
+source /home/joe_user/.yvm/yvm.sh
+```
+
+or those lines could be in `$HOME/.bash_profile` instead of `$HOME/.bashrc`.
+
 ## Technologies to Familiarize Yourself with
 - [NodeJS](https://github.com/nodejs/node)
 - [Yarn](https://github.com/yarnpkg/yarn)
