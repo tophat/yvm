@@ -51,6 +51,7 @@ Manually managing different yarn versions across projects is a pain. This fixes 
 ## Installation
 Node: >=4.8.0
 
+### Installation script
 
 Execute the following in your terminal:
 
@@ -58,7 +59,26 @@ Execute the following in your terminal:
 curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
 ```
 
-Or if already installed, to update to the latest version
+### Manual installation
+
+Navigate to https://github.com/tophat/yvm/releases and download the `yvm.zip` file for the latest release to your home directory.
+
+Next, unzip that file to the .yvm dir in your home directory and make extracted yvm.sh executable
+
+```bash
+unzip yvm.zip -d $HOME/.yvm
+chmod a+x $HOME/.yvm/yvm.sh
+```
+
+Finally, add the following lines to your `$HOME/.zshrc` or `$HOME/.bashrc`, depending on the shell you use
+
+```bash
+export YVM_DIR=/home/joe_user/.yvm
+[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
+```
+
+### Upgrade
+To upgrade yvm to the lastes version either install as normal, or run
 ```bash
 yvm update-self
 ```
@@ -113,6 +133,29 @@ You can also [declare the version using other configuration files](../docs/faq.m
 A full list of commands is on the [api reference page](../docs/api.md)
 
 Have questions? [List of common questions and answers](../docs/faq.md)
+
+## Removing
+
+To remove yvm simply execute
+
+```bash
+rm -rf $YVM_DIR
+```
+
+Next, edit `$HOME/.bashrc` and `$HOME/.zshrc` and remove those lines:
+
+```bash
+export YVM_DIR=/home/joe_user/.yvm
+[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
+```
+
+In case you had older version of yvm installed, there could also be a line like
+
+```bash
+source /home/joe_user/.yvm/yvm.sh
+```
+
+or those lines could be in `$HOME/.bash_profile` instead of `$HOME/.bashrc`.
 
 ## Technologies to Familiarize Yourself with
 - [NodeJS](https://github.com/nodejs/node)

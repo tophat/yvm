@@ -2,12 +2,9 @@ const fs = require('fs')
 const { exec } = require('shelljs')
 
 const log = require('../util/log')
-const {
-    printVersions,
-    stripVersionPrefix,
-    versionRootPath,
-    yvmPath,
-} = require('../util/utils')
+const { stripVersionPrefix, versionRootPath } = require('../util/utils')
+const { printVersions } = require('../util/version')
+const { yvmPath } = require('../util/path')
 
 const getYarnVersions = rootPath => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/
@@ -29,7 +26,11 @@ const listVersions = (rootPath = yvmPath) => {
             { async: true, silent: true },
             (code, stdout) => {
                 const versionInUse = stdout
-                printVersions(installedVersions, message, versionInUse)
+                printVersions({
+                    list: installedVersions,
+                    message,
+                    versionInUse,
+                })
             },
         )
     } else {

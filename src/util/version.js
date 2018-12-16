@@ -2,7 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const cosmiconfig = require('cosmiconfig')
 const log = require('./log')
-const { yvmPath: defaultYvmPath } = require('./utils')
+const { yvmPath: defaultYvmPath } = require('./path')
+const DEFAULT_VERSION_TEXT = 'Global Default'
 
 function isValidVersionString(version) {
     return /^\d+\.\d+\.\d+$/.test(version)
@@ -94,10 +95,43 @@ Try:
     }
 }
 
+const printVersions = ({
+    list,
+    message,
+    versionInUse = '',
+    defaultVersion = getDefaultVersion(defaultYvmPath),
+}) => {
+    log(message)
+
+    versionInUse = versionInUse.trim()
+
+    const versionsMap = {}
+
+    list.forEach(versionPadded => {
+        const version = versionPadded.trim()
+
+        let toLog =
+            version === versionInUse
+                ? ` \u2713 ${versionPadded}`
+                : ` - ${versionPadded}`
+
+        if (version === defaultVersion) toLog += ` (${DEFAULT_VERSION_TEXT})`
+        if (version === versionInUse) {
+            log('\x1b[32m%s\x1b[0m', toLog)
+        } else {
+            log(toLog)
+        }
+
+        versionsMap[version] = toLog
+    })
+    return versionsMap
+}
+
 module.exports = {
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
     setDefaultVersion,
     isValidVersionString,
+    printVersions,
 }
