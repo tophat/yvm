@@ -28,7 +28,6 @@
     "commander": "^2.15.1",
     "cosmiconfig": "^5.0.5",
     "fs-extra": "^7.0.1",
-    "gh-release": "^3.4.0",
     "request": "^2.87.0",
     "shelljs": "^0.8.2",
     "targz": "^1.0.1"
@@ -47,6 +46,7 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jest": "^22.0.0",
     "eslint-plugin-prettier": "^3.0.0",
+    "gh-release": "^3.4.0",
     "husky": "^1.2.0",
     "jest": "^23.1.0",
     "jest-junit": "^5.1.0",
