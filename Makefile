@@ -121,6 +121,6 @@ node_modules_production:
 
 .PHONY: clean
 clean:
-	rm -rf ${ARTIFACT_DIR}
+	rm -rf ${ARTIFACT_DIR} node_modules_production
 	rm -f ~/.babel.json
 	rm -rf node_modules
