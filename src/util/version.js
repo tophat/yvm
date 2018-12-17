@@ -1,6 +1,8 @@
 const fs = require('fs')
 const path = require('path')
+const { exec } = require('shelljs')
 const cosmiconfig = require('cosmiconfig')
+
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
 const DEFAULT_VERSION_TEXT = 'Global Default'
@@ -51,6 +53,19 @@ function getRcFileVersion() {
     }
     log.info(`Found config ${result.filepath}`)
     return result.config
+}
+
+function getVersionInUse() {
+    return new Promise(resolve => {
+        exec(
+            'yarn --version',
+            { async: true, silent: true },
+            (code, stdout) => {
+                const versionInUse = stdout
+                resolve(versionInUse)
+            },
+        )
+    })
 }
 
 // eslint-disable-next-line consistent-return
@@ -131,6 +146,7 @@ module.exports = {
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
+    getVersionInUse,
     setDefaultVersion,
     isValidVersionString,
     printVersions,
