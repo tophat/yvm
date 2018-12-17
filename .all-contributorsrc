@@ -154,6 +154,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "yvm-bot",
+      "name": "yvm-bot",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/45925873?v=4",
+      "profile": "https://github.com/yvm-bot",
+      "contributions": [
+        "infra"
+      ]
     }
   ]
 }
