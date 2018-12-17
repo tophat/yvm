@@ -104,7 +104,7 @@ jobs:
           command: |
             git config --global user.email "circleci-yvm@users.noreply.github.com"
             git config --global user.name "CircleCI YVM"
-            USE_SSH=true yarn publish-gh-pages
+            CUSTOM_COMMIT_MESSAGE="[skip ci]" USE_SSH=true yarn publish-gh-pages
 
 workflows:
   version: 2
