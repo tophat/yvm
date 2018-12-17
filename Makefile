@@ -25,6 +25,7 @@ NODE_MODULES_BIN := node_modules/.bin
 CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
 MADGE := $(NODE_MODULES_BIN)/madge --circular src
+BUNDLEWATCH := $(NODE_MODULES_BIN)/bundlewatch --config .bundlewatch.config.js
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
 
@@ -44,6 +45,7 @@ help:
 	@echo "make test-watch                      - runs tests as you develop"
 	@echo "make test-coverage                   - creates a coverage report and opens it in your browser"
 	@echo "make test-snapshots                  - runs test, updating snapshots"
+	@echo "make bundlewatch                     - runs bundlewatch to measure release size (run after build-production)"
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
 	@echo "make build-production                - builds a bundle with production settings"
@@ -108,6 +110,10 @@ test-snapshots: node_modules
 
 
 # ----------------- Helpers ------------------
+
+.PHONY: bundlewatch
+bundlewatch: node_modules
+	$(BUNDLEWATCH)
 
 .PHONY: node_modules
 node_modules:

@@ -54,6 +54,7 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
+      - run: make bundlewatch
       - run: ./scripts/get-version.sh > artifacts/version.txt
       - run: cat artifacts/version.txt
       - persist_to_workspace:
