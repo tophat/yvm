@@ -1,5 +1,6 @@
 const log = require('../util/log')
-const { getVersionsFromTags, printVersions } = require('../util/utils')
+const { getVersionsFromTags } = require('../util/utils')
+const { printVersions } = require('../util/version')
 
 const listRemoteCommand = () => {
     log.info('list-remote')

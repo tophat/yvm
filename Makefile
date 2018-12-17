@@ -24,6 +24,7 @@ NODE_MODULES_BIN := node_modules/.bin
 
 CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
+MADGE := $(NODE_MODULES_BIN)/madge --circular src
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
 
@@ -38,6 +39,7 @@ help:
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
+	@echo "make lint-defend-circular            - runs madge to defend against circular imports"
 	@echo "make test                            - runs the full test suite with jest"
 	@echo "make test-watch                      - runs tests as you develop"
 	@echo "make test-coverage                   - creates a coverage report and opens it in your browser"
@@ -80,6 +82,9 @@ lint: node_modules
 lint-fix: node_modules
 	$(ESLINT) --fix .
 
+.PHONY: lint-defend-circular
+lint-defend-circular: node_modules
+	$(MADGE)
 
 # -------------- Testing --------------
 
@@ -116,6 +121,6 @@ node_modules_production:
 
 .PHONY: clean
 clean:
-	rm -rf ${ARTIFACT_DIR}
+	rm -rf ${ARTIFACT_DIR} node_modules_production
 	rm -f ~/.babel.json
 	rm -rf node_modules

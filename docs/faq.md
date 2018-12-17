@@ -16,7 +16,7 @@ YVM has all installed versions of yarn in `.yvm/versions`.
 
 ## I get the message `You need to source yvm to use this command.`
 This means you're running the yvm.js script directly and not the shell function.
-Try opening another terminal window, or type `source /usr/local/bin/yvm`
+Try opening another terminal window, or type `source ~/.yvm/yvm.sh`.
 
 
 ## Declare yvm version in a configuration file. Where can I place my version number?

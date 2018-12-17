@@ -16,14 +16,10 @@ YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
 zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 
-YVM_ALIAS_DIR=${YVM_ALIAS_DIR-"/usr/local/bin"}
-executable_alias_path="${YVM_ALIAS_DIR}/yvm"
 export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
-executable_source_string="source ${executable_alias_path}"
+executable_source_string='[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh'
 
-rm -f ${executable_alias_path}
 mkdir -p ${YVM_DIR}
-mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$USE_LOCAL" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
@@ -49,7 +45,6 @@ else
 fi
 
 chmod +x ${sh_install_path}
-ln -s ${sh_install_path} ${executable_alias_path}
 
 added_newline=0
 if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
@@ -58,22 +53,22 @@ if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
     added_newline=1
 fi
 
-if ! grep -q "${executable_source_string}" ~/.zshrc; then
+if ! grep -qF "${executable_source_string}" ~/.zshrc; then
     [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
     echo ${executable_source_string} >> ~/.zshrc
 fi
 
 added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.bash_profile; then
-    echo '' >> ~/.bash_profile
-    echo ${export_yvm_dir_string} >> ~/.bash_profile
+if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
+    echo '' >> ~/.bashrc
+    echo ${export_yvm_dir_string} >> ~/.bashrc
     added_newline=1
 fi
 
-if ! grep -q "${executable_source_string}" ~/.bash_profile; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.bash_profile
-    echo ${executable_source_string} >> ~/.bash_profile
+if ! grep -qF "${executable_source_string}" ~/.bashrc; then
+    [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
+    echo ${executable_source_string} >> ~/.bashrc
 fi
 
-echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"
-echo "Open another terminal window to start using it, or type \"source /usr/local/bin/yvm\""
+echo "yvm successfully installed in ${YVM_DIR} as ${sh_install_path}"
+echo "Open another terminal window to start using it, or type \"source ${sh_install_path}\""

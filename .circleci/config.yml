@@ -47,6 +47,7 @@ jobs:
     steps:
       - prep_env
       - run: make lint
+      - run: make lint-defend-circular
   build:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -97,7 +98,7 @@ jobs:
           at: ./
       - add_ssh_keys:
           fingerprints:
-            - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
+            - "31:a5:c5:3d:78:b9:79:1d:2f:4b:59:fd:e1:89:21:dc"
       - run:
           name: Setup git user and deploy website
           command: |
