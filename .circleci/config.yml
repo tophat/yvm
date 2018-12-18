@@ -54,6 +54,7 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
+      - run: make bundlewatch
       - run: ./scripts/get-version.sh > artifacts/version.txt
       - run: cat artifacts/version.txt
       - persist_to_workspace:
@@ -98,13 +99,13 @@ jobs:
           at: ./
       - add_ssh_keys:
           fingerprints:
-            - "e4:57:c7:5a:d1:6f:a9:23:20:fe:5f:bb:77:39:33:bb"
+            - "31:a5:c5:3d:78:b9:79:1d:2f:4b:59:fd:e1:89:21:dc"
       - run:
           name: Setup git user and deploy website
           command: |
             git config --global user.email "circleci-yvm@users.noreply.github.com"
             git config --global user.name "CircleCI YVM"
-            USE_SSH=true yarn publish-gh-pages
+            CUSTOM_COMMIT_MESSAGE="[skip ci]" USE_SSH=true yarn publish-gh-pages
 
 workflows:
   version: 2

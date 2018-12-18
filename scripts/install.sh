@@ -17,7 +17,7 @@ zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 
 export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
-executable_source_string="source ${sh_install_path}"
+executable_source_string='[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh'
 
 mkdir -p ${YVM_DIR}
 
@@ -53,21 +53,21 @@ if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
     added_newline=1
 fi
 
-if ! grep -q "${executable_source_string}" ~/.zshrc; then
+if ! grep -qF "${executable_source_string}" ~/.zshrc; then
     [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
     echo ${executable_source_string} >> ~/.zshrc
 fi
 
 added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.bash_profile; then
-    echo '' >> ~/.bash_profile
-    echo ${export_yvm_dir_string} >> ~/.bash_profile
+if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
+    echo '' >> ~/.bashrc
+    echo ${export_yvm_dir_string} >> ~/.bashrc
     added_newline=1
 fi
 
-if ! grep -q "${executable_source_string}" ~/.bash_profile; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.bash_profile
-    echo ${executable_source_string} >> ~/.bash_profile
+if ! grep -qF "${executable_source_string}" ~/.bashrc; then
+    [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
+    echo ${executable_source_string} >> ~/.bashrc
 fi
 
 echo "yvm successfully installed in ${YVM_DIR} as ${sh_install_path}"
