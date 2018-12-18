@@ -33,11 +33,16 @@ if (!process.argv.includes('exec')) {
 argParser
     .command('install [version]')
     .alias('i')
+    .option('-l, --latest', 'Install the latest version of Yarn available')
     .description('Install the specified version of Yarn.')
-    .action((maybeVersion) => {
+    .action((maybeVersion, command) => {
         const [version] = getSplitVersionAndArgs(maybeVersion);
-        const install = require('./commands/install');
-        install(version);
+        const {installVersion, installLatestVersion} = require('./commands/install');
+
+        if(command.latest) {
+            return installLatestVersion()
+        }
+        installVersion(version);
     });
 
 argParser

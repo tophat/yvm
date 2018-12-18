@@ -45,7 +45,7 @@ const downloadVersion = (version, rootPath) => {
 
     return new Promise((resolve, reject) => {
         const stream = request.get(url).pipe(file)
-        stream.on('finish', () => resolve())
+        stream.on('finish', () => resolve(version))
         stream.on('error', err => {
             reject(new Error(err))
         })
@@ -95,20 +95,38 @@ const installVersion = (version, rootPath = yvmPath) => {
             }
             log(`Installing yarn v${version} in ${rootPath}`)
             return downloadVersion(version, rootPath)
-                .then(() => {
-                    log(`Finished downloading yarn version ${version}`)
-                    return extractYarn(version, rootPath)
-                })
-                .catch(err => {
-                    cleanDirectories()
-                    return Promise.reject(err)
-                })
         })
-        .catch(error => {
-            if (error) {
-                log(error)
-            }
+        .then(() => {
+            log(`Finished downloading yarn version ${version}`)
+            return extractYarn(version, rootPath)
+        })
+        .catch(err => {
+            cleanDirectories()
+            log(err)
         })
 }
 
-module.exports = installVersion
+const installLatestVersion = (rootPath = yvmPath) => {
+    return getVersionsFromTags()
+        .then(versions => {
+            const latestVersion = versions[0]
+            if (checkForVersion(latestVersion, rootPath)) {
+                log(
+                    `It looks like you already have yarn ${latestVersion} installed...`,
+                )
+                return Promise.resolve()
+            }
+            log(`Installing yarn v${latestVersion}`)
+            return downloadVersion(latestVersion, rootPath)
+        })
+        .then(installedVersion => {
+            log(`Finished downloading yarn version ${installedVersion}`)
+            return extractYarn(installedVersion, rootPath)
+        })
+        .catch(err => {
+            cleanDirectories()
+            log(err)
+        })
+}
+
+module.exports = { installVersion, installLatestVersion }
