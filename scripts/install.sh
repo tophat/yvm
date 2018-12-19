@@ -27,15 +27,22 @@ if [ "$USE_LOCAL" = true ]; then
     unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
 else
-    release_api_contents=$(curl -s ${release_api_url} )
-    download_url=$(
-        echo ${release_api_contents} |
-        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
-    )
-    version_tag=$(
-        echo ${release_api_contents} |
-        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
-    )
+    if [ -z "$VERSION_TAG" ]; then
+        download_url="https://github.com/tophat/yvm/releases/download/${VERSION_TAG}/yvm.zip"
+        version_tag=${VERSION_TAG}
+    else
+        echo "Querying github release API to determine latest version"
+        release_api_contents=$(curl -s ${release_api_url} )
+        download_url=$(
+            echo ${release_api_contents} |
+            node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
+        )
+        version_tag=$(
+            echo ${release_api_contents} |
+            node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
+        )
+    fi
+
     echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
     rm -rf "${YVM_DIR}/node_modules"
