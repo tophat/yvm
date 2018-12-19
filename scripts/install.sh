@@ -54,28 +54,32 @@ fi
 
 chmod +x ${sh_install_path}
 
-added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
-    echo '' >> ~/.zshrc
-    echo ${export_yvm_dir_string} >> ~/.zshrc
-    added_newline=1
+if [ -f ~/.zshrc ]; then
+    added_newline=0
+    if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
+        echo '' >> ~/.zshrc
+        echo ${export_yvm_dir_string} >> ~/.zshrc
+        added_newline=1
+    fi
+
+    if ! grep -qF "${executable_source_string}" ~/.zshrc; then
+        [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
+        echo ${executable_source_string} >> ~/.zshrc
+    fi
 fi
 
-if ! grep -qF "${executable_source_string}" ~/.zshrc; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
-    echo ${executable_source_string} >> ~/.zshrc
-fi
+if [ -f ~/.bashrc ]; then
+    added_newline=0
+    if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
+        echo '' >> ~/.bashrc
+        echo ${export_yvm_dir_string} >> ~/.bashrc
+        added_newline=1
+    fi
 
-added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
-    echo '' >> ~/.bashrc
-    echo ${export_yvm_dir_string} >> ~/.bashrc
-    added_newline=1
-fi
-
-if ! grep -qF "${executable_source_string}" ~/.bashrc; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
-    echo ${executable_source_string} >> ~/.bashrc
+    if ! grep -qF "${executable_source_string}" ~/.bashrc; then
+        [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
+        echo ${executable_source_string} >> ~/.bashrc
+    fi
 fi
 
 echo "yvm successfully installed in ${YVM_DIR} as ${sh_install_path}"
