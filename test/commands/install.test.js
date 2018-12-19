@@ -1,18 +1,11 @@
 const fs = require('fs-extra')
 
 const { install, installLatest } = require('../../src/commands/install')
-const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
-
-jest.mock('../../src/util/utils', () => {
-    const MOCK_REMOTE_VERSIONS = ['1.6.0', '1.0.0']
-    return {
-        getVersionsFromTags: jest.fn().mockImplementation(() => {
-            return Promise.resolve(MOCK_REMOTE_VERSIONS)
-        }),
-        getExtractionPath,
-        versionRootPath,
-    }
-})
+const {
+    getVersionsFromTags,
+    getExtractionPath,
+    versionRootPath,
+} = require('../../src/util/utils')
 
 describe('yvm install', () => {
     const rootPath = '/tmp/yvmInstall'
@@ -59,8 +52,12 @@ describe('yvm install', () => {
     })
 
     it('installs the lastest version of yarn', () => {
-        const latestVersion = '1.6.0'
-        return installLatest(rootPath).then(() => {
+        return Promise.all([
+            getVersionsFromTags(),
+            installLatest(rootPath),
+        ]).then(results => {
+            const remoteVersions = results[0]
+            const latestVersion = remoteVersions[0]
             expect(
                 fs.statSync(getExtractionPath(latestVersion, rootPath)),
             ).toBeTruthy()
