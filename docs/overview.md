@@ -25,6 +25,11 @@ Or if already installed, to update to the latest version
 yvm update-self
 ```
 
+Or to install a specific version:
+```bash
+INSTALL_VERSION="v0.9.26" curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
+```
+
 ## Usage
 
 ### Automatic magic
