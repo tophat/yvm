@@ -38,6 +38,12 @@ To download and install a version of yarn, run:
 yvm install <version>
 ```
 
+To install the latest version of yarn, run:
+
+```bash
+yvm install --latest
+```
+
 Execute an arbitrary command using a specific version of yarn:
 
 ```bash
