@@ -32,7 +32,7 @@ const cleanDirectories = () => {
     }
 }
 
-const checkForVersion = (version, rootPath) => {
+const versionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
     checkDirectories(rootPath)
     return fs.existsSync(versionPath)
@@ -80,8 +80,19 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
+const downloadAndExtractYarn = (version, rootPath) => {
+    return downloadVersion(version, rootPath)
+        .then(() => {
+            return extractYarn(version, rootPath)
+        })
+        .catch(error => {
+            log(error)
+            cleanDirectories()
+        })
+}
+
 const installVersion = (version, rootPath = yvmPath) => {
-    if (checkForVersion(version, rootPath)) {
+    if (versionInstalled(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()
     }
@@ -94,14 +105,9 @@ const installVersion = (version, rootPath = yvmPath) => {
                 return Promise.reject()
             }
             log(`Installing yarn v${version} in ${rootPath}`)
-            return downloadVersion(version, rootPath)
-        })
-        .then(() => {
-            log(`Finished downloading yarn version ${version}`)
-            return extractYarn(version, rootPath)
+            return downloadAndExtractYarn(version, rootPath)
         })
         .catch(err => {
-            cleanDirectories()
             log(err)
         })
 }
@@ -110,21 +116,16 @@ const installLatestVersion = (rootPath = yvmPath) => {
     return getVersionsFromTags()
         .then(versions => {
             const latestVersion = versions[0]
-            if (checkForVersion(latestVersion, rootPath)) {
+            if (versionInstalled(latestVersion, rootPath)) {
                 log(
                     `It looks like you already have yarn ${latestVersion} installed...`,
                 )
                 return Promise.resolve()
             }
             log(`Installing yarn v${latestVersion}`)
-            return downloadVersion(latestVersion, rootPath)
-        })
-        .then(installedVersion => {
-            log(`Finished downloading yarn version ${installedVersion}`)
-            return extractYarn(installedVersion, rootPath)
+            return downloadAndExtractYarn(latestVersion, rootPath)
         })
         .catch(err => {
-            cleanDirectories()
             log(err)
         })
 }
