@@ -27,7 +27,7 @@ yvm update-self
 
 Or to install a specific version:
 ```bash
-INSTALL_VERSION="v0.9.26" curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | INSTALL_VERSION="v0.9.26" bash
 ```
 
 ## Usage
