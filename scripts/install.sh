@@ -13,6 +13,7 @@ USE_LOCAL=${USE_LOCAL-false}
 release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
+VERSION_TAG=${VERSION_TAG-""}
 zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 
@@ -27,7 +28,7 @@ if [ "$USE_LOCAL" = true ]; then
     unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
 else
-    if [ -z "$VERSION_TAG" ]; then
+    if [ ! -z "$VERSION_TAG" ]; then
         download_url="https://github.com/tophat/yvm/releases/download/${VERSION_TAG}/yvm.zip"
         version_tag=${VERSION_TAG}
     else
