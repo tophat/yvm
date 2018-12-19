@@ -9,6 +9,8 @@ jest.mock('../../src/util/utils', () => {
         getVersionsFromTags: jest.fn().mockImplementation(() => {
             return Promise.resolve(MOCK_REMOTE_VERSIONS)
         }),
+        getExtractionPath,
+        versionRootPath,
     }
 })
 

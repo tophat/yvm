@@ -91,7 +91,7 @@ const downloadAndExtractYarn = (version, rootPath) => {
         })
 }
 
-const installVersion = (version, rootPath = yvmPath) => {
+const install = (version, rootPath = yvmPath) => {
     if (versionInstalled(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()
@@ -112,7 +112,7 @@ const installVersion = (version, rootPath = yvmPath) => {
         })
 }
 
-const installLatestVersion = (rootPath = yvmPath) => {
+const installLatest = (rootPath = yvmPath) => {
     return getVersionsFromTags()
         .then(versions => {
             const latestVersion = versions[0]
@@ -130,4 +130,4 @@ const installLatestVersion = (rootPath = yvmPath) => {
         })
 }
 
-module.exports = { installVersion, installLatestVersion }
+module.exports = { install, installLatest }

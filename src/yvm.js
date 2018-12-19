@@ -36,12 +36,12 @@ argParser
     .option('-l, --latest', 'Install the latest version of Yarn available')
     .description('Install the specified version of Yarn.')
     .action((maybeVersion, command) => {
-        const {installVersion, installLatestVersion} = require('./commands/install');
+        const {install, installLatest} = require('./commands/install');
 
-        if(command.latest) return installLatestVersion()
+        if(command.latest) return installLatest()
 
         const [version] = getSplitVersionAndArgs(maybeVersion);
-        installVersion(version);
+        install(version);
     });
 
 argParser
