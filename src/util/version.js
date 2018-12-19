@@ -8,11 +8,11 @@ const { yvmPath: defaultYvmPath } = require('./path')
 const DEFAULT_VERSION_TEXT = 'Global Default'
 
 function isValidVersionString(version) {
-    return /\d+(\.\d+){2}/.test(version)
+    return /\d+(\.\d+){2}(.*)/.test(version)
 }
 
 function getValidVersionString(version) {
-    const parsedVersionString = version.match(/\d+(\.\d+){2}/)
+    const parsedVersionString = version.match(/\d+(\.\d+){2}(.*)/)
     return parsedVersionString ? parsedVersionString[0] : null
 }
 

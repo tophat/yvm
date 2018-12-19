@@ -35,6 +35,7 @@ describe('yvm valid version', () => {
         expect(isValidVersionString('1.9.2')).toBe(true)
         expect(isValidVersionString('v1.9.2')).toBe(true)
         expect(isValidVersionString('1.9.2 ')).toBe(true)
+        expect(isValidVersionString('1.1.0-exp.2')).toBe(true)
     })
 
     it('Invalid versions', () => {
@@ -45,5 +46,6 @@ describe('yvm valid version', () => {
     it('Parse versions', () => {
         expect(getValidVersionString('1.9.0')).toBe('1.9.0')
         expect(getValidVersionString('v1.9.0')).toBe('1.9.0')
+        expect(getValidVersionString('v1.1.0-exp.2')).toBe('1.1.0-exp.2')
     })
 })
