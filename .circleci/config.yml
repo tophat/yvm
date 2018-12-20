@@ -54,13 +54,20 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
-      - run: make bundlewatch
       - run: ./scripts/get-version.sh > artifacts/version.txt
       - run: cat artifacts/version.txt
       - persist_to_workspace:
           root: ~/repo
           paths:
             - artifacts/
+  release_size_check:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: make bundlewatch
   sanity_test:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -121,6 +128,9 @@ workflows:
       - build:
           requires:
             - node_modules
+      - release_size_check:
+            - node_modules
+            - build
       - sanity_test:
           requires:
             - node_modules
