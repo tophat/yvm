@@ -28,6 +28,7 @@ baseConfig.optimization = {
         new TerserPlugin({
             parallel: true,
             cache: true,
+            includes: /\/node_modules_production/,
         }),
     ],
 }
