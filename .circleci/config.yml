@@ -129,6 +129,7 @@ workflows:
           requires:
             - node_modules
       - release_size_check:
+          requires:
             - node_modules
             - build
       - sanity_test:
