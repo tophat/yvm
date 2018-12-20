@@ -55,13 +55,13 @@ if [ ${interactive} = 1 ]; then
     yvm() {
         yvm_ 'function' $@
     }
-    local DEFAULT_YARN_VERSION=$(yvm_call_node_script get-default-version)
+    DEFAULT_YARN_VERSION=$(yvm_call_node_script get-default-version)
     if [ "x" = "x${DEFAULT_YARN_VERSION}" ]; then
         yvm_echo "Use yvm set-default <version>"
     else
         if ! type "node" > /dev/null; then
             yvm_echo "YVM Could not automatically set yarn version."
-            yvm_echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bash_profile"
+            yvm_echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bashrc"
         else
             yvm_use
         fi

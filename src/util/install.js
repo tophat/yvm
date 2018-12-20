@@ -1,6 +1,8 @@
 const fs = require('fs')
 
-const { getExtractionPath, yvmPath } = require('../util/utils')
+const { getExtractionPath } = require('../util/utils')
+const { yvmPath } = require('../util/path')
+
 const installVersion = require('../commands/install')
 
 const ensureVersionInstalled = (version, rootPath = yvmPath) => {

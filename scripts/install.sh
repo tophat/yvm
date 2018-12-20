@@ -8,39 +8,42 @@ err_report() {
 
 trap 'err_report $LINENO' ERR
 
-use_local=${use_local-false}
+USE_LOCAL=${USE_LOCAL-false}
 
 release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
-artifacts_dir="artifacts/webpack_build"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
+INSTALL_VERSION=${INSTALL_VERSION-""}
 zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 
-YVM_ALIAS_DIR=${YVM_ALIAS_DIR-"/usr/local/bin"}
-executable_alias_path="${YVM_ALIAS_DIR}/yvm"
 export_yvm_dir_string="export YVM_DIR=${YVM_DIR}"
-executable_source_string="source ${executable_alias_path}"
+executable_source_string='[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh'
 
-rm -f ${executable_alias_path}
 mkdir -p ${YVM_DIR}
-mkdir -p ${YVM_ALIAS_DIR}
 
-if [ "$use_local" = true ]; then
+if [ "$USE_LOCAL" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
     rm -rf "${YVM_DIR}/node_modules"
-    unzip -q artifacts/webpack_build/yvm.zip -d ${YVM_DIR}
+    unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
 else
-    release_api_contents=$(curl -s ${release_api_url} )
-    download_url=$(
-        echo ${release_api_contents} |
-        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
-    )
-    version_tag=$(
-        echo ${release_api_contents} |
-        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
-    )
+    if [ ! -z "$INSTALL_VERSION" ]; then
+        download_url="https://github.com/tophat/yvm/releases/download/${INSTALL_VERSION}/yvm.zip"
+        version_tag=${INSTALL_VERSION}
+    else
+        echo "Querying github release API to determine latest version"
+        release_api_contents=$(curl -s ${release_api_url} )
+        download_url=$(
+            echo ${release_api_contents} |
+            node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
+        )
+        version_tag=$(
+            echo ${release_api_contents} |
+            node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
+        )
+    fi
+
     echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
     rm -rf "${YVM_DIR}/node_modules"
@@ -50,7 +53,6 @@ else
 fi
 
 chmod +x ${sh_install_path}
-ln -s ${sh_install_path} ${executable_alias_path}
 
 added_newline=0
 if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
@@ -59,22 +61,22 @@ if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
     added_newline=1
 fi
 
-if ! grep -q "${executable_source_string}" ~/.zshrc; then
+if ! grep -qF "${executable_source_string}" ~/.zshrc; then
     [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
     echo ${executable_source_string} >> ~/.zshrc
 fi
 
 added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.bash_profile; then
-    echo '' >> ~/.bash_profile
-    echo ${export_yvm_dir_string} >> ~/.bash_profile
+if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
+    echo '' >> ~/.bashrc
+    echo ${export_yvm_dir_string} >> ~/.bashrc
     added_newline=1
 fi
 
-if ! grep -q "${executable_source_string}" ~/.bash_profile; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.bash_profile
-    echo ${executable_source_string} >> ~/.bash_profile
+if ! grep -qF "${executable_source_string}" ~/.bashrc; then
+    [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
+    echo ${executable_source_string} >> ~/.bashrc
 fi
 
-echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"
-echo "Open another terminal window to start using it, or type \"source /usr/local/bin/yvm\""
+echo "yvm successfully installed in ${YVM_DIR} as ${sh_install_path}"
+echo "Open another terminal window to start using it, or type \"source ${sh_install_path}\""

@@ -4,7 +4,7 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
-    ".github/README.md"
+    "README.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -135,6 +135,33 @@
       "profile": "http://m.lunoe.dk",
       "contributions": [
         "doc"
+      ]
+    },
+    {
+      "login": "yashshah",
+      "name": "Yash Shah",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1558352?v=4",
+      "profile": "http://www.yashshah.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "torinthiel",
+      "name": "Wacław Schiller",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/9504927?v=4",
+      "profile": "https://github.com/torinthiel",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "yvm-bot",
+      "name": "yvm-bot",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/45925873?v=4",
+      "profile": "https://github.com/yvm-bot",
+      "contributions": [
+        "infra"
       ]
     }
   ]

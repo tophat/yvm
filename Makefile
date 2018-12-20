@@ -24,6 +24,8 @@ NODE_MODULES_BIN := node_modules/.bin
 
 CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
+MADGE := $(NODE_MODULES_BIN)/madge --circular src
+BUNDLEWATCH := $(NODE_MODULES_BIN)/bundlewatch --config .bundlewatch.config.js
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
 
@@ -38,10 +40,12 @@ help:
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
+	@echo "make lint-defend-circular            - runs madge to defend against circular imports"
 	@echo "make test                            - runs the full test suite with jest"
 	@echo "make test-watch                      - runs tests as you develop"
 	@echo "make test-coverage                   - creates a coverage report and opens it in your browser"
 	@echo "make test-snapshots                  - runs test, updating snapshots"
+	@echo "make bundlewatch                     - runs bundlewatch to measure release size (run after build-production)"
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
 	@echo "make build-production                - builds a bundle with production settings"
@@ -51,7 +55,7 @@ help:
 
 .PHONY: install
 install: build-production
-	@use_local=true scripts/install.sh
+	@USE_LOCAL=true scripts/install.sh
 
 .PHONY: install-watch
 install-watch: node_modules
@@ -61,7 +65,7 @@ install-watch: node_modules
 # ---- Webpack ----
 
 .PHONY: build-production
-build-production: node_modules
+build-production: node_modules_production node_modules
 	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
@@ -80,6 +84,9 @@ lint: node_modules
 lint-fix: node_modules
 	$(ESLINT) --fix .
 
+.PHONY: lint-defend-circular
+lint-defend-circular: node_modules
+	$(MADGE)
 
 # -------------- Testing --------------
 
@@ -104,13 +111,22 @@ test-snapshots: node_modules
 
 # ----------------- Helpers ------------------
 
+.PHONY: bundlewatch
+bundlewatch: node_modules
+	$(BUNDLEWATCH)
+
 .PHONY: node_modules
 node_modules:
 	$(YARN) install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
+.PHONY: node_modules_production
+node_modules_production:
+	$(YARN) install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
+	touch node_modules_production
+
 .PHONY: clean
 clean:
-	rm -rf ${ARTIFACT_DIR}
+	rm -rf ${ARTIFACT_DIR} node_modules_production
 	rm -f ~/.babel.json
 	rm -rf node_modules

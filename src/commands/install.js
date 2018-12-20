@@ -9,8 +9,8 @@ const {
     versionRootPath,
     getExtractionPath,
     getVersionsFromTags,
-    yvmPath,
 } = require('../util/utils')
+const { yvmPath } = require('../util/path')
 
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)

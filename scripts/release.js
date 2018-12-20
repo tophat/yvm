@@ -3,10 +3,7 @@ const path = require('path')
 
 const ghRelease = require('gh-release')
 
-const YVM_ZIP_FILE = path.join(
-    process.cwd(),
-    '/artifacts/webpack_build/yvm.zip',
-)
+const YVM_ZIP_FILE = path.join(process.cwd(), '/artifacts/yvm.zip')
 
 const releaseVersion = process.env.VERSION
 
