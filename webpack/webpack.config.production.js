@@ -1,5 +1,6 @@
 const path = require('path')
 const ZipFilesPlugin = require('webpack-zip-files-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
 
 const baseConfig = require('./webpack.config.base')
 
@@ -21,5 +22,14 @@ baseConfig.plugins.push(
         format: 'zip',
     }),
 )
+
+baseConfig.optimization = {
+    minimizer: [
+        new TerserPlugin({
+            parallel: true,
+            cache: true,
+        }),
+    ],
+}
 
 module.exports = baseConfig
