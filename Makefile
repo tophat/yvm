@@ -77,42 +77,42 @@ build-dev: node_modules
 
 
 .PHONY: lint
-lint: node_modules
+lint:
 	$(ESLINT) .
 
 .PHONY: lint-fix
-lint-fix: node_modules
+lint-fix:
 	$(ESLINT) --fix .
 
 .PHONY: lint-defend-circular
-lint-defend-circular: node_modules
+lint-defend-circular:
 	$(MADGE)
 
 # -------------- Testing --------------
 
 .PHONY: test
-test: node_modules
+test:
 	$(JEST)
 
 .PHONY: test-watch
-test-watch: node_modules
+test-watch:
 	$(JEST) --watch
 
 # CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
-test-coverage: node_modules
+test-coverage:
 	$(JEST) --coverage
 	$(CODECOV)
 
 .PHONY: test-snapshots
-test-snapshots: node_modules
+test-snapshots:
 	$(JEST) --updateSnapshot
 
 
 # ----------------- Helpers ------------------
 
 .PHONY: bundlewatch
-bundlewatch: node_modules
+bundlewatch:
 	$(BUNDLEWATCH)
 
 .PHONY: node_modules
