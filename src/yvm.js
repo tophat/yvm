@@ -1,6 +1,5 @@
 const argParser = require('commander')
 
-const { ensureVersionInstalled } = require('./commands/install')
 const {
     getSplitVersionAndArgs,
     setDefaultVersion,
@@ -103,6 +102,7 @@ argParser
     .action((maybeVersion) => {
         const [version] = getSplitVersionAndArgs(maybeVersion);
         const getNewPath = require('./commands/getNewPath');
+        const { ensureVersionInstalled } = require('./commands/install')
         ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version)));
     });
 
