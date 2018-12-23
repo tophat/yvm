@@ -13,6 +13,7 @@ USE_LOCAL=${USE_LOCAL-false}
 release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
+INSTALL_VERSION=${INSTALL_VERSION-""}
 zip_download_path="${YVM_DIR}/yvm.zip"
 sh_install_path="${YVM_DIR}/yvm.sh"
 
@@ -27,15 +28,22 @@ if [ "$USE_LOCAL" = true ]; then
     unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
 else
-    release_api_contents=$(curl -s ${release_api_url} )
-    download_url=$(
-        echo ${release_api_contents} |
-        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
-    )
-    version_tag=$(
-        echo ${release_api_contents} |
-        node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
-    )
+    if [ ! -z "$INSTALL_VERSION" ]; then
+        download_url="https://github.com/tophat/yvm/releases/download/${INSTALL_VERSION}/yvm.zip"
+        version_tag=${INSTALL_VERSION}
+    else
+        echo "Querying github release API to determine latest version"
+        release_api_contents=$(curl -s ${release_api_url} )
+        download_url=$(
+            echo ${release_api_contents} |
+            node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.assets[0].browser_download_url)"
+        )
+        version_tag=$(
+            echo ${release_api_contents} |
+            node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name)"
+        )
+    fi
+
     echo "Installing Version: ${version_tag}"
     curl -s -L -o ${zip_download_path} ${download_url}
     rm -rf "${YVM_DIR}/node_modules"
@@ -46,28 +54,32 @@ fi
 
 chmod +x ${sh_install_path}
 
-added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
-    echo '' >> ~/.zshrc
-    echo ${export_yvm_dir_string} >> ~/.zshrc
-    added_newline=1
+if [ -f ~/.zshrc ]; then
+    added_newline=0
+    if ! grep -q "${export_yvm_dir_string}" ~/.zshrc; then
+        echo '' >> ~/.zshrc
+        echo ${export_yvm_dir_string} >> ~/.zshrc
+        added_newline=1
+    fi
+
+    if ! grep -qF "${executable_source_string}" ~/.zshrc; then
+        [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
+        echo ${executable_source_string} >> ~/.zshrc
+    fi
 fi
 
-if ! grep -qF "${executable_source_string}" ~/.zshrc; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.zshrc
-    echo ${executable_source_string} >> ~/.zshrc
-fi
+if [ -f ~/.bashrc ]; then
+    added_newline=0
+    if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
+        echo '' >> ~/.bashrc
+        echo ${export_yvm_dir_string} >> ~/.bashrc
+        added_newline=1
+    fi
 
-added_newline=0
-if ! grep -q "${export_yvm_dir_string}" ~/.bashrc; then
-    echo '' >> ~/.bashrc
-    echo ${export_yvm_dir_string} >> ~/.bashrc
-    added_newline=1
-fi
-
-if ! grep -qF "${executable_source_string}" ~/.bashrc; then
-    [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
-    echo ${executable_source_string} >> ~/.bashrc
+    if ! grep -qF "${executable_source_string}" ~/.bashrc; then
+        [ -z "${added_newline}" ] && echo '' >> ~/.bashrc
+        echo ${executable_source_string} >> ~/.bashrc
+    fi
 fi
 
 echo "yvm successfully installed in ${YVM_DIR} as ${sh_install_path}"

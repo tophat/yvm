@@ -59,6 +59,11 @@ Execute the following in your terminal:
 curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
 ```
 
+Or to install a specific version:
+```bash
+curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | INSTALL_VERSION="v0.9.26" bash
+```
+
 ### Manual installation
 
 Navigate to https://github.com/tophat/yvm/releases and download the `yvm.zip` file for the latest release to your home directory.
@@ -96,6 +101,11 @@ To download and install a version of yarn, run:
 yvm install <version>
 ```
 
+To get the latest version of Yarn, run:
+
+```bash
+yvm install --latest
+```
 Execute an arbitrary command using a specific version of yarn:
 
 ```bash

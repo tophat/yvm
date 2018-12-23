@@ -32,7 +32,7 @@ const cleanDirectories = () => {
     }
 }
 
-const checkForVersion = (version, rootPath) => {
+const versionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
     checkDirectories(rootPath)
     return fs.existsSync(versionPath)
@@ -45,7 +45,7 @@ const downloadVersion = (version, rootPath) => {
 
     return new Promise((resolve, reject) => {
         const stream = request.get(url).pipe(file)
-        stream.on('finish', () => resolve())
+        stream.on('finish', () => resolve(version))
         stream.on('error', err => {
             reject(new Error(err))
         })
@@ -80,8 +80,19 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = (version, rootPath = yvmPath) => {
-    if (checkForVersion(version, rootPath)) {
+const downloadAndExtractYarn = (version, rootPath) => {
+    return downloadVersion(version, rootPath)
+        .then(() => {
+            return extractYarn(version, rootPath)
+        })
+        .catch(error => {
+            log(error)
+            cleanDirectories()
+        })
+}
+
+const install = (version, rootPath = yvmPath) => {
+    if (versionInstalled(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return Promise.resolve()
     }
@@ -94,21 +105,29 @@ const installVersion = (version, rootPath = yvmPath) => {
                 return Promise.reject()
             }
             log(`Installing yarn v${version} in ${rootPath}`)
-            return downloadVersion(version, rootPath)
-                .then(() => {
-                    log(`Finished downloading yarn version ${version}`)
-                    return extractYarn(version, rootPath)
-                })
-                .catch(err => {
-                    cleanDirectories()
-                    return Promise.reject(err)
-                })
+            return downloadAndExtractYarn(version, rootPath)
         })
-        .catch(error => {
-            if (error) {
-                log(error)
-            }
+        .catch(err => {
+            log(err)
         })
 }
 
-module.exports = installVersion
+const installLatest = (rootPath = yvmPath) => {
+    return getVersionsFromTags()
+        .then(versions => {
+            const latestVersion = versions[0]
+            if (versionInstalled(latestVersion, rootPath)) {
+                log(
+                    `It looks like you already have yarn ${latestVersion} installed...`,
+                )
+                return Promise.resolve()
+            }
+            log(`Installing yarn v${latestVersion}`)
+            return downloadAndExtractYarn(latestVersion, rootPath)
+        })
+        .catch(err => {
+            log(err)
+        })
+}
+
+module.exports = { install, installLatest }
