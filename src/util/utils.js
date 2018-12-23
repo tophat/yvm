@@ -1,6 +1,8 @@
 const path = require('path')
 const request = require('request')
 
+const log = require('./log')
+
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
 const getExtractionPath = (version, rootPath) =>
@@ -20,6 +22,25 @@ const getVersionsFromTags = () => {
     return new Promise((resolve, reject) => {
         request.get(options, (error, response, body) => {
             if (error || response.statusCode !== 200) {
+                if (response.body) {
+                    if (error) {
+                        log(error)
+                    }
+                    // Temp code while we figure out github rate limit
+                    if (
+                        response.body.indexOf('API rate limit exceeded') !== -1
+                    ) {
+                        reject(
+                            `GitHub API rate limit exceeded.
+Github recently changed their rate-limiting.
+We are working on making this better in yvm!!
+see: https://github.com/tophat/yvm/issues/255 for details`,
+                        )
+                        return
+                    }
+                    reject(response.body)
+                    return
+                }
                 reject(error)
             } else {
                 const tags = JSON.parse(body)

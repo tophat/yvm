@@ -42,11 +42,17 @@ argParser
         }
 
         if (maybeVersion) {
-            installVersion(maybeVersion)
+            installVersion(maybeVersion).catch(error => {
+                log(error)
+                process.exit(1)
+            })
             return
         }
         const [defaultVersion] = getSplitVersionAndArgs();
-        installVersion(defaultVersion)
+        installVersion(defaultVersion).catch(error => {
+            log(error)
+            process.exit(1)
+        })
     });
 
 argParser
@@ -103,7 +109,10 @@ argParser
         const [version] = getSplitVersionAndArgs(maybeVersion);
         const getNewPath = require('./commands/getNewPath');
         const { ensureVersionInstalled } = require('./commands/install')
-        ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version)));
+        ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version))).catch(error => {
+            log(error)
+            process.exit(1)
+        });
     });
 
 argParser
