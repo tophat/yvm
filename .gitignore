@@ -5,3 +5,4 @@ node_modules_production
 .yvm
 yvm
 tags
+.idea/

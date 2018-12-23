@@ -2,7 +2,7 @@ module.exports = {
     "files": [
         {
             "path": "artifacts/yvm.zip",
-            "maxSize": "2.2mB" // gzipped
+            "maxSize": "6mB" // gzipped
         }
     ]
 }

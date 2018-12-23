@@ -1,7 +1,7 @@
 const path = require('path')
 const { exec } = require('shelljs')
 
-const { ensureVersionInstalled } = require('./util/install')
+const { ensureVersionInstalled } = require('./commands/install')
 const { getSplitVersionAndArgs } = require('./util/version')
 const log = require('./util/log')
 const { yvmPath } = require('./util/path')

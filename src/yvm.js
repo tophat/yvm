@@ -1,6 +1,5 @@
 const argParser = require('commander')
 
-const { ensureVersionInstalled } = require('./util/install')
 const {
     getSplitVersionAndArgs,
     setDefaultVersion,
@@ -36,12 +35,24 @@ argParser
     .option('-l, --latest', 'Install the latest version of Yarn available')
     .description('Install the specified version of Yarn.')
     .action((maybeVersion, command) => {
-        const {install, installLatest} = require('./commands/install');
+        const {installVersion, installLatest} = require('./commands/install');
+        if (command.latest) {
+            installLatest()
+            return
+        }
 
-        if(command.latest) return installLatest()
-
-        const [version] = getSplitVersionAndArgs(maybeVersion);
-        install(version);
+        if (maybeVersion) {
+            installVersion(maybeVersion).catch(error => {
+                log(error)
+                process.exit(1)
+            })
+            return
+        }
+        const [defaultVersion] = getSplitVersionAndArgs();
+        installVersion(defaultVersion).catch(error => {
+            log(error)
+            process.exit(1)
+        })
     });
 
 argParser
@@ -97,7 +108,11 @@ argParser
     .action((maybeVersion) => {
         const [version] = getSplitVersionAndArgs(maybeVersion);
         const getNewPath = require('./commands/getNewPath');
-        ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version)));
+        const { ensureVersionInstalled } = require('./commands/install')
+        ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version))).catch(error => {
+            log(error)
+            process.exit(1)
+        });
     });
 
 argParser
