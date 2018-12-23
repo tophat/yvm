@@ -1,7 +1,11 @@
 const fs = require('fs-extra')
 
-const install = require('../../src/commands/install')
-const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
+const { install, installLatest } = require('../../src/commands/install')
+const {
+    getVersionsFromTags,
+    getExtractionPath,
+    versionRootPath,
+} = require('../../src/util/utils')
 
 describe('yvm install', () => {
     const rootPath = '/tmp/yvmInstall'
@@ -44,6 +48,19 @@ describe('yvm install', () => {
             expect(() =>
                 fs.statSync(getExtractionPath(version, rootPath)),
             ).toThrow()
+        })
+    })
+
+    it('installs the lastest version of yarn', () => {
+        return Promise.all([
+            getVersionsFromTags(),
+            installLatest(rootPath),
+        ]).then(results => {
+            const remoteVersions = results[0]
+            const latestVersion = remoteVersions[0]
+            expect(
+                fs.statSync(getExtractionPath(latestVersion, rootPath)),
+            ).toBeTruthy()
         })
     })
 })
