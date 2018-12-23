@@ -1,6 +1,6 @@
 const argParser = require('commander')
 
-const { ensureVersionInstalled } = require('./util/install')
+const { ensureVersionInstalled } = require('./commands/install')
 const {
     getSplitVersionAndArgs,
     setDefaultVersion,
@@ -36,18 +36,18 @@ argParser
     .option('-l, --latest', 'Install the latest version of Yarn available')
     .description('Install the specified version of Yarn.')
     .action((maybeVersion, command) => {
-        const {install, installLatest} = require('./commands/install');
+        const {installVersion, installLatest} = require('./commands/install');
         if (command.latest) {
             installLatest()
             return
         }
 
         if (maybeVersion) {
-            install(maybeVersion)
+            installVersion(maybeVersion)
             return
         }
         const [defaultVersion] = getSplitVersionAndArgs();
-        install(defaultVersion)
+        installVersion(defaultVersion)
     });
 
 argParser

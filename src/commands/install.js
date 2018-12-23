@@ -71,7 +71,7 @@ const verifySignature = async (version, rootPath) => {
     const verified = await openpgp.verify({
         message: await openpgp.message.fromBinary(file),
         signature: await openpgp.signature.readArmored(sig),
-        publicKeys: (await openpgp.key.readArmored(publicKey)).keys
+        publicKeys: (await openpgp.key.readArmored(publicKey)).keys,
     })
 
     return verified.signatures.length && verified.signatures[0].valid
@@ -144,4 +144,12 @@ const installLatest = (rootPath = yvmPath) => {
         })
 }
 
-module.exports = { install, installLatest }
+const ensureVersionInstalled = (version, rootPath = yvmPath) => {
+    const yarnBinDir = getExtractionPath(version, rootPath)
+    if (fs.existsSync(yarnBinDir)) {
+        return Promise.resolve()
+    }
+    return installVersion(version, rootPath)
+}
+
+module.exports = { installVersion, installLatest, ensureVersionInstalled }

@@ -49,6 +49,7 @@ help:
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
 	@echo "make build-production                - builds a bundle with production settings"
+	@echo "make use-docker                      - loads this project inside a docker container for the CI environment"
 
 
 # ---- YVM Command Stuff ----
@@ -114,6 +115,10 @@ test-snapshots:
 .PHONY: bundlewatch
 bundlewatch:
 	$(BUNDLEWATCH)
+
+.PHONY: use-docker
+use-docker:
+	docker run -it --env CI=1 --mount src=$(PWD),target=/yvm,type=bind circleci/node:8.14.0
 
 .PHONY: node_modules
 node_modules:
