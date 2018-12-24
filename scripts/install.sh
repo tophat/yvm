@@ -10,7 +10,7 @@ trap 'err_report $LINENO' ERR
 
 USE_LOCAL=${USE_LOCAL-false}
 
-release_api_url="https://api.github.com/repos/tophat/yvm/releases/latest"
+release_api_url="https://XXXXXXXX.cloudfront.net/yvm-releases"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
 INSTALL_VERSION=${INSTALL_VERSION-""}

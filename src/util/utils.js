@@ -13,7 +13,7 @@ const stripVersionPrefix = tagName =>
 
 const getVersionsFromTags = () => {
     const options = {
-        url: 'https://api.github.com/repos/yarnpkg/yarn/tags',
+        url: 'https://XXXXXXXX.cloudfront.net/yarn-releases',
         headers: {
             'User-Agent': 'YVM',
         },
