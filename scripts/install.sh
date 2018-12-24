@@ -10,7 +10,7 @@ trap 'err_report $LINENO' ERR
 
 USE_LOCAL=${USE_LOCAL-false}
 
-release_api_url="https://XXXXXXXX.cloudfront.net/yvm-releases"
+release_api_url="https://d236jo9e8rrdox.cloudfront.net/yvm-releases"
 
 YVM_DIR=${YVM_INSTALL_DIR-"${HOME}/.yvm"}
 INSTALL_VERSION=${INSTALL_VERSION-""}
