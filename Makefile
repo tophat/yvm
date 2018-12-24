@@ -49,6 +49,7 @@ help:
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
 	@echo "make build-production                - builds a bundle with production settings"
+	@echo "make use-docker                      - loads this project inside a docker container for the CI environment"
 
 
 # ---- YVM Command Stuff ----
@@ -77,43 +78,47 @@ build-dev: node_modules
 
 
 .PHONY: lint
-lint: node_modules
+lint:
 	$(ESLINT) .
 
 .PHONY: lint-fix
-lint-fix: node_modules
+lint-fix:
 	$(ESLINT) --fix .
 
 .PHONY: lint-defend-circular
-lint-defend-circular: node_modules
+lint-defend-circular:
 	$(MADGE)
 
 # -------------- Testing --------------
 
 .PHONY: test
-test: node_modules
+test:
 	$(JEST)
 
 .PHONY: test-watch
-test-watch: node_modules
+test-watch:
 	$(JEST) --watch
 
 # CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
-test-coverage: node_modules
+test-coverage:
 	$(JEST) --coverage
 	$(CODECOV)
 
 .PHONY: test-snapshots
-test-snapshots: node_modules
+test-snapshots:
 	$(JEST) --updateSnapshot
 
 
 # ----------------- Helpers ------------------
 
 .PHONY: bundlewatch
-bundlewatch: node_modules
+bundlewatch:
 	$(BUNDLEWATCH)
+
+.PHONY: use-docker
+use-docker:
+	docker run -it --env CI=1 --mount src=$(PWD),target=/yvm,type=bind circleci/node:8.14.0
 
 .PHONY: node_modules
 node_modules:
