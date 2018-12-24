@@ -26,18 +26,6 @@ const getVersionsFromTags = () => {
                     if (error) {
                         log(error)
                     }
-                    // Temp code while we figure out github rate limit
-                    if (
-                        response.body.indexOf('API rate limit exceeded') !== -1
-                    ) {
-                        reject(
-                            `GitHub API rate limit exceeded.
-Github recently changed their rate-limiting.
-We are working on making this better in yvm!!
-see: https://github.com/tophat/yvm/issues/255 for details`,
-                        )
-                        return
-                    }
                     reject(response.body)
                     return
                 }
