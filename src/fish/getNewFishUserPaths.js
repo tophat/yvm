@@ -5,7 +5,7 @@ const FISH_ARRAY_DELIMINATOR = ' '
 const getNewFishUserPaths = (
     version,
     rootPath = yvmPath,
-    pathString = process.env.fish_user_paths || '',
+    pathString = process.env.FISH_USER_PATHS || '',
 ) => {
     const splitPath = pathString.split(FISH_ARRAY_DELIMINATOR)
     const destPath = versionRootPath(rootPath)
@@ -26,7 +26,7 @@ const getNewFishUserPaths = (
         splitPath.unshift(newPathSegment)
     }
 
-    return splitPath.join(FISH_ARRAY_DELIMINATOR)
+    return splitPath.join(FISH_ARRAY_DELIMINATOR).trim()
 }
 
 module.exports = getNewFishUserPaths

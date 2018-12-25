@@ -28,7 +28,7 @@ mkdir -p ${YVM_ALIAS_DIR}
 
 if [ "$use_local" = true ]; then
     rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
-    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" ${YVM_DIR}
+    cp "${artifacts_dir}/yvm.sh" "${artifacts_dir}/yvm.js" "${artifacts_dir}/yvm-exec.js" "${artifacts_dir}/fish/yvm.fish" ${YVM_DIR}
 else
     download_url=$(
         curl -s ${release_api_url} |
@@ -66,6 +66,12 @@ fi
 if ! grep -q "${executable_source_string}" ~/.bash_profile; then
     [ -z "${added_newline}" ] && echo '' >> ~/.bash_profile
     echo ${executable_source_string} >> ~/.bash_profile
+fi
+
+export_yvm_dir_fish="set -x YVM_DIR ${YVM_DIR}"
+if ! grep -q "${export_yvm_dir_fish}" ~/.config/fish/config.fish; then
+    echo '' >> ~/.config/fish/config.fish
+    echo ${export_yvm_dir_fish} >> ~/.config/fish/config.fish
 fi
 
 echo "yvm successfully installed in ${YVM_DIR} with the 'yvm' command aliased as ${executable_alias_path}"

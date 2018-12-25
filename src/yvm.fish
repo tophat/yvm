@@ -8,16 +8,20 @@ function yvm
         if test (count $argv) -gt 0
             set PROVIDED_VERSION $argv[1]
         end
-        
+
         begin
             set NEW_FISH_USER_PATHS (yvm_call_node_script get-new-fish-user-path $PROVIDED_VERSION)
         end
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
         else
-            set -U fish_user_paths $NEW_FISH_USER_PATHS
+            set -Ux fish_user_paths $NEW_FISH_USER_PATHS
             set -l new_version (yarn --version)
+            set -l current_version $LAST_USED_YARN_VERSION
             yvm_echo "Now using yarn version $new_version"
+            if test \( ! -f .yvmrc \) -a \( "$new_version" != "$current_version" \)
+                set -U LAST_USED_YARN_VERSION $new_version
+            end
         end
     end
 
@@ -30,20 +34,31 @@ function yvm
     end
 
     function yvm_call_node_script
-        # do not add anything that outputs stuff to stdout in function, its output is stored in a variable
         set -lx fish_user_paths $fish_user_paths
         node "$YVM_DIR/yvm.js" $argv
     end
 
     if [ "$command" = "use" ]
-        if test (count $argv) -gt 1 
+        if test (count $argv) -gt 1
             yvm_use $argv[2]
-        else 
+        else
             yvm_use
         end
     else if [ "$command" = "update-self" ]
         curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
     else
         yvm_call_node_script $argv[1..-1]
+    end
+end
+
+
+if [ -z "$LAST_USED_YARN_VERSION" ]
+    echo "No default yarn version set. Use yvm install <version> or yvm use <version> to fix this"
+else
+    if type -q "node"
+        yvm use $LAST_USED_YARN_VERSION
+    else
+        echo "YVM Could not automatically set yarn version."
+        echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
     end
 end
