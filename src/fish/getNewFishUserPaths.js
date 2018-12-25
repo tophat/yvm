@@ -1,4 +1,5 @@
-const { versionRootPath, yvmPath } = require('../util/utils')
+const { versionRootPath } = require('../util/utils')
+const { yvmPath } = require('../util/path')
 
 const FISH_ARRAY_DELIMINATOR = ' '
 

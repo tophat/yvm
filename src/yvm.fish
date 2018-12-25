@@ -1,8 +1,8 @@
 #!/bin/sh
+set -q YVM_DIR; or set -U YVM_DIR "$HOME/.yvm"
 
 function yvm
     set command $argv[1]
-    set -q YVM_DIR; or set -U YVM_DIR "$HOME/.yvm"
 
     function yvm_use
         if test (count $argv) -gt 0
@@ -15,13 +15,9 @@ function yvm
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
         else
-            set -Ux fish_user_paths $NEW_FISH_USER_PATHS
+            set -U fish_user_paths $NEW_FISH_USER_PATHS
             set -l new_version (yarn --version)
-            set -l current_version $LAST_USED_YARN_VERSION
             yvm_echo "Now using yarn version $new_version"
-            if test \( ! -f .yvmrc \) -a \( "$new_version" != "$current_version" \)
-                set -U LAST_USED_YARN_VERSION $new_version
-            end
         end
     end
 
@@ -51,14 +47,13 @@ function yvm
     end
 end
 
+if not type -q "node"
+    command printf "%s\n" "YVM Could not automatically set yarn version." 2>/dev/null >&2
+    command printf "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file" 2>/dev/null >&2
+    exit 1
+end
 
-if [ -z "$LAST_USED_YARN_VERSION" ]
-    echo "No default yarn version set. Use yvm install <version> or yvm use <version> to fix this"
-else
-    if type -q "node"
-        yvm use $LAST_USED_YARN_VERSION
-    else
-        echo "YVM Could not automatically set yarn version."
-        echo "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
-    end
+set -U DEFAULT_YARN_VERSION (yvm_call_node_script get-default-version 2>/dev/null)
+if [ "x" != "x$DEFAULT_YARN_VERSION" ]
+    yvm use > /dev/null
 end
