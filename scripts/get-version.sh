@@ -50,7 +50,7 @@ function vercomp () {
 
 step "Determining version to publish..."
 
-release_api_contents=$(curl --silent "https://api.github.com/repos/tophat/yvm/releases/latest")
+release_api_contents=$(curl --silent "https://d236jo9e8rrdox.cloudfront.net/yvm-releases")
 last_published_version=$(
     echo ${release_api_contents} |
     node -e "var stdin = fs.readFileSync(0).toString(); var json = JSON.parse(stdin); console.log(json.tag_name.substring(1));"
