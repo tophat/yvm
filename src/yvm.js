@@ -134,7 +134,7 @@ argParser
             process.exit(1)
             return
         }
-        if (setDefaultVersion({ parsedVersionString })) {
+        if (setDefaultVersion({ version: parsedVersionString })) {
             log('Default version set!')
         } else {
             process.exit(2)
