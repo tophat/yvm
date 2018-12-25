@@ -7,23 +7,27 @@ ifdef CI
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
+    YARN_INSTALL_ARGS=--frozen-lockfile --ci
+    YARN=$(HOME)/.yvm/yvm.sh exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
+    YARN_INSTALL_ARGS=
+    YARN=yarn
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
-YVM_DIR?=$(HOME)/.yvm
 
 NODE_MODULES_BIN := node_modules/.bin
 
 CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
+MADGE := $(NODE_MODULES_BIN)/madge --circular src
+BUNDLEWATCH := $(NODE_MODULES_BIN)/bundlewatch --config .bundlewatch.config.js
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
-YVM := $(YVM_DIR)/yvm.sh
 
 .PHONY: help
 help:
@@ -36,89 +40,98 @@ help:
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
 	@echo "make lint-fix                        - runs eslint --fix"
+	@echo "make lint-defend-circular            - runs madge to defend against circular imports"
 	@echo "make test                            - runs the full test suite with jest"
 	@echo "make test-watch                      - runs tests as you develop"
 	@echo "make test-coverage                   - creates a coverage report and opens it in your browser"
 	@echo "make test-snapshots                  - runs test, updating snapshots"
+	@echo "make bundlewatch                     - runs bundlewatch to measure release size (run after build-production)"
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
-	@echo "make build                           - builds a bundle with production settings"
-	@echo "make build_and_deploy                - builds and deploys the production bundle"
+	@echo "make build-production                - builds a bundle with production settings"
+	@echo "make use-docker                      - loads this project inside a docker container for the CI environment"
 
 
 # ---- YVM Command Stuff ----
 
 .PHONY: install
-install: build
-	@use_local=true scripts/install.sh
+install: build-production
+	@USE_LOCAL=true scripts/install.sh
 
 .PHONY: install-watch
 install-watch: node_modules
 	scripts/install-watch.sh
 
 
-# ---- Infrastructure for Test/Deploy ----
+# ---- Webpack ----
 
-.PHONY: build
-build: node_modules
-	$(WEBPACK) --config webpack/webpack.config.base.js
+.PHONY: build-production
+build-production: node_modules_production node_modules
+	$(WEBPACK) --config webpack/webpack.config.production.js
 
 .PHONY: build-dev
 build-dev: node_modules
-	$(WEBPACK) --config webpack/webpack.config.dev.js
-
-.PHONY: build_and_deploy
-build_and_deploy: node_modules
-	$(WEBPACK) --config webpack/webpack.config.deploy.js
+	$(WEBPACK) --config webpack/webpack.config.development.js
 
 
 # -------------- Linting --------------
 
 
 .PHONY: lint
-lint: node_modules
+lint:
 	$(ESLINT) .
 
 .PHONY: lint-fix
-lint-fix: node_modules
+lint-fix:
 	$(ESLINT) --fix .
 
+.PHONY: lint-defend-circular
+lint-defend-circular:
+	$(MADGE)
 
 # -------------- Testing --------------
 
 .PHONY: test
-test: node_modules
+test:
 	$(JEST)
 
 .PHONY: test-watch
-test-watch: node_modules
+test-watch:
 	$(JEST) --watch
 
 # CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
-test-coverage: node_modules
+test-coverage:
 	$(JEST) --coverage
 	$(CODECOV)
 
 .PHONY: test-snapshots
-test-snapshots: node_modules
+test-snapshots:
 	$(JEST) --updateSnapshot
 
 
 # ----------------- Helpers ------------------
 
+.PHONY: bundlewatch
+bundlewatch:
+	$(BUNDLEWATCH)
+
+.PHONY: use-docker
+use-docker:
+	docker run -it --env CI=1 --mount src=$(PWD),target=/yvm,type=bind circleci/node:8.14.0
+
 .PHONY: node_modules
-node_modules: $(YVM)
-	$(YVM) exec install
+node_modules:
+	$(YARN) install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
-$(YVM):
-	@echo "Installing the latest yvm release"
-	@scripts/install.sh
+.PHONY: node_modules_production
+node_modules_production:
+	$(YARN) install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
+	touch node_modules_production
 
 .PHONY: clean
 clean:
-	rm -rf ${ARTIFACT_DIR}
+	rm -rf ${ARTIFACT_DIR} node_modules_production
 	rm -f ~/.babel.json
 	rm -rf node_modules
-

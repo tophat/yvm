@@ -1,12 +1,9 @@
 const fs = require('fs')
 
 const log = require('../util/log')
-const {
-    printVersions,
-    stripVersionPrefix,
-    versionRootPath,
-    yvmPath,
-} = require('../util/utils')
+const { stripVersionPrefix, versionRootPath } = require('../util/utils')
+const { getVersionInUse, printVersions } = require('../util/version')
+const { yvmPath } = require('../util/path')
 
 const getYarnVersions = rootPath => {
     const re = /^v(\d+\.)(\d+\.)(\d+)$/
@@ -22,7 +19,14 @@ const getYarnVersions = rootPath => {
 const listVersions = (rootPath = yvmPath) => {
     const installedVersions = getYarnVersions(rootPath)
     if (installedVersions.length) {
-        printVersions(installedVersions, 'Installed yarn versions:')
+        getVersionInUse().then(versionInUse => {
+            const message = 'Installed yarn versions:'
+            printVersions({
+                list: installedVersions,
+                message,
+                versionInUse,
+            })
+        })
     } else {
         log('You have no yarn versions installed.')
     }

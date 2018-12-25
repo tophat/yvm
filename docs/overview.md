@@ -25,6 +25,11 @@ Or if already installed, to update to the latest version
 yvm update-self
 ```
 
+Or to install a specific version:
+```bash
+curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | INSTALL_VERSION="v0.9.26" bash
+```
+
 ## Usage
 
 ### Automatic magic
@@ -36,6 +41,12 @@ To download and install a version of yarn, run:
 
 ```bash
 yvm install <version>
+```
+
+To install the latest version of yarn, run:
+
+```bash
+yvm install --latest
 ```
 
 Execute an arbitrary command using a specific version of yarn:
