@@ -17,7 +17,7 @@ module.exports = {
         path: outputPath,
     },
     target: 'node',
-    plugins: [new CopyPlugin(['src/yvm.sh'])],
+    plugins: [new CopyPlugin(['src/yvm.sh', 'src/yvm.fish'])],
     module: {
         rules: [
             {

@@ -34,6 +34,19 @@ function yvm
         node "$YVM_DIR/yvm.js" $argv
     end
 
+    function yvm_init_fish
+        if not type -q "node"
+            yvm_err "%s\n" "YVM Could not automatically set yarn version."
+            yvm_err "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
+            exit 1
+        end
+
+        set -U DEFAULT_YARN_VERSION (yvm_call_node_script get-default-version 2>/dev/null)
+        if [ "x" != "x$DEFAULT_YARN_VERSION" ]
+            yvm_use > /dev/null
+        end
+    end
+
     if [ "$command" = "use" ]
         if test (count $argv) -gt 1
             yvm_use $argv[2]
@@ -42,18 +55,11 @@ function yvm
         end
     else if [ "$command" = "update-self" ]
         curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
+    else if [ "$command" = "init-fish" ]
+        yvm_init_fish
     else
         yvm_call_node_script $argv[1..-1]
     end
 end
 
-if not type -q "node"
-    command printf "%s\n" "YVM Could not automatically set yarn version." 2>/dev/null >&2
-    command printf "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file" 2>/dev/null >&2
-    exit 1
-end
-
-set -U DEFAULT_YARN_VERSION (yvm_call_node_script get-default-version 2>/dev/null)
-if [ "x" != "x$DEFAULT_YARN_VERSION" ]
-    yvm use > /dev/null
-end
+yvm init-fish

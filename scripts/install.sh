@@ -23,7 +23,7 @@ executable_source_string='[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh'
 mkdir -p ${YVM_DIR}
 
 if [ "$USE_LOCAL" = true ]; then
-    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js"
+    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js" "${YVM_DIR}/yvm.fish"
     rm -rf "${YVM_DIR}/node_modules"
     unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh
@@ -82,11 +82,23 @@ if [ -f ~/.bashrc ]; then
     fi
 fi
 
-export_yvm_dir_fish="set -x YVM_DIR ${YVM_DIR}"
-if ! grep -q "${export_yvm_dir_fish}" ~/.config/fish/config.fish; then
-    echo '' >> ~/.config/fish/config.fish
-    echo ${export_yvm_dir_fish} >> ~/.config/fish/config.fish
+if [ -f ~/.config/fish/config.fish ]; then
+    export_yvm_dir_fish="set -x YVM_DIR ${YVM_DIR}"
+    fish_command_source_string='. $YVM_DIR/yvm.fish'
+
+    added_newline=0
+    if ! grep -q "${export_yvm_dir_fish}" ~/.config/fish/config.fish; then
+        echo '' >> ~/.config/fish/config.fish
+        echo ${export_yvm_dir_fish} >> ~/.config/fish/config.fish
+        added_newline=1
+    fi
+
+    if ! grep -qF "${fish_command_source_string}" ~/.config/fish/config.fish; then
+        [ -z "${added_newline}" ] && echo '' >> ~/.config/fish/config.fish
+        echo ${fish_command_source_string} >> ~/.config/fish/config.fish
+    fi
 fi
+
 
 echo "yvm successfully installed in ${YVM_DIR} as ${sh_install_path}"
 echo "Open another terminal window to start using it, or type \"source ${sh_install_path}\""
