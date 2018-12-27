@@ -112,7 +112,7 @@ argParser
         ensureVersionInstalled(version).then(() => log.capturable(getNewPath(version))).catch(error => {
             log(error)
             process.exit(1)
-        })
+        });
     });
 
 argParser
@@ -126,7 +126,7 @@ argParser
             const newPath = getNewFishUserPaths(version)
             log.capturable(newPath)
         });
-    })
+    });
 
 argParser
     .command('set-default <version>')
