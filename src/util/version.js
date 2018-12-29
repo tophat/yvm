@@ -8,7 +8,12 @@ const { yvmPath: defaultYvmPath } = require('./path')
 const DEFAULT_VERSION_TEXT = 'Global Default'
 
 function isValidVersionString(version) {
-    return /^\d+\.\d+\.\d+$/.test(version)
+    return /\d+(\.\d+){2}(.*)/.test(version)
+}
+
+function getValidVersionString(version) {
+    const parsedVersionString = version.match(/\d+(\.\d+){2}(.*)/)
+    return parsedVersionString ? parsedVersionString[0] : null
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
@@ -71,9 +76,10 @@ function getVersionInUse() {
 // eslint-disable-next-line consistent-return
 const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
-        if (isValidVersionString(maybeVersionArg)) {
+        const parsedVersionString = getValidVersionString(maybeVersionArg)
+        if (parsedVersionString) {
             log.info(`Using provided version: ${maybeVersionArg}`)
-            return [maybeVersionArg, rest]
+            return [parsedVersionString, rest]
         }
     }
 
@@ -88,7 +94,7 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
                     `Invalid yarn version found in .yarnrc: ${rcVersion}`,
                 )
             }
-            versionToUse = rcVersion
+            versionToUse = getValidVersionString(rcVersion)
         } else {
             versionToUse = getDefaultVersion()
         }
@@ -149,5 +155,6 @@ module.exports = {
     getVersionInUse,
     setDefaultVersion,
     isValidVersionString,
+    getValidVersionString,
     printVersions,
 }
