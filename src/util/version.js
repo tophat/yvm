@@ -7,6 +7,8 @@ const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
 const { stripVersionPrefix, versionRootPath } = require('./utils')
 const DEFAULT_VERSION_TEXT = 'Global Default'
+const VERSION_IN_USE_SYMBOL = '\u2713'
+const VERSION_INSTALLED_SYMBOL = '\u2192'
 
 function isValidVersionString(version) {
     return /\d+(\.\d+){2}(.*)/.test(version)
@@ -147,8 +149,8 @@ const printVersions = ({
         const isInstalled = localVersions.includes(version)
 
         let toLog = ' '
-        if (isCurrent) toLog += '\u2713'
-        else if (isInstalled) toLog += '\u2192'
+        if (isCurrent) toLog += VERSION_IN_USE_SYMBOL
+        else if (isInstalled) toLog += VERSION_INSTALLED_SYMBOL
         else toLog += '-'
         toLog += ` ${versionPadded}`
 
@@ -165,6 +167,9 @@ const printVersions = ({
 }
 
 module.exports = {
+    DEFAULT_VERSION_TEXT,
+    VERSION_IN_USE_SYMBOL,
+    VERSION_INSTALLED_SYMBOL,
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
