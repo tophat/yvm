@@ -5,6 +5,7 @@ const cosmiconfig = require('cosmiconfig')
 
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
+const { stripVersionPrefix, versionRootPath } = require('./utils')
 const DEFAULT_VERSION_TEXT = 'Global Default'
 
 function isValidVersionString(version) {
@@ -73,6 +74,16 @@ function getVersionInUse() {
     })
 }
 
+function getYarnVersions(yvmPath = defaultYvmPath) {
+    const versionsPath = versionRootPath(yvmPath)
+    if (fs.existsSync(versionsPath)) {
+        const re = /^v(\d+\.)(\d+\.)(\d+)$/
+        const files = fs.readdirSync(versionsPath)
+        return files.filter(file => re.test(file)).map(stripVersionPrefix)
+    }
+    return []
+}
+
 // eslint-disable-next-line consistent-return
 const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
@@ -121,6 +132,7 @@ const printVersions = ({
     message,
     versionInUse = '',
     defaultVersion = getDefaultVersion(defaultYvmPath),
+    localVersions = [],
 }) => {
     log(message)
 
@@ -130,18 +142,22 @@ const printVersions = ({
 
     list.forEach(versionPadded => {
         const version = versionPadded.trim()
+        const isCurrent = version === versionInUse
+        const isDefault = version === defaultVersion
+        const isInstalled = localVersions.includes(version)
 
-        let toLog =
-            version === versionInUse
-                ? ` \u2713 ${versionPadded}`
-                : ` - ${versionPadded}`
+        let toLog = ' '
+        if (isCurrent) toLog += '\u2713'
+        else if (isInstalled) toLog += '\u2192'
+        else toLog += '-'
+        toLog += ` ${versionPadded}`
 
-        if (version === defaultVersion) toLog += ` (${DEFAULT_VERSION_TEXT})`
-        if (version === versionInUse) {
-            log('\x1b[32m%s\x1b[0m', toLog)
-        } else {
-            log(toLog)
-        }
+        if (isDefault) toLog += ` (${DEFAULT_VERSION_TEXT})`
+
+        const logArgs = []
+        if (isCurrent) logArgs.push('\x1b[32m%s\x1b[0m')
+        else if (isInstalled) logArgs.push('\x1b[33m%s\x1b[0m')
+        log(...logArgs, toLog)
 
         versionsMap[version] = toLog
     })
@@ -153,6 +169,7 @@ module.exports = {
     getSplitVersionAndArgs,
     getDefaultVersion,
     getVersionInUse,
+    getYarnVersions,
     setDefaultVersion,
     isValidVersionString,
     getValidVersionString,
