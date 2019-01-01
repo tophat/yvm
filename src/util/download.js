@@ -3,7 +3,7 @@ const request = require('request')
 
 const downloadFile = (url, filePath) =>
     new Promise((resolve, reject) => {
-        const handleError = data => reject(new Error(data))
+        const handleError = err => reject(err)
         request
             .get(url, { headers: { 'user-agent': 'yvm' } })
             .on('error', handleError)

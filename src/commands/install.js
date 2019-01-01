@@ -79,14 +79,15 @@ const verifySignature = async (version, rootPath) => {
 }
 
 const extractYarn = (version, rootPath) => {
-    const destPath = versionRootPath(rootPath)
+    const destPath = getExtractionPath(version, rootPath)
+    const tmpPath = `${destPath}.tar.gz.tmp`
     const srcPath = getDownloadPath(version, rootPath)
 
     return new Promise((resolve, reject) => {
         targz.decompress(
             {
                 src: srcPath,
-                dest: destPath,
+                dest: tmpPath,
             },
             err => {
                 if (err) {
@@ -94,12 +95,16 @@ const extractYarn = (version, rootPath) => {
                     reject(err)
                 } else {
                     log(`Finished extracting yarn version ${version}`)
-                    fs.renameSync(
-                        `${destPath}/yarn-v${version}`,
-                        `${destPath}/v${version}`,
-                    )
-                    fs.unlinkSync(srcPath)
-                    resolve()
+                    const [pkgDir] = fs.readdirSync(tmpPath)
+                    if (pkgDir) {
+                        const pkgPath = path.resolve(tmpPath, pkgDir)
+                        fs.renameSync(pkgPath, destPath)
+                        fs.unlinkSync(srcPath)
+                        fs.rmdirSync(tmpPath)
+                        resolve()
+                    } else {
+                        reject('Unable to located extracted package')
+                    }
                 }
             },
         )
