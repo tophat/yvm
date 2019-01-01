@@ -4,6 +4,7 @@ const path = require('path')
 const targz = require('targz')
 
 const { downloadFile } = require('../util/download')
+const input = require('../util/input')
 const log = require('../util/log')
 const {
     versionRootPath,
@@ -31,10 +32,16 @@ const isVersionInstalled = (version, rootPath) => {
     return fs.existsSync(versionPath)
 }
 
-const downloadVersion = (version, rootPath) => {
+const downloadVersion = async (version, rootPath, releaseInfo) => {
     const url = getUrl(version)
     const filePath = getDownloadPath(version, rootPath)
-    return downloadFile(url, filePath)
+    try {
+        await downloadFile(url, filePath)
+        return true
+    } catch (e) {
+        await downloadFile(releaseInfo.tarball_url, filePath)
+        return false
+    }
 }
 
 const downloadSignature = (version, rootPath) => {
@@ -130,13 +137,25 @@ const installVersion = async (version, rootPath = yvmPath) => {
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
-    await downloadVersion(version, rootPath)
-
+    const hasSig = await downloadVersion(version, rootPath, releases[version])
     log(`Finished downloading yarn version ${version}`)
-    await verifySignature(version, rootPath)
 
-    log('GPG signature validated')
-    return extractYarn(version, rootPath)
+    let continueInstall
+    if (hasSig) {
+        await verifySignature(version, rootPath)
+        log('GPG signature validated')
+        continueInstall = true
+    } else {
+        const keyword = 'yes'
+        const reply = await input({
+            text: `Downloaded yarn package has no associated signature.
+Enter '${keyword}' to continue with installation? `,
+        })
+        continueInstall = reply === keyword
+    }
+    return continueInstall
+        ? await extractYarn(version, rootPath)
+        : log('Quitting installation')
 }
 
 const installLatest = (rootPath = yvmPath) => {
