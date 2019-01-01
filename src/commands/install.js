@@ -8,6 +8,7 @@ const log = require('../util/log')
 const {
     versionRootPath,
     getExtractionPath,
+    getReleasesFromTags,
     getVersionsFromTags,
 } = require('../util/utils')
 const { yvmPath } = require('../util/path')
@@ -115,8 +116,8 @@ const installVersion = async (version, rootPath = yvmPath) => {
         return
     }
 
-    const versions = await getVersionsFromTags()
-    if (versions.indexOf(version) === -1) {
+    const releases = await getReleasesFromTags()
+    if (!releases.hasOwnProperty(version)) {
         log(
             'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
         )
@@ -135,13 +136,8 @@ const installVersion = async (version, rootPath = yvmPath) => {
 
 const installLatest = (rootPath = yvmPath) => {
     return getVersionsFromTags()
-        .then(versions => {
-            const latestVersion = versions[0]
-            return installVersion(latestVersion, rootPath)
-        })
-        .catch(err => {
-            log(err)
-        })
+        .then(([latestVersion]) => installVersion(latestVersion, rootPath))
+        .catch(err => log(err))
 }
 
 const ensureVersionInstalled = (version, rootPath = yvmPath) => {
