@@ -80,10 +80,11 @@ function getVersionInUse() {
 
 function getYarnVersions(yvmPath = defaultYvmPath) {
     const versionsPath = versionRootPath(yvmPath)
+    const prefixedVersionRegex = new RegExp(`^v${VERSION_REGEX.source}`)
     if (fs.existsSync(versionsPath)) {
         const files = fs.readdirSync(versionsPath)
         return files
-            .filter(name => name.startsWith('v') && isValidVersionString(name))
+            .filter(name => prefixedVersionRegex.test(name))
             .map(stripVersionPrefix)
     }
     return []
