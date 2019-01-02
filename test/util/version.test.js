@@ -1,9 +1,11 @@
 const mockFS = require('mock-fs')
+const { stripVersionPrefix } = require('../../src/util/utils')
 const {
     getDefaultVersion,
     setDefaultVersion,
     isValidVersionString,
     getValidVersionString,
+    getYarnVersions,
 } = require('../../src/util/version')
 
 describe('yvm default version', () => {
@@ -47,5 +49,24 @@ describe('yvm valid version', () => {
         expect(getValidVersionString('1.9.0')).toBe('1.9.0')
         expect(getValidVersionString('v1.9.0')).toBe('1.9.0')
         expect(getValidVersionString('v1.1.0-exp.2')).toBe('1.1.0-exp.2')
+    })
+})
+
+describe('yvm installed versions', () => {
+    const mockValid = ['v1.1.1', 'v1.2.3', 'v12.11.10-test-b2']
+    const mockInvalid = ['v1.0', 'v1.0-a', '1.1.2']
+    const mockYVMDir = '/mock-yvm-root-dir'
+    const mockYVMDirContents = {
+        versions: [...mockValid, ...mockInvalid].reduce(
+            (a, v) => Object.assign(a, { [v]: {} }),
+            {},
+        ),
+    }
+    beforeEach(() => mockFS({ [mockYVMDir]: mockYVMDirContents }))
+    afterEach(mockFS.restore)
+
+    it('Valid version folders', () => {
+        const expectedVersions = mockValid.map(stripVersionPrefix)
+        expect(getYarnVersions(mockYVMDir)).toEqual(expectedVersions)
     })
 })
