@@ -6,16 +6,18 @@ const cosmiconfig = require('cosmiconfig')
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
 const { stripVersionPrefix, versionRootPath } = require('./utils')
+
 const DEFAULT_VERSION_TEXT = 'Global Default'
+const VERSION_REGEX = /\d+(\.\d+){2}(.*)/
 const VERSION_IN_USE_SYMBOL = '\u2713'
 const VERSION_INSTALLED_SYMBOL = '\u2192'
 
 function isValidVersionString(version) {
-    return /\d+(\.\d+){2}(.*)/.test(version)
+    return VERSION_REGEX.test(version)
 }
 
 function getValidVersionString(version) {
-    const parsedVersionString = version.match(/\d+(\.\d+){2}(.*)/)
+    const parsedVersionString = version.match(VERSION_REGEX)
     return parsedVersionString ? parsedVersionString[0] : null
 }
 
@@ -79,9 +81,10 @@ function getVersionInUse() {
 function getYarnVersions(yvmPath = defaultYvmPath) {
     const versionsPath = versionRootPath(yvmPath)
     if (fs.existsSync(versionsPath)) {
-        const re = /^v(\d+\.)(\d+\.)(\d+)$/
         const files = fs.readdirSync(versionsPath)
-        return files.filter(file => re.test(file)).map(stripVersionPrefix)
+        return files
+            .filter(name => name.startsWith('v') && isValidVersionString(name))
+            .map(stripVersionPrefix)
     }
     return []
 }
