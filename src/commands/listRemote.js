@@ -1,17 +1,25 @@
 const log = require('../util/log')
 const { getVersionsFromTags } = require('../util/utils')
-const { printVersions, getVersionInUse } = require('../util/version')
+const {
+    getVersionInUse,
+    getYarnVersions,
+    printVersions,
+} = require('../util/version')
 
 const listRemoteCommand = () => {
     log.info('list-remote')
-
-    return Promise.all([getVersionsFromTags(), getVersionInUse()])
+    return Promise.all([
+        getVersionsFromTags(),
+        getVersionInUse(),
+        getYarnVersions(),
+    ])
         .then(results => {
-            const [remoteVersions, versionInUse] = results
+            const [remoteVersions, versionInUse, localVersions] = results
             printVersions({
                 list: remoteVersions,
                 message: 'Versions available for install:',
                 versionInUse,
+                localVersions,
             })
         })
         .catch(error => log(error))
