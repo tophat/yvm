@@ -137,11 +137,15 @@ const installVersion = async (version, rootPath = yvmPath) => {
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
-    const hasSig = await downloadVersion(version, rootPath, releases[version])
+    const hasSignature = await downloadVersion(
+        version,
+        rootPath,
+        releases[version],
+    )
     log(`Finished downloading yarn version ${version}`)
 
     let continueInstall
-    if (hasSig) {
+    if (hasSignature) {
         await verifySignature(version, rootPath)
         log('GPG signature validated')
         continueInstall = true

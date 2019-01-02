@@ -1,6 +1,8 @@
 const fs = require('fs')
 const request = require('request')
 
+const isErrorCode = httpStatusCode => httpStatusCode >= 400
+
 const downloadFile = (url, filePath) =>
     new Promise((resolve, reject) => {
         const handleError = err => reject(err)
@@ -9,7 +11,7 @@ const downloadFile = (url, filePath) =>
             .on('error', handleError)
             .on('response', r => {
                 const msg = `HTTP ${r.statusCode} - ${r.statusMessage} (${url})`
-                if (r.statusCode === 404) handleError(msg)
+                if (isErrorCode(r.statusCode)) handleError(msg)
             })
             .pipe(fs.createWriteStream(filePath))
             .on('finish', () => resolve())
