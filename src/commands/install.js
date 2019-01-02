@@ -4,7 +4,6 @@ const path = require('path')
 const targz = require('targz')
 
 const { downloadFile } = require('../util/download')
-const input = require('../util/input')
 const log = require('../util/log')
 const {
     versionRootPath,
@@ -118,7 +117,11 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = async (version, rootPath = yvmPath) => {
+const installVersion = async ({
+    version,
+    rootPath = yvmPath,
+    ignoreSignatureVerify = false,
+}) => {
     if (!fs.existsSync(versionRootPath(rootPath))) {
         fs.mkdirSync(versionRootPath(rootPath))
     }
@@ -144,28 +147,22 @@ const installVersion = async (version, rootPath = yvmPath) => {
     )
     log(`Finished downloading yarn version ${version}`)
 
-    let continueInstall
-    if (hasSignature) {
+    if (ignoreSignatureVerify) {
+        log(`Skipping signature validation`)
+    } else if (hasSignature) {
         await verifySignature(version, rootPath)
         log('GPG signature validated')
-        continueInstall = true
     } else {
-        const keyword = 'yes'
-        const reply = await input({
-            text: `Downloaded yarn package has no associated signature.
-Enter '${keyword}' to continue with installation? `,
-        })
-        continueInstall = reply === keyword
+        log(`Downloaded yarn package has no associated signature.
+Rerun with 'yvm install ${version} --ignore-signature-verify' to skip validation`)
+        return
     }
-    return continueInstall
-        ? await extractYarn(version, rootPath)
-        : log('Quitting installation')
+    await extractYarn(version, rootPath)
 }
 
-const installLatest = (rootPath = yvmPath) => {
-    return getVersionsFromTags()
-        .then(([latestVersion]) => installVersion(latestVersion, rootPath))
-        .catch(err => log(err))
+const installLatest = async options => {
+    const [latestVersion] = await getVersionsFromTags()
+    return installVersion(Object.assign(options, { version: latestVersion }))
 }
 
 const ensureVersionInstalled = (version, rootPath = yvmPath) => {
