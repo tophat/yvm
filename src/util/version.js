@@ -5,14 +5,19 @@ const cosmiconfig = require('cosmiconfig')
 
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
+const { stripVersionPrefix, versionRootPath } = require('./utils')
+
 const DEFAULT_VERSION_TEXT = 'Global Default'
+const VERSION_REGEX = /\d+(\.\d+){2}(.*)/
+const VERSION_IN_USE_SYMBOL = '\u2713'
+const VERSION_INSTALLED_SYMBOL = '\u2192'
 
 function isValidVersionString(version) {
-    return /\d+(\.\d+){2}(.*)/.test(version)
+    return VERSION_REGEX.test(version)
 }
 
 function getValidVersionString(version) {
-    const parsedVersionString = version.match(/\d+(\.\d+){2}(.*)/)
+    const parsedVersionString = version.match(VERSION_REGEX)
     return parsedVersionString ? parsedVersionString[0] : null
 }
 
@@ -73,6 +78,18 @@ function getVersionInUse() {
     })
 }
 
+function getYarnVersions(yvmPath = defaultYvmPath) {
+    const versionsPath = versionRootPath(yvmPath)
+    const prefixedVersionRegex = new RegExp(`^v${VERSION_REGEX.source}`)
+    if (fs.existsSync(versionsPath)) {
+        const files = fs.readdirSync(versionsPath)
+        return files
+            .filter(name => prefixedVersionRegex.test(name))
+            .map(stripVersionPrefix)
+    }
+    return []
+}
+
 // eslint-disable-next-line consistent-return
 const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
@@ -121,6 +138,7 @@ const printVersions = ({
     message,
     versionInUse = '',
     defaultVersion = getDefaultVersion(defaultYvmPath),
+    localVersions = [],
 }) => {
     log(message)
 
@@ -130,18 +148,22 @@ const printVersions = ({
 
     list.forEach(versionPadded => {
         const version = versionPadded.trim()
+        const isCurrent = version === versionInUse
+        const isDefault = version === defaultVersion
+        const isInstalled = localVersions.includes(version)
 
-        let toLog =
-            version === versionInUse
-                ? ` \u2713 ${versionPadded}`
-                : ` - ${versionPadded}`
+        let toLog = ' '
+        if (isCurrent) toLog += VERSION_IN_USE_SYMBOL
+        else if (isInstalled) toLog += VERSION_INSTALLED_SYMBOL
+        else toLog += '-'
+        toLog += ` ${versionPadded}`
 
-        if (version === defaultVersion) toLog += ` (${DEFAULT_VERSION_TEXT})`
-        if (version === versionInUse) {
-            log('\x1b[32m%s\x1b[0m', toLog)
-        } else {
-            log(toLog)
-        }
+        if (isDefault) toLog += ` (${DEFAULT_VERSION_TEXT})`
+
+        const logArgs = []
+        if (isCurrent) logArgs.push('\x1b[32m%s\x1b[0m')
+        else if (isInstalled) logArgs.push('\x1b[33m%s\x1b[0m')
+        log(...logArgs, toLog)
 
         versionsMap[version] = toLog
     })
@@ -149,10 +171,14 @@ const printVersions = ({
 }
 
 module.exports = {
+    DEFAULT_VERSION_TEXT,
+    VERSION_IN_USE_SYMBOL,
+    VERSION_INSTALLED_SYMBOL,
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
     getVersionInUse,
+    getYarnVersions,
     setDefaultVersion,
     isValidVersionString,
     getValidVersionString,
