@@ -2,8 +2,6 @@ const path = require('path')
 const fs = require('fs-extra')
 const targz = require('targz')
 
-const input = require('../../src/util/input')
-jest.mock('../../src/util/input')
 const download = require('../../src/util/download')
 const downloadFile = jest.spyOn(download, 'downloadFile')
 const {
@@ -37,7 +35,7 @@ describe('yvm install', () => {
 
     it('Installs a valid yarn version', () => {
         const version = '1.7.0'
-        return installVersion(version, rootPath).then(() => {
+        return installVersion({ version, rootPath }).then(() => {
             expect(
                 fs.statSync(getExtractionPath(version, rootPath)),
             ).toBeTruthy()
@@ -48,8 +46,8 @@ describe('yvm install', () => {
         const v1 = '1.7.0'
         const v2 = '1.6.0'
         return Promise.all([
-            installVersion(v1, rootPath),
-            installVersion(v2, rootPath),
+            installVersion({ version: v1, rootPath }),
+            installVersion({ version: v2, rootPath }),
         ]).then(() => {
             expect(fs.statSync(getExtractionPath(v1, rootPath))).toBeTruthy()
             expect(fs.statSync(getExtractionPath(v2, rootPath))).toBeTruthy()
@@ -58,7 +56,7 @@ describe('yvm install', () => {
 
     it('Does not install an invalid version of Yarn', () => {
         const version = '0.0.0'
-        return installVersion(version, rootPath).catch(() => {
+        return installVersion({ version, rootPath }).catch(() => {
             expect(() =>
                 fs.statSync(getExtractionPath(version, rootPath)),
             ).toThrow()
@@ -68,7 +66,7 @@ describe('yvm install', () => {
     it('Installs the lastest version of yarn', () => {
         return Promise.all([
             getVersionsFromTags(),
-            installLatest(rootPath),
+            installLatest({ rootPath }),
         ]).then(results => {
             const remoteVersions = results[0]
             const latestVersion = remoteVersions[0]
@@ -78,7 +76,7 @@ describe('yvm install', () => {
         })
     })
 
-    it('Installs valid archived yarn version', async () => {
+    it('Installs valid archived yarn version skipping validation', async () => {
         const version = '1.3.0'
         const extractionPath = getExtractionPath(version, rootPath)
         downloadFile
@@ -88,12 +86,11 @@ describe('yvm install', () => {
             .mockImplementationOnce((url, filePath) => {
                 fs.createFileSync(filePath)
             })
-        input.mockImplementationOnce(() => Promise.resolve('yes'))
-        await installVersion(version, rootPath)
+        await installVersion({ version, rootPath, ignoreSignatureVerify: true })
         expect(fs.statSync(extractionPath)).toBeTruthy()
     })
 
-    it('Does not installs archived version on user cancel', async () => {
+    it('Does not install archived version without skip validation', async () => {
         const version = '1.3.0'
         const extractionPath = getExtractionPath(version, rootPath)
         downloadFile
@@ -103,8 +100,7 @@ describe('yvm install', () => {
             .mockImplementationOnce((url, filePath) => {
                 fs.createFileSync(filePath)
             })
-        input.mockImplementationOnce(() => Promise.resolve('no'))
-        await installVersion(version, rootPath)
+        await installVersion({ version, rootPath })
         expect(() => fs.statSync(extractionPath)).toThrow()
     })
 })
