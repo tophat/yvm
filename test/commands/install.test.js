@@ -1,14 +1,18 @@
+const childProcess = require('child_process')
 const path = require('path')
 const fs = require('fs-extra')
 const targz = require('targz')
 
 const download = require('../../src/util/download')
-const downloadFile = jest.spyOn(download, 'downloadFile')
 const {
     getVersionsFromTags,
     getExtractionPath,
     versionRootPath,
 } = require('../../src/util/utils')
+
+const downloadFile = jest.spyOn(download, 'downloadFile')
+const execSync = jest.spyOn(childProcess, 'execSync')
+
 const { installVersion, installLatest } = require('../../src/commands/install')
 
 describe('yvm install', () => {
@@ -79,6 +83,7 @@ describe('yvm install', () => {
     it('Installs valid archived yarn version skipping validation', async () => {
         const version = '1.3.0'
         const extractionPath = getExtractionPath(version, rootPath)
+        execSync.mockImplementationOnce(() => {})
         downloadFile
             .mockImplementationOnce(() => {
                 throw new Error()
@@ -88,6 +93,10 @@ describe('yvm install', () => {
             })
         await installVersion({ version, rootPath, ignoreSignatureVerify: true })
         expect(fs.statSync(extractionPath)).toBeTruthy()
+        expect(execSync).toHaveBeenCalledWith(
+            'yarn install && yarn run build',
+            expect.objectContaining({ cwd: extractionPath }),
+        )
     })
 
     it('Does not install archived version without skip validation', async () => {

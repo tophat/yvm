@@ -1,3 +1,4 @@
+const { execSync } = require('child_process')
 const fs = require('fs')
 const openpgp = require('openpgp')
 const path = require('path')
@@ -107,7 +108,7 @@ const extractYarn = (version, rootPath) => {
                         fs.renameSync(pkgPath, destPath)
                         fs.unlinkSync(srcPath)
                         fs.rmdirSync(tmpPath)
-                        resolve()
+                        resolve(destPath)
                     } else {
                         reject('Unable to located extracted package')
                     }
@@ -115,6 +116,11 @@ const extractYarn = (version, rootPath) => {
             },
         )
     })
+}
+
+const buildYarn = srcPath => {
+    const options = { cwd: srcPath, stdio: 'inherit' }
+    execSync('yarn install && yarn run build', options)
 }
 
 const installVersion = async ({
@@ -140,6 +146,7 @@ const installVersion = async ({
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
+    log('Downloading...')
     const hasSignature = await downloadVersion(
         version,
         rootPath,
@@ -150,6 +157,7 @@ const installVersion = async ({
     if (ignoreSignatureVerify) {
         log(`Skipping signature validation`)
     } else if (hasSignature) {
+        log('Validating...')
         await verifySignature(version, rootPath)
         log('GPG signature validated')
     } else {
@@ -157,7 +165,13 @@ const installVersion = async ({
 Rerun with 'yvm install ${version} --ignore-signature-verify' to skip validation`)
         return
     }
-    await extractYarn(version, rootPath)
+    log('Extracting...')
+    const destPath = await extractYarn(version, rootPath)
+    if (!hasSignature) {
+        log('Building...')
+        buildYarn(destPath)
+    }
+    log('Installation successful')
 }
 
 const installLatest = async options => {
