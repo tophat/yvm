@@ -1,21 +1,38 @@
+const path = require('path')
 const fs = require('fs-extra')
+const targz = require('targz')
 
-const { installVersion, installLatest } = require('../../src/commands/install')
+const input = require('../../src/util/input')
+jest.mock('../../src/util/input')
+const download = require('../../src/util/download')
+const downloadFile = jest.spyOn(download, 'downloadFile')
 const {
     getVersionsFromTags,
     getExtractionPath,
     versionRootPath,
 } = require('../../src/util/utils')
+const { installVersion, installLatest } = require('../../src/commands/install')
 
 describe('yvm install', () => {
     const rootPath = '/tmp/yvmInstall'
 
     beforeAll(() => {
         fs.mkdirsSync(rootPath)
+        jest.spyOn(targz, 'decompress').mockImplementation(
+            ({ dest }, callback) => {
+                fs.mkdirsSync(path.resolve(dest, 'mockDir'))
+                callback()
+            },
+        )
     })
 
     afterEach(() => {
         fs.removeSync(versionRootPath(rootPath))
+        jest.clearAllMocks()
+    })
+
+    afterAll(() => {
+        jest.restoreAllMocks()
     })
 
     it('Installs a valid yarn version', () => {
@@ -39,7 +56,7 @@ describe('yvm install', () => {
         })
     })
 
-    it('Installs doesnt install an invalid version of Yarn', () => {
+    it('Does not install an invalid version of Yarn', () => {
         const version = '0.0.0'
         return installVersion(version, rootPath).catch(() => {
             expect(() =>
@@ -48,7 +65,7 @@ describe('yvm install', () => {
         })
     })
 
-    it('installs the lastest version of yarn', () => {
+    it('Installs the lastest version of yarn', () => {
         return Promise.all([
             getVersionsFromTags(),
             installLatest(rootPath),
@@ -59,5 +76,35 @@ describe('yvm install', () => {
                 fs.statSync(getExtractionPath(latestVersion, rootPath)),
             ).toBeTruthy()
         })
+    })
+
+    it('Installs valid archived yarn version', async () => {
+        const version = '1.3.0'
+        const extractionPath = getExtractionPath(version, rootPath)
+        downloadFile
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
+            .mockImplementationOnce((url, filePath) => {
+                fs.createFileSync(filePath)
+            })
+        input.mockImplementationOnce(() => Promise.resolve('yes'))
+        await installVersion(version, rootPath)
+        expect(fs.statSync(extractionPath)).toBeTruthy()
+    })
+
+    it('Does not installs archived version on user cancel', async () => {
+        const version = '1.3.0'
+        const extractionPath = getExtractionPath(version, rootPath)
+        downloadFile
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
+            .mockImplementationOnce((url, filePath) => {
+                fs.createFileSync(filePath)
+            })
+        input.mockImplementationOnce(() => Promise.resolve('no'))
+        await installVersion(version, rootPath)
+        expect(() => fs.statSync(extractionPath)).toThrow()
     })
 })
