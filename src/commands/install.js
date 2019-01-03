@@ -120,7 +120,7 @@ const extractYarn = (version, rootPath) => {
 
 const buildYarn = srcPath => {
     const options = { cwd: srcPath, stdio: 'inherit' }
-    execSync('yarn install && yarn run build', options)
+    execSync('npm install && npm run build', options)
 }
 
 const installVersion = async ({

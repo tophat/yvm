@@ -94,7 +94,7 @@ describe('yvm install', () => {
         await installVersion({ version, rootPath, ignoreSignatureVerify: true })
         expect(fs.statSync(extractionPath)).toBeTruthy()
         expect(execSync).toHaveBeenCalledWith(
-            'yarn install && yarn run build',
+            'npm install && npm run build',
             expect.objectContaining({ cwd: extractionPath }),
         )
     })
