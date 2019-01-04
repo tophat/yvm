@@ -1,4 +1,3 @@
-const { execSync } = require('child_process')
 const fs = require('fs')
 const openpgp = require('openpgp')
 const path = require('path')
@@ -13,6 +12,8 @@ const {
     getVersionsFromTags,
 } = require('../util/utils')
 const { yvmPath } = require('../util/path')
+
+const { colorCodes } = log
 
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
@@ -32,14 +33,14 @@ const isVersionInstalled = (version, rootPath) => {
     return fs.existsSync(versionPath)
 }
 
-const downloadVersion = async (version, rootPath, releaseInfo) => {
+const downloadVersion = async (version, rootPath) => {
     const url = getUrl(version)
     const filePath = getDownloadPath(version, rootPath)
     try {
         await downloadFile(url, filePath)
         return true
     } catch (e) {
-        await downloadFile(releaseInfo.tarball_url, filePath)
+        log(colorCodes.RED, e)
         return false
     }
 }
@@ -118,16 +119,7 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const buildYarn = srcPath => {
-    const options = { cwd: srcPath, stdio: 'inherit' }
-    execSync('npm install && npm run build', options)
-}
-
-const installVersion = async ({
-    version,
-    rootPath = yvmPath,
-    ignoreSignatureVerify = false,
-}) => {
+const installVersion = async ({ version, rootPath = yvmPath }) => {
     if (!fs.existsSync(versionRootPath(rootPath))) {
         fs.mkdirSync(versionRootPath(rootPath))
     }
@@ -147,30 +139,20 @@ const installVersion = async ({
 
     log(`Installing yarn v${version} in ${rootPath}`)
     log('Downloading...')
-    const hasSignature = await downloadVersion(
-        version,
-        rootPath,
-        releases[version],
-    )
-    log(`Finished downloading yarn version ${version}`)
-
-    if (ignoreSignatureVerify) {
-        log(`Skipping signature validation`)
-    } else if (hasSignature) {
-        log('Validating...')
-        await verifySignature(version, rootPath)
-        log('GPG signature validated')
-    } else {
-        log(`Downloaded yarn package has no associated signature.
-Rerun with 'yvm install ${version} --ignore-signature-verify' to skip validation`)
+    if (!(await downloadVersion(version, rootPath))) {
+        log(`Installation aborted, probably caused by a defective release`)
+        log(`\u2717 https://github.com/yarnpkg/yarn/releases/tag/v${version}`)
+        log('Please retry with the next available version')
         return
     }
+    log(`Finished downloading yarn version ${version}`)
+
+    log('Validating...')
+    await verifySignature(version, rootPath)
+    log('GPG signature validated')
+
     log('Extracting...')
-    const destPath = await extractYarn(version, rootPath)
-    if (!hasSignature) {
-        log('Building...')
-        buildYarn(destPath)
-    }
+    await extractYarn(version, rootPath)
     log('Installation successful')
 }
 

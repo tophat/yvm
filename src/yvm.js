@@ -32,24 +32,21 @@ argParser
     .command('install [version]')
     .alias('i')
     .option('-l, --latest', 'Install the latest version of Yarn available')
-    .option(
-        '-F, --ignore-signature-verify',
-        'Skip validation of package signature',
-    )
     .description('Install the specified version of Yarn.')
     .action((maybeVersion, command) => {
-        const handleError = error => {
+        const { installVersion, installLatest } = require('./commands/install')
+        const { fn: installFn, options } = command.latest
+            ? { fn: installLatest }
+            : {
+                  fn: installVersion,
+                  options: {
+                      version: maybeVersion || getSplitVersionAndArgs()[0],
+                  },
+              }
+        installFn(options).catch(error => {
             log(error)
             process.exit(1)
-        }
-        const { latest, ignoreSignatureVerify } = command
-        const { installVersion, installLatest } = require('./commands/install')
-        if (latest) {
-            installLatest({ ignoreSignatureVerify }).catch(handleError)
-            return
-        }
-        const version = maybeVersion || getSplitVersionAndArgs()[0]
-        installVersion({ version, ignoreSignatureVerify }).catch(handleError)
+        })
     })
 
 argParser

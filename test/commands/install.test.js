@@ -1,8 +1,8 @@
-const childProcess = require('child_process')
 const path = require('path')
 const fs = require('fs-extra')
 const targz = require('targz')
 
+const log = require('../../src/util/log')
 const download = require('../../src/util/download')
 const {
     getVersionsFromTags,
@@ -10,8 +10,8 @@ const {
     versionRootPath,
 } = require('../../src/util/utils')
 
+jest.mock('../../src/util/log')
 const downloadFile = jest.spyOn(download, 'downloadFile')
-const execSync = jest.spyOn(childProcess, 'execSync')
 
 const { installVersion, installLatest } = require('../../src/commands/install')
 
@@ -80,36 +80,25 @@ describe('yvm install', () => {
         })
     })
 
-    it('Installs valid archived yarn version skipping validation', async () => {
+    it('Print warning on install defective yarn release version', async () => {
         const version = '1.3.0'
         const extractionPath = getExtractionPath(version, rootPath)
-        execSync.mockImplementationOnce(() => {})
-        downloadFile
-            .mockImplementationOnce(() => {
-                throw new Error()
-            })
-            .mockImplementationOnce((url, filePath) => {
-                fs.createFileSync(filePath)
-            })
-        await installVersion({ version, rootPath, ignoreSignatureVerify: true })
-        expect(fs.statSync(extractionPath)).toBeTruthy()
-        expect(execSync).toHaveBeenCalledWith(
-            'npm install && npm run build',
-            expect.objectContaining({ cwd: extractionPath }),
-        )
-    })
-
-    it('Does not install archived version without skip validation', async () => {
-        const version = '1.3.0'
-        const extractionPath = getExtractionPath(version, rootPath)
-        downloadFile
-            .mockImplementationOnce(() => {
-                throw new Error()
-            })
-            .mockImplementationOnce((url, filePath) => {
-                fs.createFileSync(filePath)
-            })
+        downloadFile.mockImplementationOnce(() => {
+            throw new Error()
+        })
         await installVersion({ version, rootPath })
         expect(() => fs.statSync(extractionPath)).toThrow()
+        const logMessages = log.mock.calls
+            .map(args => args.join(' '))
+            .join(';')
+            .toLowerCase()
+        const expectedPhrases = [
+            'installation aborted',
+            'defective release',
+            `https://github.com/yarnpkg/yarn/releases/tag/v${version}`,
+            'please retry',
+            'next available version',
+        ]
+        expectedPhrases.forEach(s => expect(logMessages).toMatch(s))
     })
 })
