@@ -1,6 +1,10 @@
 const fs = require('fs-extra')
 
-const { installVersion, installLatest } = require('../../src/commands/install')
+const {
+    installVersion,
+    installLatest,
+    getDownloadPath,
+} = require('../../src/commands/install')
 const {
     getVersionsFromTags,
     getExtractionPath,
@@ -73,11 +77,13 @@ describe('yvm install', () => {
 
     it('Print warning on install defective yarn release version', async () => {
         const version = '1.3.0'
+        const downloadPath = getDownloadPath(version, rootPath)
         const extractionPath = getExtractionPath(version, rootPath)
         downloadFile.mockImplementationOnce(() => {
             throw new Error()
         })
         await installVersion({ version, rootPath })
+        expect(() => fs.statSync(downloadPath)).toThrow()
         expect(() => fs.statSync(extractionPath)).toThrow()
         const logMessages = log.mock.calls
             .map(args => args.join(' '))

@@ -40,6 +40,7 @@ const downloadVersion = async (version, rootPath) => {
         await downloadFile(url, filePath)
         return true
     } catch (e) {
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
         log(colors.RED, e)
         return false
     }
@@ -169,4 +170,9 @@ const ensureVersionInstalled = (version, rootPath = yvmPath) => {
     return installVersion(version, rootPath)
 }
 
-module.exports = { installVersion, installLatest, ensureVersionInstalled }
+module.exports = {
+    installVersion,
+    installLatest,
+    getDownloadPath,
+    ensureVersionInstalled,
+}
