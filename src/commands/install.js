@@ -16,7 +16,7 @@ const { yvmPath } = require('../util/path')
 const { colors } = log
 
 const getDownloadPath = (version, rootPath) =>
-    path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
+    path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
 
 const getSignatureDownloadPath = (version, rootPath) =>
     `${getDownloadPath(version, rootPath)}.asc`
