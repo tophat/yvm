@@ -15,11 +15,10 @@ log.info = function errorLog(...args) {
     }
 }
 
-log.colorCodes = {
+log.colors = {
     RED: '\x1b[31m%s\x1b[0m',
     GREEN: '\x1b[32m%s\x1b[0m',
     YELLOW: '\x1b[33m%s\x1b[0m',
-    NONE: '\x1b[0m%s\x1b[0m',
 }
 
 module.exports = log

@@ -13,7 +13,7 @@ const {
 } = require('../util/utils')
 const { yvmPath } = require('../util/path')
 
-const { colorCodes } = log
+const { colors } = log
 
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
@@ -40,7 +40,7 @@ const downloadVersion = async (version, rootPath) => {
         await downloadFile(url, filePath)
         return true
     } catch (e) {
-        log(colorCodes.RED, e)
+        log(colors.RED, e)
         return false
     }
 }

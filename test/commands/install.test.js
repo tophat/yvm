@@ -1,31 +1,22 @@
-const path = require('path')
 const fs = require('fs-extra')
-const targz = require('targz')
 
-const log = require('../../src/util/log')
-const download = require('../../src/util/download')
+const { installVersion, installLatest } = require('../../src/commands/install')
 const {
     getVersionsFromTags,
     getExtractionPath,
     versionRootPath,
 } = require('../../src/util/utils')
+const download = require('../../src/util/download')
+const log = require('../../src/util/log')
 
 jest.mock('../../src/util/log')
 const downloadFile = jest.spyOn(download, 'downloadFile')
-
-const { installVersion, installLatest } = require('../../src/commands/install')
 
 describe('yvm install', () => {
     const rootPath = '/tmp/yvmInstall'
 
     beforeAll(() => {
         fs.mkdirsSync(rootPath)
-        jest.spyOn(targz, 'decompress').mockImplementation(
-            ({ dest }, callback) => {
-                fs.mkdirsSync(path.resolve(dest, 'mockDir'))
-                callback()
-            },
-        )
     })
 
     afterEach(() => {
