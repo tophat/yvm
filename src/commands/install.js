@@ -157,9 +157,9 @@ const installVersion = async ({ version, rootPath = yvmPath }) => {
     log('Installation successful')
 }
 
-const installLatest = async () => {
+const installLatest = async (options = {}) => {
     const [latestVersion] = await getVersionsFromTags()
-    return installVersion({ version: latestVersion })
+    return installVersion(Object.assign(options, { version: latestVersion }))
 }
 
 const ensureVersionInstalled = (version, rootPath = yvmPath) => {
