@@ -35,18 +35,16 @@ argParser
     .description('Install the specified version of Yarn.')
     .action((maybeVersion, command) => {
         const { installVersion, installLatest } = require('./commands/install')
-        const { fn: installFn, options } = command.latest
-            ? { fn: installLatest }
-            : {
-                  fn: installVersion,
-                  options: {
-                      version: maybeVersion || getSplitVersionAndArgs()[0],
-                  },
-              }
-        installFn(options).catch(error => {
+        const handleError = error => {
             log(error)
             process.exit(1)
-        })
+        }
+        if (command.latest) {
+            installLatest().catch(handleError)
+            return
+        }
+        const version = maybeVersion || getSplitVersionAndArgs()[0]
+        installVersion({ version }).catch(handleError)
     })
 
 argParser
