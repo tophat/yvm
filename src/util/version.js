@@ -11,6 +11,7 @@ const DEFAULT_VERSION_TEXT = 'Global Default'
 const VERSION_REGEX = /\d+(\.\d+){2}(.*)/
 const VERSION_IN_USE_SYMBOL = '\u2713'
 const VERSION_INSTALLED_SYMBOL = '\u2192'
+const { colors } = log
 
 function isValidVersionString(version) {
     return VERSION_REGEX.test(version)
@@ -161,8 +162,8 @@ const printVersions = ({
         if (isDefault) toLog += ` (${DEFAULT_VERSION_TEXT})`
 
         const logArgs = []
-        if (isCurrent) logArgs.push('\x1b[32m%s\x1b[0m')
-        else if (isInstalled) logArgs.push('\x1b[33m%s\x1b[0m')
+        if (isCurrent) logArgs.push(colors.GREEN)
+        else if (isInstalled) logArgs.push(colors.YELLOW)
         log(...logArgs, toLog)
 
         versionsMap[version] = toLog

@@ -8,12 +8,15 @@ const log = require('../util/log')
 const {
     versionRootPath,
     getExtractionPath,
+    getReleasesFromTags,
     getVersionsFromTags,
 } = require('../util/utils')
 const { yvmPath } = require('../util/path')
 
+const { colors } = log
+
 const getDownloadPath = (version, rootPath) =>
-    path.resolve(rootPath, 'versions', `v${version}.tar.gz`)
+    path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
 
 const getSignatureDownloadPath = (version, rootPath) =>
     `${getDownloadPath(version, rootPath)}.asc`
@@ -30,10 +33,17 @@ const isVersionInstalled = (version, rootPath) => {
     return fs.existsSync(versionPath)
 }
 
-const downloadVersion = (version, rootPath) => {
+const downloadVersion = async (version, rootPath) => {
     const url = getUrl(version)
     const filePath = getDownloadPath(version, rootPath)
-    return downloadFile(url, filePath)
+    try {
+        await downloadFile(url, filePath)
+        return true
+    } catch (e) {
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+        log(colors.RED, e)
+        return false
+    }
 }
 
 const downloadSignature = (version, rootPath) => {
@@ -78,14 +88,15 @@ const verifySignature = async (version, rootPath) => {
 }
 
 const extractYarn = (version, rootPath) => {
-    const destPath = versionRootPath(rootPath)
+    const destPath = getExtractionPath(version, rootPath)
+    const tmpPath = `${destPath}.tar.gz.tmp`
     const srcPath = getDownloadPath(version, rootPath)
 
     return new Promise((resolve, reject) => {
         targz.decompress(
             {
                 src: srcPath,
-                dest: destPath,
+                dest: tmpPath,
             },
             err => {
                 if (err) {
@@ -93,19 +104,23 @@ const extractYarn = (version, rootPath) => {
                     reject(err)
                 } else {
                     log(`Finished extracting yarn version ${version}`)
-                    fs.renameSync(
-                        `${destPath}/yarn-v${version}`,
-                        `${destPath}/v${version}`,
-                    )
-                    fs.unlinkSync(srcPath)
-                    resolve()
+                    const [pkgDir] = fs.readdirSync(tmpPath)
+                    if (pkgDir) {
+                        const pkgPath = path.resolve(tmpPath, pkgDir)
+                        fs.renameSync(pkgPath, destPath)
+                        fs.unlinkSync(srcPath)
+                        fs.rmdirSync(tmpPath)
+                        resolve(destPath)
+                    } else {
+                        reject('Unable to located extracted package')
+                    }
                 }
             },
         )
     })
 }
 
-const installVersion = async (version, rootPath = yvmPath) => {
+const installVersion = async ({ version, rootPath = yvmPath }) => {
     if (!fs.existsSync(versionRootPath(rootPath))) {
         fs.mkdirSync(versionRootPath(rootPath))
     }
@@ -115,8 +130,8 @@ const installVersion = async (version, rootPath = yvmPath) => {
         return
     }
 
-    const versions = await getVersionsFromTags()
-    if (versions.indexOf(version) === -1) {
+    const releases = await getReleasesFromTags()
+    if (!releases.hasOwnProperty(version)) {
         log(
             'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
         )
@@ -124,24 +139,27 @@ const installVersion = async (version, rootPath = yvmPath) => {
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
-    await downloadVersion(version, rootPath)
-
+    log('Downloading...')
+    if (!(await downloadVersion(version, rootPath))) {
+        log(`Installation aborted, probably caused by a defective release`)
+        log(`\u2717 https://github.com/yarnpkg/yarn/releases/tag/v${version}`)
+        log('Please retry with the next available version')
+        return
+    }
     log(`Finished downloading yarn version ${version}`)
-    await verifySignature(version, rootPath)
 
+    log('Validating...')
+    await verifySignature(version, rootPath)
     log('GPG signature validated')
-    return extractYarn(version, rootPath)
+
+    log('Extracting...')
+    await extractYarn(version, rootPath)
+    log('Installation successful')
 }
 
-const installLatest = (rootPath = yvmPath) => {
-    return getVersionsFromTags()
-        .then(versions => {
-            const latestVersion = versions[0]
-            return installVersion(latestVersion, rootPath)
-        })
-        .catch(err => {
-            log(err)
-        })
+const installLatest = async (options = {}) => {
+    const [latestVersion] = await getVersionsFromTags()
+    return installVersion(Object.assign(options, { version: latestVersion }))
 }
 
 const ensureVersionInstalled = (version, rootPath = yvmPath) => {
@@ -152,4 +170,9 @@ const ensureVersionInstalled = (version, rootPath = yvmPath) => {
     return installVersion(version, rootPath)
 }
 
-module.exports = { installVersion, installLatest, ensureVersionInstalled }
+module.exports = {
+    installVersion,
+    installLatest,
+    getDownloadPath,
+    ensureVersionInstalled,
+}
