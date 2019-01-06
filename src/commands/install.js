@@ -167,7 +167,7 @@ const ensureVersionInstalled = (version, rootPath = yvmPath) => {
     if (fs.existsSync(yarnBinDir)) {
         return Promise.resolve()
     }
-    return installVersion(version, rootPath)
+    return installVersion({ version, rootPath })
 }
 
 module.exports = {
