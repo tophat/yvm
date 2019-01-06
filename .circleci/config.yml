@@ -15,7 +15,7 @@ commands:
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: 'Install yvm release version'
-          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh |  INSTALL_VERSION="v1.0.4"  bash'
   save_env_cache:
     description: "Saves environment cache"
     steps:
