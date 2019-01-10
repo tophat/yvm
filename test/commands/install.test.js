@@ -1,4 +1,5 @@
 const fs = require('fs-extra')
+const targz = require('targz')
 
 const {
     installVersion,
@@ -105,5 +106,37 @@ describe('yvm install', () => {
             'next available version',
         ]
         expectedPhrases.forEach(s => expect(logMessages).toMatch(s))
+    })
+
+    it('Logs error on failed targz decompress', async () => {
+        const version = '1.7.0'
+        const mockError = 'mock error'
+        jest.spyOn(targz, 'decompress').mockImplementationOnce((_, callback) =>
+            callback(mockError),
+        )
+        try {
+            await installVersion({ version, rootPath })
+        } catch (e) {
+            expect(e).toEqual(mockError)
+        }
+        expect(log).toHaveBeenLastCalledWith(mockError)
+        targz.decompress.mockRestore()
+    })
+
+    it('Handles error if extracted archive does not contain yarn dist', async () => {
+        const version = '1.7.0'
+        const expectedError = 'Unable to located extracted package'
+        jest.spyOn(targz, 'decompress').mockImplementationOnce(
+            ({ dest }, callback) => {
+                fs.mkdirSync(dest)
+                callback()
+            },
+        )
+        try {
+            await installVersion({ version, rootPath })
+        } catch (e) {
+            expect(e).toEqual(expectedError)
+        }
+        targz.decompress.mockRestore()
     })
 })
