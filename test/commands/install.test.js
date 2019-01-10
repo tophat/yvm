@@ -50,6 +50,16 @@ describe('yvm install', () => {
         })
     })
 
+    it('Does not reinstall an existing yarn version', async () => {
+        const version = '1.7.0'
+        await installVersion({ version, rootPath })
+        expect(fs.statSync(getExtractionPath(version, rootPath))).toBeTruthy()
+        await installVersion({ version, rootPath })
+        expect(log).toHaveBeenLastCalledWith(
+            `It looks like you already have yarn ${version} installed...`,
+        )
+    })
+
     it('Installs two versions of Yarn', () => {
         const v1 = '1.7.0'
         const v2 = '1.6.0'
