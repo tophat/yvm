@@ -13,13 +13,15 @@ const {
     versionRootPath,
 } = require('../../src/util/utils')
 const download = require('../../src/util/download')
+const path = require('../../src/util/path')
 const log = require('../../src/util/log')
 
 jest.mock('../../src/util/log')
+jest.mock('../../src/util/path', () => ({ yvmPath: '/tmp/yvmInstall' }))
 const downloadFile = jest.spyOn(download, 'downloadFile')
 
 describe('yvm install', () => {
-    const rootPath = '/tmp/yvmInstall'
+    const rootPath = path.yvmPath
 
     beforeAll(() => {
         fs.mkdirsSync(rootPath)
@@ -48,6 +50,14 @@ describe('yvm install', () => {
                 fs.statSync(getExtractionPath(version, rootPath)),
             ).toBeTruthy()
         })
+    })
+
+    it('Uses default yvmPath on install version', async () => {
+        const version = '1.7.0'
+        await installVersion({ version })
+        expect(
+            fs.statSync(getExtractionPath(version, path.yvmPath)),
+        ).toBeTruthy()
     })
 
     it('Does not reinstall an existing yarn version', async () => {
@@ -92,6 +102,16 @@ describe('yvm install', () => {
                 fs.statSync(getExtractionPath(latestVersion, rootPath)),
             ).toBeTruthy()
         })
+    })
+
+    it('Uses default yvmPath on install latest', async () => {
+        const [[latestVersion]] = await Promise.all([
+            getVersionsFromTags(),
+            installLatest(),
+        ])
+        expect(
+            fs.statSync(getExtractionPath(latestVersion, path.yvmPath)),
+        ).toBeTruthy()
     })
 
     it('Print warning on install defective yarn release version', async () => {
