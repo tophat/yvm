@@ -159,20 +159,19 @@ const installVersion = async ({ version, rootPath = yvmPath }) => {
 
 const installLatest = async (options = {}) => {
     const [latestVersion] = await getVersionsFromTags()
-    return installVersion(Object.assign(options, { version: latestVersion }))
+    await installVersion(Object.assign(options, { version: latestVersion }))
 }
 
-const ensureVersionInstalled = (version, rootPath = yvmPath) => {
+const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
     const yarnBinDir = getExtractionPath(version, rootPath)
-    if (fs.existsSync(yarnBinDir)) {
-        return Promise.resolve()
-    }
-    return installVersion({ version, rootPath })
+    if (fs.existsSync(yarnBinDir)) return
+    await installVersion({ version, rootPath })
 }
 
 module.exports = {
     installVersion,
     installLatest,
     getDownloadPath,
+    getPublicKeyPath,
     ensureVersionInstalled,
 }

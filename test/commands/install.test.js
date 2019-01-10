@@ -4,6 +4,7 @@ const {
     installVersion,
     installLatest,
     getDownloadPath,
+    getPublicKeyPath,
 } = require('../../src/commands/install')
 const {
     getVersionsFromTags,
@@ -30,6 +31,13 @@ describe('yvm install', () => {
 
     afterAll(() => {
         jest.restoreAllMocks()
+    })
+
+    it('Downloads public key signature if none exist locally', async () => {
+        const publicKeyPath = getPublicKeyPath(rootPath)
+        fs.removeSync(publicKeyPath)
+        await installVersion({ version: '1.8.0', rootPath })
+        expect(fs.existsSync(publicKeyPath)).toBeTruthy()
     })
 
     it('Installs a valid yarn version', () => {
