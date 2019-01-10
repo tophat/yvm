@@ -2,8 +2,9 @@ const fs = require('fs-extra')
 const targz = require('targz')
 
 const {
-    installVersion,
+    ensureVersionInstalled,
     installLatest,
+    installVersion,
     getDownloadPath,
     getPublicKeyPath,
 } = require('../../src/commands/install')
@@ -112,6 +113,28 @@ describe('yvm install', () => {
         expect(
             fs.statSync(getExtractionPath(latestVersion, path.yvmPath)),
         ).toBeTruthy()
+    })
+
+    describe('ensureVersionInstalled', () => {
+        it('Installs into default yvm path if none specified', async () => {
+            const version = '1.7.0'
+            await ensureVersionInstalled(version)
+            expect(
+                fs.statSync(getExtractionPath(version, path.yvmPath)),
+            ).toBeTruthy()
+        })
+
+        it('Only attempts installation if version not installed', async () => {
+            const version = '1.7.0'
+            fs.removeSync(versionRootPath(rootPath))
+            await ensureVersionInstalled(version, rootPath)
+            expect(
+                fs.statSync(getExtractionPath(version, rootPath)),
+            ).toBeTruthy()
+            downloadFile.mockClear()
+            await ensureVersionInstalled(version, rootPath)
+            expect(downloadFile).not.toBeCalled()
+        })
     })
 
     it('Print warning on install defective yarn release version', async () => {

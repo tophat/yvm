@@ -163,8 +163,7 @@ const installLatest = async (options = {}) => {
 }
 
 const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
-    const yarnBinDir = getExtractionPath(version, rootPath)
-    if (fs.existsSync(yarnBinDir)) return
+    if (isVersionInstalled(version, rootPath)) return
     await installVersion({ version, rootPath })
 }
 
