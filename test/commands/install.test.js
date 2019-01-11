@@ -178,7 +178,7 @@ describe('yvm install', () => {
 
     it('Handles error if extracted archive does not contain yarn dist', async () => {
         const version = '1.7.0'
-        const expectedError = 'Unable to located extracted package'
+        const expectedError = 'Unable to locate extracted package'
         jest.spyOn(targz, 'decompress').mockImplementationOnce(
             ({ dest }, callback) => {
                 fs.mkdirSync(dest)

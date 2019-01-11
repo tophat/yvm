@@ -112,7 +112,7 @@ const extractYarn = (version, rootPath) => {
                         fs.rmdirSync(tmpPath)
                         resolve(destPath)
                     } else {
-                        reject('Unable to located extracted package')
+                        reject('Unable to locate extracted package')
                     }
                 }
             },
