@@ -34,6 +34,9 @@
 <a href="https://github.com/tophat/getting-started/blob/master/scorecard.md">
     <img alt="Maturity badge - level 3" src="https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg"/>
 </a>
+<a href="https://pullreminders.com?ref=badge">
+    <img alt="Pull Reminders" src="https://pullreminders.com/badge.svg"/>
+</a>
 
 # Overview
 
