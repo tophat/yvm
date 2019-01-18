@@ -1,4 +1,4 @@
-# Yarn Version Manager (yvm)
+# Yarn Version Manager (yvm)s
 
 <span><img align="right" width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png" alt="Logo"></span>
 
