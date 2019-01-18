@@ -16,7 +16,8 @@
   "jest": {
     "testPathIgnorePatterns": [
       "./artifacts/",
-      "./node_modules/"
+      "./node_modules/",
+      "./node_modules_production/"
     ],
     "coverageDirectory": "./artifacts/coverage",
     "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
