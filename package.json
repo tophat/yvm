@@ -26,6 +26,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "chalk": "^2.4.2",
     "commander": "^2.15.1",
     "cosmiconfig": "^5.0.5",
     "fs-extra": "^7.0.1",
