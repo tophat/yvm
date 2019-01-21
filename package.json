@@ -2,9 +2,6 @@
   "name": "@thm/yvm",
   "version": "1.0.0",
   "description": "Yarn version manager",
-  "engines": {
-    "yarn": ">=1.7.0"
-  },
   "repository": {
     "type": "git",
     "url": "github:tophat/yvm"

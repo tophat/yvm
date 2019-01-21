@@ -27,8 +27,9 @@ const execCommand = (version, extraArgs = ['-v'], rootPath = yvmPath) =>
     )
 
 const [, , maybeVersionArg, ...rest] = process.argv
-const [version, args] = getSplitVersionAndArgs(maybeVersionArg, ...rest)
-execCommand(version, args).catch(err => {
-    log(err.message)
-    process.exit(1)
-})
+getSplitVersionAndArgs(maybeVersionArg, ...rest)
+    .then(args => execCommand(...args))
+    .catch(err => {
+        log(err.message)
+        process.exit(1)
+    })

@@ -6,7 +6,11 @@ const cosmiconfig = require('cosmiconfig')
 
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
-const { stripVersionPrefix, versionRootPath } = require('./utils')
+const {
+    getVersionsFromTags,
+    stripVersionPrefix,
+    versionRootPath,
+} = require('./utils')
 
 const DEFAULT_VERSION_TEXT = 'Global Default'
 const VERSION_IN_USE_SYMBOL = '\u2713'
@@ -16,8 +20,19 @@ function isValidVersionString(version) {
     return semver.valid(version.trim()) !== null
 }
 
+function isValidVersionRange(versionRange) {
+    return semver.validRange(versionRange.trim()) !== null
+}
+
 function getValidVersionString(version) {
     return semver.clean(version)
+}
+
+async function getVersionFromRange(versionRange) {
+    return (
+        semver.maxSatisfying(getYarnVersions(), versionRange) ||
+        semver.maxSatisfying(await getVersionsFromTags(), versionRange)
+    )
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
@@ -74,7 +89,7 @@ function getRcFileVersion() {
         return null
     }
     log.info(`Found config ${result.filepath}`)
-    return result.config
+    return String(result.config)
 }
 
 function getVersionInUse() {
@@ -102,7 +117,7 @@ function getYarnVersions(yvmPath = defaultYvmPath) {
 }
 
 // eslint-disable-next-line consistent-return
-const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
+const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
         const parsedVersionString = getValidVersionString(maybeVersionArg)
         if (parsedVersionString) {
@@ -117,12 +132,16 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
         const rcVersion = getRcFileVersion()
         let versionToUse
         if (rcVersion) {
-            if (!isValidVersionString(rcVersion)) {
+            const validVersion = isValidVersionString(rcVersion)
+            const validVersionRange = isValidVersionRange(rcVersion)
+            if (!validVersion && !validVersionRange) {
                 throw new Error(
                     `Invalid yarn version found in config: ${rcVersion}`,
                 )
             }
-            versionToUse = getValidVersionString(rcVersion)
+            versionToUse = validVersion
+                ? getValidVersionString(rcVersion)
+                : await getVersionFromRange(rcVersion)
         } else {
             versionToUse = getDefaultVersion()
         }
