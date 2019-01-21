@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const semver = require('semver')
 const { exec } = require('shelljs')
 const cosmiconfig = require('cosmiconfig')
 
@@ -8,17 +9,15 @@ const { yvmPath: defaultYvmPath } = require('./path')
 const { stripVersionPrefix, versionRootPath } = require('./utils')
 
 const DEFAULT_VERSION_TEXT = 'Global Default'
-const VERSION_REGEX = /\d+(\.\d+){2}(.*)/
 const VERSION_IN_USE_SYMBOL = '\u2713'
 const VERSION_INSTALLED_SYMBOL = '\u2192'
 
 function isValidVersionString(version) {
-    return VERSION_REGEX.test(version)
+    return semver.valid(version.trim()) !== null
 }
 
 function getValidVersionString(version) {
-    const parsedVersionString = version.match(VERSION_REGEX)
-    return parsedVersionString ? parsedVersionString[0] : null
+    return semver.clean(version)
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
@@ -93,11 +92,10 @@ function getVersionInUse() {
 
 function getYarnVersions(yvmPath = defaultYvmPath) {
     const versionsPath = versionRootPath(yvmPath)
-    const prefixedVersionRegex = new RegExp(`^v${VERSION_REGEX.source}`)
     if (fs.existsSync(versionsPath)) {
         const files = fs.readdirSync(versionsPath)
         return files
-            .filter(name => prefixedVersionRegex.test(name))
+            .filter(name => name.startsWith('v') && isValidVersionString(name))
             .map(stripVersionPrefix)
     }
     return []
