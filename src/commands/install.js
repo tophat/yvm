@@ -13,8 +13,6 @@ const {
 } = require('../util/utils')
 const { yvmPath } = require('../util/path')
 
-const { colors } = log
-
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
 
@@ -41,7 +39,7 @@ const downloadVersion = async (version, rootPath) => {
         return true
     } catch (e) {
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
-        log(colors.RED, e)
+        log.error(e)
         return false
     }
 }
