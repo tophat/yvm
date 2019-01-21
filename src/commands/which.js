@@ -21,7 +21,10 @@ const whichCommand = (inputPath, testPath = '') => {
     const pathVariables = envPath.split(':')
     pathVariables.forEach(element => {
         if (element.startsWith(versionRootPath(yvmPathToUse))) {
-            const pathVersion = getValidVersionString(element)
+            const [pathVersion] = element
+                .split('/')
+                .map(getValidVersionString)
+                .filter(a => a)
             log.info(`matched yvm version: v${pathVersion} in PATH ${element}`)
 
             const rcVersion = getRcFileVersion()
