@@ -56,7 +56,20 @@ function setDefaultVersion({ version, yvmPath = defaultYvmPath }) {
 }
 
 function getRcFileVersion() {
-    const explorer = cosmiconfig('yvm')
+    const moduleName = 'yvm'
+    const explorer = cosmiconfig(moduleName, {
+        packageProp: 'engines.yarn',
+        searchPlaces: [
+            'package.json',
+            `.${moduleName}rc`,
+            `.${moduleName}rc.json`,
+            `.${moduleName}rc.yaml`,
+            `.${moduleName}rc.yml`,
+            `.${moduleName}rc.js`,
+            `${moduleName}.config.js`,
+            `.yarnversion`,
+        ],
+    })
     const result = explorer.searchSync()
     if (!result || result.isEmpty || !result.config) {
         return null
@@ -108,7 +121,7 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
         if (rcVersion) {
             if (!isValidVersionString(rcVersion)) {
                 throw new Error(
-                    `Invalid yarn version found in .yarnrc: ${rcVersion}`,
+                    `Invalid yarn version found in config: ${rcVersion}`,
                 )
             }
             versionToUse = getValidVersionString(rcVersion)
