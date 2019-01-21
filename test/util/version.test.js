@@ -2,10 +2,12 @@ const mockFS = require('mock-fs')
 const { stripVersionPrefix } = require('../../src/util/utils')
 const {
     getDefaultVersion,
-    setDefaultVersion,
-    isValidVersionString,
     getValidVersionString,
+    getVersionFromRange,
     getYarnVersions,
+    isValidVersionRange,
+    isValidVersionString,
+    setDefaultVersion,
 } = require('../../src/util/version')
 
 describe('yvm default version', () => {
@@ -49,6 +51,21 @@ describe('yvm valid version', () => {
         expect(getValidVersionString('1.9.0')).toBe('1.9.0')
         expect(getValidVersionString('v1.9.0')).toBe('1.9.0')
         expect(getValidVersionString('v1.1.0-exp.2')).toBe('1.1.0-exp.2')
+    })
+
+    it('Valid version range', () => {
+        expect(isValidVersionRange('1.9.2')).toBe(true)
+        expect(isValidVersionRange('1.9.x')).toBe(true)
+        expect(isValidVersionRange('1.9')).toBe(true)
+        expect(isValidVersionRange('>=1.9 || <= 1.4.0')).toBe(true)
+    })
+
+    it('Accepts version range', async () => {
+        expect(await getVersionFromRange('1.9.x')).toBe('1.9.4')
+        expect(await getVersionFromRange('1.9')).toBe('1.9.4')
+        expect(await getVersionFromRange('1.4.x || >=1.10.0 < 1.13')).toBe(
+            '1.12.3',
+        )
     })
 })
 
