@@ -54,6 +54,7 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
+      - run: yarn run semantic-release --dry-run
       - persist_to_workspace:
           root: ~/repo
           paths:
