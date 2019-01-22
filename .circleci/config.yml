@@ -54,8 +54,6 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
-      - run: ./scripts/get-version.sh > artifacts/version.txt
-      - run: cat artifacts/version.txt
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -84,7 +82,7 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ~/repo
-      - run: VERSION=`cat artifacts/version.txt` node scripts/release.js
+      - run: yarn run semantic-release
   website:
     <<: *docker_defaults
     working_directory: ~/repo/website
