@@ -6,7 +6,7 @@
     <img alt="YVM Latest Version" src="https://img.shields.io/github/release/tophat/yvm.svg"/>
 </a>
 <a href="https://nodejs.org">
-    <img alt="Minimum Node Version" src="https://img.shields.io/badge/node-%3E%3D%208.0-brightgreen.svg"/>
+    <img alt="Minimum Node Version" src="https://img.shields.io/badge/node-%3E%3D%208-brightgreen.svg"/>
 </a>
 <a href="https://circleci.com/gh/tophat/yvm">
     <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
