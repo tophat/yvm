@@ -16,7 +16,8 @@
   "jest": {
     "testPathIgnorePatterns": [
       "./artifacts/",
-      "./node_modules/"
+      "./node_modules/",
+      "./node_modules_production/"
     ],
     "coverageDirectory": "./artifacts/coverage",
     "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
@@ -44,8 +45,8 @@
     "copy-webpack-plugin": "^4.5.1",
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^3.3.0",
-    "eslint-plugin-import": "^2.12.0",
+    "eslint-config-prettier": "^3.5.0",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.0.0",
     "eslint-plugin-prettier": "^3.0.0",
     "gh-release": "^3.4.0",
@@ -56,6 +57,7 @@
     "madge": "^3.3.0",
     "mock-fs": "^4.7.0",
     "prettier": "1.15.3",
+    "semantic-release": "^15.13.3",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.8",
     "webpack-node-externals": "^1.7.2",

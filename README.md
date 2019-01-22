@@ -14,6 +14,9 @@
 <a href="https://codecov.io/gh/tophat/yvm">
     <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
 </a>
+<a href="https://github.com/semantic-release/semantic-release">
+    <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg"/>
+</a>
 <br />
 <a href="https://david-dm.org/tophat/yvm">
     <img alt="Deps" src="https://david-dm.org/tophat/yvm/status.svg"/>
