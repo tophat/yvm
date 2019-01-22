@@ -18,7 +18,7 @@ const runYarn = (version, extraArgs, rootPath) => {
     try {
         // WARNING :: When changing this logic ensure that passing of stdio works correctly. e.g. user input, arrows keys
         // test:
-        // `nvm use 4.8.0` (lowest supported node version
+        // `nvm use 8.0.0` (lowest supported node version)
         // `make install`
         // `yvm exec contributors:add` and go through the steps
         childProcess.execFileSync(filePath, extraArgs, {
