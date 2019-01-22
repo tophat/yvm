@@ -36,7 +36,7 @@ argParser
     .action(async (maybeVersion, command) => {
         const { installVersion, installLatest } = require('./commands/install')
         const handleError = error => {
-            log(error)
+            log.error(error)
             process.exit(1)
         }
         if (command.latest) {
@@ -110,7 +110,7 @@ argParser
         ensureVersionInstalled(version)
             .then(() => log.capturable(getNewPath(version)))
             .catch(error => {
-                log(error)
+                log.error(error)
                 process.exit(1)
             })
     })

@@ -1,7 +1,10 @@
 const mockFS = require('mock-fs')
+const log = require('../../src/util/log')
+const path = require('../../src/util/path')
 const { stripVersionPrefix } = require('../../src/util/utils')
 const {
     getDefaultVersion,
+    getSplitVersionAndArgs,
     getValidVersionString,
     getVersionFromRange,
     getYarnVersions,
@@ -9,6 +12,8 @@ const {
     isValidVersionString,
     setDefaultVersion,
 } = require('../../src/util/version')
+
+jest.mock('../../src/util/log')
 
 describe('yvm default version', () => {
     const mockYVMDir = '/mock-yvm-root-dir'
@@ -31,6 +36,66 @@ describe('yvm default version', () => {
 
     it('Returns no version if one is not set, when there is none', () => {
         expect(getDefaultVersion(mockYVMDir)).toBeUndefined()
+    })
+})
+
+describe('yvm config version', () => {
+    const NOOP = () => {}
+    const mockRC = versionString => {
+        mockFS({
+            '.yvmrc': versionString,
+        })
+    }
+    afterEach(() => {
+        jest.resetAllMocks()
+        mockFS.restore()
+    })
+
+    it('Uses supplied version if valid', async () => {
+        const version = '1.1.1'
+        const [parsedVersion] = await getSplitVersionAndArgs(`v${version}`)
+        expect(parsedVersion).toEqual(version)
+    })
+    it('Uses valid version from config', async () => {
+        mockRC('1.1.1')
+        const [parsedVersion] = await getSplitVersionAndArgs()
+        expect(parsedVersion).toEqual('1.1.1')
+    })
+    it('Uses valid range from config', async () => {
+        mockRC(`'>=1.10.0 < 1.13'`)
+        const [parsedVersion] = await getSplitVersionAndArgs()
+        expect(parsedVersion).toEqual('1.12.3')
+    })
+    it('Logs error when getting invalid version config', async () => {
+        jest.spyOn(process, 'exit').mockImplementation(NOOP)
+        mockRC('va0.3.1')
+        await getSplitVersionAndArgs()
+        expect(log.error).toHaveBeenCalledWith(
+            expect.stringContaining('Invalid yarn version'),
+        )
+        process.exit.mockRestore()
+    })
+    it('Uses default version when no config available', async () => {
+        const mockVersion = '1.32.34'
+        mockFS({
+            [path.yvmPath]: {},
+        })
+        setDefaultVersion({
+            version: mockVersion,
+        })
+        const [parsedVersion] = await getSplitVersionAndArgs()
+        expect(parsedVersion).toEqual(mockVersion)
+    })
+    it('Logs error when no config or default version available', async () => {
+        jest.spyOn(process, 'exit').mockImplementation(NOOP)
+        mockFS({
+            [path.yvmPath]: {},
+        })
+        await getSplitVersionAndArgs()
+        expect(log.error).toHaveBeenCalledWith(
+            expect.stringContaining('No yarn version supplied'),
+        )
+        process.exit.mockRestore()
     })
 })
 
@@ -63,9 +128,7 @@ describe('yvm valid version', () => {
     it('Accepts version range', async () => {
         expect(await getVersionFromRange('1.9.x')).toBe('1.9.4')
         expect(await getVersionFromRange('1.9')).toBe('1.9.4')
-        expect(await getVersionFromRange('1.4.x || >=1.10.0 < 1.13')).toBe(
-            '1.12.3',
-        )
+        expect(await getVersionFromRange('>=1.10.0 < 1.13')).toBe('1.12.3')
     })
 })
 

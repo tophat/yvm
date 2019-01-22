@@ -22,7 +22,7 @@ const listRemoteCommand = () => {
                 localVersions,
             })
         })
-        .catch(error => log(error))
+        .catch(e => log.error(e))
 }
 
 module.exports = listRemoteCommand

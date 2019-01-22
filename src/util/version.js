@@ -158,7 +158,7 @@ Try:
         log.info(`Using yarn version: ${versionToUse}`)
         return [versionToUse, rest]
     } catch (e) {
-        log(e.message)
+        log.error(e.message)
         process.exit(1)
     }
 }
