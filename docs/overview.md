@@ -11,7 +11,7 @@ YVM will automatically use the correct yarn version when you run any yarn comman
 
 
 ## Installation
-Node: >=4.8.0
+Node: >=8.0.0
 
 
 Execute the following in your terminal:

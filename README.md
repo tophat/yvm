@@ -6,13 +6,16 @@
     <img alt="YVM Latest Version" src="https://img.shields.io/github/release/tophat/yvm.svg"/>
 </a>
 <a href="https://nodejs.org">
-    <img alt="Minimum Node Version" src="https://img.shields.io/badge/node-%3E%3D%204.8-brightgreen.svg"/>
+    <img alt="Minimum Node Version" src="https://img.shields.io/badge/node-%3E%3D%208-brightgreen.svg"/>
 </a>
 <a href="https://circleci.com/gh/tophat/yvm">
     <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
 </a>
 <a href="https://codecov.io/gh/tophat/yvm">
     <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
+</a>
+<a href="https://github.com/semantic-release/semantic-release">
+    <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg"/>
 </a>
 <br />
 <a href="https://david-dm.org/tophat/yvm">
@@ -52,7 +55,7 @@ Manually managing different yarn versions across projects is a pain. This fixes 
 
 
 ## Installation
-Node: >=4.8.0
+Node: >=8.0.0
 
 ### Installation script
 
