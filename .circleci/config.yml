@@ -142,6 +142,7 @@ workflows:
             - unit_test
             - sanity_test
             - build
+            - release_size_check
           filters:
             branches:
               only:
