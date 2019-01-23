@@ -192,6 +192,7 @@ const printVersions = ({
 
         if (isCurrent) log.success(toLog)
         else if (isInstalled) log.notice(toLog)
+        else log(toLog)
 
         versionsMap[version] = toLog
     })
