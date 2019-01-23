@@ -33,17 +33,17 @@ argParser
     .alias('i')
     .option('-l, --latest', 'Install the latest version of Yarn available')
     .description('Install the specified version of Yarn.')
-    .action((maybeVersion, command) => {
+    .action(async (maybeVersion, command) => {
         const { installVersion, installLatest } = require('./commands/install')
         const handleError = error => {
-            log(error)
+            log.error(error)
             process.exit(1)
         }
         if (command.latest) {
             installLatest().catch(handleError)
             return
         }
-        const version = maybeVersion || getSplitVersionAndArgs()[0]
+        const version = maybeVersion || await getSplitVersionAndArgs()[0]
         installVersion({ version }).catch(handleError)
     })
 
@@ -103,14 +103,14 @@ argParser
     .description(
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
-    .action(maybeVersion => {
-        const [version] = getSplitVersionAndArgs(maybeVersion)
+    .action(async maybeVersion => {
+        const [version] = await getSplitVersionAndArgs(maybeVersion)
         const getNewPath = require('./commands/getNewPath')
         const { ensureVersionInstalled } = require('./commands/install')
         ensureVersionInstalled(version)
             .then(() => log.capturable(getNewPath(version)))
             .catch(error => {
-                log(error)
+                log.error(error)
                 process.exit(1)
             })
     })

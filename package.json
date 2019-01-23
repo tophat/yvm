@@ -27,11 +27,13 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "chalk": "^2.4.2",
     "commander": "^2.15.1",
     "cosmiconfig": "^5.0.5",
     "fs-extra": "^7.0.1",
     "openpgp": "^4.3.0",
     "request": "^2.87.0",
+    "semver": "^5.6.0",
     "shelljs": "^0.8.2",
     "targz": "^1.0.1"
   },

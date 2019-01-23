@@ -1,25 +1,38 @@
 const fs = require('fs')
 const path = require('path')
+const semver = require('semver')
 const { exec } = require('shelljs')
 const cosmiconfig = require('cosmiconfig')
 
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
-const { stripVersionPrefix, versionRootPath } = require('./utils')
+const {
+    getVersionsFromTags,
+    stripVersionPrefix,
+    versionRootPath,
+} = require('./utils')
 
 const DEFAULT_VERSION_TEXT = 'Global Default'
-const VERSION_REGEX = /\d+(\.\d+){2}(.*)/
 const VERSION_IN_USE_SYMBOL = '\u2713'
 const VERSION_INSTALLED_SYMBOL = '\u2192'
-const { colors } = log
 
 function isValidVersionString(version) {
-    return VERSION_REGEX.test(version)
+    return semver.valid(version.trim()) !== null
+}
+
+function isValidVersionRange(versionRange) {
+    return semver.validRange(versionRange.trim()) !== null
 }
 
 function getValidVersionString(version) {
-    const parsedVersionString = version.match(VERSION_REGEX)
-    return parsedVersionString ? parsedVersionString[0] : null
+    return semver.clean(version)
+}
+
+async function getVersionFromRange(versionRange) {
+    return (
+        semver.maxSatisfying(getYarnVersions(), versionRange) ||
+        semver.maxSatisfying(await getVersionsFromTags(), versionRange)
+    )
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
@@ -57,13 +70,26 @@ function setDefaultVersion({ version, yvmPath = defaultYvmPath }) {
 }
 
 function getRcFileVersion() {
-    const explorer = cosmiconfig('yvm')
+    const moduleName = 'yvm'
+    const explorer = cosmiconfig(moduleName, {
+        packageProp: 'engines.yarn',
+        searchPlaces: [
+            'package.json',
+            `.${moduleName}rc`,
+            `.${moduleName}rc.json`,
+            `.${moduleName}rc.yaml`,
+            `.${moduleName}rc.yml`,
+            `.${moduleName}rc.js`,
+            `${moduleName}.config.js`,
+            `.yarnversion`,
+        ],
+    })
     const result = explorer.searchSync()
     if (!result || result.isEmpty || !result.config) {
         return null
     }
     log.info(`Found config ${result.filepath}`)
-    return result.config
+    return String(result.config)
 }
 
 function getVersionInUse() {
@@ -81,18 +107,17 @@ function getVersionInUse() {
 
 function getYarnVersions(yvmPath = defaultYvmPath) {
     const versionsPath = versionRootPath(yvmPath)
-    const prefixedVersionRegex = new RegExp(`^v${VERSION_REGEX.source}`)
     if (fs.existsSync(versionsPath)) {
         const files = fs.readdirSync(versionsPath)
         return files
-            .filter(name => prefixedVersionRegex.test(name))
+            .filter(name => name.startsWith('v') && isValidVersionString(name))
             .map(stripVersionPrefix)
     }
     return []
 }
 
 // eslint-disable-next-line consistent-return
-const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
+const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
         const parsedVersionString = getValidVersionString(maybeVersionArg)
         if (parsedVersionString) {
@@ -107,12 +132,16 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
         const rcVersion = getRcFileVersion()
         let versionToUse
         if (rcVersion) {
-            if (!isValidVersionString(rcVersion)) {
+            const validVersion = isValidVersionString(rcVersion)
+            const validVersionRange = isValidVersionRange(rcVersion)
+            if (!validVersion && !validVersionRange) {
                 throw new Error(
-                    `Invalid yarn version found in .yarnrc: ${rcVersion}`,
+                    `Invalid yarn version found in config: ${rcVersion}`,
                 )
             }
-            versionToUse = getValidVersionString(rcVersion)
+            versionToUse = validVersion
+                ? getValidVersionString(rcVersion)
+                : await getVersionFromRange(rcVersion)
         } else {
             versionToUse = getDefaultVersion()
         }
@@ -129,7 +158,7 @@ Try:
         log.info(`Using yarn version: ${versionToUse}`)
         return [versionToUse, rest]
     } catch (e) {
-        log(e.message)
+        log.error(e.message)
         process.exit(1)
     }
 }
@@ -161,10 +190,8 @@ const printVersions = ({
 
         if (isDefault) toLog += ` (${DEFAULT_VERSION_TEXT})`
 
-        const logArgs = []
-        if (isCurrent) logArgs.push(colors.GREEN)
-        else if (isInstalled) logArgs.push(colors.YELLOW)
-        log(...logArgs, toLog)
+        if (isCurrent) log.success(toLog)
+        else if (isInstalled) log.notice(toLog)
 
         versionsMap[version] = toLog
     })
@@ -178,10 +205,12 @@ module.exports = {
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
+    getValidVersionString,
+    getVersionFromRange,
     getVersionInUse,
     getYarnVersions,
-    setDefaultVersion,
+    isValidVersionRange,
     isValidVersionString,
-    getValidVersionString,
     printVersions,
+    setDefaultVersion,
 }

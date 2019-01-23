@@ -1,5 +1,5 @@
 const shell = require('shelljs')
-const { getRcFileVersion } = require('../util/version')
+const { getRcFileVersion, getValidVersionString } = require('../util/version')
 const log = require('../util/log')
 const { versionRootPath } = require('../util/utils')
 const { yvmPath } = require('../util/path')
@@ -21,13 +21,12 @@ const whichCommand = (inputPath, testPath = '') => {
     const pathVariables = envPath.split(':')
     pathVariables.forEach(element => {
         if (element.startsWith(versionRootPath(yvmPathToUse))) {
-            const versionRegex = /(v\d+\.?\d*\.?\d*)/gm
-            const matchedVersion = element.match(versionRegex)
-            log.info(
-                `matched yvm version: ${matchedVersion} in PATH ${element}`,
-            )
+            const [pathVersion] = element
+                .split('/')
+                .map(getValidVersionString)
+                .filter(a => a)
+            log.info(`matched yvm version: v${pathVersion} in PATH ${element}`)
 
-            const pathVersion = matchedVersion.toString().replace(/v/g, '')
             const rcVersion = getRcFileVersion()
             log(`Currently on yarn version ${pathVersion}`)
             if (rcVersion !== null) {

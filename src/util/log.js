@@ -1,3 +1,5 @@
+const chalk = require('chalk')
+
 const defaultLogger = console.error.bind(console) // eslint-disable-line no-console
 const capturableLogger = console.log.bind(console) // eslint-disable-line no-console
 
@@ -9,16 +11,22 @@ log.capturable = function capturableLog(...args) {
     capturableLogger(...args)
 }
 
-log.info = function errorLog(...args) {
+log.info = function infoLog(...args) {
     if (process.env.YVM_VERBOSE) {
         log(...args)
     }
 }
 
-log.colors = {
-    RED: '\x1b[31m%s\x1b[0m',
-    GREEN: '\x1b[32m%s\x1b[0m',
-    YELLOW: '\x1b[33m%s\x1b[0m',
+log.error = function errorLog(...args) {
+    log(chalk.red(...args))
+}
+
+log.success = function successLog(...args) {
+    log(chalk.green(...args))
+}
+
+log.notice = function noticeLog(...args) {
+    log(chalk.yellow(...args))
 }
 
 module.exports = log
