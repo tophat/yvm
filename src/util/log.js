@@ -3,7 +3,9 @@ const chalk = require('chalk')
 const defaultLogger = console.error.bind(console) // eslint-disable-line no-console
 const capturableLogger = console.log.bind(console) // eslint-disable-line no-console
 
-function log(...args) {
+const log = (...args) => log.default(...args)
+
+log.default = function defaultLog(...args) {
     defaultLogger(...args)
 }
 
