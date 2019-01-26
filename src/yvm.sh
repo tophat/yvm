@@ -51,10 +51,11 @@ yvm_() {
     fi
 }
 
+yvm() {
+    yvm_ 'function' $@
+}
+
 if [ ${interactive} = 1 ]; then
-    yvm() {
-        yvm_ 'function' $@
-    }
     if ! type "node" > /dev/null; then
         yvm_err "YVM Could not find node executable."
         yvm_err "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bashrc"
@@ -63,6 +64,6 @@ if [ ${interactive} = 1 ]; then
     if [ "x" != "x${DEFAULT_YARN_VERSION}" ]; then
         yvm_use > /dev/null
     fi
-else
+elif [ -n "$*" ]; then
     yvm_ 'script' $@
 fi
