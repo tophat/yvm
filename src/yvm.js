@@ -51,10 +51,10 @@ argParser
     .command('remove <version>')
     .alias('rm')
     .description('Uninstall the specified version of Yarn.')
-    .action(version => {
+    .action(async version => {
         log.info(`Removing yarn v${version}`)
         const remove = require('./commands/remove')
-        process.exit(remove(version))
+        process.exit(await remove(version))
     })
 
 // commander has support for sub commands, and will load the file yvm-exec when this is run

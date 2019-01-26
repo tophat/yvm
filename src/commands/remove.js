@@ -1,21 +1,16 @@
 const fs = require('fs-extra')
-const shell = require('shelljs')
 
 const { getExtractionPath } = require('../util/utils')
+const { getVersionInUse } = require('../util/version')
 const { yvmPath } = require('../util/path')
 
 const log = require('../util/log')
 
-const removeVersion = (version, rootPath = yvmPath) => {
+const removeVersion = async (version, rootPath = yvmPath) => {
     const versionPath = getExtractionPath(version, rootPath)
-    const { stdout, stderr, code } = shell.which('yarn')
+    const versionInUse = await getVersionInUse()
 
-    if (code !== 0) {
-        log(stderr)
-        return 2
-    }
-
-    if (stdout.startsWith(versionPath)) {
+    if (versionPath.includes(versionInUse)) {
         log('You cannot remove currently-active version')
         return 1
     }

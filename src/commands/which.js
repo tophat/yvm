@@ -1,13 +1,16 @@
-const shell = require('shelljs')
-const { getRcFileVersion, getValidVersionString } = require('../util/version')
+const {
+    getRcFileVersion,
+    getValidVersionString,
+    getVersionInUse,
+} = require('../util/version')
 const log = require('../util/log')
 const { versionRootPath } = require('../util/utils')
 const { yvmPath } = require('../util/path')
 
 const whichCommand = (inputPath, testPath = '') => {
-    if (!shell.which('yarn')) {
-        shell.echo('Sorry, yarn in NOT installed.')
-        shell.exit(1)
+    if (!getVersionInUse()) {
+        log('Sorry, yarn in NOT installed.')
+        return 1
     }
     const envPath = inputPath || process.env.PATH
     if (envPath === null || envPath === '') {
