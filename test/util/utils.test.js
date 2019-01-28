@@ -6,23 +6,16 @@ const {
     printVersions,
 } = require('../../src/util/version')
 
-jest.mock('../../src/util/log')
-
 const versionInUse = '1.2.0'
 const defaultVersion = '1.3.0'
 const localVersions = ['1.1.0', versionInUse, defaultVersion]
 const versions = [...localVersions, '1.4.0', '1.5.0']
 
 describe('Util functions', () => {
+    jest.spyOn(log, 'default')
     afterEach(() => {
         jest.resetAllMocks()
     })
-
-    const verifyPrintedVersions = () => {
-        expect(log.mock.calls).toMatchSnapshot()
-        expect(log.notice.mock.calls).toMatchSnapshot()
-        expect(log.success.mock.calls).toMatchSnapshot()
-    }
 
     it('Prints all versions passed to printVersion function', () => {
         const versionsObject = printVersions({
@@ -31,7 +24,7 @@ describe('Util functions', () => {
             versionInUse,
         })
         expect(Object.keys(versionsObject)).toHaveLength(versions.length)
-        verifyPrintedVersions()
+        expect(log.default.mock.calls).toMatchSnapshot()
     })
 
     it('Highlights the version currently in use', () => {
@@ -42,7 +35,7 @@ describe('Util functions', () => {
         })
         expect(versionsObject[versionInUse]).toContain(versionInUse)
         expect(versionsObject[versionInUse]).toContain(VERSION_IN_USE_SYMBOL)
-        verifyPrintedVersions()
+        expect(log.default.mock.calls).toMatchSnapshot()
     })
 
     it('Highlights the default version', () => {
@@ -54,7 +47,7 @@ describe('Util functions', () => {
         })
         expect(versionsObject[defaultVersion]).toContain(defaultVersion)
         expect(versionsObject[defaultVersion]).toContain(DEFAULT_VERSION_TEXT)
-        verifyPrintedVersions()
+        expect(log.default.mock.calls).toMatchSnapshot()
     })
 
     it('Highlights all installed versions', () => {
@@ -71,6 +64,6 @@ describe('Util functions', () => {
                 expect(versionsObject[v]).toContain(v)
                 expect(versionsObject[v]).toContain(VERSION_INSTALLED_SYMBOL)
             })
-        verifyPrintedVersions()
+        expect(log.default.mock.calls).toMatchSnapshot()
     })
 })
