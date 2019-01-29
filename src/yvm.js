@@ -73,10 +73,10 @@ argParser
     .description(
         'Display path to installed yarn version. Uses .yvmrc if available.',
     )
-    .action(() => {
+    .action(async () => {
         log.info('Checking yarn version')
         const which = require('./commands/which')
-        process.exit(which())
+        process.exit(await which())
     })
 
 argParser
