@@ -1,4 +1,6 @@
 const mockFS = require('mock-fs')
+const childProcess = require('child_process')
+const execSync = jest.spyOn(childProcess, 'execSync')
 const log = require('../../src/util/log')
 const path = require('../../src/util/path')
 const { stripVersionPrefix } = require('../../src/util/utils')
@@ -7,6 +9,7 @@ const {
     getSplitVersionAndArgs,
     getValidVersionString,
     getVersionFromRange,
+    getVersionInUse,
     getYarnVersions,
     isValidVersionRange,
     isValidVersionString,
@@ -148,5 +151,19 @@ describe('yvm installed versions', () => {
     it('Valid version folders', () => {
         const expectedVersions = mockValid.map(stripVersionPrefix)
         expect(getYarnVersions(mockYVMDir)).toEqual(expectedVersions)
+    })
+})
+
+describe('yarn version in use', () => {
+    it('gets active version', async () => {
+        execSync.mockReturnValueOnce('  1.7.0  ')
+        expect(await getVersionInUse()).toEqual('1.7.0')
+    })
+
+    it('returns empty string on failure', async () => {
+        execSync.mockImplementationOnce(() => {
+            throw 'some error'
+        })
+        expect(await getVersionInUse()).toEqual('')
     })
 })
