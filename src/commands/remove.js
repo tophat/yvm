@@ -10,7 +10,7 @@ const removeVersion = async (version, rootPath = yvmPath) => {
     const versionPath = getExtractionPath(version, rootPath)
     const versionInUse = await getVersionInUse()
 
-    if (versionPath.includes(versionInUse)) {
+    if (versionInUse && versionPath.includes(versionInUse)) {
         log('You cannot remove currently-active version')
         return 1
     }
