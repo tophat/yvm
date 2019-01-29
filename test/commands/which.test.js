@@ -25,6 +25,15 @@ describe('yvm which command', () => {
             expect.stringContaining(`yarn is NOT installed`),
         )
     })
+    it('fails if environment path is not available', async () => {
+        const oldPath = process.env.PATH
+        delete process.env.PATH
+        expect(await which()).toBe(1)
+        expect(log).toHaveBeenCalledWith(
+            expect.stringContaining(`PATH not found`),
+        )
+        process.env.PATH = oldPath
+    })
     it('fails to find yarn version if yvm not installed', async () => {
         const path = '/Users/tophat/.nvm/versions/node/v6.11.5/bin:'
         expect(await which(path)).toBe(2)

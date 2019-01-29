@@ -14,7 +14,7 @@ const whichCommand = async path => {
         return 1
     }
     const envPath = path || process.env.PATH
-    if (envPath === null || envPath === '') {
+    if (!envPath) {
         log('Environment PATH not found.')
         return 1
     }
