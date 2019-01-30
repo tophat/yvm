@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const semver = require('semver')
-const { exec } = require('shelljs')
+const { execSync } = require('child_process')
 const cosmiconfig = require('cosmiconfig')
 
 const log = require('./log')
@@ -92,17 +92,13 @@ function getRcFileVersion() {
     return String(result.config)
 }
 
-function getVersionInUse() {
-    return new Promise(resolve => {
-        exec(
-            'yarn --version',
-            { async: true, silent: true },
-            (code, stdout) => {
-                const versionInUse = stdout
-                resolve(versionInUse)
-            },
-        )
-    })
+async function getVersionInUse() {
+    try {
+        return String(execSync('yarn --version')).trim()
+    } catch (error) {
+        log.info(error)
+        return ''
+    }
 }
 
 function getYarnVersions(yvmPath = defaultYvmPath) {
