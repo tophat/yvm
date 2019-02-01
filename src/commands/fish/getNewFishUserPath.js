@@ -3,7 +3,7 @@ const { yvmPath } = require('../../util/path')
 
 const FISH_ARRAY_DELIMINATOR = ' '
 
-const getNewFishUserPaths = (
+const getNewFishUserPath = (
     version,
     rootPath = yvmPath,
     pathString = process.env.FISH_USER_PATHS || '',
@@ -30,4 +30,4 @@ const getNewFishUserPaths = (
     return splitPath.join(FISH_ARRAY_DELIMINATOR).trim()
 }
 
-module.exports = getNewFishUserPaths
+module.exports = getNewFishUserPath

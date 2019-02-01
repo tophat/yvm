@@ -1,4 +1,4 @@
-const getNewFishUserPaths = require('../../src/commands/fish/getNewFishUserPaths')
+const getNewFishUserPath = require('../../../src/commands/fish/getNewFishUserPath')
 
 const FISH_ARRAY_DELIMINATOR = ' '
 
@@ -14,7 +14,7 @@ describe('getNewFishUserPath', () => {
             ...mockSplitPath,
         ].join(FISH_ARRAY_DELIMINATOR)
         expect(
-            getNewFishUserPaths(mockVersion, mockRootPath, mockPathString),
+            getNewFishUserPath(mockVersion, mockRootPath, mockPathString),
         ).toEqual(expectedPathString)
     })
 
@@ -34,7 +34,7 @@ describe('getNewFishUserPath', () => {
             'def',
         ].join(FISH_ARRAY_DELIMINATOR)
         expect(
-            getNewFishUserPaths(mockVersion, mockRootPath, mockPathString),
+            getNewFishUserPath(mockVersion, mockRootPath, mockPathString),
         ).toEqual(expectedPathString)
     })
 })

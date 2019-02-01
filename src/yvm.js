@@ -108,7 +108,7 @@ argParser
     .action(async (maybeVersion, command) => {
         const [version] = await getSplitVersionAndArgs(maybeVersion)
         const isFishShell = command.shell === 'fish'
-        const getNewPath = isFishShell ? require('./commands/fish/getNewFishUserPaths') : require('./commands/getNewPath')
+        const getNewPath = isFishShell ? require('./commands/fish/getNewFishUserPath') : require('./commands/getNewPath')
         const { ensureVersionInstalled } = require('./commands/install')
         ensureVersionInstalled(version)
             .then(() => log.capturable(getNewPath(version)))
