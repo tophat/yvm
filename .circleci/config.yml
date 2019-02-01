@@ -15,7 +15,7 @@ commands:
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: 'Install yvm release version'
-          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_ALIAS_DIR=$(pwd) bash'
+          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash'
   save_env_cache:
     description: "Saves environment cache"
     steps:
@@ -54,8 +54,7 @@ jobs:
     steps:
       - prep_env
       - run: make build-production
-      - run: ./scripts/get-version.sh > artifacts/version.txt
-      - run: cat artifacts/version.txt
+      - run: yarn run semantic-release --dry-run
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -84,7 +83,7 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ~/repo
-      - run: VERSION=`cat artifacts/version.txt` node scripts/release.js
+      - run: yarn run semantic-release
   website:
     <<: *docker_defaults
     working_directory: ~/repo/website
@@ -143,6 +142,7 @@ workflows:
             - unit_test
             - sanity_test
             - build
+            - release_size_check
           filters:
             branches:
               only:

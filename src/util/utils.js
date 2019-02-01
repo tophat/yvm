@@ -11,7 +11,7 @@ const getExtractionPath = (version, rootPath) =>
 const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-const getVersionsFromTags = () => {
+const getReleasesFromTags = () => {
     const options = {
         url: 'https://d236jo9e8rrdox.cloudfront.net/yarn-releases',
         headers: {
@@ -32,18 +32,24 @@ const getVersionsFromTags = () => {
                 reject(error)
             } else {
                 const tags = JSON.parse(body)
-                const tagNames = tags.map(tag => tag.name)
-                const versions = tagNames
-                    .map(stripVersionPrefix)
-                    .filter(version => version[0] > 0)
-                resolve(versions)
+                const releases = tags.reduce((accumulator, tag) => {
+                    const version = stripVersionPrefix(tag.name)
+                    const [major] = version.split('.')
+                    return Number(major) > 0
+                        ? Object.assign(accumulator, { [version]: tag })
+                        : accumulator
+                }, {})
+                resolve(releases)
             }
         })
     })
 }
 
+const getVersionsFromTags = async () => Object.keys(await getReleasesFromTags())
+
 module.exports = {
     getExtractionPath,
+    getReleasesFromTags,
     getVersionsFromTags,
     stripVersionPrefix,
     versionRootPath,

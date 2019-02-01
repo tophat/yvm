@@ -1,33 +1,35 @@
-const shell = require('shelljs')
-const { getRcFileVersion } = require('../util/version')
+const {
+    getRcFileVersion,
+    getValidVersionString,
+    getVersionInUse,
+} = require('../util/version')
 const log = require('../util/log')
 const { versionRootPath } = require('../util/utils')
 const { yvmPath } = require('../util/path')
 
-const whichCommand = (inputPath, testPath = '') => {
-    if (!shell.which('yarn')) {
-        shell.echo('Sorry, yarn in NOT installed.')
-        shell.exit(1)
-    }
-    const envPath = inputPath || process.env.PATH
-    if (envPath === null || envPath === '') {
+const whichCommand = async path => {
+    const versionInUse = await getVersionInUse()
+    if (!versionInUse) {
+        log('Sorry, yarn is NOT installed.')
         return 1
     }
-
-    const yvmPathToUse = testPath ? testPath : yvmPath
+    const envPath = path || process.env.PATH
+    if (!envPath) {
+        log('Environment PATH not found.')
+        return 1
+    }
 
     let foundVersion = false
 
     const pathVariables = envPath.split(':')
     pathVariables.forEach(element => {
-        if (element.startsWith(versionRootPath(yvmPathToUse))) {
-            const versionRegex = /(v\d+\.?\d*\.?\d*)/gm
-            const matchedVersion = element.match(versionRegex)
-            log.info(
-                `matched yvm version: ${matchedVersion} in PATH ${element}`,
-            )
+        if (element.startsWith(versionRootPath(yvmPath))) {
+            const [pathVersion] = element
+                .split('/')
+                .map(getValidVersionString)
+                .filter(a => a)
+            log.info(`matched yvm version: v${pathVersion} in PATH ${element}`)
 
-            const pathVersion = matchedVersion.toString().replace(/v/g, '')
             const rcVersion = getRcFileVersion()
             log(`Currently on yarn version ${pathVersion}`)
             if (rcVersion !== null) {

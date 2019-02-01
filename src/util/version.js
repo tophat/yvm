@@ -1,14 +1,38 @@
 const fs = require('fs')
 const path = require('path')
-const { exec } = require('shelljs')
+const semver = require('semver')
+const { execSync } = require('child_process')
 const cosmiconfig = require('cosmiconfig')
 
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
+const {
+    getVersionsFromTags,
+    stripVersionPrefix,
+    versionRootPath,
+} = require('./utils')
+
 const DEFAULT_VERSION_TEXT = 'Global Default'
+const VERSION_IN_USE_SYMBOL = '\u2713'
+const VERSION_INSTALLED_SYMBOL = '\u2192'
 
 function isValidVersionString(version) {
-    return /^\d+\.\d+\.\d+$/.test(version)
+    return semver.valid(version.trim()) !== null
+}
+
+function isValidVersionRange(versionRange) {
+    return semver.validRange(versionRange.trim()) !== null
+}
+
+function getValidVersionString(version) {
+    return semver.clean(version)
+}
+
+async function getVersionFromRange(versionRange) {
+    return (
+        semver.maxSatisfying(getYarnVersions(), versionRange) ||
+        semver.maxSatisfying(await getVersionsFromTags(), versionRange)
+    )
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
@@ -46,34 +70,55 @@ function setDefaultVersion({ version, yvmPath = defaultYvmPath }) {
 }
 
 function getRcFileVersion() {
-    const explorer = cosmiconfig('yvm')
+    const moduleName = 'yvm'
+    const explorer = cosmiconfig(moduleName, {
+        packageProp: 'engines.yarn',
+        searchPlaces: [
+            'package.json',
+            `.${moduleName}rc`,
+            `.${moduleName}rc.json`,
+            `.${moduleName}rc.yaml`,
+            `.${moduleName}rc.yml`,
+            `.${moduleName}rc.js`,
+            `${moduleName}.config.js`,
+            `.yarnversion`,
+        ],
+    })
     const result = explorer.searchSync()
     if (!result || result.isEmpty || !result.config) {
         return null
     }
     log.info(`Found config ${result.filepath}`)
-    return result.config
+    return String(result.config)
 }
 
-function getVersionInUse() {
-    return new Promise(resolve => {
-        exec(
-            'yarn --version',
-            { async: true, silent: true },
-            (code, stdout) => {
-                const versionInUse = stdout
-                resolve(versionInUse)
-            },
-        )
-    })
+async function getVersionInUse() {
+    try {
+        return String(execSync('yarn --version')).trim()
+    } catch (error) {
+        log.info(error)
+        return ''
+    }
+}
+
+function getYarnVersions(yvmPath = defaultYvmPath) {
+    const versionsPath = versionRootPath(yvmPath)
+    if (fs.existsSync(versionsPath)) {
+        const files = fs.readdirSync(versionsPath)
+        return files
+            .filter(name => name.startsWith('v') && isValidVersionString(name))
+            .map(stripVersionPrefix)
+    }
+    return []
 }
 
 // eslint-disable-next-line consistent-return
-const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
+const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
     if (maybeVersionArg) {
-        if (isValidVersionString(maybeVersionArg)) {
+        const parsedVersionString = getValidVersionString(maybeVersionArg)
+        if (parsedVersionString) {
             log.info(`Using provided version: ${maybeVersionArg}`)
-            return [maybeVersionArg, rest]
+            return [parsedVersionString, rest]
         }
     }
 
@@ -83,12 +128,16 @@ const getSplitVersionAndArgs = (maybeVersionArg, ...rest) => {
         const rcVersion = getRcFileVersion()
         let versionToUse
         if (rcVersion) {
-            if (!isValidVersionString(rcVersion)) {
+            const validVersion = isValidVersionString(rcVersion)
+            const validVersionRange = isValidVersionRange(rcVersion)
+            if (!validVersion && !validVersionRange) {
                 throw new Error(
-                    `Invalid yarn version found in .yarnrc: ${rcVersion}`,
+                    `Invalid yarn version found in config: ${rcVersion}`,
                 )
             }
-            versionToUse = rcVersion
+            versionToUse = validVersion
+                ? getValidVersionString(rcVersion)
+                : await getVersionFromRange(rcVersion)
         } else {
             versionToUse = getDefaultVersion()
         }
@@ -105,7 +154,7 @@ Try:
         log.info(`Using yarn version: ${versionToUse}`)
         return [versionToUse, rest]
     } catch (e) {
-        log(e.message)
+        log.error(e.message)
         process.exit(1)
     }
 }
@@ -115,6 +164,7 @@ const printVersions = ({
     message,
     versionInUse = '',
     defaultVersion = getDefaultVersion(defaultYvmPath),
+    localVersions = [],
 }) => {
     log(message)
 
@@ -124,18 +174,21 @@ const printVersions = ({
 
     list.forEach(versionPadded => {
         const version = versionPadded.trim()
+        const isCurrent = version === versionInUse
+        const isDefault = version === defaultVersion
+        const isInstalled = localVersions.includes(version)
 
-        let toLog =
-            version === versionInUse
-                ? ` \u2713 ${versionPadded}`
-                : ` - ${versionPadded}`
+        let toLog = ' '
+        if (isCurrent) toLog += VERSION_IN_USE_SYMBOL
+        else if (isInstalled) toLog += VERSION_INSTALLED_SYMBOL
+        else toLog += '-'
+        toLog += ` ${versionPadded}`
 
-        if (version === defaultVersion) toLog += ` (${DEFAULT_VERSION_TEXT})`
-        if (version === versionInUse) {
-            log('\x1b[32m%s\x1b[0m', toLog)
-        } else {
-            log(toLog)
-        }
+        if (isDefault) toLog += ` (${DEFAULT_VERSION_TEXT})`
+
+        if (isCurrent) log.success(toLog)
+        else if (isInstalled) log.notice(toLog)
+        else log(toLog)
 
         versionsMap[version] = toLog
     })
@@ -143,11 +196,18 @@ const printVersions = ({
 }
 
 module.exports = {
+    DEFAULT_VERSION_TEXT,
+    VERSION_IN_USE_SYMBOL,
+    VERSION_INSTALLED_SYMBOL,
     getRcFileVersion,
     getSplitVersionAndArgs,
     getDefaultVersion,
+    getValidVersionString,
+    getVersionFromRange,
     getVersionInUse,
-    setDefaultVersion,
+    getYarnVersions,
+    isValidVersionRange,
     isValidVersionString,
     printVersions,
+    setDefaultVersion,
 }

@@ -1,19 +1,20 @@
 const fs = require('fs-extra')
 
-const list = require('../../src/commands/list')
+const version = require('../../src/util/version')
+const printVersions = jest.spyOn(version, 'printVersions')
 const {
     getExtractionPath,
     stripVersionPrefix,
     versionRootPath,
 } = require('../../src/util/utils')
-const { printVersions } = require('../../src/util/version')
+const list = require('../../src/commands/list')
 
 describe('yvm list', () => {
     const garbageInDirectory = ['haxor']
     const rootPath = '/tmp/yvmList'
     const versionsInDirectory = ['1.6.0', '1.7.0']
 
-    const getList = () => {
+    const getList = async () => {
         const versionsInDirectory = ['1.6.0', '1.7.0']
         versionsInDirectory.forEach(version => {
             fs.mkdirsSync(getExtractionPath(version, rootPath))
@@ -21,7 +22,7 @@ describe('yvm list', () => {
         garbageInDirectory.forEach(trash => {
             fs.mkdirsSync(getExtractionPath(trash, rootPath))
         })
-        return list(rootPath).map(stripVersionPrefix)
+        return (await list(rootPath)).map(stripVersionPrefix)
     }
 
     beforeAll(() => {
@@ -30,11 +31,17 @@ describe('yvm list', () => {
 
     afterEach(() => {
         fs.removeSync(versionRootPath(rootPath))
+        printVersions.mockReset()
     })
 
-    it('Lists only yarn versions in the installation directory', () => {
-        const listOutput = getList()
+    it('Lists only yarn versions in the installation directory', async () => {
+        const listOutput = await getList()
         expect(listOutput).toHaveLength(2)
+        expect(printVersions).toHaveBeenCalledWith(
+            expect.objectContaining({
+                list: listOutput,
+            }),
+        )
         versionsInDirectory.forEach(item => {
             expect(listOutput.indexOf(item)).toBeGreaterThan(-1)
         })
@@ -43,19 +50,20 @@ describe('yvm list', () => {
         })
     })
 
-    it('Correctly highlights active yarn version', () => {
-        const listOutput = getList()
-        const versionsMap = printVersions({
-            list: listOutput,
-            message: 'test',
-            versionInUse: '1.7.0',
-        })
-        expect(versionsMap['1.7.0']).toContain(` \u2713 1.7.0`)
-        expect(versionsMap['1.6.0']).toContain(` - 1.6.0`)
+    it('Correctly passes active yarn version', async () => {
+        const versionInUse = await version.getVersionInUse()
+        const list = await getList()
+        expect(printVersions).toHaveBeenCalledWith(
+            expect.objectContaining({
+                list,
+                versionInUse,
+            }),
+        )
     })
 
-    it('Returns nothing if nothing installed', () => {
-        const versions = list(rootPath)
+    it('Returns nothing if nothing installed', async () => {
+        const versions = await list(rootPath)
         expect(versions).toEqual([])
+        expect(printVersions).not.toHaveBeenCalled()
     })
 })

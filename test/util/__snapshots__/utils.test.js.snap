@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Util functions Highlights all installed versions 1`] = `
+Array [
+  Array [
+    "highlight installed versions",
+  ],
+  Array [
+    "[33m → 1.1.0[39m",
+  ],
+  Array [
+    "[32m ✓ 1.2.0[39m",
+  ],
+  Array [
+    "[33m → 1.3.0 (Global Default)[39m",
+  ],
+  Array [
+    " - 1.4.0",
+  ],
+  Array [
+    " - 1.5.0",
+  ],
+]
+`;
+
+exports[`Util functions Highlights the default version 1`] = `
+Array [
+  Array [
+    "highlight default version",
+  ],
+  Array [
+    " - 1.1.0",
+  ],
+  Array [
+    "[32m ✓ 1.2.0[39m",
+  ],
+  Array [
+    " - 1.3.0 (Global Default)",
+  ],
+  Array [
+    " - 1.4.0",
+  ],
+  Array [
+    " - 1.5.0",
+  ],
+]
+`;
+
+exports[`Util functions Highlights the version currently in use 1`] = `
+Array [
+  Array [
+    "highlight current version",
+  ],
+  Array [
+    " - 1.1.0",
+  ],
+  Array [
+    "[32m ✓ 1.2.0[39m",
+  ],
+  Array [
+    " - 1.3.0",
+  ],
+  Array [
+    " - 1.4.0",
+  ],
+  Array [
+    " - 1.5.0",
+  ],
+]
+`;
+
+exports[`Util functions Prints all versions passed to printVersion function 1`] = `
+Array [
+  Array [
+    "print all versions",
+  ],
+  Array [
+    " - 1.1.0",
+  ],
+  Array [
+    "[32m ✓ 1.2.0[39m",
+  ],
+  Array [
+    " - 1.3.0",
+  ],
+  Array [
+    " - 1.4.0",
+  ],
+  Array [
+    " - 1.5.0",
+  ],
+]
+`;
