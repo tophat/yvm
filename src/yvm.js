@@ -97,16 +97,18 @@ argParser
         log.info('Checking for installed yarn versions...')
         const listVersions = require('./commands/list')
         listVersions()
-    })
+})
 
 argParser
     .command('get-new-path [version]')
+    .option('--shell [shell]', 'Shell used when getting PATH')
     .description(
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
-    .action(async maybeVersion => {
+    .action(async (maybeVersion, command) => {
         const [version] = await getSplitVersionAndArgs(maybeVersion)
-        const getNewPath = require('./commands/getNewPath')
+        const isFishShell = command.shell === 'fish'
+        const getNewPath = isFishShell ? require('./commands/fish/getNewFishUserPaths') : require('./commands/getNewPath')
         const { ensureVersionInstalled } = require('./commands/install')
         ensureVersionInstalled(version)
             .then(() => log.capturable(getNewPath(version)))
@@ -115,19 +117,6 @@ argParser
                 process.exit(1)
             })
     })
-
-argParser
-    .command('get-new-fish-user-path [version]')
-    .description('Internal command: Gets a new fish_user_paths string for "yvm use", installing the version if necessary')
-    .action((maybeVersion) => {
-        const [version] = getSplitVersionAndArgs(maybeVersion);
-        const getNewFishUserPaths = require('./fish/getNewFishUserPaths');
-        const { ensureVersionInstalled } = require('./commands/install')
-        ensureVersionInstalled(version).then(() => {
-            const newPath = getNewFishUserPaths(version)
-            log.capturable(newPath)
-        });
-    });
 
 argParser
     .command('set-default <version>')

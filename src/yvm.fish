@@ -10,7 +10,7 @@ function yvm
         end
 
         begin
-            set NEW_FISH_USER_PATHS (yvm_call_node_script get-new-fish-user-path $PROVIDED_VERSION)
+            set NEW_FISH_USER_PATHS (yvm_call_node_script get-new-path --shell=fish $PROVIDED_VERSION)
         end
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
