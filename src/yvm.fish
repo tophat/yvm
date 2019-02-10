@@ -54,7 +54,7 @@ function yvm
             yvm_use
         end
     else if [ "$command" = "update-self" ]
-        curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
+        env YVM_INSTALL_DIR=$YVM_DIR curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
     else if [ "$command" = "init-fish" ]
         yvm_init_fish
     else
