@@ -97,16 +97,18 @@ argParser
         log.info('Checking for installed yarn versions...')
         const listVersions = require('./commands/list')
         listVersions()
-    })
+})
 
 argParser
     .command('get-new-path [version]')
+    .option('--shell [shell]', 'Shell used when getting PATH')
     .description(
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
-    .action(async maybeVersion => {
+    .action(async (maybeVersion, command) => {
         const [version] = await getSplitVersionAndArgs(maybeVersion)
-        const getNewPath = require('./commands/getNewPath')
+        const isFishShell = command.shell === 'fish'
+        const getNewPath = isFishShell ? require('./commands/fish/getNewFishUserPath') : require('./commands/getNewPath')
         const { ensureVersionInstalled } = require('./commands/install')
         ensureVersionInstalled(version)
             .then(() => log.capturable(getNewPath(version)))
