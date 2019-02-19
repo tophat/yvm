@@ -134,23 +134,17 @@ describe('yvm valid version', () => {
         expect(await getVersionFromRange('>=1.10.0 < 1.13')).toBe('1.12.3')
     })
 
-    it('Does not accept version range', done => {
-        const failOnSuccessFor = range => version =>
-            done.fail(
-                `Should have thrown error for '${range}', got '${version}' instead`,
-            )
-        const validateErrorMessage = ({ message }) => {
-            expect(message).toContain('can not be satisfied by yarn')
-            expect(message).toContain('list of available yarn versions')
-        }
-        Promise.all(
-            ['^0.1.0', '~1.0.9', '~1.12.4', '~1.7.1'].map(range => {
-                getVersionFromRange(range)
-                    .then(failOnSuccessFor(range))
-                    .catch(validateErrorMessage)
-            }),
-        ).then(() => done())
-    })
+    it.each([['^0.1.0'], ['~1.0.9'], ['~1.12.4'], ['~1.7.1']])(
+        'Does not accept version range %s',
+        async range => {
+            try {
+                const version = await getVersionFromRange(range)
+                throw `Should have thrown error for '${range}', got '${version}' instead`
+            } catch (e) {
+                expect(e).toMatchSnapshot()
+            }
+        },
+    )
 })
 
 describe('yvm installed versions', () => {
