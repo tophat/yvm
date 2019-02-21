@@ -47,7 +47,7 @@ Yarn Version Manager
 
 Pesky yarn versions got you down? Automatically and easilly manage those versions.
 
-YVM will automatically use the correct yarn version when you run any yarn commands in any folder with a `.yvmrc` file. Otherwise, it will use you a globally set version of yarn.
+YVM will automatically use the correct yarn version when you run any yarn commands in any folder with a `package.json`, `.yvmrc` or any other [supported configuration](https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number) file. Otherwise, it will use you a globally set version of yarn.
 
 
 ## Motivation
@@ -86,6 +86,13 @@ Finally, add the following lines to your `$HOME/.zshrc` or `$HOME/.bashrc`, depe
 ```bash
 export YVM_DIR=/home/joe_user/.yvm
 [ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
+```
+
+And in your `$HOME/.config/fish/config.fish` for fishers:
+
+```fish
+set -x YVM_DIR /home/joe_user/.yvm
+. $YVM_DIR/yvm.fish
 ```
 
 ### Upgrade
@@ -141,8 +148,9 @@ Full list of available commands
 yvm help
 ```
 
-### Using a .yvmrc File
-You can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the `.yvmrc` file if no version number is supplied to the command.
+### Configuration file
+
+Yvm defaults to using the `yarn` version in your `package.json` `engines`. Otherwise you can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the config file if no version number is supplied to the command.
 You can also [declare the version using other configuration files](https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number)
 
 ### Additional reference
@@ -165,6 +173,13 @@ export YVM_DIR=/home/joe_user/.yvm
 [ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
 ```
 
+Remove in `$HOME/.config/fish/config.fish` for fishers:
+
+```fish
+set -x YVM_DIR /home/joe_user/.yvm
+. $YVM_DIR/yvm.fish
+```
+
 In case you had older version of yvm installed, there could also be a line like
 
 ```bash
@@ -184,10 +199,10 @@ We welcome contributions from the community, Top Hatters and non-Top Hatters ali
 ### Basic development flow
 
 1. Ensure the problem you are solving [is an issue](https://github.com/tophat/yvm/issues) or you've created one
-1. Clone the repo
-1. We use make. `make help` will show you a list of development commands
-1. `make install-watch` will install yvm on your shell, update when you make changes, and automatically source yvm.sh. Make sure to only run this in the root yvm directory. It will fail elsewhere.
-1. `make test` and `make lint` are also commonly helpful
+2. Clone the repo
+3. We use make. `make help` will show you a list of development commands
+4. `make install-watch` will install yvm on your shell, update when you make changes, and automatically source yvm.sh. Make sure to only run this in the root yvm directory. It will fail elsewhere.
+5. `make test` and `make lint` are also commonly helpful
 
 Make sure all changes are well documented. Our documentation can be found inside the `docs` section of this repo. Be sure to read it carefully and make modifications wherever necessary.
 You can also access the documentation on our [website](https://yvm.js.org)
