@@ -171,8 +171,10 @@
       "profile": "http://emmanuel.ogbizi.com/",
       "contributions": [
         "code",
-        "test"
+        "test",
+        "doc"
       ]
     }
-  ]
+  ],
+  "contributorsPerLine": 7
 }
