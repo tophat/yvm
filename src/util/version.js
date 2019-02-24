@@ -28,11 +28,22 @@ function getValidVersionString(version) {
     return semver.clean(version)
 }
 
+/**
+ * Get the most recent yarn install version in the specified range
+ * @param {String} versionRange the bounding yarn version range
+ * @throws if no install version can be found for range
+ */
 async function getVersionFromRange(versionRange) {
-    return (
+    const availableVersion =
         semver.maxSatisfying(getYarnVersions(), versionRange) ||
         semver.maxSatisfying(await getVersionsFromTags(), versionRange)
-    )
+    if (!availableVersion) {
+        throw new Error(
+            `Given version range can not be satisfied by yarn: ${versionRange}
+See list of available yarn versions using: 'yvm list-remote'`,
+        )
+    }
+    return availableVersion
 }
 
 function getDefaultVersion(yvmPath = defaultYvmPath) {
