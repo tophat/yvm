@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yvm valid version Does not accept version range ^0.1.0 1`] = `
+[Error: Given version range can not be satisfied by yarn: ^0.1.0
+See list of available yarn versions using: 'yvm list-remote']
+`;
+
+exports[`yvm valid version Does not accept version range ~1.0.9 1`] = `
+[Error: Given version range can not be satisfied by yarn: ~1.0.9
+See list of available yarn versions using: 'yvm list-remote']
+`;
+
+exports[`yvm valid version Does not accept version range ~1.7.1 1`] = `
+[Error: Given version range can not be satisfied by yarn: ~1.7.1
+See list of available yarn versions using: 'yvm list-remote']
+`;
+
+exports[`yvm valid version Does not accept version range ~1.12.4 1`] = `
+[Error: Given version range can not be satisfied by yarn: ~1.12.4
+See list of available yarn versions using: 'yvm list-remote']
+`;

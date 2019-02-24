@@ -20,5 +20,5 @@ Try opening another terminal window, or type `source ~/.yvm/yvm.sh`.
 
 
 ## Declare yvm version in a configuration file. Where can I place my version number?
-You can set your version number in your `package.json` under the key `yvm` or in any file named: `.yvmrc`, `.yvmrc.json`, `.yvmrc.yaml`, `.yvmrc.yml`, `.yvmrc.js`, or `yvm.config.js`.
+You can set your version number or [range](https://semver.org/) in your `package.json` `engines.yarn` prop or in any file named: `.yvmrc`, `.yvmrc.json`, `.yvmrc.yaml`, `.yvmrc.yml`, `.yvmrc.js`, or `yvm.config.js`.
 The files will be searched in the current directory, and then up the tree.
