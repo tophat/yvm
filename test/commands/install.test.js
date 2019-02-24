@@ -20,6 +20,7 @@ const log = require('../../src/util/log')
 jest.mock('../../src/util/log')
 jest.mock('../../src/util/path', () => ({ yvmPath: '/tmp/yvmInstall' }))
 const downloadFile = jest.spyOn(download, 'downloadFile')
+jest.setTimeout(10000)
 
 describe('yvm install', () => {
     const rootPath = path.yvmPath
@@ -133,7 +134,7 @@ describe('yvm install', () => {
             ).toBeTruthy()
             downloadFile.mockClear()
             await ensureVersionInstalled(version, rootPath)
-            expect(downloadFile).not.toBeCalled()
+            expect(downloadFile).not.toHaveBeenCalled()
         })
     })
 
