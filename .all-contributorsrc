@@ -171,8 +171,19 @@
       "profile": "http://emmanuel.ogbizi.com/",
       "contributions": [
         "code",
-        "test"
+        "test",
+        "doc"
+      ]
+    },
+    {
+      "login": "eastenluis",
+      "name": "Martin Lai",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2723622?v=4",
+      "profile": "https://github.com/eastenluis",
+      "contributions": [
+        "code"
       ]
     }
-  ]
+  ],
+  "contributorsPerLine": 7
 }
