@@ -50,7 +50,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.5.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^22.0.0",
+    "eslint-plugin-jest": "^22.3.0",
     "eslint-plugin-prettier": "^3.0.0",
     "gh-release": "^3.4.0",
     "git-cz": "^1.8.0",
