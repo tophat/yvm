@@ -1,7 +1,7 @@
-#!/bin/bash -e
+#!/bin/bash
 
 GREEN='\033[0;32m'
-RED='\031[0;32m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 
@@ -23,11 +23,10 @@ fail() {
 }
 
 source ~/.yvm/yvm.sh
-YVM=~/.yvm/yvm.sh
 
 testing "yvm exec version command"
-${YVM} install 1.11.0
-test1_output=$(${YVM} exec 1.11.0 --version)
+yvm install 1.11.0
+test1_output=$(yvm exec 1.11.0 --version)
 if [[ ${test1_output} == "1.11.0" ]]; then
     pass
 else
@@ -35,9 +34,9 @@ else
 fi
 
 testing "yvm use"
-${YVM} install 1.7.0
-yvm_use # in place of yvm use
-test2_output=$(${YVM} exec --version)
+yvm install 1.7.0
+yvm use
+test2_output=$(yvm exec --version)
 if [[ ${test2_output} == "1.7.0" ]]; then
     pass
 else
