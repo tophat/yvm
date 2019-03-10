@@ -15,8 +15,7 @@ const yvmInstalledVersion = (inYvmPath = yvmPath) => {
         }
         return version
     } catch (e) {
-        log('Unable to determine installed version')
-        log(e)
+        log.info(e)
         return undefined
     }
 }
