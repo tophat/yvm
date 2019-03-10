@@ -34,7 +34,7 @@ function yvm
         node "$YVM_DIR/yvm.js" $argv
     end
 
-    function yvm_init_fish
+    function yvm_init_sh
         if not type -q "node"
             yvm_err "%s\n" "YVM Could not automatically set yarn version."
             yvm_err "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
@@ -55,11 +55,11 @@ function yvm
         end
     else if [ "$command" = "update-self" ]
         env YVM_INSTALL_DIR=$YVM_DIR curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
-    else if [ "$command" = "init-fish" ]
-        yvm_init_fish
+    else if [ "$command" = "init-sh" ]
+        yvm_init_sh
     else
         yvm_call_node_script $argv[1..-1]
     end
 end
 
-yvm init-fish
+yvm init-sh
