@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yvm installed version logs reason for failure if verbose is true 1`] = `
+Array [
+  [Error: ENOENT: no such file or directory, open '/mock-yvm-root-dir/.version'],
+]
+`;
