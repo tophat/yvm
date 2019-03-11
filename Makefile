@@ -8,7 +8,7 @@ ifdef CI
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--frozen-lockfile --ci
-    YARN=$(HOME)/.yvm/yvm.sh exec
+    YARN=. $(HOME)/.yvm/yvm.sh && yvm exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
