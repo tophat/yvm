@@ -34,10 +34,10 @@ else
 fi
 
 testing "yvm use"
-yvm install 1.7.0
-yvm use
+yvm install 1.13.0
+yvm use 1.13.0
 test2_output=$(yvm exec --version)
-if [[ ${test2_output} == "1.7.0" ]]; then
+if [[ ${test2_output} == "1.13.0" ]]; then
     pass
 else
     fail ${test2_output}
@@ -45,7 +45,7 @@ fi
 
 testing "yvm use set yarn"
 test3_output=$(yarn --version)
-if [[ ${test3_output} == "1.7.0" ]]; then
+if [[ ${test3_output} == "1.13.0" ]]; then
     pass
 else
     fail ${test3_output}
