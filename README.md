@@ -62,12 +62,12 @@ Node: >=8.0.0
 Execute the following in your terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | node
 ```
 
 Or to install a specific version:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | INSTALL_VERSION="v0.9.26" bash
+curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | INSTALL_VERSION="v0.9.26" node
 ```
 
 ### Manual installation

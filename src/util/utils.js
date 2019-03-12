@@ -1,6 +1,7 @@
 const path = require('path')
 const request = require('request')
 
+const { USER_AGENT } = require('./constants')
 const log = require('./log')
 
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
@@ -15,7 +16,7 @@ const getReleasesFromTags = () => {
     const options = {
         url: 'https://d236jo9e8rrdox.cloudfront.net/yarn-releases',
         headers: {
-            'User-Agent': 'YVM',
+            'User-Agent': USER_AGENT,
         },
     }
 
