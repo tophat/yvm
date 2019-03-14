@@ -51,3 +51,6 @@ yvm() {
 }
 
 yvm init-sh
+if [ -n "$*" ]; then
+    yvm $@
+fi
