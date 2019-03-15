@@ -12,7 +12,7 @@ err_report_missing_dependency() {
 
 trap 'err_report $LINENO' ERR
 
-INSTALL_DEPENDENCIES=( "unzips" "curl" )
+INSTALL_DEPENDENCIES=( "unzip" "curl" )
 
 for package in "${INSTALL_DEPENDENCIES[@]}"
 do
