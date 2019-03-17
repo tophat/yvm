@@ -16,7 +16,7 @@ INSTALL_DEPENDENCIES=( "unzip" "curl" )
 
 for package in "${INSTALL_DEPENDENCIES[@]}"
 do
-    if [ ! `eval "$package -v"` ]; then
+    if [ ! `eval "$package --version"` ]; then
         err_report_missing_dependency $package
         exit 1
     fi
