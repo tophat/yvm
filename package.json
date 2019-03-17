@@ -21,7 +21,9 @@
       "./node_modules_production/"
     ],
     "coverageDirectory": "./artifacts/coverage",
-    "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
+    "setupFilesAfterEnv": [
+        "./test/setupTestFramework.js"
+    ]
   },
   "author": "Top Hat <opensource@tophat.com>",
   "license": "Apache-2.0",
