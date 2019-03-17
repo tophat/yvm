@@ -16,6 +16,7 @@ const stripVersionPrefix = tagName =>
 const getRequest = memoize(async url => {
     const options = {
         url,
+        gzip: true,
         headers: {
             'User-Agent': USER_AGENT,
         },
