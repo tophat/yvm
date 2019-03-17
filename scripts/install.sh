@@ -7,7 +7,7 @@ err_report() {
 }
 
 err_report_missing_dependency() {
-    echo "The install cannot proceed due to a missing dependency. \"${1}\" is not installed."
+    echo "The install cannot proceed due to a missing dependency. \"${1}\" is not installed or available in your PATH."
 }
 
 trap 'err_report $LINENO' ERR
