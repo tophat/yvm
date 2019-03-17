@@ -1,16 +1,15 @@
 const path = require('path')
 const childProcess = require('child_process')
 
-const { ensureVersionInstalled } = require('./commands/install')
-const { getSplitVersionAndArgs } = require('./util/version')
-const log = require('./util/log')
-const { yvmPath } = require('./util/path')
+const { ensureVersionInstalled } = require('./install')
+const { getSplitVersionAndArgs } = require('../util/version')
+const log = require('../util/log')
+const { yvmPath } = require('../util/path')
 
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
 
-const runYarn = (version, extraArgs, rootPath) => {
-    // first two arguments are filler args [node version, yarn version]
+const runYarn = (version, extraArgs = ['-v'], rootPath = yvmPath) => {
     process.argv = ['', ''].concat(extraArgs)
     const filePath = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
     const command = `${filePath} ${extraArgs.join(' ')}`
@@ -30,15 +29,16 @@ const runYarn = (version, extraArgs, rootPath) => {
     }
 }
 
-const execCommand = (version, extraArgs = ['-v'], rootPath = yvmPath) =>
-    ensureVersionInstalled(version, rootPath).then(() =>
-        runYarn(version, extraArgs, rootPath),
-    )
-
-const [, , maybeVersionArg, ...rest] = process.argv
-getSplitVersionAndArgs(maybeVersionArg, ...rest)
-    .then(args => execCommand(...args))
-    .catch(err => {
-        log(err.message)
+const execCommand = async (maybeVersion, rest) => {
+    try {
+        const args = await getSplitVersionAndArgs(maybeVersion, ...rest)
+        await ensureVersionInstalled(args[0])
+        await runYarn(...args)
+    } catch (e) {
+        log(e.message)
+        log.info(e.stack)
         process.exit(1)
-    })
+    }
+}
+
+module.exports = execCommand

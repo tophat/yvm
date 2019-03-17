@@ -6,23 +6,21 @@ const {
     printVersions,
 } = require('../util/version')
 
-const listRemoteCommand = () => {
+const listRemoteCommand = async () => {
     log.info('list-remote')
-    return Promise.all([
-        getVersionsFromTags(),
-        getVersionInUse(),
-        getYarnVersions(),
-    ])
-        .then(results => {
-            const [remoteVersions, versionInUse, localVersions] = results
-            printVersions({
-                list: remoteVersions,
-                message: 'Versions available for install:',
-                versionInUse,
-                localVersions,
-            })
+    try {
+        const [remoteVersions, versionInUse, localVersions] = await Promise.all(
+            [getVersionsFromTags(), getVersionInUse(), getYarnVersions()],
+        )
+        await printVersions({
+            list: remoteVersions,
+            message: 'Versions available for install:',
+            versionInUse,
+            localVersions,
         })
-        .catch(e => log.error(e))
+    } catch (e) {
+        log.error(e)
+    }
 }
 
 module.exports = listRemoteCommand

@@ -1,8 +1,8 @@
 const fs = require('fs')
-const path = require('path')
 const semver = require('semver')
 const { execSync } = require('child_process')
 const cosmiconfig = require('cosmiconfig')
+const memoize = require('lodash.memoize')
 
 const log = require('./log')
 const { yvmPath: defaultYvmPath } = require('./path')
@@ -11,76 +11,76 @@ const {
     stripVersionPrefix,
     versionRootPath,
 } = require('./utils')
+const alias = require('./alias')
 
 const DEFAULT_VERSION_TEXT = 'Global Default'
 const VERSION_IN_USE_SYMBOL = '\u2713'
 const VERSION_INSTALLED_SYMBOL = '\u2192'
 
-function isValidVersionString(version) {
-    return semver.valid(version.trim()) !== null
-}
-
-function isValidVersionRange(versionRange) {
+const isValidVersionString = version => semver.valid(version.trim()) !== null
+const isValidVersionRange = versionRange => {
     return semver.validRange(versionRange.trim()) !== null
 }
-
-function getValidVersionString(version) {
-    return semver.clean(version)
-}
+const getValidVersionString = version => semver.clean(version)
 
 /**
  * Get the most recent yarn install version in the specified range
  * @param {String} versionRange the bounding yarn version range
  * @throws if no install version can be found for range
  */
-async function getVersionFromRange(versionRange) {
+const getVersionFromRange = memoize(async versionRange => {
     const availableVersion =
         semver.maxSatisfying(getYarnVersions(), versionRange) ||
         semver.maxSatisfying(await getVersionsFromTags(), versionRange)
     if (!availableVersion) {
         throw new Error(
-            `Given version range can not be satisfied by yarn: ${versionRange}
+            `Given version can not be satisfied by yarn: ${versionRange}
 See list of available yarn versions using: 'yvm list-remote'`,
         )
     }
     return availableVersion
-}
+})
 
-function getDefaultVersion(yvmPath = defaultYvmPath) {
-    const versionStoragePath = path.join(yvmPath, '.default-version')
-    try {
-        const versionJSONString = fs.readFileSync(versionStoragePath, 'utf8')
-        const versionJSON = JSON.parse(versionJSONString)
-        const version = versionJSON.defaultVersion
-        if (!version) {
-            throw new Error(
-                `Version JSON exists but contains no key 'defaultVersion'`,
-            )
+const resolveVersion = memoize(
+    async ({ versionString, yvmPath = defaultYvmPath }) => {
+        const { version } = await alias.resolveAlias({ versionString, yvmPath })
+        if (version) {
+            const validVersion = isValidVersionString(version)
+            const validVersionRange = isValidVersionRange(version)
+            if (validVersion || validVersionRange) {
+                return await getVersionFromRange(version)
+            }
+            if (alias.isReserved(version)) {
+                return await alias.resolveReserved(version, { yvmPath })
+            }
         }
-        return version
+        throw new Error(`Unable to resolve: ${versionString}`)
+    },
+)
+
+const getDefaultVersion = async (yvmPath = defaultYvmPath) => {
+    try {
+        return await resolveVersion({
+            versionString: alias.DEFAULT,
+            yvmPath,
+        })
     } catch (e) {
-        log.info('Unable to determine default version')
         log.info(e)
-        return undefined
     }
 }
 
-function setDefaultVersion({ version, yvmPath = defaultYvmPath }) {
-    const versionStoragePath = path.join(yvmPath, '.default-version')
-
-    const jsonObject = { defaultVersion: version }
-    const content = JSON.stringify(jsonObject)
+const setDefaultVersion = async ({ version, yvmPath = defaultYvmPath }) => {
     try {
-        fs.writeFileSync(versionStoragePath, content)
+        await alias.setAlias({ name: alias.DEFAULT, version, yvmPath })
         return true
     } catch (e) {
         log('Unable to set default version')
-        log(e)
+        log.info(e)
         return false
     }
 }
 
-function getRcFileVersion() {
+const getRcFileVersion = () => {
     const moduleName = 'yvm'
     const explorer = cosmiconfig(moduleName, {
         packageProp: 'engines.yarn',
@@ -103,16 +103,16 @@ function getRcFileVersion() {
     return String(result.config)
 }
 
-async function getVersionInUse() {
+const getVersionInUse = memoize(async () => {
     try {
         return String(execSync('yarn --version')).trim()
     } catch (error) {
         log.info(error)
         return ''
     }
-}
+})
 
-function getYarnVersions(yvmPath = defaultYvmPath) {
+const getYarnVersions = memoize((yvmPath = defaultYvmPath) => {
     const versionsPath = versionRootPath(yvmPath)
     if (fs.existsSync(versionsPath)) {
         const files = fs.readdirSync(versionsPath)
@@ -121,36 +121,36 @@ function getYarnVersions(yvmPath = defaultYvmPath) {
             .map(stripVersionPrefix)
     }
     return []
-}
+})
 
-// eslint-disable-next-line consistent-return
 const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
-    if (maybeVersionArg) {
-        const parsedVersionString = getValidVersionString(maybeVersionArg)
-        if (parsedVersionString) {
-            log.info(`Using provided version: ${maybeVersionArg}`)
-            return [parsedVersionString, rest]
-        }
-    }
-
-    rest.unshift(maybeVersionArg)
-
     try {
+        if (maybeVersionArg) {
+            log.info(`Attempting to resolve ${maybeVersionArg}.`)
+            const parsedVersionString = await resolveVersion({
+                versionString: maybeVersionArg,
+            }).catch(e => {
+                log.info(e.message)
+                log.info(e.stack)
+                return undefined
+            })
+            if (parsedVersionString) {
+                log.info(`Using provided version: ${parsedVersionString}`)
+                return [parsedVersionString, rest]
+            }
+        }
+
+        rest.unshift(maybeVersionArg)
         const rcVersion = getRcFileVersion()
         let versionToUse
         if (rcVersion) {
-            const validVersion = isValidVersionString(rcVersion)
-            const validVersionRange = isValidVersionRange(rcVersion)
-            if (!validVersion && !validVersionRange) {
-                throw new Error(
-                    `Invalid yarn version found in config: ${rcVersion}`,
-                )
-            }
-            versionToUse = validVersion
-                ? getValidVersionString(rcVersion)
-                : await getVersionFromRange(rcVersion)
+            log.info(`Resolving version '${rcVersion}' found in config`)
+            versionToUse = await resolveVersion({
+                versionString: rcVersion,
+            })
         } else {
-            versionToUse = getDefaultVersion()
+            log.info(`Attempting to use default version.`)
+            versionToUse = await getDefaultVersion()
         }
 
         if (!versionToUse) {
@@ -166,20 +166,22 @@ Try:
         return [versionToUse, rest]
     } catch (e) {
         log.error(e.message)
+        log.info(e.stack)
         process.exit(1)
     }
 }
 
-const printVersions = ({
+const printVersions = async ({
     list,
     message,
     versionInUse = '',
-    defaultVersion = getDefaultVersion(defaultYvmPath),
+    defaultVersion,
     localVersions = [],
 }) => {
     log(message)
 
     versionInUse = versionInUse.trim()
+    defaultVersion = defaultVersion || (await getDefaultVersion(defaultYvmPath))
 
     const versionsMap = {}
 
@@ -210,9 +212,9 @@ module.exports = {
     DEFAULT_VERSION_TEXT,
     VERSION_IN_USE_SYMBOL,
     VERSION_INSTALLED_SYMBOL,
+    getDefaultVersion,
     getRcFileVersion,
     getSplitVersionAndArgs,
-    getDefaultVersion,
     getValidVersionString,
     getVersionFromRange,
     getVersionInUse,
@@ -220,5 +222,6 @@ module.exports = {
     isValidVersionRange,
     isValidVersionString,
     printVersions,
+    resolveVersion,
     setDefaultVersion,
 }

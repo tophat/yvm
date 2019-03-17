@@ -3,15 +3,12 @@ const openpgp = require('openpgp')
 const path = require('path')
 const targz = require('targz')
 
+const alias = require('../util/alias')
 const { downloadFile } = require('../util/download')
 const log = require('../util/log')
-const {
-    versionRootPath,
-    getExtractionPath,
-    getReleasesFromTags,
-    getVersionsFromTags,
-} = require('../util/utils')
 const { yvmPath } = require('../util/path')
+const { versionRootPath, getExtractionPath } = require('../util/utils')
+const { resolveVersion } = require('../util/version')
 
 const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
@@ -118,7 +115,14 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = async ({ version, rootPath = yvmPath }) => {
+const installVersion = async ({
+    version: versionString,
+    rootPath = yvmPath,
+}) => {
+    const version = await resolveVersion({
+        versionString,
+        yvmPath: rootPath,
+    })
     if (!fs.existsSync(versionRootPath(rootPath))) {
         fs.mkdirSync(versionRootPath(rootPath))
     }
@@ -126,14 +130,6 @@ const installVersion = async ({ version, rootPath = yvmPath }) => {
     if (isVersionInstalled(version, rootPath)) {
         log(`It looks like you already have yarn ${version} installed...`)
         return
-    }
-
-    const releases = await getReleasesFromTags()
-    if (!releases.hasOwnProperty(version)) {
-        log(
-            'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
-        )
-        throw new Error('Invalid version number provided')
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
@@ -155,9 +151,8 @@ const installVersion = async ({ version, rootPath = yvmPath }) => {
     log('Installation successful')
 }
 
-const installLatest = async (options = {}) => {
-    const [latestVersion] = await getVersionsFromTags()
-    await installVersion(Object.assign(options, { version: latestVersion }))
+const installLatest = async ({ rootPath = yvmPath } = {}) => {
+    await installVersion({ rootPath, version: alias.LATEST })
 }
 
 const ensureVersionInstalled = async (version, rootPath = yvmPath) => {

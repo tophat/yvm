@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`alias resolveAliases does not crash on cyclic alias dependancy 1`] = `
+Array [
+  Object {
+    "name": "default",
+    "value": Object {
+      "value": "stable",
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "one",
+    "value": Object {
+      "value": "zero",
+      "version": undefined,
+    },
+  },
+  Object {
+    "name": "two",
+    "value": Object {
+      "value": "one",
+      "version": undefined,
+    },
+  },
+  Object {
+    "name": "zero",
+    "value": Object {
+      "value": "two",
+      "version": undefined,
+    },
+  },
+  Object {
+    "name": "latest",
+    "value": Object {
+      "value": undefined,
+      "version": "latest",
+    },
+  },
+  Object {
+    "name": "stable",
+    "value": Object {
+      "value": undefined,
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "system",
+    "value": Object {
+      "value": undefined,
+      "version": "system",
+    },
+  },
+]
+`;
+
+exports[`alias resolveAliases matches all aliases on empty pattern 1`] = `
+Array [
+  Object {
+    "name": "default",
+    "value": Object {
+      "value": "stable",
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "one",
+    "value": Object {
+      "value": "zero",
+      "version": "1.8.0",
+    },
+  },
+  Object {
+    "name": "zero",
+    "value": Object {
+      "value": "1.8.0",
+      "version": "1.8.0",
+    },
+  },
+  Object {
+    "name": "two",
+    "value": Object {
+      "value": "one",
+      "version": "1.8.0",
+    },
+  },
+  Object {
+    "name": "latest",
+    "value": Object {
+      "value": undefined,
+      "version": "latest",
+    },
+  },
+  Object {
+    "name": "stable",
+    "value": Object {
+      "value": undefined,
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "system",
+    "value": Object {
+      "value": undefined,
+      "version": "system",
+    },
+  },
+]
+`;

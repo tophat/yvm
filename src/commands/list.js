@@ -10,7 +10,7 @@ const listVersions = async rootPath => {
     if (installedVersions.length) {
         const versionInUse = await getVersionInUse()
         const message = 'Installed yarn versions:'
-        printVersions({
+        await printVersions({
             list: installedVersions,
             message,
             versionInUse,

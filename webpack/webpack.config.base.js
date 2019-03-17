@@ -9,7 +9,6 @@ module.exports = {
     mode: 'production',
     entry: {
         yvm: ['@babel/polyfill', './src/yvm.js'],
-        'yvm-exec': ['@babel/polyfill', './src/yvm-exec.js'],
     },
     externals: [nodeExternals()],
     output: {
