@@ -44,19 +44,21 @@ argParser
     .description(messageOptionalVersion`Install the specified version of Yarn`)
     .action(async (maybeVersion, command) => {
         const { installVersion } = require('./commands/install')
-        const handleError = error => {
-            log.error(error)
+        try {
+            let version = maybeVersion
+            if (command.stable) {
+                version = alias.STABLE
+            } else if (command.latest) {
+                version = alias.LATEST
+            } else if (!version) {
+                version = (await getSplitVersionAndArgs())[0]
+            }
+            installVersion({ version })
+        } catch (e) {
+            log(e.message)
+            log.info(e.stack)
             process.exit(1)
         }
-        let version = maybeVersion
-        if (command.stable) {
-            version = alias.STABLE
-        } else if (command.latest) {
-            version = alias.LATEST
-        } else if (!version) {
-            version = await getSplitVersionAndArgs()[0]
-        }
-        installVersion({ version }).catch(handleError)
     })
 
 const uninstallVersion = async version => {
@@ -137,15 +139,16 @@ argParser
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
     .action(async (maybeVersion, { shell }) => {
-        const [version] = await getSplitVersionAndArgs(maybeVersion)
-        const getNewPath = require('./commands/getNewPath')
-        const { ensureVersionInstalled } = require('./commands/install')
-        ensureVersionInstalled(version)
-            .then(() => log.capturable(getNewPath({ version, shell })))
-            .catch(error => {
-                log.error(error)
-                process.exit(1)
-            })
+        try {
+            const [version] = await getSplitVersionAndArgs(maybeVersion)
+            const getNewPath = require('./commands/getNewPath')
+            const { ensureVersionInstalled } = require('./commands/install')
+            await ensureVersionInstalled(version)
+            log.capturable(getNewPath({ version, shell }))
+        } catch (error) {
+            log.error(error)
+            process.exit(1)
+        }
     })
 
 argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')

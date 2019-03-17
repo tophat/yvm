@@ -1,6 +1,7 @@
 const mockFS = require('mock-fs')
 const childProcess = require('child_process')
 const execSync = jest.spyOn(childProcess, 'execSync')
+
 const alias = require('../../src/util/alias')
 const log = require('../../src/util/log')
 const path = require('../../src/util/path')
@@ -89,14 +90,14 @@ describe('yvm config version', () => {
     })
 
     it('Uses supplied version if valid', async () => {
-        const version = '1.1.0'
+        const version = '1.9.4'
         const [parsedVersion] = await getSplitVersionAndArgs(`v${version}`)
         expect(parsedVersion).toEqual(version)
     })
     it('Uses valid version from config', async () => {
-        mockRC('1.1.0')
+        mockRC('1.9.4')
         const [parsedVersion] = await getSplitVersionAndArgs()
-        expect(parsedVersion).toEqual('1.1.0')
+        expect(parsedVersion).toEqual('1.9.4')
     })
     it('Uses valid range from config', async () => {
         mockRC(`'>=1.10.0 < 1.13'`)
@@ -105,23 +106,21 @@ describe('yvm config version', () => {
     })
     it('Logs error when supplied invalid version and uses config', async () => {
         jest.spyOn(log, 'info')
-        mockRC('1.1.0')
+        mockRC('1.9.4')
         resolveVersion.cache.clear()
         const [parsedVersion] = await getSplitVersionAndArgs('va1.3.1')
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining('Unable to resolve'),
         )
-        expect(parsedVersion).toEqual('1.1.0')
+        expect(parsedVersion).toEqual('1.9.4')
     })
     it('Logs error when getting invalid version config', async () => {
-        jest.spyOn(process, 'exit').mockImplementation(() => {})
         jest.spyOn(log, 'error')
         mockRC('va0.3.1')
-        await getSplitVersionAndArgs()
+        await getSplitVersionAndArgs().catch(() => {})
         expect(log.error).toHaveBeenCalledWith(
             expect.stringContaining('Unable to resolve'),
         )
-        process.exit.mockRestore()
     })
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
@@ -134,16 +133,16 @@ describe('yvm config version', () => {
         const [parsedVersion] = await getSplitVersionAndArgs()
         expect(parsedVersion).toEqual(mockVersion)
     })
-    it('Logs error when unable to parse or find any version', async () => {
-        jest.spyOn(process, 'exit').mockImplementation(() => {})
+    it('Throws error when unable to parse or find any version', async () => {
         jest.spyOn(log, 'error')
         mockRC('')
-        setDefaultVersion({ version: null })
-        await getSplitVersionAndArgs('va0.1.1')
-        expect(log.error).toHaveBeenCalledWith(
-            expect.stringContaining('No yarn version supplied'),
-        )
-        process.exit.mockRestore()
+        try {
+            await getSplitVersionAndArgs('va0.1.1')
+        } catch (e) {
+            expect(e.message).toEqual(
+                expect.stringContaining('No yarn version supplied'),
+            )
+        }
     })
 })
 

@@ -31,9 +31,12 @@ const runYarn = (version, extraArgs = ['-v'], rootPath = yvmPath) => {
 
 const execCommand = async (maybeVersion, rest) => {
     try {
-        const args = await getSplitVersionAndArgs(maybeVersion, ...rest)
-        await ensureVersionInstalled(args[0])
-        await runYarn(...args)
+        const [version, args] = await getSplitVersionAndArgs(
+            maybeVersion,
+            ...rest,
+        )
+        await ensureVersionInstalled(version)
+        await runYarn(version, args)
     } catch (e) {
         log(e.message)
         log.info(e.stack)

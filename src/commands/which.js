@@ -14,8 +14,12 @@ const { yvmPath } = require('../util/path')
 const whichCommand = async ({ version, rootPath = yvmPath }) => {
     let versionToUse = getValidVersionString(version || '')
     if (!versionToUse) {
-        const [commandVersion] = await getSplitVersionAndArgs(version)
-        versionToUse = commandVersion
+        try {
+            const [commandVersion] = await getSplitVersionAndArgs(version)
+            versionToUse = commandVersion
+        } catch (e) {
+            log.info(e.message)
+        }
     }
     if (!versionToUse) {
         versionToUse = await getVersionInUse()

@@ -124,6 +124,7 @@ const getYarnVersions = memoize((yvmPath = defaultYvmPath) => {
 })
 
 const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
+    let versionToUse
     try {
         if (maybeVersionArg) {
             log.info(`Attempting to resolve ${maybeVersionArg}.`)
@@ -132,7 +133,6 @@ const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
             }).catch(e => {
                 log.info(e.message)
                 log.info(e.stack)
-                return undefined
             })
             if (parsedVersionString) {
                 log.info(`Using provided version: ${parsedVersionString}`)
@@ -142,7 +142,6 @@ const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
 
         rest.unshift(maybeVersionArg)
         const rcVersion = getRcFileVersion()
-        let versionToUse
         if (rcVersion) {
             log.info(`Resolving version '${rcVersion}' found in config`)
             versionToUse = await resolveVersion({
@@ -152,23 +151,22 @@ const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
             log.info(`Attempting to use default version.`)
             versionToUse = await getDefaultVersion()
         }
+    } catch (e) {
+        log.error(e.message)
+        log.info(e.stack)
+    }
 
-        if (!versionToUse) {
-            throw new Error(
-                `No yarn version supplied!
+    if (!versionToUse) {
+        throw new Error(
+            `No yarn version supplied!
 Try:
     Setting a global default version (yvm set-default 1.9.2)
     Adding .yvmrc file in this directory or a parent directory
     Specify your version in the command.`,
-            )
-        }
-        log.info(`Using yarn version: ${versionToUse}`)
-        return [versionToUse, rest]
-    } catch (e) {
-        log.error(e.message)
-        log.info(e.stack)
-        process.exit(1)
+        )
     }
+    log.info(`Using yarn version: ${versionToUse}`)
+    return [versionToUse, rest]
 }
 
 const printVersions = async ({
