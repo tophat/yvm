@@ -6,7 +6,21 @@ err_report() {
     echo "yvm failed to install, the command that failed was: https://github.com/tophat/yvm/blob/master/scripts/install.sh#L${1}"
 }
 
+err_report_missing_dependency() {
+    echo "The install cannot proceed due to a missing dependency. \"${1}\" is not installed or available in your PATH."
+}
+
 trap 'err_report $LINENO' ERR
+
+INSTALL_DEPENDENCIES=( "unzip" "curl" )
+
+for package in "${INSTALL_DEPENDENCIES[@]}"
+do
+    if [ ! `eval "command -v $package"` ]; then
+        err_report_missing_dependency $package
+        exit 1
+    fi
+done
 
 USE_LOCAL=${USE_LOCAL-false}
 
