@@ -455,6 +455,7 @@ describe('alias', () => {
         const inputCases = [
             ['current', '^1.1', '1.13.0'],
             ['installed', '1.3', '1.3.0'],
+            ['available', '1.5', '1.5.0'],
             ['unavailable', '1.1', '1.1.0'],
             ['undefined', '1.2.0', undefined],
             [alias.STABLE, undefined, '1.13.0'],
