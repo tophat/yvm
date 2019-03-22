@@ -1,12 +1,12 @@
 const fs = require('fs')
 const { execSync } = require('child_process')
 const path = require('path')
+const chalk = require('chalk')
 const memoize = require('lodash.memoize')
 
 const log = require('./log')
-const { getPathEntries, yvmPath: defaultYvmPath } = require('./path')
-
 const { getRequest, getVersionsFromTags } = require('./utils')
+const { getPathEntries, yvmPath: defaultYvmPath } = require('./path')
 
 const STORAGE_FILE = '.aliases'
 
@@ -226,6 +226,42 @@ const resolveMatchingAliases = memoize(
     },
 )
 
+const getFormatter = (allVersions, installedVersions, currentVersion) => (
+    name,
+    version,
+    target,
+) => {
+    const defaultStyler = chalk.grey
+    let termStyler = defaultStyler
+    const isAvailable = allVersions.includes(target)
+    if (target === currentVersion) {
+        termStyler = chalk.green
+    } else if (installedVersions.includes(target)) {
+        termStyler = chalk.yellow
+    } else if (isAvailable) {
+        termStyler = chalk.white
+    } else {
+        termStyler = chalk.red
+    }
+    if (isReserved(name)) {
+        termStyler = termStyler.bold
+    }
+    const parts = [termStyler(name), ' → ']
+    const targetVersion = termStyler(isAvailable ? target : NOT_AVAILABLE)
+    if (version) {
+        parts.push(
+            chalk.white(version),
+            ' (',
+            termStyler(isAvailable ? target : NOT_AVAILABLE),
+            ')',
+        )
+    } else {
+        parts.push(targetVersion)
+    }
+
+    return defaultStyler(parts.join(''))
+}
+
 module.exports = {
     DEFAULT,
     LATEST,
@@ -236,6 +272,7 @@ module.exports = {
     SYSTEM,
     UNRESOLVED,
     getDefaultAliases,
+    getFormatter,
     getMatchingAliases,
     getUserAliases,
     isReserved,

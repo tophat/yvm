@@ -1,18 +1,6 @@
 const argParser = require('commander')
-const chalk = require('chalk')
 
 const log = require('./util/log')
-const alias = require('./util/alias')
-const {
-    getDefaultVersion,
-    getSplitVersionAndArgs,
-    getVersionInUse,
-    getYarnVersions,
-    resolveVersion,
-    setDefaultVersion,
-} = require('./util/version')
-const { getVersionsFromTags } = require('./util/utils')
-const { yvmInstalledVersion } = require('./util/yvmInstalledVersion')
 
 const messageNoYvm = 'Unable to determine yvm version'
 const messageSourceYvm =
@@ -24,6 +12,7 @@ argParser.description('Yarn Version Manager')
 argParser.addImplicitHelpCommand = () => {}
 
 if (!process.argv.includes('exec')) {
+    const { yvmInstalledVersion } = require('./util/yvmInstalledVersion')
     argParser.version(yvmInstalledVersion() || messageNoYvm)
     argParser
         .command('*', '', { noHelp: true, isDefault: true })
@@ -43,6 +32,8 @@ argParser
     .option('-s, --stable', signPosting`install stable`)
     .description(messageOptionalVersion`Install the specified version of Yarn`)
     .action(async (maybeVersion, command) => {
+        const alias = require('./util/alias')
+        const { getSplitVersionAndArgs } = require('./util/version')
         const { installVersion } = require('./commands/install')
         try {
             let version = maybeVersion
@@ -139,6 +130,7 @@ argParser
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
     .action(async (maybeVersion, { shell }) => {
+        const { getSplitVersionAndArgs } = require('./util/version')
         try {
             const [version] = await getSplitVersionAndArgs(maybeVersion)
             const getNewPath = require('./commands/getNewPath')
@@ -158,42 +150,19 @@ argParser.command(
 )
 argParser.command('alias', '', { noHelp: true }).action(async () => {
     const [, , , nameOrPattern, maybeVersion] = process.argv
-    const installedVersions = getYarnVersions()
-    const currentVersion = await getVersionInUse()
-    const allVersions = await getVersionsFromTags()
+    const alias = require('./util/alias')
+    const {
+        getVersionInUse,
+        getYarnVersions,
+        resolveVersion,
+    } = require('./util/version')
+    const { getVersionsFromTags } = require('./util/utils')
 
-    const format = (name, version, target) => {
-        let termStyler = chalk.grey
-        const isAvailable = allVersions.includes(target)
-        if (target === currentVersion) {
-            termStyler = chalk.green
-        } else if (installedVersions.includes(target)) {
-            termStyler = chalk.yellow
-        } else if (isAvailable) {
-            termStyler = chalk.white
-        } else {
-            termStyler = chalk.red
-        }
-        if (alias.isReserved(name)) {
-            termStyler = termStyler.bold
-        }
-        const parts = [termStyler(name), ' → ']
-        const targetVersion = termStyler(
-            isAvailable ? target : alias.NOT_AVAILABLE,
-        )
-        if (version) {
-            parts.push(
-                chalk.white(version),
-                ' (',
-                termStyler(isAvailable ? target : alias.NOT_AVAILABLE),
-                ')',
-            )
-        } else {
-            parts.push(targetVersion)
-        }
-
-        return parts.join('')
-    }
+    const format = alias.getFormatter(
+        await getVersionsFromTags(),
+        getYarnVersions(),
+        await getVersionInUse(),
+    )
 
     const safeResolveVersion = async versionString =>
         resolveVersion({ versionString }).catch(e => log.info(e.message))
@@ -207,7 +176,7 @@ argParser.command('alias', '', { noHelp: true }).action(async () => {
         }
         const message = format(name, version, targetVersion)
         if (targetVersion) {
-            log(chalk.grey(message))
+            log(message)
             process.exit(0)
         } else {
             log.error(message)
@@ -221,7 +190,7 @@ argParser.command('alias', '', { noHelp: true }).action(async () => {
             value: { value, version: versionString },
         } of matchingAliases) {
             const version = await safeResolveVersion(versionString)
-            log(chalk.grey(format(name, value, version)))
+            log(format(name, value, version))
         }
         const noMatchFound = pattern.length > 0 && matchingAliases.length < 1
         process.exit(noMatchFound ? 1 : 0)
@@ -234,6 +203,7 @@ argParser
     .option('-R, --recursive', 'Delete all dependant aliases as well')
     .description('Deletes the alias named <name>')
     .action(async (name, { force, recursive }) => {
+        const alias = require('./util/alias')
         const deleted = await alias.unsetAlias({ name, force, recursive })
         if (deleted) {
             log('Alias successfully deleted')
@@ -245,6 +215,7 @@ argParser
     .command('set-default <version>')
     .description(signPosting`alias default <version>`)
     .action(async version => {
+        const { setDefaultVersion } = require('./util/version')
         if (await setDefaultVersion({ version })) {
             log('Default version set!')
         } else {
@@ -256,6 +227,7 @@ argParser
     .command('get-default-version')
     .description(signPosting`alias default`)
     .action(async () => {
+        const { getDefaultVersion } = require('./util/version')
         const version = await getDefaultVersion()
         if (version) {
             log.capturable(version)
@@ -269,6 +241,7 @@ argParser
     .command('version')
     .description(signPosting`--version`)
     .action(() => {
+        const { yvmInstalledVersion } = require('./util/yvmInstalledVersion')
         const version = yvmInstalledVersion()
         log.capturable(version || messageNoYvm)
         process.exit(version ? 0 : 1)

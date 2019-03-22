@@ -41,8 +41,8 @@ const currentCommand = async ({ path: pathToUse, shell } = {}) => {
                         `Your .yvmrc version: ${rcVersion} and PATH version: ${pathVersion} don't match :(`,
                     )
                 }
-                return 0
             }
+            return 0
         }
     }
     log('Yarn was NOT installed by yvm')
