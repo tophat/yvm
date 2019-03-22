@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`alias getFormatter formats and colors inputs correctly available alias 1`] = `"[90m[37mavailable[90m → [37m1.5[90m ([37m1.5.0[90m)[39m"`;
+
+exports[`alias getFormatter formats and colors inputs correctly current alias 1`] = `"[90m[32mcurrent[90m → [37m^1.1[90m ([32m1.13.0[90m)[39m"`;
+
+exports[`alias getFormatter formats and colors inputs correctly installed alias 1`] = `"[90m[33minstalled[90m → [37m1.3[90m ([33m1.3.0[90m)[39m"`;
+
+exports[`alias getFormatter formats and colors inputs correctly stable alias 1`] = `"[90m[32m[1mstable[22m[90m → [32m[1m1.13.0[22m[90m[39m"`;
+
+exports[`alias getFormatter formats and colors inputs correctly system alias 1`] = `"[90m[31m[1msystem[22m[90m → [31m[1mN/A[22m[90m[39m"`;
+
+exports[`alias getFormatter formats and colors inputs correctly unavailable alias 1`] = `"[90m[31munavailable[90m → [37m1.1[90m ([31mN/A[90m)[39m"`;
+
+exports[`alias getFormatter formats and colors inputs correctly undefined alias 1`] = `"[90m[31mundefined[90m → [37m1.2.0[90m ([31mN/A[90m)[39m"`;
+
+exports[`alias resolveAliases does not crash on cyclic alias dependancy 1`] = `
+Array [
+  Object {
+    "name": "default",
+    "value": Object {
+      "value": "stable",
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "one",
+    "value": Object {
+      "value": "zero",
+      "version": undefined,
+    },
+  },
+  Object {
+    "name": "two",
+    "value": Object {
+      "value": "one",
+      "version": undefined,
+    },
+  },
+  Object {
+    "name": "zero",
+    "value": Object {
+      "value": "two",
+      "version": undefined,
+    },
+  },
+  Object {
+    "name": "latest",
+    "value": Object {
+      "value": undefined,
+      "version": "latest",
+    },
+  },
+  Object {
+    "name": "stable",
+    "value": Object {
+      "value": undefined,
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "system",
+    "value": Object {
+      "value": undefined,
+      "version": "system",
+    },
+  },
+]
+`;
+
+exports[`alias resolveAliases matches all aliases on empty pattern 1`] = `
+Array [
+  Object {
+    "name": "default",
+    "value": Object {
+      "value": "stable",
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "one",
+    "value": Object {
+      "value": "zero",
+      "version": "1.8.0",
+    },
+  },
+  Object {
+    "name": "zero",
+    "value": Object {
+      "value": "1.8.0",
+      "version": "1.8.0",
+    },
+  },
+  Object {
+    "name": "two",
+    "value": Object {
+      "value": "one",
+      "version": "1.8.0",
+    },
+  },
+  Object {
+    "name": "latest",
+    "value": Object {
+      "value": undefined,
+      "version": "latest",
+    },
+  },
+  Object {
+    "name": "stable",
+    "value": Object {
+      "value": undefined,
+      "version": "stable",
+    },
+  },
+  Object {
+    "name": "system",
+    "value": Object {
+      "value": undefined,
+      "version": "system",
+    },
+  },
+]
+`;

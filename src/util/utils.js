@@ -1,6 +1,12 @@
 const path = require('path')
 const request = require('request')
+const memoize = require('lodash.memoize')
 
+const {
+    USER_AGENT,
+    YARN_DOWNLOAD_URL,
+    YARN_RELEASES_API_URL,
+} = require('./constants')
 const log = require('./log')
 
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
@@ -11,14 +17,14 @@ const getExtractionPath = (version, rootPath) =>
 const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-const getReleasesFromTags = () => {
+const getRequest = memoize(async url => {
     const options = {
-        url: 'https://d236jo9e8rrdox.cloudfront.net/yarn-releases',
+        url,
+        gzip: true,
         headers: {
-            'User-Agent': 'YVM',
+            'User-Agent': USER_AGENT,
         },
     }
-
     return new Promise((resolve, reject) => {
         request.get(options, (error, response, body) => {
             if (error || response.statusCode !== 200) {
@@ -26,30 +32,39 @@ const getReleasesFromTags = () => {
                     if (error) {
                         log(error)
                     }
-                    reject(response.body)
-                    return
+                    return reject(response.body)
                 }
-                reject(error)
-            } else {
-                const tags = JSON.parse(body)
-                const releases = tags.reduce((accumulator, tag) => {
-                    const version = stripVersionPrefix(tag.name)
-                    const [major] = version.split('.')
-                    return Number(major) > 0
-                        ? Object.assign(accumulator, { [version]: tag })
-                        : accumulator
-                }, {})
-                resolve(releases)
+                return reject(error)
             }
+            return resolve(body)
         })
     })
-}
+})
 
-const getVersionsFromTags = async () => Object.keys(await getReleasesFromTags())
+const getVersionDownloadUrl = version =>
+    `${YARN_DOWNLOAD_URL}/${version}/yarn-v${version}.tar.gz`
+
+const getReleasesFromTags = memoize(async () => {
+    return getRequest(YARN_RELEASES_API_URL).then(body => {
+        return JSON.parse(body).reduce((accumulator, tag) => {
+            const version = stripVersionPrefix(tag.name)
+            const [major] = version.split('.')
+            return Number(major) > 0
+                ? Object.assign(accumulator, { [version]: tag })
+                : accumulator
+        }, {})
+    })
+})
+
+const getVersionsFromTags = memoize(async () => {
+    return Object.keys(await getReleasesFromTags())
+})
 
 module.exports = {
     getExtractionPath,
     getReleasesFromTags,
+    getRequest,
+    getVersionDownloadUrl,
     getVersionsFromTags,
     stripVersionPrefix,
     versionRootPath,

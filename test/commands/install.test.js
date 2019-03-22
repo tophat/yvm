@@ -13,12 +13,16 @@ const {
     getExtractionPath,
     versionRootPath,
 } = require('../../src/util/utils')
+const { YARN_RELEASE_TAGS_URL } = require('../../src/util/constants')
 const download = require('../../src/util/download')
 const path = require('../../src/util/path')
 const log = require('../../src/util/log')
 
-jest.mock('../../src/util/log')
-jest.mock('../../src/util/path', () => ({ yvmPath: '/tmp/yvmInstall' }))
+jest.mock('../../src/util/path', () => ({
+    yvmPath: '/tmp/yvmInstall',
+    getPathEntries: () => [],
+}))
+jest.spyOn(log, 'default')
 const downloadFile = jest.spyOn(download, 'downloadFile')
 jest.setTimeout(10000)
 
@@ -67,7 +71,7 @@ describe('yvm install', () => {
         await installVersion({ version, rootPath })
         expect(fs.statSync(getExtractionPath(version, rootPath))).toBeTruthy()
         await installVersion({ version, rootPath })
-        expect(log).toHaveBeenLastCalledWith(
+        expect(log.default).toHaveBeenLastCalledWith(
             `It looks like you already have yarn ${version} installed...`,
         )
     })
@@ -148,14 +152,14 @@ describe('yvm install', () => {
         await installVersion({ version, rootPath })
         expect(() => fs.statSync(downloadPath)).toThrow()
         expect(() => fs.statSync(extractionPath)).toThrow()
-        const logMessages = log.mock.calls
+        const logMessages = log.default.mock.calls
             .map(args => args.join(' '))
             .join(';')
             .toLowerCase()
         const expectedPhrases = [
             'installation aborted',
             'defective release',
-            `https://github.com/yarnpkg/yarn/releases/tag/v${version}`,
+            `${YARN_RELEASE_TAGS_URL}/v${version}`,
             'please retry',
             'next available version',
         ]
@@ -173,7 +177,7 @@ describe('yvm install', () => {
         } catch (e) {
             expect(e).toEqual(mockError)
         }
-        expect(log).toHaveBeenLastCalledWith(mockError)
+        expect(log.default).toHaveBeenLastCalledWith(mockError)
         targz.decompress.mockRestore()
     })
 

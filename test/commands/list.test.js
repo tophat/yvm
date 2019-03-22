@@ -32,6 +32,7 @@ describe('yvm list', () => {
     afterEach(() => {
         fs.removeSync(versionRootPath(rootPath))
         printVersions.mockReset()
+        version.getYarnVersions.cache.clear()
     })
 
     it('Lists only yarn versions in the installation directory', async () => {

@@ -1,12 +1,13 @@
 const fs = require('fs-extra')
 
 const { getExtractionPath } = require('../util/utils')
-const { getVersionInUse } = require('../util/version')
+const { getVersionInUse, resolveVersion } = require('../util/version')
 const { yvmPath } = require('../util/path')
 
 const log = require('../util/log')
 
-const removeVersion = async (version, rootPath = yvmPath) => {
+const removeVersion = async (versionString, rootPath = yvmPath) => {
+    const version = await resolveVersion({ versionString, yvmPath: rootPath })
     const versionPath = getExtractionPath(version, rootPath)
     const versionInUse = await getVersionInUse()
 

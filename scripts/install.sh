@@ -37,7 +37,7 @@ executable_source_string='[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh'
 mkdir -p ${YVM_DIR}
 
 if [ "$USE_LOCAL" = true ]; then
-    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm-exec.js" "${YVM_DIR}/yvm.fish"
+    rm -f "${YVM_DIR}/yvm.sh" "${YVM_DIR}/yvm.js" "${YVM_DIR}/yvm.fish"
     rm -rf "${YVM_DIR}/node_modules"
     unzip -o -q artifacts/yvm.zip -d ${YVM_DIR}
     chmod +x ${YVM_DIR}/yvm.sh

@@ -50,7 +50,8 @@ yvm() {
     fi
 }
 
-yvm init-sh
 if [ -n "$*" ]; then
     yvm $@
+else
+    yvm init-sh
 fi
