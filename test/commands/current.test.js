@@ -11,8 +11,12 @@ const log = require('../../src/util/log')
 jest.mock('../../src/util/log')
 
 describe('yvm current command', () => {
+    let processEnv
+    beforeEach(() => {
+        processEnv = Object.assign({}, process.env)
+    })
     afterEach(() => {
-        jest.clearAllMocks()
+        process.env = Object.assign({}, processEnv)
     })
     afterAll(() => {
         jest.restoreAllMocks()
@@ -26,22 +30,18 @@ describe('yvm current command', () => {
         )
     })
     it('fails if environment path is not available', async () => {
-        const oldPath = process.env.PATH
         delete process.env.PATH
         expect(await current()).toBe(1)
         expect(log).toHaveBeenCalledWith(
             expect.stringContaining(`PATH not found`),
         )
-        process.env.PATH = oldPath
     })
     it('fails if fish environment path is not available', async () => {
-        const oldFishPath = process.env.FISH_USER_PATHS
         delete process.env.FISH_USER_PATHS
         expect(await current({ shell: 'fish' })).toBe(1)
         expect(log).toHaveBeenCalledWith(
             expect.stringContaining(`PATH not found`),
         )
-        process.env.FISH_USER_PATHS = oldFishPath
     })
     it('fails to find yarn version if yvm not installed', async () => {
         const path = '/Users/tophat/.nvm/versions/node/v6.11.5/bin:'
