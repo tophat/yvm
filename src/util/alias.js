@@ -141,8 +141,8 @@ const unsetAlias = async ({
         }
         let deleted = false
         const aliases = await getUserAliases(yvmPath)
-        const aliasNames = Object.keys(aliases)
-        const dependants = aliasNames.filter(d => aliases[d] === name)
+        const aliasNameList = Object.keys(aliases)
+        const dependants = aliasNameList.filter(d => aliases[d] === name)
         if (dependants.length && !force && !recursive) {
             log.notice(`The following aliases will be orphaned: ${dependants}
 Rerun with '--force' to remove just this alias
@@ -152,9 +152,9 @@ Or with '--recursive' to remove all dependants`)
                 ? getAllDependants({ name, aliases })
                 : [name]
             const newAliases = {}
-            for (const a of aliasNames) {
-                if (namesToRemove.includes(a)) continue
-                newAliases[a] = aliases[a]
+            for (const aliasName of aliasNameList) {
+                if (namesToRemove.includes(aliasName)) continue
+                newAliases[aliasName] = aliases[aliasName]
             }
             deleted = aliases[name] !== newAliases[name]
             log.info(`The following aliases were removed: ${namesToRemove}`)
