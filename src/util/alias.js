@@ -174,7 +174,7 @@ const resolveAlias = memoize(
         visitedAliases = [],
         yvmPath = defaultYvmPath,
     }) => {
-        const chain = visitedAliases.length ? visitedAliases.join(', ') : ''
+        const chain = visitedAliases.join(', ')
         const resolveErrorMessage = msg => `${msg}: '${versionString}' ${chain}`
         if (visitedAliases.includes(versionString)) {
             throw new Error(resolveErrorMessage`Cyclic chain detected`)

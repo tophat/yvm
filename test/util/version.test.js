@@ -26,7 +26,7 @@ describe('yvm default version', () => {
     jest.spyOn(log, 'info')
     const resolveReserved = jest.spyOn(alias, 'resolveReserved')
     beforeEach(() => {
-        log()
+        log() // see https://github.com/facebook/jest/issues/5792
         mockFS({
             [mockYVMDir]: {},
         })

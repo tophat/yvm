@@ -53,7 +53,7 @@ argParser
     })
 
 const uninstallVersion = async version => {
-    log.info(`Removing yarn v${version}`)
+    log.info(`Removing Yarn v${version}`)
     const remove = require('./commands/remove')
     process.exit(await remove(version))
 }
@@ -89,16 +89,16 @@ argParser
     .command('which [version]')
     .description(messageOptionalVersion`Display path to Yarn version`)
     .action(async maybeVersion => {
-        log.info('Getting path to yarn version')
+        log.info('Getting path to Yarn version')
         const which = require('./commands/which')
         process.exit(await which({ version: maybeVersion }))
     })
 
 argParser
     .command('current')
-    .description('Display current active yarn version')
+    .description('Display current active Yarn version')
     .action(async command => {
-        log.info('Checking yarn version')
+        log.info('Checking Yarn version')
         const current = require('./commands/current')
         process.exit(await current(command))
     })
