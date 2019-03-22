@@ -2,7 +2,11 @@ const path = require('path')
 const request = require('request')
 const memoize = require('lodash.memoize')
 
-const { USER_AGENT } = require('./constants')
+const {
+    USER_AGENT,
+    YARN_DOWNLOAD_URL,
+    YARN_RELEASES_API_URL,
+} = require('./constants')
 const log = require('./log')
 
 const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
@@ -37,10 +41,11 @@ const getRequest = memoize(async url => {
     })
 })
 
+const getVersionDownloadUrl = version =>
+    `${YARN_DOWNLOAD_URL}/${version}/yarn-v${version}.tar.gz`
+
 const getReleasesFromTags = memoize(async () => {
-    return getRequest(
-        'https://d236jo9e8rrdox.cloudfront.net/yarn-releases',
-    ).then(body => {
+    return getRequest(YARN_RELEASES_API_URL).then(body => {
         return JSON.parse(body).reduce((accumulator, tag) => {
             const version = stripVersionPrefix(tag.name)
             const [major] = version.split('.')
@@ -59,6 +64,7 @@ module.exports = {
     getExtractionPath,
     getReleasesFromTags,
     getRequest,
+    getVersionDownloadUrl,
     getVersionsFromTags,
     stripVersionPrefix,
     versionRootPath,

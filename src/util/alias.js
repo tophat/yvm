@@ -7,6 +7,10 @@ const memoize = require('lodash.memoize')
 const log = require('./log')
 const { getRequest, getVersionsFromTags } = require('./utils')
 const { getPathEntries, yvmPath: defaultYvmPath } = require('./path')
+const {
+    YARN_INSTALL_PAGE_URL,
+    YARN_INSTALL_STABLE_REGEX,
+} = require('./constants')
 
 const STORAGE_FILE = '.aliases'
 
@@ -23,8 +27,8 @@ const RESERVED_NAMES = [...DEFAULT_NAMES, LTS, NOT_AVAILABLE]
 const resolveLatest = memoize(async () => (await getVersionsFromTags())[0])
 
 const resolveStable = memoize(async () => {
-    const body = await getRequest('https://yarnpkg.com/lang/en/docs/install/')
-    const matches = body.match(/stable \(([\w.-]+)\)/i)
+    const body = await getRequest(YARN_INSTALL_PAGE_URL)
+    const matches = body.match(YARN_INSTALL_STABLE_REGEX)
     return matches ? matches[1] : UNRESOLVED
 })
 
