@@ -51,7 +51,7 @@ curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.s
 
 ### Manual installation
 
-Navigate to [github.com/tophat/yvm/releases](https://github.com/tophat/yvm/releases) and download the `yvm.zip` file for the latest release to your home directory.
+Navigate to [yvm releases](https://github.com/tophat/yvm/releases) and download the `yvm.zip` file for the latest release to your home directory.
 
 Next, unzip that file to the .yvm dir in your home directory and make extracted yvm.sh executable
 
