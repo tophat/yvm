@@ -442,4 +442,31 @@ describe('alias', () => {
             )
         })
     })
+
+    describe('getFormatter', () => {
+        const currentVersion = '1.13.0'
+        const installedVersions = [currentVersion, '1.8.0', '1.3.0']
+        const allVersions = ['1.2.0', '1.5.0', ...installedVersions]
+        const formatter = alias.getFormatter(
+            allVersions,
+            installedVersions,
+            currentVersion,
+        )
+        const inputCases = [
+            ['current', '^1.1', '1.13.0'],
+            ['installed', '1.3', '1.3.0'],
+            ['unavailable', '1.1', '1.1.0'],
+            ['undefined', '1.2.0', undefined],
+            [alias.STABLE, undefined, '1.13.0'],
+            [alias.SYSTEM, undefined, '1.7.0'],
+        ]
+        it.each(inputCases)(
+            'formats and colors inputs correctly %s alias',
+            (name, version, target) => {
+                const formatted = formatter(name, version, target)
+                log(formatted)
+                expect(formatted).toMatchSnapshot()
+            },
+        )
+    })
 })

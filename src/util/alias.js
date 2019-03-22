@@ -249,12 +249,7 @@ const getFormatter = (allVersions, installedVersions, currentVersion) => (
     const parts = [termStyler(name), ' → ']
     const targetVersion = termStyler(isAvailable ? target : NOT_AVAILABLE)
     if (version) {
-        parts.push(
-            chalk.white(version),
-            ' (',
-            termStyler(isAvailable ? target : NOT_AVAILABLE),
-            ')',
-        )
+        parts.push(chalk.white(version), ' (', targetVersion, ')')
     } else {
         parts.push(targetVersion)
     }
