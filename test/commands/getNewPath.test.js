@@ -47,17 +47,17 @@ describe('getNewPath', () => {
     })
 
     describe('fish', () => {
-        const FISH_ARRAY_DELIMINATOR = ' '
+        const FISH_ARRAY_DELIMITER = ' '
         it('Returns a new fish_user_path string with a yarn directory prepended', () => {
             const mockVersion = '1.7.0'
             const mockRootPath = '/some/path'
             const mockSplitPath = ['abc', 'def']
-            const mockPathString = mockSplitPath.join(FISH_ARRAY_DELIMINATOR)
+            const mockPathString = mockSplitPath.join(FISH_ARRAY_DELIMITER)
 
             const expectedPathString = [
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
                 ...mockSplitPath,
-            ].join(FISH_ARRAY_DELIMINATOR)
+            ].join(FISH_ARRAY_DELIMITER)
             expect(
                 getNewPath({
                     shell: 'fish',
@@ -76,13 +76,13 @@ describe('getNewPath', () => {
                 `${mockRootPath}/versions/v1.6.0/bin`,
                 'def',
             ]
-            const mockPathString = mockSplitPath.join(FISH_ARRAY_DELIMINATOR)
+            const mockPathString = mockSplitPath.join(FISH_ARRAY_DELIMITER)
 
             const expectedPathString = [
                 'abc',
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
                 'def',
-            ].join(FISH_ARRAY_DELIMINATOR)
+            ].join(FISH_ARRAY_DELIMITER)
             expect(
                 getNewPath({
                     shell: 'fish',
