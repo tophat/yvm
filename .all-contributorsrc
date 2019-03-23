@@ -192,6 +192,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "aelkady",
+      "name": "Ahmed Elkady",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6837609?v=4",
+      "profile": "http://www.ahmedelkady.xyz",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7
