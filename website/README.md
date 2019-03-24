@@ -9,6 +9,8 @@ in the root directory `./website`
 
 ```sh
 yarn install
+
+yarn build
 ```
 
 Start the [localhost:3000](http://localhost:3000) server using
@@ -18,3 +20,7 @@ yarn start
 ```
 
 Refresh the page for your changes to be reflected
+
+### NOTE
+
+Do not commit changes made to the docs by the build script.
