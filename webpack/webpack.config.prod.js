@@ -23,11 +23,6 @@ Object.assign(baseConfig, {
             format: 'zip',
         }),
     ],
-    optimization: {
-        splitChunks: {
-            chunks: 'all',
-        },
-    },
 })
 
 module.exports = baseConfig
