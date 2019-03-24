@@ -21,7 +21,9 @@
       "./node_modules_production/"
     ],
     "coverageDirectory": "./artifacts/coverage",
-    "setupTestFrameworkScriptFile": "./test/setupTestFramework.js"
+    "setupFilesAfterEnv": [
+      "./test/setupTestFramework.js"
+    ]
   },
   "author": "Top Hat <opensource@tophat.com>",
   "license": "Apache-2.0",
@@ -31,6 +33,7 @@
     "commander": "^2.15.1",
     "cosmiconfig": "^5.1.0",
     "fs-extra": "^7.0.1",
+    "lodash.memoize": "^4.1.2",
     "openpgp": "^4.3.0",
     "request": "^2.87.0",
     "semver": "^5.6.0",
@@ -41,7 +44,9 @@
     "@babel/preset-env": "^7.3.1",
     "@tophat/eslint-config": "^0.1.4",
     "all-contributors-cli": "^6.1.2",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
+    "babel-plugin-dynamic-import-node": "^2.2.0",
     "bundlewatch": "^0.2.1",
     "codecov": "^3.0.2",
     "copy-webpack-plugin": "^5.0.0",
@@ -53,7 +58,7 @@
     "eslint-plugin-jest": "^22.3.0",
     "eslint-plugin-prettier": "^3.0.0",
     "gh-release": "^3.4.0",
-    "git-cz": "^1.8.0",
+    "git-cz": "^3.0.0",
     "husky": "^1.2.0",
     "jest": "^24.1.0",
     "jest-junit": "^6.0.1",

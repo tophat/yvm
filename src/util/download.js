@@ -1,11 +1,13 @@
-const fs = require('fs')
-const request = require('request')
+import fs from 'fs'
+import request from 'request'
+
+import { USER_AGENT } from './constants'
 
 const { USER_AGENT } = require('./constants')
 
 const isErrorCode = httpStatusCode => httpStatusCode >= 400
 
-const downloadFile = (url, filePath) =>
+export const downloadFile = (url, filePath) =>
     new Promise((resolve, reject) => {
         const handleError = err => reject(err)
         request
@@ -18,7 +20,3 @@ const downloadFile = (url, filePath) =>
             .pipe(fs.createWriteStream(filePath))
             .on('finish', () => resolve())
     })
-
-module.exports = {
-    downloadFile,
-}

@@ -2,59 +2,37 @@
 
 <span><img align="right" width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png" alt="Logo"></span>
 
-<a href="https://github.com/tophat/yvm/releases">
-    <img alt="YVM Latest Version" src="https://img.shields.io/github/release/tophat/yvm.svg"/>
-</a>
-<a href="https://nodejs.org">
-    <img alt="Minimum Node Version" src="https://img.shields.io/badge/node-%3E%3D%208-brightgreen.svg"/>
-</a>
-<a href="https://circleci.com/gh/tophat/yvm">
-    <img alt="Builds" src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg"/>
-</a>
-<a href="https://codecov.io/gh/tophat/yvm">
-    <img alt="codecov" src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU"/>
-</a>
-<a href="https://github.com/semantic-release/semantic-release">
-    <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg"/>
-</a>
-<br />
-<a href="https://david-dm.org/tophat/yvm">
-    <img alt="Deps" src="https://david-dm.org/tophat/yvm/status.svg"/>
-</a>
-<a href="https://david-dm.org/tophat/yvm">
-    <img alt="Dev Deps" src="https://david-dm.org/tophat/yvm/dev-status.svg"/>
-</a>
-<a href="https://greenkeeper.io">
-    <img alt="Green Keeper" src="https://badges.greenkeeper.io/tophat/yvm.svg"/>
-</a>
-<br />
-<a href="#contributors">
-    <img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-18-orange.svg?style=flat-square"/>
-</a>
-<a href="https://opensource.tophat.com/slack">
-    <img alt="Slack workspace" src="https://slackinvite.dev.tophat.com/badge.svg"/>
-</a>
-<a href="https://github.com/tophat/getting-started/blob/master/scorecard.md">
-    <img alt="Maturity badge - level 3" src="https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg"/>
-</a>
-<a href="https://pullreminders.com?ref=badge">
-    <img alt="Pull Reminders" src="https://pullreminders.com/badge.svg"/>
-</a>
+<!-- BADGES:START -->
 
-# Overview
+[![YVM Latest Version](https://img.shields.io/github/release/tophat/yvm.svg)](https://github.com/tophat/yvm/releases)
+[![Minimum Node Version](https://img.shields.io/badge/node-%3E%3D%208-brightgreen.svg)](https://nodejs.org)
+[![Builds](https://img.shields.io/circleci/project/github/tophat/yvm/master.svg)](https://circleci.com/gh/tophat/yvm)
+[![codecov](https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophat/yvm)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm)
+[![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm)
+[![Green Keeper](https://badges.greenkeeper.io/tophat/yvm.svg)](https://greenkeeper.io)
+[![All Contributors](https://img.shields.io/badge/all_contributors-21-orange.svg?style=flat-square)](#contributors)
+[![Slack workspace](https://slackinvite.dev.tophat.com/badge.svg)](https://opensource.tophat.com/slack)
+[![Maturity badge - level 3](https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg)](https://github.com/tophat/getting-started/blob/master/scorecard.md)
+[![Pull Reminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
-Yarn Version Manager
+<!-- BADGES:END -->
+
+## Overview
+
+<!-- OVERVIEW-DOCS:START -->
 
 Pesky yarn versions got you down? Automatically and easilly manage those versions.
 
 YVM will automatically use the correct yarn version when you run any yarn commands in any folder with a `package.json`, `.yvmrc` or any other [supported configuration](https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number) file. Otherwise, it will use you a globally set version of yarn.
 
-
 ## Motivation
+
 Manually managing different yarn versions across projects is a pain. This fixes that.
 
-
 ## Installation
+
 Node: >=8.0.0
 
 ### Installation script
@@ -66,13 +44,14 @@ curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.j
 ```
 
 Or to install a specific version:
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | INSTALL_VERSION="v0.9.26" node
 ```
 
 ### Manual installation
 
-Navigate to https://github.com/tophat/yvm/releases and download the `yvm.zip` file for the latest release to your home directory.
+Navigate to [yvm releases](https://github.com/tophat/yvm/releases) and download the `yvm.zip` file for the latest release to your home directory.
 
 Next, unzip that file to the .yvm dir in your home directory and make extracted yvm.sh executable
 
@@ -96,7 +75,9 @@ set -x YVM_DIR /home/joe_user/.yvm
 ```
 
 ### Upgrade
-To upgrade yvm to the lastes version either install as normal, or run
+
+To upgrade yvm to the lastest version either install as normal, or run
+
 ```bash
 yvm update-self
 ```
@@ -104,6 +85,7 @@ yvm update-self
 ## Usage
 
 ### Automatic magic
+
 Run any yarn command and watch it magically use the correct version of yarn
 
 ### Basic
@@ -117,8 +99,9 @@ yvm install <version>
 To get the latest version of Yarn, run:
 
 ```bash
-yvm install --latest
+yvm install latest
 ```
+
 Execute an arbitrary command using a specific version of yarn:
 
 ```bash
@@ -126,26 +109,49 @@ yvm exec <version> <command>
 ```
 
 ### Additional commands
-Switch the current yarn versions, using:
+
+Switch the current yarn versions:
 
 ```bash
 yvm use <version>
 yarn --version
 ```
 
-List Versions
+Control version aliasing:
+
 ```bash
-yvm list
+yvm alias stable
+# stable → 1.13.0 (1.13.0)
+
+yvm alias default stable
+# default → stable (1.13.0)
+
+yvm alias
+# default → stable (1.13.0)
+# latest → 1.14.0 (1.14.0)
+# stable → 1.13.0 (1.13.0)
+# system → 1.13.0 (1.13.0)
+
+yvm alias default '^1.7'
+# default → ^1.7 (1.14.0)
 ```
 
-Check Current Version
+Show path to version used:
+
 ```bash
 yvm which
 ```
 
-Full list of available commands
+List installed yarn versions:
+
 ```bash
-yvm help
+yvm list
+```
+
+Full list of available commands:
+
+```bash
+yvm --help
 ```
 
 ### Configuration file
@@ -153,7 +159,10 @@ yvm help
 Yvm defaults to using the `yarn` version in your `package.json` `engines`. Otherwise you can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the config file if no version number is supplied to the command.
 You can also [declare the version using other configuration files](https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number)
 
+<!-- OVERVIEW-DOCS:END -->
+
 ### Additional reference
+
 A full list of commands is on the [api reference page](https://yvm.js.org/docs/api)
 
 Have questions? [List of common questions and answers](https://yvm.js.org/docs/faq)
@@ -188,12 +197,10 @@ source /home/joe_user/.yvm/yvm.sh
 
 or those lines could be in `$HOME/.bash_profile` instead of `$HOME/.bashrc`.
 
-## Technologies to Familiarize Yourself with
-- [NodeJS](https://github.com/nodejs/node)
-- [Yarn](https://github.com/yarnpkg/yarn)
-
-
 ## Contributing
+
+<!-- CONTRIBUTING-DOCS:START -->
+
 We welcome contributions from the community, Top Hatters and non-Top Hatters alike. Here are some guidelines to help you get started!
 
 ### Basic development flow
@@ -209,7 +216,6 @@ You can also access the documentation on our [website](https://yvm.js.org)
 
 Please make sure to look over our [Code of Conduct](https://github.com/tophat/getting-started/blob/master/code-of-conduct.md) as well!
 
-
 ### Manual testing command contributions
 
 ```bash
@@ -217,6 +223,12 @@ make install
 yvm <your-command-here>
 ```
 
+### Technologies to Familiarize Yourself with
+
+- [NodeJS](https://github.com/nodejs/node)
+- [Yarn](https://github.com/yarnpkg/yarn)
+
+<!-- CONTRIBUTING-DOCS:END -->
 
 ## Contributors
 
@@ -224,10 +236,8 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/3876970?v=4" width="100px;" alt="Francois Campbell"/><br /><sub><b>Francois Campbell</b></sub>](https://github.com/francoiscampbell)<br />[💻](https://github.com/tophat/yvm/commits?author=francoiscampbell "Code") | [<img src="https://avatars2.githubusercontent.com/u/3534236?v=4" width="100px;" alt="Jake Bolam"/><br /><sub><b>Jake Bolam</b></sub>](https://jakebolam.com)<br />[📖](https://github.com/tophat/yvm/commits?author=jakebolam "Documentation") [💻](https://github.com/tophat/yvm/commits?author=jakebolam "Code") [🚇](#infra-jakebolam "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars1.githubusercontent.com/u/39271619?v=4" width="100px;" alt="Brandon Baksh"/><br /><sub><b>Brandon Baksh</b></sub>](https://www.linkedin.com/in/brandonbaksh/)<br />[💻](https://github.com/tophat/yvm/commits?author=brandonbaksh "Code") | [<img src="https://avatars3.githubusercontent.com/u/2070398?v=4" width="100px;" alt="Milan Milojic"/><br /><sub><b>Milan Milojic</b></sub>](https://github.com/nepodmitljivi)<br />[💻](https://github.com/tophat/yvm/commits?author=nepodmitljivi "Code") | [<img src="https://avatars2.githubusercontent.com/u/38886386?v=4" width="100px;" alt="Umar Ahmed"/><br /><sub><b>Umar Ahmed</b></sub>](https://github.com/umar-tophat)<br />[💻](https://github.com/tophat/yvm/commits?author=umar-tophat "Code") | [<img src="https://avatars0.githubusercontent.com/u/3258756?v=4" width="100px;" alt="Nicholas Dujay"/><br /><sub><b>Nicholas Dujay</b></sub>](https://github.com/dat2)<br />[💻](https://github.com/tophat/yvm/commits?author=dat2 "Code") | [<img src="https://avatars0.githubusercontent.com/u/3996927?v=4" width="100px;" alt="Aser Eldamaty"/><br /><sub><b>Aser Eldamaty</b></sub>](https://github.com/aeldamaty)<br />[💻](https://github.com/tophat/yvm/commits?author=aeldamaty "Code") |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars3.githubusercontent.com/u/3495264?v=4" width="100px;" alt="Michael Rose"/><br /><sub><b>Michael Rose</b></sub>](http://msrose.github.io)<br />[💻](https://github.com/tophat/yvm/commits?author=msrose "Code") | [<img src="https://avatars0.githubusercontent.com/u/8632167?v=4" width="100px;" alt="Sanchit Gera"/><br /><sub><b>Sanchit Gera</b></sub>](http://www.sanchitgera.ca)<br />[📖](https://github.com/tophat/yvm/commits?author=sanchitgera "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/6020693?v=4" width="100px;" alt="sdcosta"/><br /><sub><b>sdcosta</b></sub>](https://github.com/sdcosta)<br />[📖](https://github.com/tophat/yvm/commits?author=sdcosta "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/445636?v=4" width="100px;" alt="Siavash Mahmoudian"/><br /><sub><b>Siavash Mahmoudian</b></sub>](https://breezio.com)<br />[🚇](#infra-syavash "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars3.githubusercontent.com/in/505?v=4" width="100px;" alt="greenkeeper[bot]"/><br /><sub><b>greenkeeper[bot]</b></sub>](https://github.com/apps/greenkeeper)<br />[🚇](#infra-greenkeeper[bot] "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars0.githubusercontent.com/u/7827407?v=4" width="100px;" alt="Jay Crumb"/><br /><sub><b>Jay Crumb</b></sub>](https://github.com/jcrumb)<br />[📖](https://github.com/tophat/yvm/commits?author=jcrumb "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/1097941?v=4" width="100px;" alt="Michael Lunøe"/><br /><sub><b>Michael Lunøe</b></sub>](http://m.lunoe.dk)<br />[📖](https://github.com/tophat/yvm/commits?author=mlunoe "Documentation") |
-| [<img src="https://avatars3.githubusercontent.com/u/1558352?v=4" width="100px;" alt="Yash Shah"/><br /><sub><b>Yash Shah</b></sub>](http://www.yashshah.com)<br />[💻](https://github.com/tophat/yvm/commits?author=yashshah "Code") | [<img src="https://avatars0.githubusercontent.com/u/9504927?v=4" width="100px;" alt="Wacław Schiller"/><br /><sub><b>Wacław Schiller</b></sub>](https://github.com/torinthiel)<br />[💻](https://github.com/tophat/yvm/commits?author=torinthiel "Code") | [<img src="https://avatars0.githubusercontent.com/u/45925873?v=4" width="100px;" alt="yvm-bot"/><br /><sub><b>yvm-bot</b></sub>](https://github.com/yvm-bot)<br />[🚇](#infra-yvm-bot "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars0.githubusercontent.com/u/2528959?v=4" width="100px;" alt="Emmanuel Ogbizi"/><br /><sub><b>Emmanuel Ogbizi</b></sub>](http://emmanuel.ogbizi.com/)<br />[💻](https://github.com/tophat/yvm/commits?author=iamogbz "Code") [⚠️](https://github.com/tophat/yvm/commits?author=iamogbz "Tests") [📖](https://github.com/tophat/yvm/commits?author=iamogbz "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/2723622?v=4" width="100px;" alt="Martin Lai"/><br /><sub><b>Martin Lai</b></sub>](https://github.com/eastenluis)<br />[💻](https://github.com/tophat/yvm/commits?author=eastenluis "Code") |
+<table><tr><td align="center"><a href="https://github.com/francoiscampbell"><img src="https://avatars3.githubusercontent.com/u/3876970?v=4" width="100px;" alt="Francois Campbell"/><br /><sub><b>Francois Campbell</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=francoiscampbell" title="Code">💻</a></td><td align="center"><a href="https://jakebolam.com"><img src="https://avatars2.githubusercontent.com/u/3534236?v=4" width="100px;" alt="Jake Bolam"/><br /><sub><b>Jake Bolam</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=jakebolam" title="Documentation">📖</a> <a href="https://github.com/tophat/yvm/commits?author=jakebolam" title="Code">💻</a> <a href="#infra-jakebolam" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td><td align="center"><a href="https://www.linkedin.com/in/brandonbaksh/"><img src="https://avatars1.githubusercontent.com/u/39271619?v=4" width="100px;" alt="Brandon Baksh"/><br /><sub><b>Brandon Baksh</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=brandonbaksh" title="Code">💻</a></td><td align="center"><a href="https://github.com/nepodmitljivi"><img src="https://avatars3.githubusercontent.com/u/2070398?v=4" width="100px;" alt="Milan Milojic"/><br /><sub><b>Milan Milojic</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=nepodmitljivi" title="Code">💻</a></td><td align="center"><a href="https://github.com/umar-tophat"><img src="https://avatars2.githubusercontent.com/u/38886386?v=4" width="100px;" alt="Umar Ahmed"/><br /><sub><b>Umar Ahmed</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=umar-tophat" title="Code">💻</a></td><td align="center"><a href="https://github.com/dat2"><img src="https://avatars0.githubusercontent.com/u/3258756?v=4" width="100px;" alt="Nicholas Dujay"/><br /><sub><b>Nicholas Dujay</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=dat2" title="Code">💻</a></td><td align="center"><a href="https://github.com/aeldamaty"><img src="https://avatars0.githubusercontent.com/u/3996927?v=4" width="100px;" alt="Aser Eldamaty"/><br /><sub><b>Aser Eldamaty</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=aeldamaty" title="Code">💻</a></td></tr><tr><td align="center"><a href="http://msrose.github.io"><img src="https://avatars3.githubusercontent.com/u/3495264?v=4" width="100px;" alt="Michael Rose"/><br /><sub><b>Michael Rose</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=msrose" title="Code">💻</a></td><td align="center"><a href="http://www.sanchitgera.ca"><img src="https://avatars0.githubusercontent.com/u/8632167?v=4" width="100px;" alt="Sanchit Gera"/><br /><sub><b>Sanchit Gera</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=sanchitgera" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/sdcosta"><img src="https://avatars0.githubusercontent.com/u/6020693?v=4" width="100px;" alt="sdcosta"/><br /><sub><b>sdcosta</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=sdcosta" title="Documentation">📖</a></td><td align="center"><a href="https://breezio.com"><img src="https://avatars1.githubusercontent.com/u/445636?v=4" width="100px;" alt="Siavash Mahmoudian"/><br /><sub><b>Siavash Mahmoudian</b></sub></a><br /><a href="#infra-syavash" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td><td align="center"><a href="https://github.com/apps/greenkeeper"><img src="https://avatars3.githubusercontent.com/in/505?v=4" width="100px;" alt="greenkeeper[bot]"/><br /><sub><b>greenkeeper[bot]</b></sub></a><br /><a href="#infra-greenkeeper[bot]" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td><td align="center"><a href="https://github.com/jcrumb"><img src="https://avatars0.githubusercontent.com/u/7827407?v=4" width="100px;" alt="Jay Crumb"/><br /><sub><b>Jay Crumb</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=jcrumb" title="Documentation">📖</a></td><td align="center"><a href="http://m.lunoe.dk"><img src="https://avatars0.githubusercontent.com/u/1097941?v=4" width="100px;" alt="Michael Lunøe"/><br /><sub><b>Michael Lunøe</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=mlunoe" title="Documentation">📖</a></td></tr><tr><td align="center"><a href="http://www.yashshah.com"><img src="https://avatars3.githubusercontent.com/u/1558352?v=4" width="100px;" alt="Yash Shah"/><br /><sub><b>Yash Shah</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=yashshah" title="Code">💻</a></td><td align="center"><a href="https://github.com/torinthiel"><img src="https://avatars0.githubusercontent.com/u/9504927?v=4" width="100px;" alt="Wacław Schiller"/><br /><sub><b>Wacław Schiller</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=torinthiel" title="Code">💻</a></td><td align="center"><a href="https://github.com/yvm-bot"><img src="https://avatars0.githubusercontent.com/u/45925873?v=4" width="100px;" alt="yvm-bot"/><br /><sub><b>yvm-bot</b></sub></a><br /><a href="#infra-yvm-bot" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td><td align="center"><a href="http://emmanuel.ogbizi.com/"><img src="https://avatars0.githubusercontent.com/u/2528959?v=4" width="100px;" alt="Emmanuel Ogbizi"/><br /><sub><b>Emmanuel Ogbizi</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=iamogbz" title="Code">💻</a> <a href="https://github.com/tophat/yvm/commits?author=iamogbz" title="Tests">⚠️</a> <a href="https://github.com/tophat/yvm/commits?author=iamogbz" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/eastenluis"><img src="https://avatars3.githubusercontent.com/u/2723622?v=4" width="100px;" alt="Martin Lai"/><br /><sub><b>Martin Lai</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=eastenluis" title="Code">💻</a></td><td align="center"><a href="https://marccataford.com"><img src="https://avatars2.githubusercontent.com/u/6210361?v=4" width="100px;" alt="Marc Cataford"/><br /><sub><b>Marc Cataford</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=mcataford" title="Code">💻</a></td><td align="center"><a href="http://www.ahmedelkady.xyz"><img src="https://avatars3.githubusercontent.com/u/6837609?v=4" width="100px;" alt="Ahmed Elkady"/><br /><sub><b>Ahmed Elkady</b></sub></a><br /><a href="#review-aelkady" title="Reviewed Pull Requests">👀</a></td></tr></table>
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!

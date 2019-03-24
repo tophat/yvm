@@ -14,8 +14,8 @@ commands:
           name: Restore node_modules cache
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
-          name: 'Install yvm release version'
-          command: 'curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash'
+          name: "Install yvm release version"
+          command: "curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash"
   save_env_cache:
     description: "Saves environment cache"
     steps:

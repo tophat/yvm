@@ -1,6 +1,6 @@
-const mockFS = require('mock-fs')
-const log = require('../../src/util/log')
-const { yvmInstalledVersion } = require('../../src/util/yvmInstalledVersion')
+import mockFS from 'mock-fs'
+import log from '../../src/util/log'
+import { yvmInstalledVersion } from '../../src/util/yvmInstalledVersion'
 
 describe('yvm installed version', () => {
     const mockYVMDir = '/mock-yvm-root-dir'

@@ -1,10 +1,10 @@
-const log = require('../../src/util/log')
-const {
+import log from '../../src/util/log'
+import {
     DEFAULT_VERSION_TEXT,
     VERSION_IN_USE_SYMBOL,
     VERSION_INSTALLED_SYMBOL,
     printVersions,
-} = require('../../src/util/version')
+} from '../../src/util/version'
 
 const versionInUse = '1.2.0'
 const defaultVersion = '1.3.0'
@@ -16,19 +16,19 @@ describe('Util functions', () => {
     afterEach(() => {
         jest.resetAllMocks()
     })
+    afterAll(jest.restoreAllMocks)
 
-    it('Prints all versions passed to printVersion function', () => {
-        const versionsObject = printVersions({
+    it('Prints all versions passed to printVersion function', async () => {
+        const versionsObject = await printVersions({
             message: 'print all versions',
             list: versions,
-            versionInUse,
         })
         expect(Object.keys(versionsObject)).toHaveLength(versions.length)
         expect(log.default.mock.calls).toMatchSnapshot()
     })
 
-    it('Highlights the version currently in use', () => {
-        const versionsObject = printVersions({
+    it('Highlights the version currently in use', async () => {
+        const versionsObject = await printVersions({
             message: 'highlight current version',
             list: versions,
             versionInUse,
@@ -38,8 +38,8 @@ describe('Util functions', () => {
         expect(log.default.mock.calls).toMatchSnapshot()
     })
 
-    it('Highlights the default version', () => {
-        const versionsObject = printVersions({
+    it('Highlights the default version', async () => {
+        const versionsObject = await printVersions({
             message: 'highlight default version',
             list: versions,
             versionInUse,
@@ -50,8 +50,8 @@ describe('Util functions', () => {
         expect(log.default.mock.calls).toMatchSnapshot()
     })
 
-    it('Highlights all installed versions', () => {
-        const versionsObject = printVersions({
+    it('Highlights all installed versions', async () => {
+        const versionsObject = await printVersions({
             message: 'highlight installed versions',
             list: versions,
             versionInUse,

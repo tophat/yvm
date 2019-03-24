@@ -3,13 +3,14 @@ const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 
-const outputPath = path.resolve(__dirname, '..', 'artifacts', 'webpack_build')
+const rootPath = path.resolve(__dirname, '..')
+const artifactsPath = path.resolve(rootPath, 'artifacts')
+const outputPath = path.resolve(artifactsPath, 'webpack_build')
 
 module.exports = {
     mode: 'production',
     entry: {
         yvm: ['@babel/polyfill', './src/yvm.js'],
-        'yvm-exec': ['@babel/polyfill', './src/yvm-exec.js'],
     },
     externals: [nodeExternals()],
     output: {
@@ -26,6 +27,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         cacheDirectory: true,
+                        plugins: ['dynamic-import-node'],
                         presets: [
                             ['@babel/preset-env', { targets: { node: '8.0' } }],
                         ],

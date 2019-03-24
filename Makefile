@@ -1,6 +1,6 @@
 ARTIFACT_DIR?=artifacts
 TEST_REPORTS_DIR?=$(ARTIFACT_DIR)/reports
-BUILD_DIR?=$(ARTIFACT_DIR)/build
+BUILD_DIR?=$(ARTIFACT_DIR)/webpack_build
 
 ifdef CI
     ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
@@ -8,7 +8,7 @@ ifdef CI
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--frozen-lockfile --ci
-    YARN=. $(HOME)/.yvm/yvm.sh && yvm exec
+    YARN=$(HOME)/.yvm/yvm.sh exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
@@ -35,7 +35,7 @@ help:
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
 	@echo "make install-watch                   - runs install, and watches code for local development"
-	@echo "make build-dev                       - builds a bundle with development settings"
+	@echo "make build                           - builds a bundle with development settings"
 	@echo "----------------------- Other Commands  -------------------------"
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
@@ -66,12 +66,12 @@ install-watch: node_modules
 # ---- Webpack ----
 
 .PHONY: build-production
-build-production: node_modules_production node_modules
-	$(WEBPACK) --config webpack/webpack.config.production.js
+build-production: node_modules_production node_modules clean_webpack_build
+	$(WEBPACK) --config webpack/webpack.config.prod.js
 
-.PHONY: build-dev
-build-dev: node_modules
-	$(WEBPACK) --config webpack/webpack.config.development.js
+.PHONY: build
+build: node_modules clean_webpack_build
+	$(WEBPACK) --config webpack/webpack.config.dev.js
 
 
 # -------------- Linting --------------
@@ -130,8 +130,11 @@ node_modules_production:
 	$(YARN) install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
 	touch node_modules_production
 
-.PHONY: clean
-clean:
-	rm -rf ${ARTIFACT_DIR} node_modules_production
-	rm -f ~/.babel.json
+.PHONY: clean_node_modules
+clean_node_modules:
 	rm -rf node_modules
+	rm -rf node_modules_production
+
+.PHONY: clean_webpack_build
+clean_webpack_build:
+	rm -rf ${BUILD_DIR}

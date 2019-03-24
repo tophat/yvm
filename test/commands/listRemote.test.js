@@ -1,7 +1,7 @@
-const log = require('../../src/util/log')
-const listRemote = require('../../src/commands/listRemote')
-const { getVersionsFromTags } = require('../../src/util/utils')
-const { getVersionInUse, printVersions } = require('../../src/util/version')
+import log from '../../src/util/log'
+import { listRemote } from '../../src/commands/listRemote'
+import { getVersionsFromTags } from '../../src/util/utils'
+import { getVersionInUse, printVersions } from '../../src/util/version'
 
 jest.mock('../../src/util/version', () => {
     const MOCK_CURRENT_VERSION = '1.0.0'

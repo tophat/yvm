@@ -29,7 +29,6 @@ restore_file() {
 # Save and link files
 save_and_link_file "yvm.sh"
 save_and_link_file "yvm.js"
-save_and_link_file "yvm-exec.js"
 save_and_link_file "yvm.fish"
 
 # Save and Link Node Modules
@@ -44,12 +43,11 @@ int_trap() {
 trap int_trap INT
 
 # Start Webpack in watch mode
-./node_modules/.bin/webpack --progress --config webpack/webpack.config.development.js --watch
+./node_modules/.bin/webpack --progress --config webpack/webpack.config.dev.js --watch
 
 # Clean up and recover
 restore_file "yvm.sh"
 restore_file "yvm.js"
-restore_file "yvm-exec.js"
 restore_file "yvm.fish"
 
 # Restore Node Modules

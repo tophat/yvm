@@ -183,6 +183,24 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mcataford",
+      "name": "Marc Cataford",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/6210361?v=4",
+      "profile": "https://marccataford.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "aelkady",
+      "name": "Ahmed Elkady",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6837609?v=4",
+      "profile": "http://www.ahmedelkady.xyz",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7

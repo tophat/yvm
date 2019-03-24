@@ -1,10 +1,10 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 
-const { yvmPath } = require('./path')
-const log = require('./log')
+import { yvmPath } from './path'
+import log from './log'
 
-const yvmInstalledVersion = (inYvmPath = yvmPath) => {
+export const yvmInstalledVersion = (inYvmPath = yvmPath) => {
     const versionStoragePath = path.join(inYvmPath, '.version')
     try {
         const versionJSONString = fs.readFileSync(versionStoragePath, 'utf8')
@@ -18,8 +18,4 @@ const yvmInstalledVersion = (inYvmPath = yvmPath) => {
         log.info(e)
         return undefined
     }
-}
-
-module.exports = {
-    yvmInstalledVersion,
 }

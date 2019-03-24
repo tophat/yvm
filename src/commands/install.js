@@ -1,30 +1,29 @@
-const fs = require('fs')
-const openpgp = require('openpgp')
-const path = require('path')
-const targz = require('targz')
+import fs from 'fs'
+import path from 'path'
+import targz from 'targz'
+import * as openpgp from 'openpgp'
 
-const { downloadFile } = require('../util/download')
-const log = require('../util/log')
-const {
+import { YARN_PUBLIC_KEY_URL, YARN_RELEASE_TAGS_URL } from '../util/constants'
+import { LATEST } from '../util/alias'
+import { downloadFile } from '../util/download'
+import log from '../util/log'
+import { yvmPath } from '../util/path'
+import {
     versionRootPath,
     getExtractionPath,
-    getReleasesFromTags,
-    getVersionsFromTags,
-} = require('../util/utils')
-const { yvmPath } = require('../util/path')
+    getVersionDownloadUrl,
+} from '../util/utils'
+import { resolveVersion } from '../util/version'
 
-const getDownloadPath = (version, rootPath) =>
+export const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
 
 const getSignatureDownloadPath = (version, rootPath) =>
     `${getDownloadPath(version, rootPath)}.asc`
 
-const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
+export const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
 
-const getUrl = version =>
-    `https://yarnpkg.com/downloads/${version}/yarn-v${version}.tar.gz`
-
-const getSignatureUrl = version => `${getUrl(version)}.asc`
+const getSignatureUrl = version => `${getVersionDownloadUrl(version)}.asc`
 
 const isVersionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
@@ -32,7 +31,7 @@ const isVersionInstalled = (version, rootPath) => {
 }
 
 const downloadVersion = async (version, rootPath) => {
-    const url = getUrl(version)
+    const url = getVersionDownloadUrl(version)
     const filePath = getDownloadPath(version, rootPath)
     try {
         await downloadFile(url, filePath)
@@ -57,10 +56,7 @@ const getPublicKey = async rootPath => {
         log.info('GPG public key file already downloaded')
     } else {
         log.info('Downloading GPG public key file')
-        await downloadFile(
-            'https://dl.yarnpkg.com/debian/pubkey.gpg',
-            publicKeyPath,
-        )
+        await downloadFile(YARN_PUBLIC_KEY_URL, publicKeyPath)
     }
     return fs.readFileSync(publicKeyPath)
 }
@@ -118,7 +114,14 @@ const extractYarn = (version, rootPath) => {
     })
 }
 
-const installVersion = async ({ version, rootPath = yvmPath }) => {
+export const installVersion = async ({
+    version: versionString,
+    rootPath = yvmPath,
+}) => {
+    const version = await resolveVersion({
+        versionString,
+        yvmPath: rootPath,
+    })
     if (!fs.existsSync(versionRootPath(rootPath))) {
         fs.mkdirSync(versionRootPath(rootPath))
     }
@@ -128,19 +131,11 @@ const installVersion = async ({ version, rootPath = yvmPath }) => {
         return
     }
 
-    const releases = await getReleasesFromTags()
-    if (!releases.hasOwnProperty(version)) {
-        log(
-            'You have provided an invalid version number. use "yvm ls-remote" to see valid versions.',
-        )
-        throw new Error('Invalid version number provided')
-    }
-
     log(`Installing yarn v${version} in ${rootPath}`)
     log('Downloading...')
     if (!(await downloadVersion(version, rootPath))) {
         log(`Installation aborted, probably caused by a defective release`)
-        log(`\u2717 https://github.com/yarnpkg/yarn/releases/tag/v${version}`)
+        log(`\u2717 ${YARN_RELEASE_TAGS_URL}/v${version}`)
         log('Please retry with the next available version')
         return
     }
@@ -155,20 +150,11 @@ const installVersion = async ({ version, rootPath = yvmPath }) => {
     log('Installation successful')
 }
 
-const installLatest = async (options = {}) => {
-    const [latestVersion] = await getVersionsFromTags()
-    await installVersion(Object.assign(options, { version: latestVersion }))
+export const installLatest = async ({ rootPath = yvmPath } = {}) => {
+    await installVersion({ rootPath, version: LATEST })
 }
 
-const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
+export const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
     if (isVersionInstalled(version, rootPath)) return
     await installVersion({ version, rootPath })
-}
-
-module.exports = {
-    installVersion,
-    installLatest,
-    getDownloadPath,
-    getPublicKeyPath,
-    ensureVersionInstalled,
 }
