@@ -42,4 +42,4 @@ const siteConfig = {
     enableUpdateBy: true,
 }
 
-export default siteConfig
+module.exports = siteConfig
