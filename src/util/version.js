@@ -1,34 +1,41 @@
-const fs = require('fs')
-const semver = require('semver')
-const { execSync } = require('child_process')
-const cosmiconfig = require('cosmiconfig')
-const memoize = require('lodash.memoize')
+import fs from 'fs'
+import { execSync } from 'child_process'
+import semver from 'semver'
+import cosmiconfig from 'cosmiconfig'
+import memoize from 'lodash.memoize'
 
-const log = require('./log')
-const { yvmPath: defaultYvmPath } = require('./path')
-const {
+import log from './log'
+import { yvmPath as defaultYvmPath } from './path'
+import {
     getVersionsFromTags,
     stripVersionPrefix,
     versionRootPath,
-} = require('./utils')
-const alias = require('./alias')
+} from './utils'
+import {
+    DEFAULT,
+    isReserved,
+    resolveAlias,
+    resolveReserved,
+    setAlias,
+} from './alias'
 
-const DEFAULT_VERSION_TEXT = 'Global Default'
-const VERSION_IN_USE_SYMBOL = '\u2713'
-const VERSION_INSTALLED_SYMBOL = '\u2192'
+export const DEFAULT_VERSION_TEXT = 'Global Default'
+export const VERSION_IN_USE_SYMBOL = '\u2713'
+export const VERSION_INSTALLED_SYMBOL = '\u2192'
 
-const isValidVersionString = version => semver.valid(version.trim()) !== null
-const isValidVersionRange = versionRange => {
+export const isValidVersionString = version =>
+    semver.valid(version.trim()) !== null
+export const isValidVersionRange = versionRange => {
     return semver.validRange(versionRange.trim()) !== null
 }
-const getValidVersionString = version => semver.clean(version)
+export const getValidVersionString = version => semver.clean(version)
 
 /**
  * Get the most recent yarn install version in the specified range
  * @param {String} versionRange the bounding yarn version range
  * @throws if no install version can be found for range
  */
-const getVersionFromRange = memoize(async versionRange => {
+export const getVersionFromRange = memoize(async versionRange => {
     const availableVersion =
         semver.maxSatisfying(getYarnVersions(), versionRange) ||
         semver.maxSatisfying(await getVersionsFromTags(), versionRange)
@@ -41,27 +48,27 @@ See list of available yarn versions using: 'yvm list-remote'`,
     return availableVersion
 })
 
-const resolveVersion = memoize(
+export const resolveVersion = memoize(
     async ({ versionString, yvmPath = defaultYvmPath }) => {
-        const { version } = await alias.resolveAlias({ versionString, yvmPath })
+        const { version } = await resolveAlias({ versionString, yvmPath })
         if (version) {
             const validVersion = isValidVersionString(version)
             const validVersionRange = isValidVersionRange(version)
             if (validVersion || validVersionRange) {
                 return await getVersionFromRange(version)
             }
-            if (alias.isReserved(version)) {
-                return await alias.resolveReserved(version, { yvmPath })
+            if (isReserved(version)) {
+                return await resolveReserved(version, { yvmPath })
             }
         }
         throw new Error(`Unable to resolve: ${versionString}`)
     },
 )
 
-const getDefaultVersion = async (yvmPath = defaultYvmPath) => {
+export const getDefaultVersion = async (yvmPath = defaultYvmPath) => {
     try {
         return await resolveVersion({
-            versionString: alias.DEFAULT,
+            versionString: DEFAULT,
             yvmPath,
         })
     } catch (e) {
@@ -69,9 +76,12 @@ const getDefaultVersion = async (yvmPath = defaultYvmPath) => {
     }
 }
 
-const setDefaultVersion = async ({ version, yvmPath = defaultYvmPath }) => {
+export const setDefaultVersion = async ({
+    version,
+    yvmPath = defaultYvmPath,
+}) => {
     try {
-        await alias.setAlias({ name: alias.DEFAULT, version, yvmPath })
+        await setAlias({ name: DEFAULT, version, yvmPath })
         return true
     } catch (e) {
         log('Unable to set default version')
@@ -80,7 +90,7 @@ const setDefaultVersion = async ({ version, yvmPath = defaultYvmPath }) => {
     }
 }
 
-const getRcFileVersion = () => {
+export const getRcFileVersion = () => {
     const moduleName = 'yvm'
     const explorer = cosmiconfig(moduleName, {
         packageProp: 'engines.yarn',
@@ -103,7 +113,7 @@ const getRcFileVersion = () => {
     return String(result.config)
 }
 
-const getVersionInUse = memoize(async () => {
+export const getVersionInUse = memoize(async () => {
     try {
         return String(execSync('yarn --version')).trim()
     } catch (error) {
@@ -112,7 +122,7 @@ const getVersionInUse = memoize(async () => {
     }
 })
 
-const getYarnVersions = memoize((yvmPath = defaultYvmPath) => {
+export const getYarnVersions = memoize((yvmPath = defaultYvmPath) => {
     const versionsPath = versionRootPath(yvmPath)
     if (fs.existsSync(versionsPath)) {
         const files = fs.readdirSync(versionsPath)
@@ -123,7 +133,7 @@ const getYarnVersions = memoize((yvmPath = defaultYvmPath) => {
     return []
 })
 
-const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
+export const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
     let versionToUse
     try {
         if (maybeVersionArg) {
@@ -169,7 +179,7 @@ Try:
     return [versionToUse, rest]
 }
 
-const printVersions = async ({
+export const printVersions = async ({
     list,
     message,
     versionInUse = '',
@@ -204,22 +214,4 @@ const printVersions = async ({
         versionsMap[version] = toLog
     })
     return versionsMap
-}
-
-module.exports = {
-    DEFAULT_VERSION_TEXT,
-    VERSION_IN_USE_SYMBOL,
-    VERSION_INSTALLED_SYMBOL,
-    getDefaultVersion,
-    getRcFileVersion,
-    getSplitVersionAndArgs,
-    getValidVersionString,
-    getVersionFromRange,
-    getVersionInUse,
-    getYarnVersions,
-    isValidVersionRange,
-    isValidVersionString,
-    printVersions,
-    resolveVersion,
-    setDefaultVersion,
 }

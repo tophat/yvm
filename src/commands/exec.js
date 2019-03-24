@@ -1,10 +1,10 @@
-const path = require('path')
-const childProcess = require('child_process')
+import path from 'path'
+import { execFileSync } from 'child_process'
 
-const { ensureVersionInstalled } = require('./install')
-const { getSplitVersionAndArgs } = require('../util/version')
-const log = require('../util/log')
-const { yvmPath } = require('../util/path')
+import { ensureVersionInstalled } from './install'
+import { getSplitVersionAndArgs } from '../util/version'
+import log from '../util/log'
+import { yvmPath } from '../util/path'
 
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
@@ -20,7 +20,7 @@ const runYarn = (version, extraArgs = ['-v'], rootPath = yvmPath) => {
         // `nvm use 8.0.0` (lowest supported node version)
         // `make install`
         // `yvm exec contributors:add` and go through the steps
-        childProcess.execFileSync(filePath, extraArgs, {
+        execFileSync(filePath, extraArgs, {
             stdio: 'inherit',
         })
     } catch (error) {
@@ -29,7 +29,7 @@ const runYarn = (version, extraArgs = ['-v'], rootPath = yvmPath) => {
     }
 }
 
-const execCommand = async (maybeVersion, rest) => {
+export const exec = async (maybeVersion, rest) => {
     try {
         const [version, args] = await getSplitVersionAndArgs(
             maybeVersion,
@@ -43,5 +43,3 @@ const execCommand = async (maybeVersion, rest) => {
         process.exit(1)
     }
 }
-
-module.exports = execCommand

@@ -1,38 +1,37 @@
-const fs = require('fs')
-const { execSync } = require('child_process')
-const path = require('path')
-const chalk = require('chalk')
-const memoize = require('lodash.memoize')
+import fs from 'fs'
+import { execSync } from 'child_process'
+import path from 'path'
+import chalk from 'chalk'
+import memoize from 'lodash.memoize'
 
-const log = require('./log')
-const { getRequest, getVersionsFromTags } = require('./utils')
-const { getPathEntries, yvmPath: defaultYvmPath } = require('./path')
-const {
-    YARN_INSTALL_PAGE_URL,
-    YARN_INSTALL_STABLE_REGEX,
-} = require('./constants')
+import log from './log'
+import { getRequest, getVersionsFromTags } from './utils'
+import { getPathEntries, yvmPath as defaultYvmPath } from './path'
+import { YARN_INSTALL_PAGE_URL, YARN_INSTALL_STABLE_REGEX } from './constants'
 
-const STORAGE_FILE = '.aliases'
+export const STORAGE_FILE = '.aliases'
 
-const DEFAULT = 'default'
-const LATEST = 'latest'
+export const DEFAULT = 'default'
+export const LATEST = 'latest'
 const LTS = 'lts' // TODO: resolve long term support version
-const STABLE = 'stable'
-const SYSTEM = 'system'
-const UNRESOLVED = undefined
-const NOT_AVAILABLE = 'N/A'
-const DEFAULT_NAMES = [LATEST, STABLE, SYSTEM]
-const RESERVED_NAMES = [...DEFAULT_NAMES, LTS, NOT_AVAILABLE]
+export const STABLE = 'stable'
+export const SYSTEM = 'system'
+export const UNRESOLVED = undefined
+export const NOT_AVAILABLE = 'N/A'
+export const DEFAULT_NAMES = [LATEST, STABLE, SYSTEM]
+export const RESERVED_NAMES = [...DEFAULT_NAMES, LTS, NOT_AVAILABLE]
 
-const resolveLatest = memoize(async () => (await getVersionsFromTags())[0])
+export const resolveLatest = memoize(
+    async () => (await getVersionsFromTags())[0],
+)
 
-const resolveStable = memoize(async () => {
+export const resolveStable = memoize(async () => {
     const body = await getRequest(YARN_INSTALL_PAGE_URL)
     const matches = body.match(YARN_INSTALL_STABLE_REGEX)
     return matches ? matches[1] : UNRESOLVED
 })
 
-const resolveSystem = memoize(
+export const resolveSystem = memoize(
     async ({ shell, yvmPath = defaultYvmPath } = {}) => {
         for (const pathEntry of getPathEntries(shell)) {
             if (
@@ -44,9 +43,8 @@ const resolveSystem = memoize(
             }
             try {
                 const pathToExec = path.join(pathEntry, 'yarn')
-                return String(
-                    execSync(`${pathToExec} --version 2> /dev/null`),
-                ).trim()
+                const execCommand = `${pathToExec} --version 2> /dev/null`
+                return String(execSync(execCommand)).trim()
             } catch (error) {
                 log.info(error.message)
             }
@@ -55,9 +53,9 @@ const resolveSystem = memoize(
     },
 )
 
-const isReserved = name => RESERVED_NAMES.includes(name)
+export const isReserved = name => RESERVED_NAMES.includes(name)
 
-const resolveReserved = memoize(async (name, args = {}) => {
+export const resolveReserved = memoize(async (name, args = {}) => {
     const resolver =
         {
             [LATEST]: resolveLatest,
@@ -67,14 +65,14 @@ const resolveReserved = memoize(async (name, args = {}) => {
     return resolver(args)
 })
 
-const getDefaultAliases = () => {
+export const getDefaultAliases = () => {
     return DEFAULT_NAMES.reduce(
         (aliases, name) => Object.assign(aliases, { [name]: UNRESOLVED }),
         {},
     )
 }
 
-const getUserAliases = memoize(async (yvmPath = defaultYvmPath) => {
+export const getUserAliases = memoize(async (yvmPath = defaultYvmPath) => {
     const aliases = { [DEFAULT]: STABLE }
     const aliasStoragePath = path.join(yvmPath, STORAGE_FILE)
     try {
@@ -92,11 +90,11 @@ const filterAliasesByName = (pattern, aliases) => {
         .map(name => ({ name, value: aliases[name] }))
 }
 
-const getMatchingAliases = async (pattern, yvmPath = defaultYvmPath) => {
+export const getMatchingAliases = async (pattern, yvmPath = defaultYvmPath) => {
     return filterAliasesByName(pattern, await getUserAliases(yvmPath))
 }
 
-const setAlias = async ({ name, version, yvmPath = defaultYvmPath }) => {
+export const setAlias = async ({ name, version, yvmPath = defaultYvmPath }) => {
     const aliasStoragePath = path.join(yvmPath, STORAGE_FILE)
     try {
         if (isReserved(name)) {
@@ -128,7 +126,7 @@ const getAllDependants = ({ name, aliases }) => {
     return visited
 }
 
-const unsetAlias = async ({
+export const unsetAlias = async ({
     name,
     force = false,
     recursive = false,
@@ -171,7 +169,7 @@ Or with '--recursive' to remove all dependants`)
     }
 }
 
-const resolveAlias = memoize(
+export const resolveAlias = memoize(
     async ({
         versionString,
         currentAliases,
@@ -199,7 +197,7 @@ const resolveAlias = memoize(
     },
 )
 
-const resolveAliases = memoize(async (yvmPath = defaultYvmPath) => {
+export const resolveAliases = memoize(async (yvmPath = defaultYvmPath) => {
     const currentAliases = {
         ...(await getUserAliases(yvmPath)),
         ...getDefaultAliases(),
@@ -224,17 +222,17 @@ const resolveAliases = memoize(async (yvmPath = defaultYvmPath) => {
     return resolvedAliases
 })
 
-const resolveMatchingAliases = memoize(
+export const resolveMatchingAliases = memoize(
     async (pattern = '', yvmPath = defaultYvmPath) => {
         return filterAliasesByName(pattern, await resolveAliases(yvmPath))
     },
 )
 
-const getFormatter = (allVersions, installedVersions, currentVersion) => (
-    name,
-    version,
-    target,
-) => {
+export const getFormatter = (
+    allVersions,
+    installedVersions,
+    currentVersion,
+) => (name, version, target) => {
     const defaultStyler = chalk.grey
     let termStyler = defaultStyler
     const isAvailable = allVersions.includes(target)
@@ -259,29 +257,4 @@ const getFormatter = (allVersions, installedVersions, currentVersion) => (
     }
 
     return defaultStyler(parts.join(''))
-}
-
-module.exports = {
-    DEFAULT,
-    LATEST,
-    NOT_AVAILABLE,
-    RESERVED_NAMES,
-    STABLE,
-    STORAGE_FILE,
-    SYSTEM,
-    UNRESOLVED,
-    getDefaultAliases,
-    getFormatter,
-    getMatchingAliases,
-    getUserAliases,
-    isReserved,
-    resolveAlias,
-    resolveAliases,
-    resolveLatest,
-    resolveMatchingAliases,
-    resolveReserved,
-    resolveStable,
-    resolveSystem,
-    setAlias,
-    unsetAlias,
 }

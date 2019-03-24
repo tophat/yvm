@@ -1,12 +1,11 @@
-const mockFS = require('mock-fs')
-const childProcess = require('child_process')
-const execSync = jest.spyOn(childProcess, 'execSync')
+import mockFS from 'mock-fs'
+import childProcess from 'child_process'
 
-const alias = require('../../src/util/alias')
-const log = require('../../src/util/log')
-const path = require('../../src/util/path')
-const { stripVersionPrefix } = require('../../src/util/utils')
-const {
+import log from '../../src/util/log'
+import * as alias from '../../src/util/alias'
+import { yvmPath } from '../../src/util/path'
+import { stripVersionPrefix } from '../../src/util/utils'
+import {
     getDefaultVersion,
     getSplitVersionAndArgs,
     getValidVersionString,
@@ -17,7 +16,9 @@ const {
     isValidVersionString,
     resolveVersion,
     setDefaultVersion,
-} = require('../../src/util/version')
+} from '../../src/util/version'
+
+afterAll(jest.restoreAllMocks)
 
 describe('yvm default version', () => {
     const mockYVMDir = '/mock-yvm-root-dir'
@@ -125,7 +126,7 @@ describe('yvm config version', () => {
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
         mockFS({
-            [path.yvmPath]: {},
+            [yvmPath]: {},
         })
         await setDefaultVersion({
             version: mockVersion,
@@ -214,17 +215,21 @@ describe('yvm installed versions', () => {
 })
 
 describe('yarn version in use', () => {
+    beforeEach(() => getVersionInUse.cache.clear())
+    afterEach(jest.resetAllMocks)
+    afterAll(jest.restoreAllMocks)
+
     it('gets active version', async () => {
-        execSync.mockReturnValueOnce('  1.7.0  ')
-        getVersionInUse.cache.clear()
+        const execSync = jest.spyOn(childProcess, 'execSync')
+        execSync.mockReturnValue('  1.7.0  ')
         expect(await getVersionInUse()).toEqual('1.7.0')
     })
 
     it('returns empty string on failure', async () => {
-        execSync.mockImplementationOnce(() => {
+        const execSync = jest.spyOn(childProcess, 'execSync')
+        execSync.mockImplementation(() => {
             throw 'some error'
         })
-        getVersionInUse.cache.clear()
         expect(await getVersionInUse()).toEqual('')
     })
 })

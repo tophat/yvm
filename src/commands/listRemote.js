@@ -1,12 +1,12 @@
-const log = require('../util/log')
-const { getVersionsFromTags } = require('../util/utils')
-const {
+import log from '../util/log'
+import { getVersionsFromTags } from '../util/utils'
+import {
     getVersionInUse,
     getYarnVersions,
     printVersions,
-} = require('../util/version')
+} from '../util/version'
 
-const listRemoteCommand = async () => {
+export const listRemote = async () => {
     log.info('list-remote')
     try {
         const [remoteVersions, versionInUse, localVersions] = await Promise.all(
@@ -22,5 +22,3 @@ const listRemoteCommand = async () => {
         log.error(e)
     }
 }
-
-module.exports = listRemoteCommand

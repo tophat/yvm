@@ -1,15 +1,15 @@
-const path = require('path')
+import path from 'path'
 
-const {
+import {
     getRcFileVersion,
     getValidVersionString,
     getVersionInUse,
-} = require('../util/version')
-const log = require('../util/log')
-const { versionRootPath } = require('../util/utils')
-const { getCurrentPath, getPathDelimiter, yvmPath } = require('../util/path')
+} from '../util/version'
+import log from '../util/log'
+import { versionRootPath } from '../util/utils'
+import { getCurrentPath, getPathDelimiter, yvmPath } from '../util/path'
 
-const currentCommand = async ({ path: pathToUse, shell } = {}) => {
+export const current = async ({ path: pathToUse, shell } = {}) => {
     const pathDelimiter = getPathDelimiter(shell)
     const versionInUse = await getVersionInUse()
     if (!versionInUse) {
@@ -48,5 +48,3 @@ const currentCommand = async ({ path: pathToUse, shell } = {}) => {
     log('Yarn was NOT installed by yvm')
     return 2
 }
-
-module.exports = currentCommand

@@ -1,15 +1,17 @@
-const fs = require('fs')
-const mockFS = require('mock-fs')
-const childProcess = require('child_process')
+import fs from 'fs'
+import mockFS from 'mock-fs'
+import childProcess from 'child_process'
 jest.spyOn(childProcess, 'execSync')
 
-const log = require('../../src/util/log')
-const utils = require('../../src/util/utils')
+import log from '../../src/util/log'
+import * as utils from '../../src/util/utils'
 jest.spyOn(utils, 'getRequest')
 jest.spyOn(utils, 'getVersionsFromTags')
-const alias = require('../../src/util/alias')
+import * as alias from '../../src/util/alias'
 
 describe('alias', () => {
+    afterAll(jest.restoreAllMocks)
+
     describe('resolveLatest', () => {
         it('gets latest version', async () => {
             utils.getVersionsFromTags.mockReturnValueOnce([

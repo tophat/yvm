@@ -1,34 +1,32 @@
-const fs = require('fs-extra')
-const targz = require('targz')
+import fs from 'fs-extra'
+import targz from 'targz'
 
-const {
+import {
     ensureVersionInstalled,
     installLatest,
     installVersion,
     getDownloadPath,
     getPublicKeyPath,
-} = require('../../src/commands/install')
-const {
+} from '../../src/commands/install'
+import {
     getVersionsFromTags,
     getExtractionPath,
     versionRootPath,
-} = require('../../src/util/utils')
-const { YARN_RELEASE_TAGS_URL } = require('../../src/util/constants')
-const download = require('../../src/util/download')
-const path = require('../../src/util/path')
-const log = require('../../src/util/log')
+} from '../../src/util/utils'
+import { YARN_RELEASE_TAGS_URL } from '../../src/util/constants'
+import * as download from '../../src/util/download'
+import { yvmPath as rootPath } from '../../src/util/path'
+import log from '../../src/util/log'
 
 jest.mock('../../src/util/path', () => ({
     yvmPath: '/tmp/yvmInstall',
     getPathEntries: () => [],
 }))
+jest.setTimeout(10000)
 jest.spyOn(log, 'default')
 const downloadFile = jest.spyOn(download, 'downloadFile')
-jest.setTimeout(10000)
 
 describe('yvm install', () => {
-    const rootPath = path.yvmPath
-
     beforeAll(() => {
         fs.mkdirsSync(rootPath)
     })
@@ -45,13 +43,13 @@ describe('yvm install', () => {
     it('Downloads public key signature if none exist locally', async () => {
         const publicKeyPath = getPublicKeyPath(rootPath)
         fs.removeSync(publicKeyPath)
-        await installVersion({ version: '1.8.0', rootPath })
+        await installVersion({ version: '1.8.0', yvmPath: rootPath })
         expect(fs.existsSync(publicKeyPath)).toBeTruthy()
     })
 
     it('Installs a valid yarn version', () => {
         const version = '1.7.0'
-        return installVersion({ version, rootPath }).then(() => {
+        return installVersion({ version, yvmPath: rootPath }).then(() => {
             expect(
                 fs.statSync(getExtractionPath(version, rootPath)),
             ).toBeTruthy()
@@ -61,16 +59,14 @@ describe('yvm install', () => {
     it('Uses default yvmPath on install version', async () => {
         const version = '1.7.0'
         await installVersion({ version })
-        expect(
-            fs.statSync(getExtractionPath(version, path.yvmPath)),
-        ).toBeTruthy()
+        expect(fs.statSync(getExtractionPath(version, rootPath))).toBeTruthy()
     })
 
     it('Does not reinstall an existing yarn version', async () => {
         const version = '1.7.0'
-        await installVersion({ version, rootPath })
+        await installVersion({ version, yvmPath: rootPath })
         expect(fs.statSync(getExtractionPath(version, rootPath))).toBeTruthy()
-        await installVersion({ version, rootPath })
+        await installVersion({ version, yvmPath: rootPath })
         expect(log.default).toHaveBeenLastCalledWith(
             `It looks like you already have yarn ${version} installed...`,
         )
@@ -80,8 +76,8 @@ describe('yvm install', () => {
         const v1 = '1.7.0'
         const v2 = '1.6.0'
         return Promise.all([
-            installVersion({ version: v1, rootPath }),
-            installVersion({ version: v2, rootPath }),
+            installVersion({ version: v1, yvmPath: rootPath }),
+            installVersion({ version: v2, yvmPath: rootPath }),
         ]).then(() => {
             expect(fs.statSync(getExtractionPath(v1, rootPath))).toBeTruthy()
             expect(fs.statSync(getExtractionPath(v2, rootPath))).toBeTruthy()
@@ -90,7 +86,7 @@ describe('yvm install', () => {
 
     it('Does not install an invalid version of Yarn', () => {
         const version = '0.0.0'
-        return installVersion({ version, rootPath }).catch(() => {
+        return installVersion({ version, yvmPath: rootPath }).catch(() => {
             expect(() =>
                 fs.statSync(getExtractionPath(version, rootPath)),
             ).toThrow()
@@ -100,7 +96,7 @@ describe('yvm install', () => {
     it('Installs the lastest version of yarn', () => {
         return Promise.all([
             getVersionsFromTags(),
-            installLatest({ rootPath }),
+            installLatest({ yvmPath: rootPath }),
         ]).then(results => {
             const remoteVersions = results[0]
             const latestVersion = remoteVersions[0]
@@ -116,7 +112,7 @@ describe('yvm install', () => {
             installLatest(),
         ])
         expect(
-            fs.statSync(getExtractionPath(latestVersion, path.yvmPath)),
+            fs.statSync(getExtractionPath(latestVersion, rootPath)),
         ).toBeTruthy()
     })
 
@@ -125,7 +121,7 @@ describe('yvm install', () => {
             const version = '1.7.0'
             await ensureVersionInstalled(version)
             expect(
-                fs.statSync(getExtractionPath(version, path.yvmPath)),
+                fs.statSync(getExtractionPath(version, rootPath)),
             ).toBeTruthy()
         })
 
@@ -149,7 +145,7 @@ describe('yvm install', () => {
         downloadFile.mockImplementationOnce(() => {
             throw new Error()
         })
-        await installVersion({ version, rootPath })
+        await installVersion({ version, yvmPath: rootPath })
         expect(() => fs.statSync(downloadPath)).toThrow()
         expect(() => fs.statSync(extractionPath)).toThrow()
         const logMessages = log.default.mock.calls
@@ -173,7 +169,7 @@ describe('yvm install', () => {
             callback(mockError),
         )
         try {
-            await installVersion({ version, rootPath })
+            await installVersion({ version, yvmPath: rootPath })
         } catch (e) {
             expect(e).toEqual(mockError)
         }
@@ -191,7 +187,7 @@ describe('yvm install', () => {
             },
         )
         try {
-            await installVersion({ version, rootPath })
+            await installVersion({ version, yvmPath: rootPath })
         } catch (e) {
             expect(e).toEqual(expectedError)
         }
