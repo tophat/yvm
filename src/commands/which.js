@@ -1,17 +1,17 @@
-const path = require('path')
+import path from 'path'
 
-const log = require('../util/log')
-const alias = require('../util/alias')
-const {
+import log from '../util/log'
+import { SYSTEM } from '../util/alias'
+import {
     getSplitVersionAndArgs,
     getValidVersionString,
     getVersionInUse,
     getYarnVersions,
-} = require('../util/version')
-const { getVersionsFromTags, versionRootPath } = require('../util/utils')
-const { yvmPath } = require('../util/path')
+} from '../util/version'
+import { getVersionsFromTags, versionRootPath } from '../util/utils'
+import { yvmPath } from '../util/path'
 
-const whichCommand = async ({ version, rootPath = yvmPath }) => {
+export const which = async ({ version, rootPath = yvmPath }) => {
     let versionToUse = getValidVersionString(version || '')
     if (!versionToUse) {
         try {
@@ -35,7 +35,7 @@ const whichCommand = async ({ version, rootPath = yvmPath }) => {
     }
     const currentVersion = await getVersionInUse()
     if (versionToUse === currentVersion) {
-        log(alias.SYSTEM)
+        log(SYSTEM)
         return 0
     }
     const remoteVersions = await getVersionsFromTags()
@@ -46,5 +46,3 @@ const whichCommand = async ({ version, rootPath = yvmPath }) => {
     log(`Version '${versionToUse}' is not installed.`)
     return 1
 }
-
-module.exports = whichCommand

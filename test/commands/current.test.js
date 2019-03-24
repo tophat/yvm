@@ -1,12 +1,12 @@
-const fs = require('fs')
-const path = require('../../src/util/path')
+import fs from 'fs'
+import * as path from '../../src/util/path'
 path.yvmPath = '/Users/tophat/.yvm'
-const version = require('../../src/util/version')
+import * as version from '../../src/util/version'
 const getVersionInUse = jest
     .spyOn(version, 'getVersionInUse')
     .mockResolvedValue('1.7.0')
-const current = require('../../src/commands/current')
-const log = require('../../src/util/log')
+import { current } from '../../src/commands/current'
+import log from '../../src/util/log'
 
 jest.mock('../../src/util/log')
 

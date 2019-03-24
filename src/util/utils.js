@@ -1,23 +1,23 @@
-const path = require('path')
-const request = require('request')
-const memoize = require('lodash.memoize')
+import path from 'path'
+import request from 'request'
+import memoize from 'lodash.memoize'
 
-const {
+import {
     USER_AGENT,
     YARN_DOWNLOAD_URL,
     YARN_RELEASES_API_URL,
-} = require('./constants')
-const log = require('./log')
+} from './constants'
+import log from './log'
 
-const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
+export const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
-const getExtractionPath = (version, rootPath) =>
+export const getExtractionPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}`)
 
-const stripVersionPrefix = tagName =>
+export const stripVersionPrefix = tagName =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-const getRequest = memoize(async url => {
+export const getRequest = memoize(async url => {
     const options = {
         url,
         gzip: true,
@@ -41,10 +41,10 @@ const getRequest = memoize(async url => {
     })
 })
 
-const getVersionDownloadUrl = version =>
+export const getVersionDownloadUrl = version =>
     `${YARN_DOWNLOAD_URL}/${version}/yarn-v${version}.tar.gz`
 
-const getReleasesFromTags = memoize(async () => {
+export const getReleasesFromTags = memoize(async () => {
     return getRequest(YARN_RELEASES_API_URL).then(body => {
         return JSON.parse(body).reduce((accumulator, tag) => {
             const version = stripVersionPrefix(tag.name)
@@ -56,16 +56,6 @@ const getReleasesFromTags = memoize(async () => {
     })
 })
 
-const getVersionsFromTags = memoize(async () => {
+export const getVersionsFromTags = memoize(async () => {
     return Object.keys(await getReleasesFromTags())
 })
-
-module.exports = {
-    getExtractionPath,
-    getReleasesFromTags,
-    getRequest,
-    getVersionDownloadUrl,
-    getVersionsFromTags,
-    stripVersionPrefix,
-    versionRootPath,
-}

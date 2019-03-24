@@ -1,6 +1,6 @@
-const path = require('path')
+import path from 'path'
 
-const getNewPath = require('../../src/commands/getNewPath')
+import { getNewPath } from '../../src/commands/getNewPath'
 
 describe('getNewPath', () => {
     it('Returns a new PATH string with a yarn directory prepended', () => {

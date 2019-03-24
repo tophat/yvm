@@ -1,10 +1,10 @@
-const path = require('path')
-const fs = require('fs-extra')
+import path from 'path'
+import fs from 'fs-extra'
 
-const { getExtractionPath, versionRootPath } = require('../../src/util/utils')
-const version = require('../../src/util/version')
+import { getExtractionPath, versionRootPath } from '../../src/util/utils'
+import * as version from '../../src/util/version'
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
-const remove = require('../../src/commands/remove')
+import { remove } from '../../src/commands/remove'
 
 describe('yvm remove', () => {
     const rootPath = '/tmp/yvmRemove'
@@ -19,6 +19,8 @@ describe('yvm remove', () => {
         fs.removeSync(versionRootPath(rootPath))
         getVersionInUse.mockReset()
     })
+
+    afterAll(jest.restoreAllMocks)
 
     it('Removes installed version specified', async () => {
         const version = '1.7.0'

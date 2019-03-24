@@ -43,7 +43,7 @@ int_trap() {
 trap int_trap INT
 
 # Start Webpack in watch mode
-./node_modules/.bin/webpack --progress --config webpack/webpack.config.development.js --watch
+./node_modules/.bin/webpack --progress --config webpack/webpack.config.dev.js --watch
 
 # Clean up and recover
 restore_file "yvm.sh"

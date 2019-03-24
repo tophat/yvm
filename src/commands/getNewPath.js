@@ -1,9 +1,14 @@
-const path = require('path')
+import path from 'path'
 
-const { versionRootPath } = require('../util/utils')
-const { getCurrentPath, getPathDelimiter, yvmPath } = require('../util/path')
+import { versionRootPath } from '../util/utils'
+import { getCurrentPath, getPathDelimiter, yvmPath } from '../util/path'
 
-const getNewPath = ({ version, rootPath = yvmPath, shell, pathString }) => {
+export const getNewPath = ({
+    version,
+    rootPath = yvmPath,
+    shell,
+    pathString,
+}) => {
     const pathDelimiter = getPathDelimiter(shell)
     const pathToUpdate = pathString || getCurrentPath(shell) || ''
     const splitPath = pathToUpdate.split(pathDelimiter)
@@ -27,5 +32,3 @@ const getNewPath = ({ version, rootPath = yvmPath, shell, pathString }) => {
 
     return splitPath.join(pathDelimiter).trim()
 }
-
-module.exports = getNewPath

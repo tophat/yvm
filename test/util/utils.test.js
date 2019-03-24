@@ -1,10 +1,10 @@
-const log = require('../../src/util/log')
-const {
+import log from '../../src/util/log'
+import {
     DEFAULT_VERSION_TEXT,
     VERSION_IN_USE_SYMBOL,
     VERSION_INSTALLED_SYMBOL,
     printVersions,
-} = require('../../src/util/version')
+} from '../../src/util/version'
 
 const versionInUse = '1.2.0'
 const defaultVersion = '1.3.0'
@@ -16,6 +16,7 @@ describe('Util functions', () => {
     afterEach(() => {
         jest.resetAllMocks()
     })
+    afterAll(jest.restoreAllMocks)
 
     it('Prints all versions passed to printVersion function', async () => {
         const versionsObject = await printVersions({

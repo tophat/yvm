@@ -1,6 +1,7 @@
 {
+  "parser": "babel-eslint",
   "extends": [
-      "@tophat",
-      "@tophat/eslint-config/jest"
+    "@tophat",
+    "@tophat/eslint-config/jest"
   ]
 }

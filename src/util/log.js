@@ -1,4 +1,4 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
 const defaultLogger = console.error.bind(console) // eslint-disable-line no-console
 const capturableLogger = console.log.bind(console) // eslint-disable-line no-console
@@ -31,4 +31,4 @@ log.notice = function noticeLog(...args) {
     log(chalk.yellow(...args))
 }
 
-module.exports = log
+export default log

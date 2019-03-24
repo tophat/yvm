@@ -1,11 +1,11 @@
-const log = require('../util/log')
-const {
+import log from '../util/log'
+import {
     getVersionInUse,
     getYarnVersions,
     printVersions,
-} = require('../util/version')
+} from '../util/version'
 
-const listVersions = async rootPath => {
+export const listVersions = async rootPath => {
     const installedVersions = getYarnVersions(rootPath)
     if (installedVersions.length) {
         const versionInUse = await getVersionInUse()
@@ -20,5 +20,3 @@ const listVersions = async rootPath => {
     }
     return installedVersions
 }
-
-module.exports = listVersions

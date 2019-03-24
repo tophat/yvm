@@ -1,13 +1,13 @@
-const fs = require('fs-extra')
+import fs from 'fs-extra'
 
-const version = require('../../src/util/version')
+import * as version from '../../src/util/version'
 const printVersions = jest.spyOn(version, 'printVersions')
-const {
+import {
     getExtractionPath,
     stripVersionPrefix,
     versionRootPath,
-} = require('../../src/util/utils')
-const list = require('../../src/commands/list')
+} from '../../src/util/utils'
+import { listVersions } from '../../src/commands/list'
 
 describe('yvm list', () => {
     const garbageInDirectory = ['haxor']
@@ -22,7 +22,7 @@ describe('yvm list', () => {
         garbageInDirectory.forEach(trash => {
             fs.mkdirsSync(getExtractionPath(trash, rootPath))
         })
-        return (await list(rootPath)).map(stripVersionPrefix)
+        return (await listVersions(rootPath)).map(stripVersionPrefix)
     }
 
     beforeAll(() => {
@@ -63,7 +63,7 @@ describe('yvm list', () => {
     })
 
     it('Returns nothing if nothing installed', async () => {
-        const versions = await list(rootPath)
+        const versions = await listVersions(rootPath)
         expect(versions).toEqual([])
         expect(printVersions).not.toHaveBeenCalled()
     })
