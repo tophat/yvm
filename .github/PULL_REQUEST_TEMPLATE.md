@@ -2,6 +2,9 @@
 <!-- Add a bulleted list of items changed or added -->
 
 
+### Checklist
+- [ ] This PR has updated documentation
+- [ ] This PR has sufficient testing
 
 ## DevQA
 
@@ -12,9 +15,5 @@
 ### DevQA Steps
 <!-- Fill in steps to DevQA this PR here -->
 
-
-
-### Comments:
+### Comments
 <!-- Any other comments you want to include for reviewers. -->
-
-
