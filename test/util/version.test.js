@@ -1,6 +1,5 @@
 import mockFS from 'mock-fs'
 import childProcess from 'child_process'
-const execSync = jest.spyOn(childProcess, 'execSync')
 
 import log from '../../src/util/log'
 import * as alias from '../../src/util/alias'
@@ -221,11 +220,13 @@ describe('yarn version in use', () => {
     afterAll(jest.restoreAllMocks)
 
     it('gets active version', async () => {
+        const execSync = jest.spyOn(childProcess, 'execSync')
         execSync.mockReturnValue('  1.7.0  ')
         expect(await getVersionInUse()).toEqual('1.7.0')
     })
 
     it('returns empty string on failure', async () => {
+        const execSync = jest.spyOn(childProcess, 'execSync')
         execSync.mockImplementation(() => {
             throw 'some error'
         })
