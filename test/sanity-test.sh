@@ -22,6 +22,21 @@ fail() {
     exit 1
 }
 
+testing "yvm default options"
+~/.yvm/yvm.sh --version
+if [[ "$?x" == "x"]]; then
+    pass
+else
+    fail "yvm --version non zero exit"
+fi
+
+~/.yvm/yvm.sh --help
+if [[ "$?x" == "x"]]; then
+    pass
+else
+    fail "yvm --help non zero exit"
+fi
+
 source ~/.yvm/yvm.sh
 
 testing "yvm exec version command"
