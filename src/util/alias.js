@@ -9,7 +9,7 @@ import { getRequest, getVersionsFromTags } from './utils'
 import { getPathEntries, yvmPath as defaultYvmPath } from './path'
 import { YARN_INSTALL_PAGE_URL, YARN_INSTALL_STABLE_REGEX } from './constants'
 
-const STORAGE_FILE = '.aliases'
+export const STORAGE_FILE = '.aliases'
 
 export const DEFAULT = 'default'
 export const LATEST = 'latest'
