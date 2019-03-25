@@ -15,7 +15,7 @@ commands:
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: "Install yvm release version"
-          command: "node ./scripts/install.js"
+          command: "node ~/repo/scripts/install.js"
   save_env_cache:
     description: "Saves environment cache"
     steps:
