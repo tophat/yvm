@@ -44,7 +44,7 @@ argParser
             } else if (!version) {
                 version = (await getSplitVersionAndArgs())[0]
             }
-            installVersion({ version })
+            await installVersion({ version })
         } catch (e) {
             log(e.message)
             log.info(e.stack)
@@ -55,7 +55,13 @@ argParser
 const uninstallVersion = async version => {
     log.info(`Removing Yarn v${version}`)
     const { remove } = await import('./commands/remove')
-    process.exit(await remove(version))
+    let exitCode = 1
+    try {
+        exitCode = await remove(version)
+    } catch (e) {
+        log(e.message)
+    }
+    process.exit(exitCode)
 }
 argParser
     .command('remove <version>')
