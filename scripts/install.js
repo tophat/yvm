@@ -4,11 +4,11 @@ const os = require('os')
 const fs = require('fs')
 const { execSync } = require('child_process')
 
-const log = (...args) => console.error(...args) // eslint-disable-line no-console
+const log = (...args) => console.log(...args) // eslint-disable-line no-console
 
 const dependencies = ['curl', 'unzip']
 
-async function preflightCheck() {
+function preflightCheck(...dependencies) {
     const missing = []
     dependencies.forEach(pkg => {
         try {
@@ -133,8 +133,9 @@ async function ensureConfig(configFile, configLines) {
 }
 
 async function run() {
+    preflightCheck(...dependencies)
     const { version, paths, shConfigs, releaseApiUrl, useLocal } = getConfig()
-    const yvmDirectoryExists = ensureDir(paths.yvm)
+    await ensureDir(paths.yvm)
     if (!useLocal) {
         if (version.tagName) {
             version.downloadUrl = getVersionDownloadUrl(version.tagName)
@@ -147,7 +148,6 @@ async function run() {
     if (version.tagName) {
         log(`Installing Version: ${version.tagName}`)
     }
-    await yvmDirectoryExists
     await cleanYvmDir(paths.yvm)
     await unzipFile(paths.zip, paths.yvm)
 
@@ -170,10 +170,16 @@ Open another terminal window to start using, or type "source ${paths.yvmSh}"`)
 }
 
 if (!module.parent) {
-    preflightCheck()
-        .then(run)
-        .catch(error => {
-            log('yvm installation failed')
-            log(error.message)
-        })
+    run().catch(error => {
+        log('yvm installation failed')
+        log(error.message)
+    })
+}
+
+module.exports = {
+    ensureConfig,
+    escapeRegExp,
+    getConfig,
+    preflightCheck,
+    run,
 }

@@ -387,14 +387,11 @@ describe('alias', () => {
         })
 
         afterEach(() => {
+            mockFS.restore()
             jest.clearAllMocks()
             alias.getUserAliases.cache.clear()
             alias.resolveAliases.cache.clear()
             alias.resolveMatchingAliases.cache.clear()
-        })
-
-        afterAll(() => {
-            mockFS.restore()
         })
 
         it('matches all aliases on empty pattern', async () => {
@@ -406,9 +403,12 @@ describe('alias', () => {
                     zero: version,
                 }),
             })
-            expect(
-                await alias.resolveMatchingAliases(undefined, mockYVMPath),
-            ).toMatchSnapshot()
+            const result = await alias.resolveMatchingAliases(
+                undefined,
+                mockYVMPath,
+            )
+            mockFS.restore()
+            expect(result).toMatchSnapshot()
         })
 
         it('does not crash on cyclic alias dependancy', async () => {
@@ -419,9 +419,12 @@ describe('alias', () => {
                     zero: 'two',
                 }),
             })
-            expect(
-                await alias.resolveMatchingAliases(undefined, mockYVMPath),
-            ).toMatchSnapshot()
+            const result = await alias.resolveMatchingAliases(
+                undefined,
+                mockYVMPath,
+            )
+            mockFS.restore()
+            expect(result).toMatchSnapshot()
         })
 
         it('resolves only matching aliases', async () => {

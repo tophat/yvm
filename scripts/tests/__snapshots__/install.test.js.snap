@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yvm install latest version indicates successful completion 1`] = `
+Object {
+  "paths": Object {
+    "home": "other-mock-home",
+    "yvm": "other-mock-home/.yvm",
+    "yvmSh": "other-mock-home/.yvm/yvm.sh",
+    "zip": "other-mock-home/.yvm/yvm.zip",
+  },
+  "releaseApiUrl": "https://d236jo9e8rrdox.cloudfront.net/yvm-releases",
+  "shConfigs": Object {
+    "other-mock-home/.bashrc": Array [
+      "export YVM_DIR=other-mock-home/.yvm",
+      "[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh",
+    ],
+    "other-mock-home/.config/fish/config.fish": Array [
+      "set -x YVM_DIR other-mock-home/.yvm",
+      ". $YVM_DIR/yvm.fish",
+    ],
+    "other-mock-home/.zshrc": Array [
+      "export YVM_DIR=other-mock-home/.yvm",
+      "[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh",
+    ],
+  },
+  "useLocal": false,
+  "version": Object {
+    "tagName": null,
+  },
+}
+`;
+
+exports[`yvm install local version indicates successful completion 1`] = `
+Object {
+  "paths": Object {
+    "home": "mock-home",
+    "yvm": "mock-home/.yvm",
+    "yvmSh": "mock-home/.yvm/yvm.sh",
+    "zip": "artifacts/yvm.zip",
+  },
+  "releaseApiUrl": "https://d236jo9e8rrdox.cloudfront.net/yvm-releases",
+  "shConfigs": Object {
+    "mock-home/.bashrc": Array [
+      "export YVM_DIR=mock-home/.yvm",
+      "[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh",
+    ],
+    "mock-home/.config/fish/config.fish": Array [
+      "set -x YVM_DIR mock-home/.yvm",
+      ". $YVM_DIR/yvm.fish",
+    ],
+    "mock-home/.zshrc": Array [
+      "export YVM_DIR=mock-home/.yvm",
+      "[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh",
+    ],
+  },
+  "useLocal": "true",
+  "version": Object {
+    "tagName": null,
+  },
+}
+`;
+
+exports[`yvm install specified version indicates successful completion 1`] = `
+Object {
+  "paths": Object {
+    "home": "another-mock-home",
+    "yvm": "another-mock-home/.yvm",
+    "yvmSh": "another-mock-home/.yvm/yvm.sh",
+    "zip": "another-mock-home/.yvm/yvm.zip",
+  },
+  "releaseApiUrl": "https://d236jo9e8rrdox.cloudfront.net/yvm-releases",
+  "shConfigs": Object {
+    "another-mock-home/.bashrc": Array [
+      "export YVM_DIR=another-mock-home/.yvm",
+      "[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh",
+    ],
+    "another-mock-home/.config/fish/config.fish": Array [
+      "set -x YVM_DIR another-mock-home/.yvm",
+      ". $YVM_DIR/yvm.fish",
+    ],
+    "another-mock-home/.zshrc": Array [
+      "export YVM_DIR=another-mock-home/.yvm",
+      "[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh",
+    ],
+  },
+  "useLocal": false,
+  "version": Object {
+    "tagName": "v2.4.0",
+  },
+}
+`;

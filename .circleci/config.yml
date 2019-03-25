@@ -38,6 +38,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - prep_env
+      - attach_workspace:
+          at: ~/repo
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
@@ -115,6 +117,7 @@ workflows:
       - unit_test:
           requires:
             - node_modules
+            - build
       - lint:
           requires:
             - node_modules
