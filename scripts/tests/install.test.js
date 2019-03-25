@@ -57,7 +57,7 @@ describe('yvm install', () => {
     })
 
     it('runs when executed', () => {
-        const output = String(execSync('./scripts/install.js')).trim()
+        const output = String(execSync('node ./scripts/install.js')).trim()
         const expectedOutput = [
             'All dependencies satisfied',
             'yvm successfully installed',
