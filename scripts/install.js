@@ -4,7 +4,7 @@ const os = require('os')
 const fs = require('fs')
 const { execSync } = require('child_process')
 
-const log = console.error.bind(console) // eslint-disable-line no-console
+const log = (...args) => console.error(...args) // eslint-disable-line no-console
 
 const dependencies = ['curl', 'unzip']
 
@@ -69,7 +69,7 @@ function escapeRegExp(src) {
 
 async function ensureDir(dirPath) {
     if (fs.existsSync(dirPath)) return
-    fs.mkdirSync(dirPath)
+    execSync(`mkdir -p ${dirPath}`)
 }
 
 function getVersionDownloadUrl(version) {
@@ -94,13 +94,7 @@ async function removeFile(filePath) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const filesToRemove = [
-        'yvm.sh',
-        'yvm.js',
-        'yvm.fish',
-        'yvm-exec.js',
-        'node_modules',
-    ]
+    const filesToRemove = ['yvm.sh', 'yvm.js', 'yvm.fish', 'node_modules']
     await Promise.all(
         filesToRemove.map(file => removeFile(`${yvmPath}/${file}`).catch(log)),
     )
