@@ -93,9 +93,10 @@ jobs:
       - save_env_cache
       - run: yarn build
       - persist_to_workspace:
-          root: ./
+          root: ../
           paths:
-            - build/
+            - docs/
+            - website/build/
   deploy_website:
     <<: *docker_defaults
     working_directory: ~/repo/website
