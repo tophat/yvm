@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Overview · Yarn Version Manager</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;!-- BADGES:START --&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Overview · Yarn Version Manager"/><meta property="og:type" content="website"/><meta property="og:url" content="https://yvm.js.org/index.html"/><meta property="og:description" content="&lt;!-- BADGES:START --&gt;"/><meta property="og:image" content="https://yvm.js.org/img/yarn.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://yvm.js.org/img/yarn.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Overview · Yarn Version Manager</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;!-- BADGES:PLACEHOLDER --&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Overview · Yarn Version Manager"/><meta property="og:type" content="website"/><meta property="og:url" content="https://yvm.js.org/index.html"/><meta property="og:description" content="&lt;!-- BADGES:PLACEHOLDER --&gt;"/><meta property="og:image" content="https://yvm.js.org/img/yarn.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://yvm.js.org/img/yarn.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script>
               (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
               (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
               m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -56,97 +56,6 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Overview</h1></header><article><div><span><!-- BADGES:START -->
-<p><a href="https://github.com/tophat/yvm/releases"><img src="https://img.shields.io/github/release/tophat/yvm.svg" alt="YVM Latest Version"></a>
-<a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D%208-brightgreen.svg" alt="Minimum Node Version"></a>
-<a href="https://circleci.com/gh/tophat/yvm"><img src="https://img.shields.io/circleci/project/github/tophat/yvm/master.svg" alt="Builds"></a>
-<a href="https://codecov.io/gh/tophat/yvm"><img src="https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU" alt="codecov"></a>
-<a href="https://github.com/semantic-release/semantic-release"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release"></a>
-<a href="https://david-dm.org/tophat/yvm"><img src="https://david-dm.org/tophat/yvm/status.svg" alt="Deps"></a>
-<a href="https://david-dm.org/tophat/yvm"><img src="https://david-dm.org/tophat/yvm/dev-status.svg" alt="Dev Deps"></a>
-<a href="https://greenkeeper.io"><img src="https://badges.greenkeeper.io/tophat/yvm.svg" alt="Green Keeper"></a>
-<a href="#contributors"><img src="https://img.shields.io/badge/all_contributors-21-orange.svg?style=flat-square" alt="All Contributors"></a>
-<a href="https://opensource.tophat.com/slack"><img src="https://slackinvite.dev.tophat.com/badge.svg" alt="Slack workspace"></a>
-<a href="https://github.com/tophat/getting-started/blob/master/scorecard.md"><img src="https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg" alt="Maturity badge - level 3"></a>
-<a href="https://pullreminders.com?ref=badge"><img src="https://pullreminders.com/badge.svg" alt="Pull Reminders"></a></p>
-<!-- BADGES:END -->
-<!-- OVERVIEW-DOCS:START -->
-<p>Pesky yarn versions got you down? Automatically and easilly manage those versions.</p>
-<p>YVM will automatically use the correct yarn version when you run any yarn commands in any folder with a <code>package.json</code>, <code>.yvmrc</code> or any other <a href="https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number">supported configuration</a> file. Otherwise, it will use you a globally set version of yarn.</p>
-<h2><a class="anchor" aria-hidden="true" id="motivation"></a><a href="#motivation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Motivation</h2>
-<p>Manually managing different yarn versions across projects is a pain. This fixes that.</p>
-<h2><a class="anchor" aria-hidden="true" id="installation"></a><a href="#installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation</h2>
-<p>Node: &gt;=8.0.0</p>
-<h3><a class="anchor" aria-hidden="true" id="installation-script"></a><a href="#installation-script" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Installation script</h3>
-<p>Execute the following in your terminal:</p>
-<pre><code class="hljs css language-bash">curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash
-</code></pre>
-<p>Or to install a specific version:</p>
-<pre><code class="hljs css language-bash">curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | INSTALL_VERSION=<span class="hljs-string">"v0.9.26"</span> bash
-</code></pre>
-<h3><a class="anchor" aria-hidden="true" id="manual-installation"></a><a href="#manual-installation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Manual installation</h3>
-<p>Navigate to <a href="https://github.com/tophat/yvm/releases">yvm releases</a> and download the <code>yvm.zip</code> file for the latest release to your home directory.</p>
-<p>Next, unzip that file to the .yvm dir in your home directory and make extracted yvm.sh executable</p>
-<pre><code class="hljs css language-bash">unzip yvm.zip -d <span class="hljs-variable">$HOME</span>/.yvm
-chmod a+x <span class="hljs-variable">$HOME</span>/.yvm/yvm.sh
-</code></pre>
-<p>Finally, add the following lines to your <code>$HOME/.zshrc</code> or <code>$HOME/.bashrc</code>, depending on the shell you use</p>
-<pre><code class="hljs css language-bash"><span class="hljs-built_in">export</span> YVM_DIR=/home/joe_user/.yvm
-[ -r <span class="hljs-variable">$YVM_DIR</span>/yvm.sh ] &amp;&amp; <span class="hljs-built_in">source</span> <span class="hljs-variable">$YVM_DIR</span>/yvm.sh
-</code></pre>
-<p>And in your <code>$HOME/.config/fish/config.fish</code> for fishers:</p>
-<pre><code class="hljs css language-fish">set -x YVM_DIR /home/joe_user/<span class="hljs-selector-class">.yvm</span>
-. <span class="hljs-variable">$YVM_DIR</span>/yvm<span class="hljs-selector-class">.fish</span>
-</code></pre>
-<h3><a class="anchor" aria-hidden="true" id="upgrade"></a><a href="#upgrade" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Upgrade</h3>
-<p>To upgrade yvm to the lastest version either install as normal, or run</p>
-<pre><code class="hljs css language-bash">yvm update-self
-</code></pre>
-<h2><a class="anchor" aria-hidden="true" id="usage"></a><a href="#usage" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Usage</h2>
-<h3><a class="anchor" aria-hidden="true" id="automatic-magic"></a><a href="#automatic-magic" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Automatic magic</h3>
-<p>Run any yarn command and watch it magically use the correct version of yarn</p>
-<h3><a class="anchor" aria-hidden="true" id="basic"></a><a href="#basic" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic</h3>
-<p>To download and install a version of yarn, run:</p>
-<pre><code class="hljs css language-bash">yvm install &lt;version&gt;
-</code></pre>
-<p>To get the latest version of Yarn, run:</p>
-<pre><code class="hljs css language-bash">yvm install latest
-</code></pre>
-<p>Execute an arbitrary command using a specific version of yarn:</p>
-<pre><code class="hljs css language-bash">yvm <span class="hljs-built_in">exec</span> &lt;version&gt; &lt;<span class="hljs-built_in">command</span>&gt;
-</code></pre>
-<h3><a class="anchor" aria-hidden="true" id="additional-commands"></a><a href="#additional-commands" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Additional commands</h3>
-<p>Switch the current yarn versions:</p>
-<pre><code class="hljs css language-bash">yvm use &lt;version&gt;
-yarn --version
-</code></pre>
-<p>Control version aliasing:</p>
-<pre><code class="hljs css language-bash">yvm <span class="hljs-built_in">alias</span> stable
-<span class="hljs-comment"># stable → 1.13.0 (1.13.0)</span>
-
-yvm <span class="hljs-built_in">alias</span> default stable
-<span class="hljs-comment"># default → stable (1.13.0)</span>
-
-yvm <span class="hljs-built_in">alias</span>
-<span class="hljs-comment"># default → stable (1.13.0)</span>
-<span class="hljs-comment"># latest → 1.14.0 (1.14.0)</span>
-<span class="hljs-comment"># stable → 1.13.0 (1.13.0)</span>
-<span class="hljs-comment"># system → 1.13.0 (1.13.0)</span>
-
-yvm <span class="hljs-built_in">alias</span> default <span class="hljs-string">'^1.7'</span>
-<span class="hljs-comment"># default → ^1.7 (1.14.0)</span>
-</code></pre>
-<p>Show path to version used:</p>
-<pre><code class="hljs css language-bash">yvm <span class="hljs-built_in">which</span>
-</code></pre>
-<p>List installed yarn versions:</p>
-<pre><code class="hljs css language-bash">yvm list
-</code></pre>
-<p>Full list of available commands:</p>
-<pre><code class="hljs css language-bash">yvm --<span class="hljs-built_in">help</span>
-</code></pre>
-<h3><a class="anchor" aria-hidden="true" id="configuration-file"></a><a href="#configuration-file" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Configuration file</h3>
-<p>Yvm defaults to using the <code>yarn</code> version in your <code>package.json</code> <code>engines</code>. Otherwise you can create a <code>.yvmrc</code> file containing the version number of yarn in your project's root directory. Afterwards, <code>yvm use</code>, <code>yvm install</code> and <code>yvm exec</code> will use the version specified in the config file if no version number is supplied to the command.
-You can also <a href="https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number">declare the version using other configuration files</a></p>
-<!-- OVERVIEW-DOCS:END -->
-</span></div></article></div><div class="docLastUpdate"><em>Last updated by Emmanuel Ogbizi</em></div><div class="docs-prevnext"><a class="docs-next button" href="/docs/api"><span>API</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#motivation">Motivation</a></li><li><a href="#installation">Installation</a><ul class="toc-headings"><li><a href="#installation-script">Installation script</a></li><li><a href="#manual-installation">Manual installation</a></li><li><a href="#upgrade">Upgrade</a></li></ul></li><li><a href="#usage">Usage</a><ul class="toc-headings"><li><a href="#automatic-magic">Automatic magic</a></li><li><a href="#basic">Basic</a></li><li><a href="#additional-commands">Additional commands</a></li><li><a href="#configuration-file">Configuration file</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="footer"><div class="footer-icon"><a href="/" class="nav-home"><img src="/img/yarn.png" alt="Yarn Version Manager" width="58" height="58"/></a></div><div class="footer-github"><a href="https://github.com/tophat/yvm">GitHub</a><a class="github-button" href="https://github.com/tophat/yvm" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Top Hat Open Source</section></footer></div></body></html>
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Overview</h1></header><article><div><span><!-- BADGES:PLACEHOLDER -->
+<!-- OVERVIEW-DOCS:PLACEHOLDER -->
+</span></div></article></div><div class="docLastUpdate"><em>Last updated by Emmanuel Ogbizi</em></div><div class="docs-prevnext"><a class="docs-next button" href="/docs/api"><span>API</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="footer"><div class="footer-icon"><a href="/" class="nav-home"><img src="/img/yarn.png" alt="Yarn Version Manager" width="58" height="58"/></a></div><div class="footer-github"><a href="https://github.com/tophat/yvm">GitHub</a><a class="github-button" href="https://github.com/tophat/yvm" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Top Hat Open Source</section></footer></div></body></html>
