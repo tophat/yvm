@@ -64,14 +64,15 @@ const uninstallVersion = async version => {
     process.exit(exitCode)
 }
 argParser
-    .command('remove <version>')
-    .description(signPosting`uninstall`)
-    .action(uninstallVersion)
-argParser
     .command('uninstall <version>')
     .alias('rm')
     .description('Uninstall the specified version of Yarn.')
     .action(uninstallVersion)
+
+argParser
+    .command('use [version]')
+    .description(messageOptionalVersion`Activate specified Yarn version`)
+    .action(() => log(messageSourceYvm))
 
 argParser
     .command('exec [version] [args...]')
@@ -87,36 +88,12 @@ argParser
     })
 
 argParser
-    .command('use [version]')
-    .description(messageOptionalVersion`Activate specified Yarn version`)
-    .action(() => log(messageSourceYvm))
-
-argParser
-    .command('which [version]')
-    .description(messageOptionalVersion`Display path to Yarn version`)
-    .action(async maybeVersion => {
-        log.info('Getting path to Yarn version')
-        const { which } = await import('./commands/which')
-        process.exit(await which({ version: maybeVersion }))
-    })
-
-argParser
     .command('current')
     .description('Display current active Yarn version')
     .action(async command => {
         log.info('Checking Yarn version')
         const { current } = await import('./commands/current')
         process.exit(await current(command))
-    })
-
-argParser
-    .command('list-remote')
-    .alias('ls-remote')
-    .description('List Yarn versions available to install.')
-    .action(async () => {
-        log.info('Checking for available yarn versions...')
-        const { listRemote } = await import('./commands/listRemote')
-        listRemote()
     })
 
 argParser
@@ -130,25 +107,13 @@ argParser
     })
 
 argParser
-    .command('get-new-path [version]', '', { noHelp: true })
-    .option('--shell [shell]', 'Shell used when getting PATH')
-    .description(
-        'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
-    )
-    .action(async (maybeVersion, { shell }) => {
-        const { getSplitVersionAndArgs } = await import('./util/version')
-        try {
-            const [version] = await getSplitVersionAndArgs(maybeVersion)
-            const { getNewPath } = await import('./commands/getNewPath')
-            const {
-                ensureVersionInstalled,
-            } = await import('./commands/install')
-            await ensureVersionInstalled(version)
-            log.capturable(getNewPath({ version, shell }))
-        } catch (error) {
-            log.error(error)
-            process.exit(1)
-        }
+    .command('list-remote')
+    .alias('ls-remote')
+    .description('List Yarn versions available to install.')
+    .action(async () => {
+        log.info('Checking for available yarn versions...')
+        const { listRemote } = await import('./commands/listRemote')
+        listRemote()
     })
 
 argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')
@@ -224,6 +189,56 @@ argParser
     })
 
 argParser
+    .command('which [version]')
+    .description(messageOptionalVersion`Display path to Yarn version`)
+    .action(async maybeVersion => {
+        log.info('Getting path to Yarn version')
+        const { which } = await import('./commands/which')
+        process.exit(await which({ version: maybeVersion }))
+    })
+
+argParser
+    .command('update-self')
+    .description('Updates yvm to the latest version')
+    .action(() => log(messageSourceYvm))
+
+argParser
+    .command('get-new-path [version]', '', { noHelp: true })
+    .option('--shell [shell]', 'Shell used when getting PATH')
+    .description(
+        'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
+    )
+    .action(async (maybeVersion, { shell }) => {
+        const { getSplitVersionAndArgs } = await import('./util/version')
+        try {
+            const [version] = await getSplitVersionAndArgs(maybeVersion)
+            const { getNewPath } = await import('./commands/getNewPath')
+            const {
+                ensureVersionInstalled,
+            } = await import('./commands/install')
+            await ensureVersionInstalled(version)
+            log.capturable(getNewPath({ version, shell }))
+        } catch (error) {
+            log.error(error)
+            process.exit(1)
+        }
+    })
+
+argParser
+    .command('version')
+    .description(signPosting`--version`)
+    .action(() => {
+        const version = yvmInstalledVersion()
+        log.capturable(version || messageNoYvm)
+        process.exit(version ? 0 : 1)
+    })
+
+argParser
+    .command('remove <version>')
+    .description(signPosting`uninstall`)
+    .action(uninstallVersion)
+
+argParser
     .command('set-default <version>')
     .description(signPosting`alias default <version>`)
     .action(async version => {
@@ -248,19 +263,5 @@ argParser
             process.exit(1)
         }
     })
-
-argParser
-    .command('version')
-    .description(signPosting`--version`)
-    .action(() => {
-        const version = yvmInstalledVersion()
-        log.capturable(version || messageNoYvm)
-        process.exit(version ? 0 : 1)
-    })
-
-argParser
-    .command('update-self')
-    .description('Updates yvm to the latest version')
-    .action(() => log(messageSourceYvm))
 
 argParser.parse(process.argv)
