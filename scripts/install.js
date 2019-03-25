@@ -6,6 +6,26 @@ const { execSync } = require('child_process')
 
 const log = console.error.bind(console) // eslint-disable-line no-console
 
+const dependencies = ['curl', 'unzip']
+
+async function preflightCheck() {
+    const missing = []
+    dependencies.forEach(pkg => {
+        try {
+            execSync(`command -v ${pkg}`)
+        } catch (e) {
+            missing.push(pkg)
+        }
+    })
+    if (missing.length) {
+        throw new Error(
+            'The install cannot proceed due missing dependencies. ' +
+                `"${missing.join('", "')}" is not installed or in your PATH.`,
+        )
+    }
+    log('All dependencies satisfied.')
+}
+
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
@@ -156,8 +176,10 @@ Open another terminal window to start using, or type "source ${paths.yvmSh}"`)
 }
 
 if (!module.parent) {
-    run().catch(error => {
-        log('yvm installation failed')
-        log(error)
-    })
+    preflightCheck()
+        .then(run)
+        .catch(error => {
+            log('yvm installation failed')
+            log(error.message)
+        })
 }

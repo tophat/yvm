@@ -3,8 +3,6 @@ import request from 'request'
 
 import { USER_AGENT } from './constants'
 
-const { USER_AGENT } = require('./constants')
-
 const isErrorCode = httpStatusCode => httpStatusCode >= 400
 
 export const downloadFile = (url, filePath) =>
