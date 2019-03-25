@@ -1,8 +1,8 @@
 {
   "scripts": {
     "start": "docusaurus-start",
-    "build": "docusaurus-build",
-    "publish-gh-pages": "docusaurus-publish",
+    "build": "./syncDocs.js && docusaurus-build",
+    "publish-gh-pages": "./syncDocs.js && docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version"

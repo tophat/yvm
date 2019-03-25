@@ -92,17 +92,11 @@ jobs:
       - run: yarn install --frozen-lockfile
       - save_env_cache
       - run: yarn build
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - build/
   deploy_website:
     <<: *docker_defaults
     working_directory: ~/repo/website
     steps:
       - prep_env
-      - attach_workspace:
-          at: ./
       - add_ssh_keys:
           fingerprints:
             - "31:a5:c5:3d:78:b9:79:1d:2f:4b:59:fd:e1:89:21:dc"
