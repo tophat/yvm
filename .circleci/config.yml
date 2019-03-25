@@ -103,7 +103,7 @@ jobs:
     steps:
       - prep_env
       - attach_workspace:
-          at: ./
+          at: ../
       - add_ssh_keys:
           fingerprints:
             - "31:a5:c5:3d:78:b9:79:1d:2f:4b:59:fd:e1:89:21:dc"
