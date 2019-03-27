@@ -36,7 +36,7 @@
     "lodash.memoize": "^4.1.2",
     "openpgp": "^4.3.0",
     "request": "^2.87.0",
-    "semver": "^5.6.0",
+    "semver": "^6.0.0",
     "targz": "^1.0.1"
   },
   "devDependencies": {
