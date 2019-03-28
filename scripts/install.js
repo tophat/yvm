@@ -16,9 +16,10 @@ function preflightCheck(...dependencies) {
         }
     })
     if (missing.length) {
+        const prepzn = missing.length > 1 ? 'are' : 'is'
         throw new Error(
-            'The install cannot proceed due missing dependencies. ' +
-                `"${missing.join('", "')}" is not installed or in your PATH.`,
+            `The install cannot proceed due missing dependencies.
+"${missing.join('", "')}" ${prepzn} not installed or in your PATH.`,
         )
     }
     log('All dependencies satisfied.')
