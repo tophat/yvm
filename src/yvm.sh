@@ -42,7 +42,7 @@ yvm() {
     if [ "${command}" = "use" ]; then
         yvm_use $2
     elif [ "${command}" = "update-self" ]; then
-        curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | YVM_INSTALL_DIR=${YVM_DIR} bash
+        curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | YVM_INSTALL_DIR=${YVM_DIR} node
     elif [ "${command}" = "init-sh" ]; then
         yvm_init_sh
     else

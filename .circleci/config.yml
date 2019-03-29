@@ -15,7 +15,7 @@ commands:
           key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - run:
           name: "Install yvm release version"
-          command: "curl https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.sh | bash"
+          command: "node ~/repo/scripts/install.js"
   save_env_cache:
     description: "Saves environment cache"
     steps:
@@ -38,6 +38,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - prep_env
+      - attach_workspace:
+          at: ~/repo
       - run: make test-coverage
       - store_test_results:
           path: artifacts/reports/tests
@@ -74,7 +76,7 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ~/repo
-      - run: YVM_ALIAS_DIR=~/bin USE_LOCAL=true ./scripts/install.sh
+      - run: USE_LOCAL=true node ./scripts/install.js
       - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
   deploy:
     <<: *docker_defaults
@@ -115,6 +117,7 @@ workflows:
       - unit_test:
           requires:
             - node_modules
+            - build
       - lint:
           requires:
             - node_modules
