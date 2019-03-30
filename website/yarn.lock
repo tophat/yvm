@@ -1682,10 +1682,10 @@ dir-glob@2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
-docusaurus@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.7.1.tgz#5ada6752b992027de1c58170948c43958348bc48"
-  integrity sha512-m/cOQ365eeROQ1WjL/m7IY3/hRmCVx1n2T9xIyBcopGpK/SXyFxklc9WIxqntiGLljgcoW7CRfZt3o4YmHIcFQ==
+docusaurus@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/docusaurus/-/docusaurus-1.8.0.tgz#d82eeb426c1f0fb69411f141fa9311213254ad1a"
+  integrity sha512-Hn+/simu3yiX+5ucqNvX6yTyXtH3BFu2UIeGiXcKiRG8Khos206SsQQ2B7DrBzeJ0duhPxi/I7zYMFyaF23UUQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/plugin-proposal-class-properties" "^7.0.0"
