@@ -13,9 +13,7 @@ jest.mock('../../src/util/version', () => {
         getYarnVersions: jest.fn().mockImplementation(() => {
             return MOCK_LOCAL_VERSIONS
         }),
-        printVersions: jest.fn().mockImplementation(() => {
-            throw new Error('mock error')
-        }),
+        printVersions: jest.fn(),
     }
 })
 jest.mock('../../src/util/utils', () => {
@@ -28,8 +26,14 @@ jest.mock('../../src/util/utils', () => {
 })
 
 describe('yvm list-remote', () => {
+    beforeAll(() => {
+        jest.spyOn(log, 'default')
+    })
+    beforeEach(jest.clearAllMocks)
+    afterAll(jest.restoreAllMocks)
+
     it('lists the response from the API', async () => {
-        await listRemote()
+        expect(await listRemote()).toEqual(0)
         expect(getVersionInUse).toHaveBeenCalled()
         expect(getVersionsFromTags).toHaveBeenCalled()
         const callArgs = printVersions.mock.calls[0][0]
@@ -39,13 +43,16 @@ describe('yvm list-remote', () => {
     })
 
     it('prints error if any fail', async () => {
-        jest.spyOn(log, 'default')
-        await listRemote()
+        printVersions.mockRejectedValue(new Error('mock error'))
+        expect(await listRemote()).toEqual(1)
         expect(log.default).toHaveBeenCalledWith('mock error')
-        log.default.mockRestore()
     })
 
-    afterAll(() => {
-        jest.clearMocks()
+    it('prints error when no remote version available', async () => {
+        getVersionsFromTags.mockResolvedValue([])
+        expect(await listRemote()).toEqual(1)
+        expect(log.default).toHaveBeenCalledWith(
+            expect.stringContaining('No versions available'),
+        )
     })
 })
