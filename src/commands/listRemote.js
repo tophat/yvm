@@ -12,6 +12,9 @@ export const listRemote = async () => {
         const [remoteVersions, versionInUse, localVersions] = await Promise.all(
             [getVersionsFromTags(), getVersionInUse(), getYarnVersions()],
         )
+        if (!remoteVersions.length) {
+            throw new Error('No versions available for install')
+        }
         await printVersions({
             list: remoteVersions,
             message: 'Versions available for install:',
@@ -19,6 +22,8 @@ export const listRemote = async () => {
             localVersions,
         })
     } catch (e) {
-        log.error(e)
+        log(e.message)
+        log.info(e.stack)
+        process.exit(1)
     }
 }
