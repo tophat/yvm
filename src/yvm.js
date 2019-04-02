@@ -103,7 +103,12 @@ argParser
     .action(async () => {
         log.info('Checking for installed yarn versions...')
         const { listVersions } = await import('./commands/list')
-        listVersions()
+        try {
+            await listVersions()
+        } catch (e) {
+            log(e.message)
+            process.exit(2)
+        }
     })
 
 argParser
@@ -113,7 +118,12 @@ argParser
     .action(async () => {
         log.info('Checking for available yarn versions...')
         const { listRemote } = await import('./commands/listRemote')
-        listRemote()
+        try {
+            process.exit(await listRemote())
+        } catch (e) {
+            log(e.message)
+            process.exit(2)
+        }
     })
 
 argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')

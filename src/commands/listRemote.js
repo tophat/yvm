@@ -21,9 +21,10 @@ export const listRemote = async () => {
             versionInUse,
             localVersions,
         })
+        return 0
     } catch (e) {
         log(e.message)
         log.info(e.stack)
-        process.exit(1)
+        return 1
     }
 }
