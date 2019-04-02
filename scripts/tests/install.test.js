@@ -44,6 +44,31 @@ describe('yvm install', () => {
         })
     }
 
+    const expectedConfigObject = ({ homePath, tagName = null, useLocal }) => ({
+        paths: {
+            home: homePath,
+            yvm: `${homePath}/.yvm`,
+            yvmSh: `${homePath}/.yvm/yvm.sh`,
+            zip: `${useLocal ? 'artifacts' : `${homePath}/.yvm`}/yvm.zip`,
+        },
+        shConfigs: {
+            [`${homePath}/.bashrc`]: [
+                `export YVM_DIR=${homePath}/.yvm`,
+                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
+            ],
+            [`${homePath}/.config/fish/config.fish`]: [
+                `set -x YVM_DIR ${homePath}/.yvm`,
+                '. $YVM_DIR/yvm.fish',
+            ],
+            [`${homePath}/.zshrc`]: [
+                `export YVM_DIR=${homePath}/.yvm`,
+                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
+            ],
+        },
+        useLocal,
+        version: { tagName },
+    })
+
     afterEach(() => {
         jest.clearAllMocks()
         fs.removeSync(mockHomeValue)
@@ -97,15 +122,21 @@ that should be replaced`
     })
 
     describe('local version', () => {
+        const mockHome = mockHomeValue
         beforeEach(() => {
-            envHomeMock.mockValue(mockHomeValue)
+            envHomeMock.mockValue(mockHome)
             envUseLocal.mockValue(true)
             envInstallVersion.reset()
         })
 
         it('indicates successful completion', async () => {
             const config = getConfig()
-            expect(config).toMatchSnapshot()
+            expect(config).toMatchObject(
+                expectedConfigObject({
+                    homePath: mockHome,
+                    useLocal: 'true',
+                }),
+            )
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
@@ -179,7 +210,12 @@ that should be replaced`
 
         it('indicates successful completion', async () => {
             const config = getConfig()
-            expect(config).toMatchSnapshot()
+            expect(config).toMatchObject(
+                expectedConfigObject({
+                    homePath: mockHome,
+                    useLocal: false,
+                }),
+            )
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
@@ -210,21 +246,26 @@ that should be replaced`
     })
 
     describe('specified version', () => {
-        const installVersion = 'v2.4.0'
         const mockHome = 'another-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             envUseLocal.reset()
-            envInstallVersion.mockValue(installVersion)
         })
 
-        afterAll(() => {
+        afterEach(() => {
             fs.removeSync(mockHome)
         })
 
-        it('indicates successful completion', async () => {
+        const testFn = async installVersion => {
+            envInstallVersion.mockValue(installVersion)
             const config = getConfig()
-            expect(config).toMatchSnapshot()
+            expect(config).toMatchObject(
+                expectedConfigObject({
+                    homePath: mockHome,
+                    useLocal: false,
+                    tagName: installVersion,
+                }),
+            )
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
@@ -248,9 +289,50 @@ that should be replaced`
             expect(fs.pathExistsSync(config.paths.zip)).toBe(false)
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
-            expect(version).toMatch(`${installVersion}`)
+            expect(version).toMatch(installVersion)
             // script is executable
             fs.accessSync(`${yvmHome}/yvm.sh`, fs.constants.X_OK)
+        }
+
+        it.each(['v2.3.0', '2.4'].map(a => [a]))(
+            'indicates successful completion %s',
+            testFn,
+        )
+    })
+
+    describe('invalid version', () => {
+        const installVersion = 'invalid-version-xyz'
+        const mockHome = 'invalid-mock-home'
+        beforeEach(() => {
+            envHomeMock.mockValue(mockHome)
+            envUseLocal.reset()
+            envInstallVersion.mockValue(installVersion)
+        })
+
+        afterAll(() => {
+            fs.removeSync(mockHome)
+        })
+
+        it('indicates invalid version tag', async done => {
+            const config = getConfig()
+            try {
+                await run()
+                done.fail(`Run did not throw an error`)
+            } catch (e) {
+                expect(e.message).toMatch(/No release version/)
+            }
+            const yvmHome = config.paths.yvm
+            // should not have downloaded zip file
+            expect(fs.pathExistsSync(config.paths.zip)).toBe(false)
+            // should not have created version tag
+            expect(fs.pathExistsSync(`${yvmHome}/.version`)).toBe(false)
+            // should not have extracted files
+            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
+            installFiles.forEach(file => {
+                const filePath = `${yvmHome}/${file}`
+                expect(fs.pathExistsSync(filePath)).toBe(false)
+            })
+            done()
         })
     })
 })
