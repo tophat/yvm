@@ -57,5 +57,12 @@ export const getReleasesFromTags = memoize(async () => {
 })
 
 export const getVersionsFromTags = memoize(async () => {
-    return Object.keys(await getReleasesFromTags())
+    try {
+        return Object.keys(await getReleasesFromTags())
+    } catch (e) {
+        log.error(
+            'Unable to retrieve remote versions. Please check your network connection',
+        )
+        return []
+    }
 })

@@ -137,11 +137,10 @@ export const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
     let versionToUse
     try {
         if (maybeVersionArg) {
-            log.info(`Attempting to resolve ${maybeVersionArg}.`)
+            log.info(`Attempting to resolve ${maybeVersionArg}`)
             const parsedVersionString = await resolveVersion({
                 versionString: maybeVersionArg,
             }).catch(e => {
-                log.info(e.message)
                 log.info(e.stack)
             })
             if (parsedVersionString) {
