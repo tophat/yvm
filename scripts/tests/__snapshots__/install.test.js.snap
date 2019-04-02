@@ -9,6 +9,7 @@ Object {
     "zip": "other-mock-home/.yvm/yvm.zip",
   },
   "releaseApiUrl": "https://d236jo9e8rrdox.cloudfront.net/yvm-releases",
+  "releasesApiUrl": "https://api.github.com/repos/tophat/yvm/releases",
   "shConfigs": Object {
     "other-mock-home/.bashrc": Array [
       "export YVM_DIR=other-mock-home/.yvm",
@@ -39,6 +40,7 @@ Object {
     "zip": "artifacts/yvm.zip",
   },
   "releaseApiUrl": "https://d236jo9e8rrdox.cloudfront.net/yvm-releases",
+  "releasesApiUrl": "https://api.github.com/repos/tophat/yvm/releases",
   "shConfigs": Object {
     "mock-home/.bashrc": Array [
       "export YVM_DIR=mock-home/.yvm",
@@ -69,6 +71,7 @@ Object {
     "zip": "another-mock-home/.yvm/yvm.zip",
   },
   "releaseApiUrl": "https://d236jo9e8rrdox.cloudfront.net/yvm-releases",
+  "releasesApiUrl": "https://api.github.com/repos/tophat/yvm/releases",
   "shConfigs": Object {
     "another-mock-home/.bashrc": Array [
       "export YVM_DIR=another-mock-home/.yvm",
