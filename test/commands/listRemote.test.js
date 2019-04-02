@@ -39,10 +39,10 @@ describe('yvm list-remote', () => {
     })
 
     it('prints error if any fail', async () => {
-        jest.spyOn(log, 'error')
+        jest.spyOn(log, 'default')
         await listRemote()
-        expect(log.error).toHaveBeenCalledWith(new Error('mock error'))
-        log.error.mockRestore()
+        expect(log.default).toHaveBeenCalledWith('mock error')
+        log.default.mockRestore()
     })
 
     afterAll(() => {
