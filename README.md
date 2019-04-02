@@ -35,7 +35,15 @@ Manually managing different yarn versions across projects is a pain. This fixes 
 
 Node: >=8.0.0
 
-### Installation script
+### Homebrew
+
+Installs the latest stable version.
+
+```sh
+brew install tophat/bar/yvm
+```
+
+### Script
 
 Execute the following in your terminal:
 
@@ -49,7 +57,7 @@ Or to install a specific version:
 curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | INSTALL_VERSION="v0.9.26" node
 ```
 
-### Manual installation
+### Manual
 
 Navigate to [yvm releases](https://github.com/tophat/yvm/releases) and download the `yvm.zip` file for the latest release to your home directory.
 
