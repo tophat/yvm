@@ -28,7 +28,7 @@ export const getRequest = memoize(async url => {
     return new Promise((resolve, reject) => {
         request.get(options, (error, response, body) => {
             if (error || response.statusCode !== 200) {
-                if (response.body) {
+                if (response && response.body) {
                     if (error) {
                         log(error)
                     }
