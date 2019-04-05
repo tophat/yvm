@@ -51,6 +51,7 @@ function getConfig() {
             [`${home}/.config/fish/config.fish`]: fishConfig,
         },
         releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
+        releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
         useLocal,
         version: {
             tagName: process.env.INSTALL_VERSION || null,
@@ -71,17 +72,28 @@ async function ensureDir(dirPath) {
     execSync(`mkdir -p ${dirPath}`)
 }
 
-function getVersionDownloadUrl(version) {
-    return `https://github.com/tophat/yvm/releases/download/${version}/yvm.zip`
+function getTagAndUrlFromRelease(data) {
+    const {
+        tag_name: tagName,
+        assets: [{ browser_download_url: downloadUrl }],
+    } = data
+    return { tagName, downloadUrl }
+}
+
+function getYvmVersion(versionTag, releasesApiUrl) {
+    const data = execSync(`curl -s ${releasesApiUrl}`)
+    for (const release of JSON.parse(data)) {
+        const { tagName } = getTagAndUrlFromRelease(release)
+        if (tagName.match(new RegExp(versionTag))) {
+            return getTagAndUrlFromRelease(release)
+        }
+    }
+    return {}
 }
 
 async function getLatestYvmVersion(releaseApiUrl) {
     const data = execSync(`curl -s ${releaseApiUrl}`)
-    const {
-        tag_name: tagName,
-        assets: [{ browser_download_url: downloadUrl }],
-    } = JSON.parse(data)
-    return { tagName, downloadUrl }
+    return getTagAndUrlFromRelease(JSON.parse(data))
 }
 
 async function downloadFile(urlPath, filePath) {
@@ -133,11 +145,18 @@ async function ensureConfig(configFile, configLines) {
 
 async function run() {
     preflightCheck(...dependencies)
-    const { version, paths, shConfigs, releaseApiUrl, useLocal } = getConfig()
+    const config = getConfig()
+    const { version, paths, shConfigs, useLocal } = config
     await ensureDir(paths.yvm)
     if (!useLocal) {
+        const { releaseApiUrl, releasesApiUrl } = config
         if (version.tagName) {
-            version.downloadUrl = getVersionDownloadUrl(version.tagName)
+            log('Querying github release API to determine version tag')
+            const result = await getYvmVersion(version.tagName, releasesApiUrl)
+            if (!result.tagName) {
+                throw new Error(`No release version '${version.tagName}'`)
+            }
+            Object.assign(version, result)
         } else {
             log('Querying github release API to determine latest version')
             Object.assign(version, await getLatestYvmVersion(releaseApiUrl))
