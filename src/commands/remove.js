@@ -17,7 +17,7 @@ export const remove = async (versionString, rootPath = yvmPath) => {
         const versionInUse = await getVersionInUse()
 
         if (versionInUse && versionPath.includes(versionInUse)) {
-            throw new Error('You cannot remove currently-active version')
+            throw new Error('You cannot remove currently-active version.')
         }
 
         if (!fs.existsSync(versionPath)) {
