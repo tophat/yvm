@@ -168,14 +168,10 @@ argParser
     .command('get-default-version')
     .description(signPosting`alias default`)
     .action(async () => {
-        const { getDefaultVersion } = await import('./util/version')
-        const version = await getDefaultVersion()
-        if (version) {
-            log.capturable(version)
-        } else {
-            log('No default yarn version set')
-            process.exit(1)
-        }
+        const {
+            getDefaultVersion,
+        } = await import('./commands/getDefaultVersion')
+        process.exit(await getDefaultVersion())
     })
 
 argParser.parse(process.argv)
