@@ -43,8 +43,7 @@ argParser
 
 const uninstallVersion = async version => {
     const { remove } = await import('./commands/remove')
-    const exitCode = await remove(version)
-    process.exit(exitCode)
+    process.exit(await remove(version))
 }
 argParser
     .command('uninstall <version>')
@@ -67,8 +66,7 @@ argParser
     .action(async () => {
         const [, , , maybeVersion, ...rest] = process.argv
         const { exec } = await import('./commands/exec')
-        const exitCode = await exec(maybeVersion, rest)
-        process.exit(exitCode)
+        process.exit(await exec(maybeVersion, rest))
     })
 
 argParser
@@ -94,14 +92,8 @@ argParser
     .alias('ls-remote')
     .description('List Yarn versions available to install.')
     .action(async () => {
-        log.info('Checking for available yarn versions...')
         const { listRemote } = await import('./commands/listRemote')
-        try {
-            process.exit(await listRemote())
-        } catch (e) {
-            log(e.message)
-            process.exit(2)
-        }
+        process.exit(await listRemote())
     })
 
 argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')

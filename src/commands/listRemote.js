@@ -7,7 +7,7 @@ import {
 } from '../util/version'
 
 export const listRemote = async () => {
-    log.info('list-remote')
+    log.info('Checking for available yarn versions...')
     try {
         const [remoteVersions, versionInUse, localVersions] = await Promise.all(
             [getVersionsFromTags(), getVersionInUse(), getYarnVersions()],
