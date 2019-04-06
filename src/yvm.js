@@ -32,24 +32,13 @@ argParser
     .option('-s, --stable', signPosting`install stable`)
     .description(messageOptionalVersion`Install the specified version of Yarn`)
     .action(async (maybeVersion, command) => {
-        const { LATEST, STABLE } = await import('./util/alias')
-        const { getSplitVersionAndArgs } = await import('./util/version')
-        const { installVersion } = await import('./commands/install')
-        try {
-            let version = maybeVersion
-            if (command.stable) {
-                version = STABLE
-            } else if (command.latest) {
-                version = LATEST
-            } else if (!version) {
-                version = (await getSplitVersionAndArgs())[0]
-            }
-            await installVersion({ version })
-        } catch (e) {
-            log(e.message)
-            log.info(e.stack)
-            process.exit(1)
-        }
+        const { install } = await import('./commands/install')
+        const exitCode = await install({
+            latest: command.latest,
+            stable: command.stable,
+            version: maybeVersion,
+        })
+        process.exit(exitCode)
     })
 
 const uninstallVersion = async version => {
