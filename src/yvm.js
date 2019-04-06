@@ -103,55 +103,8 @@ argParser.command(
 )
 argParser.command('alias', '', { noHelp: true }).action(async () => {
     const [, , , nameOrPattern, maybeVersion] = process.argv
-    const {
-        getFormatter,
-        resolveMatchingAliases,
-        setAlias,
-    } = await import('./util/alias')
-    const {
-        getVersionInUse,
-        getYarnVersions,
-        resolveVersion,
-    } = await import('./util/version')
-    const { getVersionsFromTags } = await import('./util/utils')
-
-    const format = getFormatter(
-        await getVersionsFromTags(),
-        getYarnVersions(),
-        await getVersionInUse(),
-    )
-
-    const safeResolveVersion = async versionString =>
-        resolveVersion({ versionString }).catch(e => log.info(e.message))
-
-    if (typeof maybeVersion === 'string') {
-        const name = nameOrPattern
-        const version = maybeVersion
-        let targetVersion
-        if (await setAlias({ name, version })) {
-            targetVersion = await safeResolveVersion(version)
-        }
-        const message = format(name, version, targetVersion)
-        if (targetVersion) {
-            log(message)
-            process.exit(0)
-        } else {
-            log.error(message)
-            process.exit(1)
-        }
-    } else {
-        const pattern = nameOrPattern || ''
-        const matchingAliases = await resolveMatchingAliases(pattern)
-        for (const {
-            name,
-            value: { value, version: versionString },
-        } of matchingAliases) {
-            const version = await safeResolveVersion(versionString)
-            log(format(name, value, version))
-        }
-        const noMatchFound = pattern.length > 0 && matchingAliases.length < 1
-        process.exit(noMatchFound ? 1 : 0)
-    }
+    const { alias } = await import('./commands/alias')
+    process.exit(await alias(nameOrPattern, maybeVersion))
 })
 
 argParser
