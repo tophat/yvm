@@ -4,7 +4,7 @@ import targz from 'targz'
 import * as openpgp from 'openpgp'
 
 import { YARN_PUBLIC_KEY_URL, YARN_RELEASE_TAGS_URL } from '../util/constants'
-import { LATEST } from '../util/alias'
+import { LATEST, STABLE } from '../util/alias'
 import { downloadFile } from '../util/download'
 import log from '../util/log'
 import { yvmPath } from '../util/path'
@@ -13,7 +13,7 @@ import {
     getExtractionPath,
     getVersionDownloadUrl,
 } from '../util/utils'
-import { resolveVersion } from '../util/version'
+import { getSplitVersionAndArgs, resolveVersion } from '../util/version'
 
 export const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
@@ -94,21 +94,19 @@ const extractYarn = (version, rootPath) => {
             },
             err => {
                 if (err) {
-                    log(err)
-                    reject(err)
-                } else {
-                    log(`Finished extracting yarn version ${version}`)
-                    const [pkgDir] = fs.readdirSync(tmpPath)
-                    if (pkgDir) {
-                        const pkgPath = path.resolve(tmpPath, pkgDir)
-                        fs.renameSync(pkgPath, destPath)
-                        fs.unlinkSync(srcPath)
-                        fs.rmdirSync(tmpPath)
-                        resolve(destPath)
-                    } else {
-                        reject('Unable to locate extracted package')
-                    }
+                    return reject(err)
                 }
+                log(`Finished extracting yarn version ${version}`)
+                const [pkgDir] = fs.readdirSync(tmpPath)
+                if (!pkgDir) {
+                    const errorMessage = 'Unable to locate extracted package'
+                    return reject(new Error(errorMessage))
+                }
+                const pkgPath = path.resolve(tmpPath, pkgDir)
+                fs.renameSync(pkgPath, destPath)
+                fs.unlinkSync(srcPath)
+                fs.rmdirSync(tmpPath)
+                return resolve(destPath)
             },
         )
     })
@@ -134,10 +132,9 @@ export const installVersion = async ({
     log(`Installing yarn v${version} in ${rootPath}`)
     log('Downloading...')
     if (!(await downloadVersion(version, rootPath))) {
-        log(`Installation aborted, probably caused by a defective release`)
-        log(`\u2717 ${YARN_RELEASE_TAGS_URL}/v${version}`)
-        log('Please retry with the next available version')
-        return
+        throw new Error(`Installation aborted, probably caused by a defective release
+\u2717 ${YARN_RELEASE_TAGS_URL}/v${version}
+Please retry with the next available version`)
     }
     log(`Finished downloading yarn version ${version}`)
 
@@ -150,11 +147,25 @@ export const installVersion = async ({
     log('Installation successful')
 }
 
-export const installLatest = async ({ rootPath = yvmPath } = {}) => {
-    await installVersion({ rootPath, version: LATEST })
-}
-
 export const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
     if (isVersionInstalled(version, rootPath)) return
     await installVersion({ version, rootPath })
+}
+
+export const install = async ({ latest, stable, version } = {}) => {
+    try {
+        if (stable) {
+            version = STABLE
+        } else if (latest) {
+            version = LATEST
+        } else if (!version) {
+            version = (await getSplitVersionAndArgs())[0]
+        }
+        await installVersion({ version })
+        return 0
+    } catch (e) {
+        log(e.message)
+        log.info(e.stack)
+        return 1
+    }
 }

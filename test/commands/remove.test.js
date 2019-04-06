@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 
+import log from '../../src/util/log'
 import { getExtractionPath, versionRootPath } from '../../src/util/utils'
 import * as version from '../../src/util/version'
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
@@ -12,12 +13,14 @@ describe('yvm remove', () => {
     const versionPath = version => path.resolve(versionRoot, `v${version}`)
 
     beforeAll(() => {
+        jest.spyOn(log, 'default')
         fs.mkdirsSync(rootPath)
     })
 
     afterEach(() => {
         fs.removeSync(versionRootPath(rootPath))
         getVersionInUse.mockReset()
+        jest.clearAllMocks()
     })
 
     afterAll(jest.restoreAllMocks)
@@ -29,6 +32,9 @@ describe('yvm remove', () => {
         fs.mkdirsSync(versionInstallationPath)
         expect(await remove(version, rootPath)).toBe(0)
         expect(fs.existsSync(versionPath(version))).toBe(false)
+        expect(log.default).toHaveBeenCalledWith(
+            expect.stringContaining('Successfully removed yarn v1.7.0'),
+        )
     })
 
     it('Does not removes currently active version', async () => {
@@ -38,5 +44,20 @@ describe('yvm remove', () => {
         fs.mkdirsSync(versionInstallationPath)
         expect(await remove(version, rootPath)).toBe(1)
         expect(fs.existsSync(versionPath(version))).toBe(true)
+        expect(log.default).toHaveBeenCalledWith(
+            expect.stringContaining(
+                'You cannot remove currently-active version',
+            ),
+        )
+    })
+
+    it('Handles not installed version', async () => {
+        const version = '1.7.0'
+        getVersionInUse.mockReturnValue('')
+        expect(fs.existsSync(versionPath(version))).toBe(false)
+        expect(await remove(version, rootPath)).toBe(1)
+        expect(log.default).toHaveBeenCalledWith(
+            expect.stringContaining('Yarn version 1.7.0 not found'),
+        )
     })
 })

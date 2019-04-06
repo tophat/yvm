@@ -1,8 +1,43 @@
 import path from 'path'
 
-import { getNewPath } from '../../src/commands/getNewPath'
+import log from '../../src/util/log'
+import * as version from '../../src/util/version'
+import * as install from '../../src/commands/install'
+
+import { buildNewPath, getNewPath } from '../../src/commands/getNewPath'
 
 describe('getNewPath', () => {
+    const mockVersion = '1.13.0'
+    beforeAll(() => {
+        jest.spyOn(log, 'capturable')
+        jest.spyOn(log, 'error')
+        jest.spyOn(log, 'info')
+        jest.spyOn(install, 'ensureVersionInstalled').mockImplementation(
+            () => {},
+        )
+        jest.spyOn(version, 'getSplitVersionAndArgs').mockReturnValue([
+            mockVersion,
+        ])
+    })
+    beforeEach(jest.clearAllMocks)
+    afterAll(jest.restoreAllMocks)
+
+    it('outputs new path', async () => {
+        const newPath = buildNewPath({ version: mockVersion })
+        expect(await getNewPath(mockVersion)).toEqual(0)
+        expect(log.capturable).toHaveBeenCalledWith(newPath)
+    })
+
+    it('error handles correctly', async () => {
+        const mockError = new Error('mock error')
+        install.ensureVersionInstalled.mockRejectedValueOnce(mockError)
+        expect(await getNewPath(mockVersion)).toEqual(1)
+        expect(log.error).toHaveBeenCalledWith(mockError.message)
+        expect(log.info).toHaveBeenCalledWith(mockError.stack)
+    })
+})
+
+describe('buildNewPath', () => {
     it('Returns a new PATH string with a yarn directory prepended', () => {
         const mockVersion = '1.7.0'
         const mockRootPath = '/some/path'
@@ -14,7 +49,7 @@ describe('getNewPath', () => {
             ...mockSplitPath,
         ].join(path.delimiter)
         expect(
-            getNewPath({
+            buildNewPath({
                 version: mockVersion,
                 rootPath: mockRootPath,
                 pathString: mockPathString,
@@ -38,7 +73,7 @@ describe('getNewPath', () => {
             'def',
         ].join(path.delimiter)
         expect(
-            getNewPath({
+            buildNewPath({
                 version: mockVersion,
                 rootPath: mockRootPath,
                 pathString: mockPathString,
@@ -59,7 +94,7 @@ describe('getNewPath', () => {
                 ...mockSplitPath,
             ].join(FISH_ARRAY_DELIMITER)
             expect(
-                getNewPath({
+                buildNewPath({
                     shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,
@@ -84,7 +119,7 @@ describe('getNewPath', () => {
                 'def',
             ].join(FISH_ARRAY_DELIMITER)
             expect(
-                getNewPath({
+                buildNewPath({
                     shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,

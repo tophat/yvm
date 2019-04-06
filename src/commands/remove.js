@@ -7,28 +7,27 @@ import { yvmPath } from '../util/path'
 import log from '../util/log'
 
 export const remove = async (versionString, rootPath = yvmPath) => {
-    const version = await resolveVersion({ versionString, yvmPath: rootPath })
-    const versionPath = getExtractionPath(version, rootPath)
-    const versionInUse = await getVersionInUse()
-
-    if (versionInUse && versionPath.includes(versionInUse)) {
-        log('You cannot remove currently-active version')
-        return 1
-    }
-
-    if (!fs.existsSync(versionPath)) {
-        log(
-            `Failed to remove yarn v${version}. Yarn version ${version} not found.`,
-        )
-        return 1
-    }
-
+    log.info(`Removing Yarn v${versionString}`)
     try {
+        const version = await resolveVersion({
+            versionString,
+            yvmPath: rootPath,
+        })
+        const versionPath = getExtractionPath(version, rootPath)
+        const versionInUse = await getVersionInUse()
+
+        if (versionInUse && versionPath.includes(versionInUse)) {
+            throw new Error('You cannot remove currently-active version.')
+        }
+
+        if (!fs.existsSync(versionPath)) {
+            throw new Error(`Yarn version ${version} not found.`)
+        }
         fs.removeSync(versionPath)
         log(`Successfully removed yarn v${version}.`)
         return 0
     } catch (err) {
-        log(`Failed to remove yarn v${version}. \n ${err}`)
+        log(`Failed to remove yarn v${versionString}.\n${err.message}`)
         return 1
     }
 }
