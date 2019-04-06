@@ -2,13 +2,7 @@ const os = require('os')
 const fs = require('fs-extra')
 const { execSync } = require('child_process')
 
-const {
-    ensureConfig,
-    escapeRegExp,
-    getConfig,
-    preflightCheck,
-    run,
-} = require('../install')
+const { getConfig, preflightCheck, run } = require('../install')
 
 const mockProp = (obj, prop, mockValue) => {
     const original = obj[prop]
@@ -35,35 +29,12 @@ describe('yvm install', () => {
     const envInstallVersion = mockProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
 
-    const confirmShellConfig = configFile => {
-        const content = fs.readFileSync(configFile).toString()
-        const { shConfigs } = getConfig()
-        shConfigs[configFile].forEach(string => {
-            const exactMatch = new RegExp(`\n${escapeRegExp(string)}\n`)
-            expect(content.match(exactMatch)).toBeTruthy()
-        })
-    }
-
     const expectedConfigObject = ({ homePath, tagName = null, useLocal }) => ({
         paths: {
             home: homePath,
             yvm: `${homePath}/.yvm`,
             yvmSh: `${homePath}/.yvm/yvm.sh`,
             zip: `${useLocal ? 'artifacts' : `${homePath}/.yvm`}/yvm.zip`,
-        },
-        shConfigs: {
-            [`${homePath}/.bashrc`]: [
-                `export YVM_DIR=${homePath}/.yvm`,
-                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
-            ],
-            [`${homePath}/.config/fish/config.fish`]: [
-                `set -x YVM_DIR ${homePath}/.yvm`,
-                '. $YVM_DIR/yvm.fish',
-            ],
-            [`${homePath}/.zshrc`]: [
-                `export YVM_DIR=${homePath}/.yvm`,
-                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
-            ],
         },
         useLocal,
         version: { tagName },
@@ -102,22 +73,6 @@ describe('yvm install', () => {
             expect(() => preflightCheck('somemissingbin')).toThrow(
                 /The install cannot proceed due missing dependencies/,
             )
-        })
-    })
-
-    describe('ensureConfig', () => {
-        it('updates exiting lines', async () => {
-            const fileName = 'some-random-rc'
-            const initial = `with
-# -- specific existing line --
-that should be replaced`
-            const expected = `with
-specific existing line
-that should be replaced`
-            fs.writeFileSync(fileName, initial)
-            await ensureConfig(fileName, ['specific existing line'])
-            expect(fs.readFileSync(fileName, 'utf8')).toEqual(expected)
-            fs.unlinkSync(fileName)
         })
     })
 
@@ -188,11 +143,28 @@ that should be replaced`
         })
 
         const rcFiles = ['.bashrc', '.zshrc', '.config/fish/config.fish']
+        const shConfigs = {
+            [`${mockHomeValue}/.bashrc`]: [
+                `export YVM_DIR=${mockHomeValue}/.yvm`,
+                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
+            ],
+            [`${mockHomeValue}/.config/fish/config.fish`]: [
+                `set -x YVM_DIR ${mockHomeValue}/.yvm`,
+                '. $YVM_DIR/yvm.fish',
+            ],
+            [`${mockHomeValue}/.zshrc`]: [
+                `export YVM_DIR=${mockHomeValue}/.yvm`,
+                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
+            ],
+        }
         it.each(rcFiles.map(file => [file]))('configures %s', async rcFile => {
             const filePath = `${mockHomeValue}/${rcFile}`
-            fs.outputFileSync(filePath, '')
+            fs.outputFileSync(filePath, 'dummy')
             await run()
-            confirmShellConfig(filePath)
+            const content = fs.readFileSync(filePath).toString()
+            shConfigs[filePath].forEach(string => {
+                expect(content.includes(string)).toBe(true)
+            })
         })
     })
 
