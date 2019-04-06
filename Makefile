@@ -55,7 +55,10 @@ help:
 # ---- YVM Command Stuff ----
 
 .PHONY: install
-install: build-production
+install: build-production install-local
+
+.PHONY: install-local
+install-local:
 	@USE_LOCAL=true node scripts/install.js
 
 .PHONY: install-watch

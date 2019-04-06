@@ -76,7 +76,7 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ~/repo
-      - run: USE_LOCAL=true node ./scripts/install.js
+      - run: make install-local
       - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
   deploy:
     <<: *docker_defaults
