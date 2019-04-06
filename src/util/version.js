@@ -147,9 +147,9 @@ export const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
                 log.info(`Using provided version: ${parsedVersionString}`)
                 return [parsedVersionString, rest]
             }
+            rest.unshift(maybeVersionArg)
         }
 
-        rest.unshift(maybeVersionArg)
         const rcVersion = getRcFileVersion()
         if (rcVersion) {
             log.info(`Resolving version '${rcVersion}' found in config`)
