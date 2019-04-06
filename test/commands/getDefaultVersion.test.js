@@ -3,7 +3,7 @@ import * as version from '../../src/util/version'
 const getDefault = jest.spyOn(version, 'getDefaultVersion')
 import { getDefaultVersion } from '../../src/commands/getDefaultVersion'
 
-describe('unalias', () => {
+describe('getDefaultVersion', () => {
     jest.spyOn(log, 'capturable')
     jest.spyOn(log, 'default')
     jest.spyOn(log, 'error')
