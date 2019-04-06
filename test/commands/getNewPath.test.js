@@ -1,8 +1,8 @@
 import path from 'path'
 
-import { getNewPath } from '../../src/commands/getNewPath'
+import { buildNewPath } from '../../src/commands/getNewPath'
 
-describe('getNewPath', () => {
+describe('buildNewPath', () => {
     it('Returns a new PATH string with a yarn directory prepended', () => {
         const mockVersion = '1.7.0'
         const mockRootPath = '/some/path'
@@ -14,7 +14,7 @@ describe('getNewPath', () => {
             ...mockSplitPath,
         ].join(path.delimiter)
         expect(
-            getNewPath({
+            buildNewPath({
                 version: mockVersion,
                 rootPath: mockRootPath,
                 pathString: mockPathString,
@@ -38,7 +38,7 @@ describe('getNewPath', () => {
             'def',
         ].join(path.delimiter)
         expect(
-            getNewPath({
+            buildNewPath({
                 version: mockVersion,
                 rootPath: mockRootPath,
                 pathString: mockPathString,
@@ -59,7 +59,7 @@ describe('getNewPath', () => {
                 ...mockSplitPath,
             ].join(FISH_ARRAY_DELIMITER)
             expect(
-                getNewPath({
+                buildNewPath({
                     shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,
@@ -84,7 +84,7 @@ describe('getNewPath', () => {
                 'def',
             ].join(FISH_ARRAY_DELIMITER)
             expect(
-                getNewPath({
+                buildNewPath({
                     shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,

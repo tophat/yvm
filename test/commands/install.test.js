@@ -1,9 +1,9 @@
 import fs from 'fs-extra'
 import targz from 'targz'
 
+import { LATEST } from '../../src/util/alias'
 import {
     ensureVersionInstalled,
-    installLatest,
     installVersion,
     getDownloadPath,
     getPublicKeyPath,
@@ -96,7 +96,7 @@ describe('yvm install', () => {
     it('Installs the lastest version of yarn', () => {
         return Promise.all([
             getVersionsFromTags(),
-            installLatest({ yvmPath: rootPath }),
+            installVersion({ version: LATEST, yvmPath: rootPath }),
         ]).then(results => {
             const remoteVersions = results[0]
             const latestVersion = remoteVersions[0]
@@ -109,7 +109,7 @@ describe('yvm install', () => {
     it('Uses default yvmPath on install latest', async () => {
         const [[latestVersion]] = await Promise.all([
             getVersionsFromTags(),
-            installLatest(),
+            installVersion({ version: LATEST }),
         ])
         expect(
             fs.statSync(getExtractionPath(latestVersion, rootPath)),
