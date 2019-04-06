@@ -42,14 +42,8 @@ argParser
     })
 
 const uninstallVersion = async version => {
-    log.info(`Removing Yarn v${version}`)
     const { remove } = await import('./commands/remove')
-    let exitCode = 1
-    try {
-        exitCode = await remove(version)
-    } catch (e) {
-        log(e.message)
-    }
+    const exitCode = await remove(version)
     process.exit(exitCode)
 }
 argParser
