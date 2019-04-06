@@ -39,6 +39,7 @@ describe('alias', () => {
             allYarnVersions,
         )
         jest.spyOn(log, 'default')
+        jest.spyOn(log, 'error')
     })
 
     beforeEach(() => {
@@ -65,6 +66,13 @@ describe('alias', () => {
                 def: 'invalid',
             })
         })
+
+        it('handles thrown failure', async () => {
+            const mockError = new Error('some error')
+            utils.getVersionsFromTags.mockRejectedValueOnce(mockError)
+            expect(await alias('def', '1.15')).toBe(2)
+            expect(log.error).toHaveBeenCalledWith(mockError.message)
+        })
     })
 
     describe('getAlias', () => {
@@ -81,6 +89,13 @@ describe('alias', () => {
         it('handles no matches for supplied pattern', async () => {
             expect(await alias('abracadabra')).toBe(1)
             expect(log.default.mock.calls).toMatchSnapshot()
+        })
+
+        it('handles thrown failure', async () => {
+            const mockError = new Error('some error')
+            utils.getVersionsFromTags.mockRejectedValueOnce(mockError)
+            expect(await alias()).toBe(2)
+            expect(log.error).toHaveBeenCalledWith(mockError.message)
         })
     })
 })
