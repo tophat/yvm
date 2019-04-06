@@ -12,7 +12,7 @@ export function escapeRegExp(src) {
     return src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-async function ensureConfig(configFile, configLines) {
+export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
     let contents = fs.readFileSync(configFile).toString()
     const linesAppended = configLines.map(string => {
@@ -29,7 +29,7 @@ async function ensureConfig(configFile, configLines) {
         contents += '\n'
     }
     fs.writeFileSync(configFile, contents)
-    log(`Configured '${configFile}'`)
+    log.info(`Configured '${configFile}'`)
     return true
 }
 
@@ -52,6 +52,7 @@ export const configureBash = async ({ home, yvmDir }) => {
     if (!configured) {
         log('Unable to configure BASH at', bashRcFile, 'or', bashProFile)
     }
+    return configured
 }
 
 export const configureFish = async ({ home, yvmDir }) => {
@@ -64,6 +65,7 @@ export const configureFish = async ({ home, yvmDir }) => {
     if (!configured) {
         log('Unable to configure FISH at', configFile)
     }
+    return configured
 }
 
 export const configureZsh = async ({ home, yvmDir }) => {
@@ -76,18 +78,20 @@ export const configureZsh = async ({ home, yvmDir }) => {
     if (!configured) {
         log('Unable to configure ZSH at', configFile)
     }
+    return configured
 }
 
-export const configureShell = async ({ home, shell = '' }) => {
-    const userHome = home || process.env.HOME || os.homedir()
-    const yvmDir = process.env.YVM_INSTALL_DIR || path.join(userHome, '.yvm')
-    const configHandlers = {
-        bash: configureBash,
-        fish: configureFish,
-        zsh: configureZsh,
-    }
-    const updatingShellConfigs = []
+export const configureShell = async ({ home, shell = '' } = {}) => {
     try {
+        const userHome = home || process.env.HOME || os.homedir()
+        const yvmDir =
+            process.env.YVM_INSTALL_DIR || path.join(userHome, '.yvm')
+        const configHandlers = {
+            bash: configureBash,
+            fish: configureFish,
+            zsh: configureZsh,
+        }
+        const updatingShellConfigs = []
         for (const supportedShell of Object.keys(configHandlers)) {
             if (supportedShell.includes(shell)) {
                 updatingShellConfigs.push(
@@ -95,11 +99,13 @@ export const configureShell = async ({ home, shell = '' }) => {
                 )
             }
         }
-        await Promise.all(updatingShellConfigs)
-        return 0
+        const result = await Promise.all(updatingShellConfigs)
+        const allSuccessful = result.every(a => a)
+        const anySuccessful = result.some(a => a)
+        return allSuccessful || (anySuccessful && !shell) ? 0 : 1
     } catch (e) {
         log(e.message)
         log.info(e.stack)
-        return 1
+        return 2
     }
 }

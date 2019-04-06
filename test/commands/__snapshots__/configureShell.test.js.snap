@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`configureShell configures all 1`] = `
+"dummy
+export YVM_DIR=some-install-dir
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+"
+`;
+
+exports[`configureShell configures all 2`] = `
+"dummy
+export YVM_DIR=some-install-dir
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+"
+`;
+
+exports[`configureShell configures all 3`] = `
+"dummy
+set -x YVM_DIR some-install-dir
+. $YVM_DIR/yvm.fish
+"
+`;
+
+exports[`configureShell configures bash 1`] = `
+"dummy
+export YVM_DIR=some-install-dir
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+"
+`;
+
+exports[`configureShell configures bash 2`] = `"dummy"`;
+
+exports[`configureShell configures bash 3`] = `"dummy"`;
+
+exports[`configureShell configures fish 1`] = `"dummy"`;
+
+exports[`configureShell configures fish 2`] = `"dummy"`;
+
+exports[`configureShell configures fish 3`] = `
+"dummy
+set -x YVM_DIR some-install-dir
+. $YVM_DIR/yvm.fish
+"
+`;
+
+exports[`configureShell configures none 1`] = `
+Array [
+  Array [
+    "Unable to configure BASH at",
+    "mock-home/.bashrc",
+    "or",
+    "mock-home/.bash_profile",
+  ],
+  Array [
+    "Unable to configure FISH at",
+    "mock-home/.config/fish/config.fish",
+  ],
+  Array [
+    "Unable to configure ZSH at",
+    "mock-home/.zshrc",
+  ],
+]
+`;
+
+exports[`configureShell configures zsh 1`] = `"dummy"`;
+
+exports[`configureShell configures zsh 2`] = `
+"dummy
+export YVM_DIR=some-install-dir
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+"
+`;
+
+exports[`configureShell configures zsh 3`] = `"dummy"`;
