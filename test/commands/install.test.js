@@ -67,7 +67,7 @@ describe('yvm install', () => {
         const version = '1.7.0'
         expect(await install({ version })).toEqual(0)
         expect(fs.statSync(getExtractionPath(version, rootPath))).toBeTruthy()
-        expect(await install({ version })).toEqual(1)
+        expect(await install({ version })).toEqual(0)
         expect(log.default).toHaveBeenLastCalledWith(
             `It looks like you already have yarn ${version} installed...`,
         )

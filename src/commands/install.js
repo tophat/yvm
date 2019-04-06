@@ -125,9 +125,8 @@ export const installVersion = async ({
     }
 
     if (isVersionInstalled(version, rootPath)) {
-        throw new Error(
-            `It looks like you already have yarn ${version} installed...`,
-        )
+        log(`It looks like you already have yarn ${version} installed...`)
+        return
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
