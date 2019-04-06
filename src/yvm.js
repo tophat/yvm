@@ -85,14 +85,8 @@ argParser
     .alias('ls')
     .description('List the currently installed versions of Yarn.')
     .action(async () => {
-        log.info('Checking for installed yarn versions...')
-        const { listVersions } = await import('./commands/list')
-        try {
-            await listVersions()
-        } catch (e) {
-            log(e.message)
-            process.exit(2)
-        }
+        const { list } = await import('./commands/list')
+        process.exit(await list())
     })
 
 argParser

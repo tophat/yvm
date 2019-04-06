@@ -20,3 +20,14 @@ export const listVersions = async rootPath => {
     }
     return installedVersions
 }
+
+export const list = async () => {
+    try {
+        log.info('Checking for installed yarn versions...')
+        await listVersions()
+        return 0
+    } catch (e) {
+        log(e.message)
+        return 2
+    }
+}
