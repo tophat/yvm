@@ -68,18 +68,10 @@ unzip yvm.zip -d $HOME/.yvm
 chmod a+x $HOME/.yvm/yvm.sh
 ```
 
-Finally, add the following lines to your `$HOME/.zshrc` or `$HOME/.bashrc`, depending on the shell you use
+Finally, run the following command to configure your shell rc file
 
 ```bash
-export YVM_DIR=/home/joe_user/.yvm
-[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
-```
-
-And in your `$HOME/.config/fish/config.fish` for fishers:
-
-```fish
-set -x YVM_DIR /home/joe_user/.yvm
-. $YVM_DIR/yvm.fish
+./home/joe_user/.yvm/yvm.sh configure-shell
 ```
 
 ### Upgrade
