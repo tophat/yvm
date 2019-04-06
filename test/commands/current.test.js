@@ -37,7 +37,7 @@ describe('yvm current command', () => {
         )
     })
     it('fails if fish environment path is not available', async () => {
-        delete process.env.FISH_USER_PATHS
+        delete process.env.fish_user_paths
         expect(await current({ shell: 'fish' })).toBe(1)
         expect(log).toHaveBeenCalledWith(
             expect.stringContaining(`PATH not found`),
