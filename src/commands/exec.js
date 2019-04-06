@@ -37,9 +37,10 @@ export const exec = async (maybeVersion, rest) => {
         )
         await ensureVersionInstalled(version)
         await runYarn(version, args)
+        return 0
     } catch (e) {
         log(e.message)
         log.info(e.stack)
-        process.exit(1)
+        return 1
     }
 }

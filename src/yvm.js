@@ -65,9 +65,10 @@ argParser
         messageOptionalVersion`Execute command using specified Yarn version`,
     )
     .action(async () => {
-        const [, , , maybeVersion, ...args] = process.argv
+        const [, , , maybeVersion, ...rest] = process.argv
         const { exec } = await import('./commands/exec')
-        await exec(maybeVersion, args)
+        const exitCode = await exec(maybeVersion, rest)
+        process.exit(exitCode)
     })
 
 argParser
