@@ -138,19 +138,8 @@ argParser
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
     .action(async (maybeVersion, { shell }) => {
-        const { getSplitVersionAndArgs } = await import('./util/version')
-        try {
-            const [version] = await getSplitVersionAndArgs(maybeVersion)
-            const { getNewPath } = await import('./commands/getNewPath')
-            const {
-                ensureVersionInstalled,
-            } = await import('./commands/install')
-            await ensureVersionInstalled(version)
-            log.capturable(getNewPath({ version, shell }))
-        } catch (error) {
-            log.error(error)
-            process.exit(1)
-        }
+        const { getNewPath } = await import('./commands/getNewPath')
+        process.exit(await getNewPath(maybeVersion, shell))
     })
 
 argParser
