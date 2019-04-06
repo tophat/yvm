@@ -72,8 +72,8 @@ describe('alias', () => {
 
         it('gets first non yvm yarn executable in fish shell', async () => {
             const yvmPath = '/Users/tophat/.yvm'
-            const oldPath = process.env.FISH_USER_PATHS
-            process.env.FISH_USER_PATHS = `${yvmPath}/versions/v1.13.0/bin /usr/local/bin:`
+            const oldPath = process.env.fish_user_paths
+            process.env.fish_user_paths = `${yvmPath}/versions/v1.13.0/bin /usr/local/bin:`
             childProcess.execSync.mockReturnValueOnce('1.14.0')
             expect(
                 await alias.resolveSystem({ shell: 'fish', yvmPath }),
@@ -81,17 +81,17 @@ describe('alias', () => {
             expect(childProcess.execSync).toHaveBeenCalledWith(
                 expect.stringContaining('usr/local/bin/yarn'),
             )
-            process.env.FISH_USER_PATHS = oldPath
+            process.env.fish_user_paths = oldPath
         })
 
         it('returns nothing if yarn not found in fish user path', async () => {
-            const oldPath = process.env.FISH_USER_PATHS
-            process.env.FISH_USER_PATHS =
+            const oldPath = process.env.fish_user_paths
+            process.env.fish_user_paths =
                 '/Users/tophat/.nvm/versions/node/v6.11.5/bin '
             expect(
                 await alias.resolveSystem({ shell: 'fish', yvmPath }),
             ).toEqual(alias.NOT_AVAILABLE)
-            process.env.FISH_USER_PATHS = oldPath
+            process.env.fish_user_paths = oldPath
         })
     })
 

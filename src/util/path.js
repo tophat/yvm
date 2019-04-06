@@ -12,7 +12,7 @@ export const getPathDelimiter = shell => {
 
 export const getCurrentPath = shell => {
     if (isFishShell(shell)) {
-        return process.env.FISH_USER_PATHS || ''
+        return process.env.fish_user_paths || ''
     }
     return process.env.PATH || ''
 }
