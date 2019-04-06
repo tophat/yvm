@@ -94,21 +94,19 @@ const extractYarn = (version, rootPath) => {
             },
             err => {
                 if (err) {
-                    log(err)
-                    reject(err)
-                } else {
-                    log(`Finished extracting yarn version ${version}`)
-                    const [pkgDir] = fs.readdirSync(tmpPath)
-                    if (pkgDir) {
-                        const pkgPath = path.resolve(tmpPath, pkgDir)
-                        fs.renameSync(pkgPath, destPath)
-                        fs.unlinkSync(srcPath)
-                        fs.rmdirSync(tmpPath)
-                        resolve(destPath)
-                    } else {
-                        reject('Unable to locate extracted package')
-                    }
+                    return reject(err)
                 }
+                log(`Finished extracting yarn version ${version}`)
+                const [pkgDir] = fs.readdirSync(tmpPath)
+                if (!pkgDir) {
+                    const errorMessage = 'Unable to locate extracted package'
+                    return reject(new Error(errorMessage))
+                }
+                const pkgPath = path.resolve(tmpPath, pkgDir)
+                fs.renameSync(pkgPath, destPath)
+                fs.unlinkSync(srcPath)
+                fs.rmdirSync(tmpPath)
+                return resolve(destPath)
             },
         )
     })
@@ -127,17 +125,17 @@ export const installVersion = async ({
     }
 
     if (isVersionInstalled(version, rootPath)) {
-        log(`It looks like you already have yarn ${version} installed...`)
-        return
+        throw new Error(
+            `It looks like you already have yarn ${version} installed...`,
+        )
     }
 
     log(`Installing yarn v${version} in ${rootPath}`)
     log('Downloading...')
     if (!(await downloadVersion(version, rootPath))) {
-        log(`Installation aborted, probably caused by a defective release`)
-        log(`\u2717 ${YARN_RELEASE_TAGS_URL}/v${version}`)
-        log('Please retry with the next available version')
-        return
+        throw new Error(`Installation aborted, probably caused by a defective release
+\u2717 ${YARN_RELEASE_TAGS_URL}/v${version}
+Please retry with the next available version`)
     }
     log(`Finished downloading yarn version ${version}`)
 
@@ -155,7 +153,7 @@ export const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
     await installVersion({ version, rootPath })
 }
 
-export const install = async ({ latest, stable, version }) => {
+export const install = async ({ latest, stable, version } = {}) => {
     try {
         if (stable) {
             version = STABLE
