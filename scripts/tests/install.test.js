@@ -40,6 +40,10 @@ describe('yvm install', () => {
         version: { tagName },
     })
 
+    beforeAll(() => {
+        execSync(`make install-local`)
+    })
+
     afterEach(() => {
         jest.clearAllMocks()
         fs.removeSync(mockHomeValue)

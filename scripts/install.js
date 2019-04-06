@@ -139,14 +139,19 @@ async function run() {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
     ongoingTasks.push(ensureScriptExecutable(paths.yvmSh))
-    const configureCommand = [
-        'node',
-        path.join(paths.yvm, 'yvm.js'),
-        'configure-shell',
-        '--home',
-        paths.home,
-    ].join(' ')
-    execSync(configureCommand)
+    try {
+        const configureCommand = [
+            'node',
+            path.join(paths.yvm, 'yvm.js'),
+            'configure-shell',
+            '--home',
+            paths.home,
+        ].join(' ')
+        execSync(configureCommand)
+    } catch (e) {
+        log('Unable to configure shell')
+        log(`Run '${paths.yvmSh} configure-shell' to complete this step`)
+    }
     await Promise.all(ongoingTasks)
 
     log(`yvm successfully installed in ${paths.yvm} as ${paths.yvmSh}
