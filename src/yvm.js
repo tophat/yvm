@@ -113,12 +113,8 @@ argParser
     .option('-R, --recursive', 'Delete all dependant aliases as well')
     .description('Deletes the alias named <name>')
     .action(async (name, { force, recursive }) => {
-        const { unsetAlias } = await import('./util/alias')
-        const deleted = await unsetAlias({ name, force, recursive })
-        if (deleted) {
-            log('Alias successfully deleted')
-        }
-        process.exit(deleted ? 0 : 1)
+        const { unalias } = await import('./commands/unalias')
+        process.exit(await unalias({ name, force, recursive }))
     })
 
 argParser
