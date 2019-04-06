@@ -160,12 +160,8 @@ argParser
     .command('set-default <version>')
     .description(signPosting`alias default <version>`)
     .action(async version => {
-        const { setDefaultVersion } = await import('./util/version')
-        if (await setDefaultVersion({ version })) {
-            log('Default version set!')
-        } else {
-            process.exit(2)
-        }
+        const { setDefault } = await import('./commands/setDefault')
+        process.exit(await setDefault(version))
     })
 
 argParser
