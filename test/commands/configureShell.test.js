@@ -46,7 +46,8 @@ describe('configureShell', () => {
 
     beforeEach(() => {
         jest.clearAllMocks()
-        fs.emptyDirSync(mockHomeValue)
+        fs.removeSync(mockHomeValue)
+        fs.mkdirSync(mockHomeValue)
         rcFiles.forEach(filePath => fs.outputFileSync(filePath, 'dummy'))
     })
 
