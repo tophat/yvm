@@ -184,7 +184,7 @@ describe('yvm install', () => {
         const expectedErrorMessage = 'Unable to locate extracted package'
         jest.spyOn(targz, 'decompress').mockImplementationOnce(
             ({ dest }, callback) => {
-                fs.mkdirSync(dest)
+                fs.emptyDirSync(dest)
                 callback()
             },
         )
