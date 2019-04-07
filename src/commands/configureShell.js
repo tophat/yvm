@@ -2,15 +2,9 @@ import fs from 'fs-extra'
 import os from 'os'
 import path from 'path'
 
-import log from '../util/log'
+import escapeRegExp from 'lodash.escaperegexp'
 
-/**
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
- * @param {string} src to be escaped
- */
-export function escapeRegExp(src) {
-    return src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
+import log from '../util/log'
 
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
