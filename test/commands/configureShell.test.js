@@ -26,29 +26,37 @@ describe('configureShell', () => {
     const mockHomeValue = 'mock-home'
     const envHomeMock = mockProp(process.env, 'HOME')
     const mockInstallDir = 'mock-install-dir/.yvm'
-    const envYvmInstallDir = mockProp(
-        process.env,
-        'YVM_INSTALL_DIR',
-        mockInstallDir,
-    )
+    const envYvmInstallDir = mockProp(process.env, 'YVM_INSTALL_DIR')
     jest.spyOn(os, 'homedir')
     jest.spyOn(log, 'default')
     jest.spyOn(log, 'info')
 
-    const rcFiles = ['.bashrc', '.zshrc', '.config/fish/config.fish'].map(
-        file => path.join(mockHomeValue, file),
-    )
+    const fileToPath = ([file]) => path.join(mockHomeValue, file)
+    const rcFiles = {
+        bashrc: fileToPath`.bashrc`,
+        bashpro: fileToPath`.bash_profile`,
+        zshrc: fileToPath`.zshrc`,
+        fishconf: fileToPath`.config/fish/config.fish`,
+    }
+    const rcFilePaths = Object.values(rcFiles)
     const confirmShellConfig = () => {
-        rcFiles.forEach(filePath =>
-            expect(fs.readFileSync(filePath).toString()).toMatchSnapshot(),
-        )
+        const configs = rcFilePaths.reduce((configs, file) => {
+            const content = fs.existsSync(file) && fs.readFileSync(file)
+            return Object.assign(configs, { [file]: String(content || null) })
+        }, {})
+        expect(configs).toMatchSnapshot()
     }
 
     beforeEach(() => {
         jest.clearAllMocks()
         fs.removeSync(mockHomeValue)
         fs.mkdirSync(mockHomeValue)
-        rcFiles.forEach(filePath => fs.outputFileSync(filePath, 'dummy'))
+        rcFilePaths.forEach(filePath => fs.outputFileSync(filePath, 'dummy'))
+    })
+
+    afterEach(() => {
+        envHomeMock.reset()
+        envYvmInstallDir.reset()
     })
 
     afterAll(() => {
@@ -58,7 +66,7 @@ describe('configureShell', () => {
         fs.removeSync(mockHomeValue)
     })
 
-    it('configures bash', async () => {
+    it('configures only bashrc', async () => {
         envYvmInstallDir.mockValue('some-install-dir')
         expect(
             await configureShell({ home: mockHomeValue, shell: 'bash' }),
@@ -68,11 +76,26 @@ describe('configureShell', () => {
             expect.stringContaining('Configured'),
         )
         expect(log.info).toHaveBeenCalledWith(
-            expect.stringContaining(rcFiles[0]),
+            expect.stringContaining(rcFiles.bashrc),
         )
     })
 
-    it('configures fish', async () => {
+    it('configures only bash_profile when no bashrc', async () => {
+        envYvmInstallDir.mockValue(mockInstallDir)
+        fs.removeSync(rcFiles.bashrc)
+        expect(
+            await configureShell({ home: mockHomeValue, shell: 'bash' }),
+        ).toBe(0)
+        confirmShellConfig()
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining('Configured'),
+        )
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining(rcFiles.bashpro),
+        )
+    })
+
+    it('configures only fish', async () => {
         envHomeMock.mockValue(mockHomeValue)
         expect(await configureShell({ shell: 'fish' })).toBe(0)
         confirmShellConfig()
@@ -80,11 +103,11 @@ describe('configureShell', () => {
             expect.stringContaining('Configured'),
         )
         expect(log.info).toHaveBeenCalledWith(
-            expect.stringContaining(rcFiles[2]),
+            expect.stringContaining(rcFiles.fishconf),
         )
     })
 
-    it('configures zsh', async () => {
+    it('configures only zsh', async () => {
         envHomeMock.mockValue()
         os.homedir.mockReturnValueOnce(mockHomeValue)
         expect(await configureShell({ shell: 'zsh' })).toBe(0)
@@ -93,7 +116,7 @@ describe('configureShell', () => {
             expect.stringContaining('Configured'),
         )
         expect(log.info).toHaveBeenCalledWith(
-            expect.stringContaining(rcFiles[1]),
+            expect.stringContaining(rcFiles.zshrc),
         )
     })
 
@@ -104,20 +127,21 @@ describe('configureShell', () => {
             expect.stringContaining('Configured'),
         )
         expect(log.info).toHaveBeenCalledWith(
-            expect.stringContaining(rcFiles[0]),
+            expect.stringContaining(rcFiles.bashrc),
         )
         expect(log.info).toHaveBeenCalledWith(
-            expect.stringContaining(rcFiles[1]),
+            expect.stringContaining(rcFiles.fishconf),
         )
         expect(log.info).toHaveBeenCalledWith(
-            expect.stringContaining(rcFiles[2]),
+            expect.stringContaining(rcFiles.zshrc),
         )
     })
 
     it('configures none', async () => {
         fs.emptyDirSync(mockHomeValue)
         expect(await configureShell({ home: mockHomeValue })).toBe(1)
-        rcFiles.forEach(filePath => expect(fs.existsSync(filePath)).toBe(false))
+        rcFilePaths.forEach(file => expect(fs.existsSync(file)).toBe(false))
+        confirmShellConfig()
         expect(log.default.mock.calls).toMatchSnapshot()
     })
 

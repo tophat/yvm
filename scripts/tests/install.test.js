@@ -47,6 +47,9 @@ describe('yvm install', () => {
     afterEach(() => {
         jest.clearAllMocks()
         fs.removeSync(mockHomeValue)
+        envHomeMock.reset()
+        envUseLocal.reset()
+        envInstallVersion.reset()
     })
 
     afterAll(() => {
@@ -54,18 +57,6 @@ describe('yvm install', () => {
         envHomeMock.restore()
         envUseLocal.restore()
         envInstallVersion.restore()
-    })
-
-    it('runs when executed', () => {
-        const output = String(execSync('node ./scripts/install.js')).trim()
-        const expectedOutput = [
-            'All dependencies satisfied',
-            'yvm successfully installed',
-            `Open another terminal window`,
-        ]
-        expectedOutput.forEach(expected =>
-            expect(output).toEqual(expect.stringContaining(expected)),
-        )
     })
 
     describe('preflightCheck', () => {
@@ -85,7 +76,6 @@ describe('yvm install', () => {
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             envUseLocal.mockValue(true)
-            envInstallVersion.reset()
         })
 
         it('indicates successful completion', async () => {
@@ -127,7 +117,6 @@ describe('yvm install', () => {
             expect(fs.pathExistsSync(testHomePath)).toBe(false)
             envHomeMock.mockValue(testHomePath)
             await run()
-            envHomeMock.reset()
             expect(fs.pathExistsSync(`${testHomePath}/.yvm`)).toBe(true)
             fs.removeSync(testHomePath)
         })
@@ -176,8 +165,6 @@ describe('yvm install', () => {
         const mockHome = 'other-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.reset()
-            envInstallVersion.reset()
         })
 
         afterAll(() => {
@@ -225,7 +212,6 @@ describe('yvm install', () => {
         const mockHome = 'another-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.reset()
         })
 
         afterEach(() => {
@@ -281,7 +267,6 @@ describe('yvm install', () => {
         const mockHome = 'invalid-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.reset()
             envInstallVersion.mockValue(installVersion)
         })
 
