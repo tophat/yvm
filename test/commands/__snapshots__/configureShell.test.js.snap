@@ -20,10 +20,10 @@ export YVM_DIR=mock-home/.yvm
 
 exports[`configureShell configures none 1`] = `
 Object {
-  "mock-home/.bash_profile": "null",
-  "mock-home/.bashrc": "null",
-  "mock-home/.config/fish/config.fish": "null",
-  "mock-home/.zshrc": "null",
+  "mock-home/.bash_profile": null,
+  "mock-home/.bashrc": null,
+  "mock-home/.config/fish/config.fish": null,
+  "mock-home/.zshrc": null,
 }
 `;
 
@@ -52,7 +52,7 @@ Object {
 export YVM_DIR=mock-install-dir/.yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",
-  "mock-home/.bashrc": "null",
+  "mock-home/.bashrc": null,
   "mock-home/.config/fish/config.fish": "dummy",
   "mock-home/.zshrc": "dummy",
 }

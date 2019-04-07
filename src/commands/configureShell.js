@@ -14,7 +14,7 @@ export function escapeRegExp(src) {
 
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
-    let contents = fs.readFileSync(configFile).toString()
+    let contents = fs.readFileSync(configFile, 'utf8')
     const linesAppended = configLines.map(string => {
         const finalString = `\n${string}`
         if (contents.includes(string)) {

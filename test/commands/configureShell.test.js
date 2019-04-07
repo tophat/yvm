@@ -41,8 +41,8 @@ describe('configureShell', () => {
     const rcFilePaths = Object.values(rcFiles)
     const confirmShellConfig = () => {
         const configs = rcFilePaths.reduce((configs, file) => {
-            const content = fs.existsSync(file) && fs.readFileSync(file)
-            return Object.assign(configs, { [file]: String(content || null) })
+            const content = fs.existsSync(file) && fs.readFileSync(file, 'utf8')
+            return Object.assign(configs, { [file]: content || null })
         }, {})
         expect(configs).toMatchSnapshot()
     }

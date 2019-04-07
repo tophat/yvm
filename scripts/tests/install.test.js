@@ -154,7 +154,7 @@ describe('yvm install', () => {
             const filePath = `${mockHomeValue}/${rcFile}`
             fs.outputFileSync(filePath, 'dummy')
             await run()
-            const content = fs.readFileSync(filePath).toString()
+            const content = fs.readFileSync(filePath, 'utf8')
             shConfigs[filePath].forEach(string => {
                 expect(content.includes(string)).toBe(true)
             })
