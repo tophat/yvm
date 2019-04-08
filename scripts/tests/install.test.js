@@ -22,7 +22,7 @@ const mockProp = (obj, prop, mockValue) => {
     }
 }
 
-describe('yvm install', () => {
+describe('install yvm', () => {
     const log = jest.spyOn(console, 'log')
     const mockHomeValue = 'mock-home'
     const envHomeMock = mockProp(process.env, 'HOME')
