@@ -98,6 +98,12 @@ argParser
         process.exit(await listRemote())
     })
 
+argParser
+    .command('deactivate')
+    .alias('unuse')
+    .description('Undo effects of `yvm` on current shell')
+    .action(() => log(messageSourceYvm))
+
 argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')
 argParser.command(
     'alias <name> <version>',
@@ -118,6 +124,11 @@ argParser
         const { unalias } = await import('commands/unalias')
         process.exit(await unalias({ name, force, recursive }))
     })
+
+argParser
+    .command('unload')
+    .description('Unload `yvm` from shell')
+    .action(() => log(messageSourceYvm))
 
 argParser
     .command('which [version]')
