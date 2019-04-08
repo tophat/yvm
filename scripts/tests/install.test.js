@@ -1,8 +1,9 @@
 const os = require('os')
 const fs = require('fs-extra')
 const { execSync } = require('child_process')
+const https = require('https')
 
-const { getConfig, preflightCheck, run } = require('../install')
+const { downloadFile, getConfig, preflightCheck, run } = require('../install')
 
 const mockProp = (obj, prop, mockValue) => {
     const original = obj[prop]
@@ -68,6 +69,55 @@ describe('yvm install', () => {
             expect(() => preflightCheck('somemissingbin')).toThrow(
                 /The install cannot proceed due missing dependencies/,
             )
+        })
+    })
+
+    describe('downloadFile', () => {
+        const mockResponseProps = {
+            on(_, cb) {
+                cb()
+            },
+            setEncoding() {},
+            headers: {},
+        }
+
+        beforeAll(() => jest.spyOn(https, 'get'))
+        beforeEach(() => https.get.mockReset())
+        afterAll(() => https.get.mockRestore())
+
+        it('throws error on non-secure URL', async () => {
+            expect.assertions(1)
+            try {
+                await downloadFile({ source: 'http://example.com' })
+            } catch (err) {
+                expect(err.toString()).toMatch(/Only https scheme is supported/)
+            }
+        })
+
+        it('throws error on status error codes', async () => {
+            expect.assertions(1)
+            https.get.mockImplementation((_, cb) => cb({ statusCode: 400 }))
+            try {
+                await downloadFile({ source: 'https://400.example.com' })
+            } catch (err) {
+                expect(err.toString()).toMatch(/Failed to download file/)
+            }
+        })
+
+        it('follows redirect paths', async () => {
+            expect.assertions(1)
+            const mockRedirectUrl = 'https://redirectme.example.com'
+            https.get.mockImplementation(({ hostname }, cb) =>
+                mockRedirectUrl.includes(hostname)
+                    ? cb({ ...mockResponseProps, statusCode: 200 })
+                    : cb({
+                          ...mockResponseProps,
+                          statusCode: 302,
+                          headers: { location: mockRedirectUrl },
+                      }),
+            )
+            await downloadFile({ source: 'https://400.example.com' })
+            expect(https.get).toHaveBeenCalledTimes(2)
         })
     })
 
