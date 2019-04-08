@@ -1,9 +1,9 @@
 import path from 'path'
 
 import log from '../../src/util/log'
+import * as pathUtils from '../../src/util/path'
 import * as version from '../../src/util/version'
 import * as install from '../../src/commands/install'
-
 import { buildNewPath, getNewPath } from '../../src/commands/getNewPath'
 
 describe('getNewPath', () => {
@@ -38,11 +38,16 @@ describe('getNewPath', () => {
 })
 
 describe('buildNewPath', () => {
+    beforeAll(() => {
+        jest.spyOn(pathUtils, 'getPathEntries')
+    })
+    afterAll(jest.restoreAllMocks)
+
     it('Returns a new PATH string with a yarn directory prepended', () => {
         const mockVersion = '1.7.0'
         const mockRootPath = '/some/path'
         const mockSplitPath = ['abc', 'def']
-        const mockPathString = mockSplitPath.join(path.delimiter)
+        pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
 
         const expectedPathString = [
             `${mockRootPath}/versions/v${mockVersion}/bin`,
@@ -52,31 +57,30 @@ describe('buildNewPath', () => {
             buildNewPath({
                 version: mockVersion,
                 rootPath: mockRootPath,
-                pathString: mockPathString,
             }),
         ).toEqual(expectedPathString)
     })
 
-    it('Returns a new PATH string with the yarn dir edited if it was already present', () => {
+    it('Returns a new PATH string with the yarn dir replaced if it was already present', () => {
         const mockVersion = '1.7.0'
         const mockRootPath = '/some/path'
         const mockSplitPath = [
             'abc',
             `${mockRootPath}/versions/v1.6.0/bin`,
             'def',
+            `${mockRootPath}/versions/v1.5.0/bin`,
         ]
-        const mockPathString = mockSplitPath.join(path.delimiter)
+        pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
 
         const expectedPathString = [
-            'abc',
             `${mockRootPath}/versions/v${mockVersion}/bin`,
+            'abc',
             'def',
         ].join(path.delimiter)
         expect(
             buildNewPath({
                 version: mockVersion,
                 rootPath: mockRootPath,
-                pathString: mockPathString,
             }),
         ).toEqual(expectedPathString)
     })
@@ -87,7 +91,7 @@ describe('buildNewPath', () => {
             const mockVersion = '1.7.0'
             const mockRootPath = '/some/path'
             const mockSplitPath = ['abc', 'def']
-            const mockPathString = mockSplitPath.join(FISH_ARRAY_DELIMITER)
+            pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
 
             const expectedPathString = [
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
@@ -98,24 +102,24 @@ describe('buildNewPath', () => {
                     shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,
-                    pathString: mockPathString,
                 }),
             ).toEqual(expectedPathString)
         })
 
-        it('Returns a new fish_user_path string with the yarn dir edited if it was already present', () => {
+        it('Returns a new fish_user_path string with the yarn dir replaced if it was already present', () => {
             const mockVersion = '1.7.0'
             const mockRootPath = '/some/path'
             const mockSplitPath = [
                 'abc',
                 `${mockRootPath}/versions/v1.6.0/bin`,
                 'def',
+                `${mockRootPath}/versions/v1.5.0/bin`,
             ]
-            const mockPathString = mockSplitPath.join(FISH_ARRAY_DELIMITER)
+            pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
 
             const expectedPathString = [
-                'abc',
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
+                'abc',
                 'def',
             ].join(FISH_ARRAY_DELIMITER)
             expect(
@@ -123,7 +127,6 @@ describe('buildNewPath', () => {
                     shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,
-                    pathString: mockPathString,
                 }),
             ).toEqual(expectedPathString)
         })
