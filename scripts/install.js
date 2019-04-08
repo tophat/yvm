@@ -81,10 +81,10 @@ function escapeRegExp(src) {
 function ensureDir(dirPath) {
     if (!fs.existsSync(dirPath)) {
         const directories = path.resolve(dirPath).split(path.sep)
-        let baseDir = directories[0] || '/'
-        for (const dirname of [...directories, '.']) {
-            if (!fs.existsSync(baseDir)) fs.mkdirSync(baseDir)
+        let baseDir = directories.shift() || path.sep
+        for (const dirname of directories) {
             baseDir = path.join(baseDir, dirname)
+            if (!fs.existsSync(baseDir)) fs.mkdirSync(baseDir)
         }
     }
 }
