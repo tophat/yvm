@@ -193,7 +193,7 @@ async function removeFile(filePath) {
 async function cleanYvmDir(yvmPath) {
     const removing = []
     for (const filePath of fs.readdirSync(yvmPath)) {
-        if (!filePath.endsWith('version')) {
+        if (!filePath.endsWith('versions')) {
             removing.push(removeFile(filePath))
         }
     }
