@@ -132,6 +132,18 @@ argParser
     .action(() => log(messageSourceYvm))
 
 argParser
+    .command('configure-shell', '', { noHelp: true })
+    .option('--home [home]', 'Alternate path to home directory')
+    .option('--shell [shell]', 'Shell to configure, defaults to all')
+    .description(
+        'Internal command: Configures any shell config files found for loading yvm on startup',
+    )
+    .action(async ({ home, shell }) => {
+        const { configureShell } = await import('./commands/configureShell')
+        process.exit(await configureShell({ home, shell }))
+    })
+
+argParser
     .command('get-new-path [version]', '', { noHelp: true })
     .option('--shell [shell]', 'Shell used when getting PATH')
     .description(

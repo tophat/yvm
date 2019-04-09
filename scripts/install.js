@@ -31,27 +31,13 @@ function preflightCheck(...dependencies) {
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
-    const yvmDir = process.env.YVM_INSTALL_DIR || `${home}/.yvm`
-    const yvmDirVarName = 'YVM_DIR'
-    const bashConfig = [
-        `export ${yvmDirVarName}=${yvmDir}`,
-        `[ -r $${yvmDirVarName}/yvm.sh ] && . $${yvmDirVarName}/yvm.sh`,
-    ]
-    const fishConfig = [
-        `set -x ${yvmDirVarName} ${yvmDir}`,
-        `. $${yvmDirVarName}/yvm.fish`,
-    ]
+    const yvmDir = process.env.YVM_INSTALL_DIR || path.join(home, '.yvm')
     return {
         paths: {
             home,
             yvm: yvmDir,
-            yvmSh: `${yvmDir}/yvm.sh`,
-            zip: `${useLocal ? 'artifacts' : yvmDir}/yvm.zip`,
-        },
-        shConfigs: {
-            [`${home}/.bashrc`]: bashConfig,
-            [`${home}/.zshrc`]: bashConfig,
-            [`${home}/.config/fish/config.fish`]: fishConfig,
+            yvmSh: path.join(yvmDir, 'yvm.sh'),
+            zip: path.join(useLocal ? 'artifacts' : yvmDir, 'yvm.zip'),
         },
         releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
         releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
@@ -60,14 +46,6 @@ function getConfig() {
             tagName: process.env.INSTALL_VERSION || null,
         },
     }
-}
-
-/**
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
- * @param {string} src to be escaped
- */
-function escapeRegExp(src) {
-    return src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 /**
@@ -214,7 +192,9 @@ async function removeFile(filePath) {
 async function cleanYvmDir(yvmPath) {
     const filesToRemove = ['yvm.sh', 'yvm.js', 'yvm.fish', 'node_modules']
     await Promise.all(
-        filesToRemove.map(file => removeFile(`${yvmPath}/${file}`).catch(log)),
+        filesToRemove.map(file =>
+            removeFile(path.join(yvmPath, file)).catch(log),
+        ),
     )
 }
 
@@ -223,7 +203,7 @@ async function unzipFile(filePath, yvmPath) {
 }
 
 async function saveVersion(versionTag, yvmPath) {
-    const filePath = `${yvmPath}/.version`
+    const filePath = path.join(yvmPath, '.version')
     fs.writeFileSync(filePath, `{ "version": "${versionTag}" }`)
 }
 
@@ -231,29 +211,10 @@ async function ensureScriptExecutable(filePath) {
     execSync(`chmod +x ${filePath}`)
 }
 
-async function ensureConfig(configFile, configLines) {
-    if (!fs.existsSync(configFile)) return
-    let contents = fs.readFileSync(configFile).toString()
-    const linesAppended = configLines.map(string => {
-        const finalString = `\n${string}`
-        if (contents.includes(string)) {
-            const matchString = new RegExp(`\n.*${escapeRegExp(string)}.*`)
-            contents = contents.replace(matchString, finalString)
-            return false
-        }
-        contents += finalString
-        return true
-    })
-    if (linesAppended.some(a => a)) {
-        contents += '\n'
-    }
-    fs.writeFileSync(configFile, contents)
-}
-
 async function run() {
     preflightCheck(...dependencies)
     const config = getConfig()
-    const { version, paths, shConfigs, useLocal } = config
+    const { version, paths, useLocal } = config
     ensureDir(paths.yvm)
     if (!useLocal) {
         const { releaseApiUrl, releasesApiUrl } = config
@@ -287,10 +248,19 @@ async function run() {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
     ongoingTasks.push(ensureScriptExecutable(paths.yvmSh))
-    const updatingShellConfigs = Object.entries(shConfigs).map(
-        ([configFile, configLines]) => ensureConfig(configFile, configLines),
-    )
-    ongoingTasks.push(...updatingShellConfigs)
+    try {
+        const configureCommand = [
+            'node',
+            path.join(paths.yvm, 'yvm.js'),
+            'configure-shell',
+            '--home',
+            paths.home,
+        ].join(' ')
+        execSync(configureCommand)
+    } catch (e) {
+        log('Unable to configure shell')
+        log(`Run '${paths.yvmSh} configure-shell' to complete this step`)
+    }
     await Promise.all(ongoingTasks)
 
     log(`yvm successfully installed in ${paths.yvm} as ${paths.yvmSh}
@@ -306,8 +276,6 @@ if (!module.parent) {
 
 module.exports = {
     downloadFile,
-    ensureConfig,
-    escapeRegExp,
     getConfig,
     preflightCheck,
     run,

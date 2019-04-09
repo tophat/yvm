@@ -3,14 +3,7 @@ const fs = require('fs-extra')
 const { execSync } = require('child_process')
 const https = require('https')
 
-const {
-    downloadFile,
-    ensureConfig,
-    escapeRegExp,
-    getConfig,
-    preflightCheck,
-    run,
-} = require('../install')
+const { downloadFile, getConfig, preflightCheck, run } = require('../install')
 
 const mockProp = (obj, prop, mockValue) => {
     const original = obj[prop]
@@ -29,22 +22,13 @@ const mockProp = (obj, prop, mockValue) => {
     }
 }
 
-describe('yvm install', () => {
+describe('install yvm', () => {
     const log = jest.spyOn(console, 'log')
     const mockHomeValue = 'mock-home'
     const envHomeMock = mockProp(process.env, 'HOME')
     const envUseLocal = mockProp(process.env, 'USE_LOCAL')
     const envInstallVersion = mockProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
-
-    const confirmShellConfig = configFile => {
-        const content = fs.readFileSync(configFile).toString()
-        const { shConfigs } = getConfig()
-        shConfigs[configFile].forEach(string => {
-            const exactMatch = new RegExp(`\n${escapeRegExp(string)}\n`)
-            expect(content.match(exactMatch)).toBeTruthy()
-        })
-    }
 
     const expectedConfigObject = ({ homePath, tagName = null, useLocal }) => ({
         paths: {
@@ -53,27 +37,20 @@ describe('yvm install', () => {
             yvmSh: `${homePath}/.yvm/yvm.sh`,
             zip: `${useLocal ? 'artifacts' : `${homePath}/.yvm`}/yvm.zip`,
         },
-        shConfigs: {
-            [`${homePath}/.bashrc`]: [
-                `export YVM_DIR=${homePath}/.yvm`,
-                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
-            ],
-            [`${homePath}/.config/fish/config.fish`]: [
-                `set -x YVM_DIR ${homePath}/.yvm`,
-                '. $YVM_DIR/yvm.fish',
-            ],
-            [`${homePath}/.zshrc`]: [
-                `export YVM_DIR=${homePath}/.yvm`,
-                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
-            ],
-        },
         useLocal,
         version: { tagName },
+    })
+
+    beforeAll(() => {
+        execSync(`make install-local`)
     })
 
     afterEach(() => {
         jest.clearAllMocks()
         fs.removeSync(mockHomeValue)
+        envHomeMock.reset()
+        envUseLocal.reset()
+        envInstallVersion.reset()
     })
 
     afterAll(() => {
@@ -81,18 +58,6 @@ describe('yvm install', () => {
         envHomeMock.restore()
         envUseLocal.restore()
         envInstallVersion.restore()
-    })
-
-    it('runs when executed', () => {
-        const output = String(execSync('node ./scripts/install.js')).trim()
-        const expectedOutput = [
-            'All dependencies satisfied',
-            'yvm successfully installed',
-            `Open another terminal window`,
-        ]
-        expectedOutput.forEach(expected =>
-            expect(output).toEqual(expect.stringContaining(expected)),
-        )
     })
 
     describe('preflightCheck', () => {
@@ -156,28 +121,11 @@ describe('yvm install', () => {
         })
     })
 
-    describe('ensureConfig', () => {
-        it('updates exiting lines', async () => {
-            const fileName = 'some-random-rc'
-            const initial = `with
-# -- specific existing line --
-that should be replaced`
-            const expected = `with
-specific existing line
-that should be replaced`
-            fs.writeFileSync(fileName, initial)
-            await ensureConfig(fileName, ['specific existing line'])
-            expect(fs.readFileSync(fileName, 'utf8')).toEqual(expected)
-            fs.unlinkSync(fileName)
-        })
-    })
-
     describe('local version', () => {
         const mockHome = mockHomeValue
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             envUseLocal.mockValue(true)
-            envInstallVersion.reset()
         })
 
         it('indicates successful completion', async () => {
@@ -219,7 +167,6 @@ that should be replaced`
             expect(fs.pathExistsSync(testHomePath)).toBe(false)
             envHomeMock.mockValue(testHomePath)
             await run()
-            envHomeMock.reset()
             expect(fs.pathExistsSync(`${testHomePath}/.yvm`)).toBe(true)
             fs.removeSync(testHomePath)
         })
@@ -239,11 +186,28 @@ that should be replaced`
         })
 
         const rcFiles = ['.bashrc', '.zshrc', '.config/fish/config.fish']
+        const shConfigs = {
+            [`${mockHomeValue}/.bashrc`]: [
+                `export YVM_DIR=${mockHomeValue}/.yvm`,
+                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
+            ],
+            [`${mockHomeValue}/.config/fish/config.fish`]: [
+                `set -x YVM_DIR ${mockHomeValue}/.yvm`,
+                '. $YVM_DIR/yvm.fish',
+            ],
+            [`${mockHomeValue}/.zshrc`]: [
+                `export YVM_DIR=${mockHomeValue}/.yvm`,
+                '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
+            ],
+        }
         it.each(rcFiles.map(file => [file]))('configures %s', async rcFile => {
             const filePath = `${mockHomeValue}/${rcFile}`
-            fs.outputFileSync(filePath, '')
+            fs.outputFileSync(filePath, 'dummy')
             await run()
-            confirmShellConfig(filePath)
+            const content = fs.readFileSync(filePath, 'utf8')
+            shConfigs[filePath].forEach(string => {
+                expect(content.includes(string)).toBe(true)
+            })
         })
     })
 
@@ -251,8 +215,6 @@ that should be replaced`
         const mockHome = 'other-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.reset()
-            envInstallVersion.reset()
         })
 
         afterAll(() => {
@@ -300,7 +262,6 @@ that should be replaced`
         const mockHome = 'another-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.reset()
         })
 
         afterEach(() => {
@@ -356,7 +317,6 @@ that should be replaced`
         const mockHome = 'invalid-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.reset()
             envInstallVersion.mockValue(installVersion)
         })
 
