@@ -37,6 +37,7 @@ function getConfig() {
             home,
             yvm: yvmDir,
             yvmSh: path.join(yvmDir, 'yvm.sh'),
+            yarnShim: path.join(yvmDir, 'shim', 'yarn'),
             zip: path.join(useLocal ? 'artifacts' : yvmDir, 'yvm.zip'),
         },
         releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
@@ -136,7 +137,7 @@ function httpRequest(uri) {
         hostname,
         path: `${pathname}${search}`,
         method: 'GET',
-        headers: { 'User-Agent': 'yvm' },
+        headers: { 'User-Agent': 'YVM' },
     }
 }
 
@@ -190,12 +191,13 @@ async function removeFile(filePath) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const filesToRemove = ['yvm.sh', 'yvm.js', 'yvm.fish', 'node_modules']
-    await Promise.all(
-        filesToRemove.map(file =>
-            removeFile(path.join(yvmPath, file)).catch(log),
-        ),
-    )
+    const removing = []
+    for (const filePath of fs.readdirSync(yvmPath)) {
+        if (!filePath.endsWith('version')) {
+            removing.push(removeFile(filePath))
+        }
+    }
+    await Promise.all(removing)
 }
 
 async function unzipFile(filePath, yvmPath) {
@@ -247,7 +249,10 @@ async function run() {
     if (version.tagName) {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
-    ongoingTasks.push(ensureScriptExecutable(paths.yvmSh))
+    ongoingTasks.push(
+        ensureScriptExecutable(paths.yvmSh),
+        ensureScriptExecutable(paths.yarnShim),
+    )
     try {
         const configureCommand = [
             'node',

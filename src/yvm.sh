@@ -33,10 +33,7 @@ yvm() {
             yvm_err "YVM Could not find node executable."
             yvm_err "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bashrc"
         fi
-        DEFAULT_YARN_VERSION=$(yvm_call_node_script get-default-version 2>/dev/null)
-        if [ "x" != "x${DEFAULT_YARN_VERSION}" ]; then
-            yvm_use > /dev/null
-        fi
+        export PATH="${YVM_DIR}/shim":$PATH
     }
 
     if [ "${command}" = "use" ]; then

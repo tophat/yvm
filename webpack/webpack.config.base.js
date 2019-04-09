@@ -18,7 +18,13 @@ module.exports = {
         path: outputPath,
     },
     target: 'node',
-    plugins: [new CopyPlugin(['src/yvm.sh', 'src/yvm.fish'])],
+    plugins: [
+        new CopyPlugin([
+            'src/yvm.sh',
+            'src/yvm.fish',
+            { from: 'src/shim/yarn.js', to: './shim/yarn', toType: 'file' },
+        ]),
+    ],
     module: {
         rules: [
             {
