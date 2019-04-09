@@ -29,7 +29,7 @@ describe('install yvm', () => {
     const envUseLocal = mockProp(process.env, 'USE_LOCAL')
     const envInstallVersion = mockProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
-
+    const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
     const expectedConfigObject = ({ homePath, tagName = null, useLocal }) => ({
         paths: {
             home: homePath,
@@ -148,7 +148,6 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(fs.pathExistsSync(filePath)).toBe(true)
@@ -242,7 +241,6 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(fs.pathExistsSync(filePath)).toBe(true)
@@ -291,7 +289,6 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(fs.pathExistsSync(filePath)).toBe(true)
@@ -338,7 +335,6 @@ describe('install yvm', () => {
             // should not have created version tag
             expect(fs.pathExistsSync(`${yvmHome}/.version`)).toBe(false)
             // should not have extracted files
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(fs.pathExistsSync(filePath)).toBe(false)
