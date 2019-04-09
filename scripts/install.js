@@ -191,13 +191,15 @@ async function removeFile(filePath) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const removing = []
-    for (const filePath of fs.readdirSync(yvmPath)) {
-        if (!filePath.endsWith('versions')) {
-            removing.push(removeFile(filePath))
-        }
-    }
-    await Promise.all(removing)
+    const filesNotToRemove = new Set(['versions'])
+    const filesToRemove = fs
+        .readdirSync(yvmPath)
+        .filter(f => !filesNotToRemove.has(f))
+    await Promise.all(
+        filesToRemove.map(file =>
+            removeFile(path.join(yvmPath, file)).catch(log),
+        ),
+    )
 }
 
 async function unzipFile(filePath, yvmPath) {
