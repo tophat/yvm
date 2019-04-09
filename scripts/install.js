@@ -28,6 +28,8 @@ function preflightCheck(...dependencies) {
     log('All dependencies satisfied.')
 }
 
+const zipFile = 'yvm.zip'
+
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
@@ -38,7 +40,7 @@ function getConfig() {
             yvm: yvmDir,
             yvmSh: path.join(yvmDir, 'yvm.sh'),
             yarnShim: path.join(yvmDir, 'shim', 'yarn'),
-            zip: path.join(useLocal ? 'artifacts' : yvmDir, 'yvm.zip'),
+            zip: path.join(useLocal ? 'artifacts' : yvmDir, zipFile),
         },
         releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
         releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
@@ -191,7 +193,7 @@ async function removeFile(filePath) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const filesNotToRemove = new Set(['versions', 'yvm.zip'])
+    const filesNotToRemove = new Set(['versions', zipFile])
     const filesToRemove = fs
         .readdirSync(yvmPath)
         .filter(f => !filesNotToRemove.has(f))
@@ -206,9 +208,9 @@ async function unzipFile(filePath, yvmPath) {
     execSync(`unzip -o -q ${filePath} -d ${yvmPath}`)
 }
 
-async function saveVersion(versionTag, yvmPath) {
+async function saveVersion(version, yvmPath) {
     const filePath = path.join(yvmPath, '.version')
-    fs.writeFileSync(filePath, `{ "version": "${versionTag}" }`)
+    fs.writeFileSync(filePath, JSON.stringify({ version }))
 }
 
 async function ensureScriptExecutable(filePath) {
