@@ -191,7 +191,7 @@ async function removeFile(filePath) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const filesNotToRemove = new Set(['versions'])
+    const filesNotToRemove = new Set(['versions', 'yvm.zip'])
     const filesToRemove = fs
         .readdirSync(yvmPath)
         .filter(f => !filesNotToRemove.has(f))
