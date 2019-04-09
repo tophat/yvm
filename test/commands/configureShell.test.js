@@ -78,6 +78,9 @@ describe('configureShell', () => {
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining(rcFiles.bashrc),
         )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
+        )
     })
 
     it('configures only bash_profile when no bashrc', async () => {
@@ -93,6 +96,9 @@ describe('configureShell', () => {
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining(rcFiles.bashpro),
         )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
+        )
     })
 
     it('configures only fish', async () => {
@@ -104,6 +110,9 @@ describe('configureShell', () => {
         )
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining(rcFiles.fishconf),
+        )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
         )
     })
 
@@ -117,6 +126,9 @@ describe('configureShell', () => {
         )
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining(rcFiles.zshrc),
+        )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
         )
     })
 
@@ -134,6 +146,9 @@ describe('configureShell', () => {
         )
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining(rcFiles.zshrc),
+        )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
         )
     })
 

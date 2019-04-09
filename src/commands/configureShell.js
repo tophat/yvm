@@ -96,7 +96,12 @@ export const configureShell = async ({ home, shell = '' } = {}) => {
         const result = await Promise.all(updatingShellConfigs)
         const allSuccessful = result.every(a => a)
         const anySuccessful = result.some(a => a)
-        return allSuccessful || (anySuccessful && !shell) ? 0 : 1
+        const isSuccessful = allSuccessful || (anySuccessful && !shell)
+        if (!isSuccessful) {
+            return 1
+        }
+        log('Shell configured successfully')
+        return 0
     } catch (e) {
         log(e.message)
         log.info(e.stack)
