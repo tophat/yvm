@@ -15,7 +15,7 @@ function yvm
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
         else
-            set -U fish_user_paths $NEW_FISH_USER_PATHS
+            set -U fish_user_paths (string split ' ' -- $NEW_FISH_USER_PATHS)
             set -l new_version (yarn --version)
             yvm_echo "Now using yarn version $new_version"
         end
