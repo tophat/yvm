@@ -212,6 +212,10 @@ async function saveVersion(versionTag, yvmPath) {
 }
 
 async function ensureScriptExecutable(filePath) {
+    if (!fs.existsSync(filePath)) {
+        log(`${filePath} does not exist`)
+        return
+    }
     execSync(`chmod +x ${filePath}`)
 }
 
