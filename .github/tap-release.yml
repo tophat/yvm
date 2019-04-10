@@ -1,6 +1,5 @@
 asset: yvm.zip
 tap: tophat/homebrew-bar/Formula/yvm.rb
-branches: test-auto-tap
 template: >
   class Yvm < Formula
     desc     "$REPO_DESCRIPTION"
