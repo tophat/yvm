@@ -28,6 +28,8 @@ function preflightCheck(...dependencies) {
     log('All dependencies satisfied.')
 }
 
+const zipFile = 'yvm.zip'
+
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
@@ -37,7 +39,8 @@ function getConfig() {
             home,
             yvm: yvmDir,
             yvmSh: path.join(yvmDir, 'yvm.sh'),
-            zip: path.join(useLocal ? 'artifacts' : yvmDir, 'yvm.zip'),
+            yarnShim: path.join(yvmDir, 'shim', 'yarn'),
+            zip: path.join(useLocal ? 'artifacts' : yvmDir, zipFile),
         },
         releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
         releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
@@ -136,7 +139,7 @@ function httpRequest(uri) {
         hostname,
         path: `${pathname}${search}`,
         method: 'GET',
-        headers: { 'User-Agent': 'yvm' },
+        headers: { 'User-Agent': 'YVM' },
     }
 }
 
@@ -190,7 +193,10 @@ async function removeFile(filePath) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const filesToRemove = ['yvm.sh', 'yvm.js', 'yvm.fish', 'node_modules']
+    const filesNotToRemove = new Set(['versions', zipFile])
+    const filesToRemove = fs
+        .readdirSync(yvmPath)
+        .filter(f => !filesNotToRemove.has(f))
     await Promise.all(
         filesToRemove.map(file =>
             removeFile(path.join(yvmPath, file)).catch(log),
@@ -202,12 +208,16 @@ async function unzipFile(filePath, yvmPath) {
     execSync(`unzip -o -q ${filePath} -d ${yvmPath}`)
 }
 
-async function saveVersion(versionTag, yvmPath) {
+async function saveVersion(version, yvmPath) {
     const filePath = path.join(yvmPath, '.version')
-    fs.writeFileSync(filePath, `{ "version": "${versionTag}" }`)
+    fs.writeFileSync(filePath, JSON.stringify({ version }))
 }
 
 async function ensureScriptExecutable(filePath) {
+    if (!fs.existsSync(filePath)) {
+        log(`${filePath} does not exist`)
+        return
+    }
     execSync(`chmod +x ${filePath}`)
 }
 
@@ -247,7 +257,10 @@ async function run() {
     if (version.tagName) {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
-    ongoingTasks.push(ensureScriptExecutable(paths.yvmSh))
+    ongoingTasks.push(
+        ensureScriptExecutable(paths.yvmSh),
+        ensureScriptExecutable(paths.yarnShim),
+    )
     try {
         const configureCommand = [
             'node',

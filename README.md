@@ -23,7 +23,7 @@
 
 <!-- OVERVIEW-DOCS:START -->
 
-Pesky yarn versions got you down? Automatically and easilly manage those versions.
+Pesky yarn versions got you down? Automatically and easily manage those versions.
 
 YVM will automatically use the correct yarn version when you run any yarn commands in any folder with a `package.json`, `.yvmrc` or any other [supported configuration](https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number) file. Otherwise, it will use you a globally set version of yarn.
 
@@ -84,13 +84,19 @@ yvm update-self
 
 ## Usage
 
-### Automatic magic
+### Automagic
 
-Run any yarn command and watch it magically use the correct version of yarn
+Run any yarn command and watch it automagically use the correct version of yarn.
+
+Yarn is shimmed to use the default version or the version defined your current directory [config file](#configuration-file).
+
+```sh
+yarn --version
+```
 
 ### Basic
 
-To download and install a version of yarn, run:
+To download and install a specific version of yarn, run:
 
 ```bash
 yvm install <version>
@@ -116,6 +122,8 @@ Switch the current yarn versions:
 yvm use <version>
 yarn --version
 ```
+
+**NOTE**: The above disables [yarn shimming](#automagic) until a new shell is loaded.
 
 Control version aliasing:
 

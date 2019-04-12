@@ -15,7 +15,7 @@ function yvm
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
         else
-            set -U fish_user_paths $NEW_FISH_USER_PATHS
+            set -U fish_user_paths (string split ' ' -- $NEW_FISH_USER_PATHS)
             set -l new_version (yarn --version)
             yvm_echo "Now using yarn version $new_version"
         end
@@ -40,11 +40,7 @@ function yvm
             yvm_err "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
             exit 1
         end
-
-        set -U DEFAULT_YARN_VERSION (yvm_call_node_script get-default-version 2>/dev/null)
-        if [ "x" != "x$DEFAULT_YARN_VERSION" ]
-            yvm_use > /dev/null
-        end
+        set -U fish_user_paths "$YVM_DIR/shim" $fish_user_paths
     end
 
     if [ "$command" = "use" ]

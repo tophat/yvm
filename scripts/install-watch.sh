@@ -30,6 +30,7 @@ restore_file() {
 save_and_link_file "yvm.sh"
 save_and_link_file "yvm.js"
 save_and_link_file "yvm.fish"
+save_and_link_file "shim/yarn"
 
 # Save and Link Node Modules
 echo "Saving+Linking node_modules"
@@ -49,6 +50,7 @@ trap int_trap INT
 restore_file "yvm.sh"
 restore_file "yvm.js"
 restore_file "yvm.fish"
+restore_file "shim/yarn"
 
 # Restore Node Modules
 rm "${HOME}/.yvm/node_modules"
