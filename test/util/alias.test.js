@@ -29,16 +29,15 @@ describe('alias', () => {
         })
 
         it('gets stable version', async () => {
-            utils.getRequest.mockReturnValueOnce(
-                '<html><body><span>Stable (1.15.2)</span></body></html>',
-            )
+            utils.getRequest.mockReturnValueOnce(' 1.15.2 ')
             expect(await alias.resolveStable()).toBe('1.15.2')
+            expect(utils.getRequest).toHaveBeenCalledWith(
+                'https://yarnpkg.com/latest-version',
+            )
         })
 
         it('does not get stable version', async () => {
-            utils.getRequest.mockReturnValueOnce(
-                '<html><body><span></span></body></html>',
-            )
+            utils.getRequest.mockReturnValueOnce('  ')
             expect(await alias.resolveStable()).toBe(alias.UNRESOLVED)
         })
     })

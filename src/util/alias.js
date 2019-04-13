@@ -27,7 +27,7 @@ export const resolveLatest = memoize(
 
 export const resolveStable = memoize(async () => {
     const version = await getRequest(YARN_STABLE_VERSION_URL)
-    return version || UNRESOLVED
+    return (version && version.trim()) || UNRESOLVED
 })
 
 export const resolveSystem = memoize(
