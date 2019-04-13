@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 * unload yvm from PATH command
 * unload yvm from shell command
+* use yarn self update version url for stable version
 
 ## [v3.2.0](https://github.com/tophat/yvm/compare/v3.0.1...v3.0.2) (2019-04-12)
 
