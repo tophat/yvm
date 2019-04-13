@@ -180,9 +180,9 @@ argParser
     .command('get-default-version')
     .description(signPosting`alias default`)
     .action(async () => {
-        const {
-            getDefaultVersion,
-        } = await import('./commands/getDefaultVersion')
+        const { getDefaultVersion } = await import(
+            './commands/getDefaultVersion'
+        )
         process.exit(await getDefaultVersion())
     })
 
