@@ -2,9 +2,25 @@ import fs from 'fs-extra'
 import os from 'os'
 import path from 'path'
 
-import escapeRegExp from 'lodash.escaperegexp'
+import escapeRegExp from 'lodash/escaperegexp'
 
-import log from 'util/log'
+import log from '../util/log'
+import bashScript from '!!raw-loader!shell/yvm.sh'
+import fishScript from '!!raw-loader!shell/yvm.fish'
+import yarnShim from '!!raw-loader!shell/yarn_shim.js'
+
+/**
+ * Helper utility for unpacking an executable script
+ * from yvm.js into a target file. Is a no-op if the
+ * target file already exists.
+ */
+const unpackShellScript = (content, filename) => {
+    if (fs.existsSync(filename)) return false
+    fs.writeFileSync(filename, content, {
+        encoding: 'utf8',
+        mode: 0o755,
+    })
+}
 
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
@@ -37,6 +53,7 @@ export const configureBash = async ({ home, yvmDir }) => {
         `export ${yvmDirVarName}=${yvmDir}`,
         `[ -r $${shPath} ] && . $${shPath}`,
     ]
+    unpackShellScript(bashScript, shPath)
     let configured = false
     if (fs.existsSync(bashRcFile)) {
         configured = await ensureConfig(bashRcFile, bashConfig)
@@ -56,6 +73,7 @@ export const configureFish = async ({ home, yvmDir }) => {
         `set -x ${yvmDirVarName} ${yvmDir}`,
         `. $${fishPath}`,
     ])
+    unpackShellScript(fishScript, fishPath)
     if (!configured) {
         log('Unable to configure FISH at', configFile)
     }
@@ -69,13 +87,19 @@ export const configureZsh = async ({ home, yvmDir }) => {
         `export ${yvmDirVarName}=${yvmDir}`,
         `[ -r $${shPath} ] && . $${shPath}`,
     ])
+    unpackShellScript(bashScript, shPath)
     if (!configured) {
         log('Unable to configure ZSH at', configFile)
     }
     return configured
 }
 
-export const configureShell = async ({ home, shell = '' } = {}) => {
+export const configureShim = async ({ yvmDir }) => {
+    const shimFile = path.join(yvmDir, 'shim', 'yarn')
+    unpackShellScript(yarnShim, shimFile)
+}
+
+export const configureShell = async ({ home, shim, shell = '' } = {}) => {
     try {
         const userHome = home || process.env.HOME || os.homedir()
         const yvmDir =
@@ -86,6 +110,7 @@ export const configureShell = async ({ home, shell = '' } = {}) => {
             zsh: configureZsh,
         }
         const updatingShellConfigs = []
+        if (shim) updatingShellConfigs.push(configureShim({ yvmDir }))
         for (const supportedShell of Object.keys(configHandlers)) {
             if (supportedShell.includes(shell)) {
                 updatingShellConfigs.push(

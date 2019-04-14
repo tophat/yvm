@@ -1,7 +1,5 @@
 const path = require('path')
 
-const CopyPlugin = require('copy-webpack-plugin')
-
 const rootPath = path.resolve(__dirname, '..')
 const artifactsPath = path.resolve(rootPath, 'artifacts')
 const outputPath = path.resolve(artifactsPath, 'webpack_build')
@@ -24,13 +22,7 @@ const config = {
         path: outputPath,
     },
     target: 'node',
-    plugins: [
-        new CopyPlugin([
-            'src/yvm.sh',
-            'src/yvm.fish',
-            { from: 'src/shim/yarn.js', to: './shim/yarn', toType: 'file' },
-        ]),
-    ],
+    plugins: [],
     resolve: {
         modules: [
             path.resolve(rootPath, 'src'),
@@ -45,7 +37,7 @@ const config = {
                     loader: 'babel-loader',
                     options: {
                         cacheDirectory: true,
-                        plugins: ['dynamic-import-node'],
+                        plugins: ['dynamic-import-node', 'lodash'],
                         presets: [
                             ['@babel/preset-env', { targets: { node: '8.0' } }],
                         ],

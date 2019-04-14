@@ -158,3 +158,4 @@ clean_webpack_build:
 
 .PHONY: clean
 clean: clean_node_modules clean_webpack_build
+	rm -rf ${ARTIFACT_DIR}
