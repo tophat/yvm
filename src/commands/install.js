@@ -64,9 +64,15 @@ const extractYarn = async (version, rootPath) => {
     })
 }
 
+const logVerifyNotice = extraMessage => {
+    log.notice(`Unable to verify GPG signature.
+Note, this may happen on older yarn versions if the public key used to sign those versions has expired.`)
+    extraMessage && log(extraMessage)
+}
+
 export const installVersion = async ({
     version: versionString,
-    verifyGPG,
+    verifyGPG = false,
     rootPath = yvmPath,
 }) => {
     const version = await resolveVersion({
@@ -91,12 +97,16 @@ Please retry with the next available version`)
     }
     log(`Finished downloading yarn version ${version}`)
 
-    if (verifyGPG) {
-        log('Validating...')
+    log('Validating...')
+    try {
         await verifySignature(version, rootPath)
         log('GPG signature validated')
-    } else {
-        log('Skipping GPG validation...')
+    } catch (e) {
+        if (e instanceof VerificationError && !verifyGPG) {
+            logVerifyNotice()
+        } else {
+            throw e
+        }
     }
 
     log('Extracting...')
@@ -111,13 +121,9 @@ export const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
 
 const logHelpful = error => {
     if (error instanceof VerificationError) {
-        log(
-            'Unable to verify GPG signature. If you would like to ' +
-                'proceed anyway, re-run yvm install without the --verify ' +
-                'flag. Note, this may happen on older yarn versions if ' +
-                'the public key used to sign those versions has expired.',
+        return logVerifyNotice(
+            `If you would like to proceed anyway, re-run 'yvm install' without the '--verify' flag`,
         )
-        return
     }
 
     log(error.message)

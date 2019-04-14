@@ -1,11 +1,10 @@
 import fs from 'fs-extra'
 import * as openpgp from 'openpgp'
 
+import { downloadFile, getDownloadPath } from '../../src/util/download'
 import { yvmPath as rootPath } from '../../src/util/path'
+import { getVersionDownloadUrl } from '../../src/util/utils'
 import { verifySignature, VerificationError } from '../../src/util/verification'
-
-import { resolveStable } from '../../src/util/alias'
-import * as version from '../../src/util/version'
 
 jest.mock('../../src/util/path', () => ({
     yvmPath: '/tmp/yvmInstall',
@@ -13,30 +12,32 @@ jest.mock('../../src/util/path', () => ({
 }))
 
 describe('verification', () => {
+    const mockVersion = '1.15.2'
+    const mockVerify = jest.spyOn(openpgp, 'verify', 'get')
+    const downloadMockFile = downloadFile(
+        getVersionDownloadUrl(mockVersion),
+        getDownloadPath(mockVersion, rootPath),
+    )
     beforeAll(() => {
         fs.mkdirsSync(rootPath)
     })
+    beforeEach(jest.clearAllMocks)
+    afterAll(jest.restoreAllMocks)
 
     it('executes successfully on valid signature', async () => {
-        const mockVersion = await version.resolveVersion({
-            versionString: await resolveStable(),
-            yvmPath: rootPath,
-        })
         expect.assertions(1)
-        return expect(verifySignature(mockVersion, rootPath)).resolves.toEqual(
-            true,
-        )
+        await downloadMockFile
+        const verification = verifySignature(mockVersion, rootPath)
+        await expect(verification).resolves.toEqual(true)
     })
 
     it('throws verification error on invalid signature', async () => {
-        //jest.spyOn(openpgp, '')
-        const mockVersion = await version.resolveVersion({
-            versionString: await resolveStable(),
-            yvmPath: rootPath,
-        })
         expect.assertions(1)
-        return expect(verifySignature(mockVersion, rootPath)).rejects.toThrow(
-            VerificationError,
+        await downloadMockFile
+        mockVerify.mockImplementationOnce(() => () =>
+            Promise.resolve({ signatures: [] }),
         )
+        const verification = verifySignature(mockVersion, rootPath)
+        await expect(verification).rejects.toThrow(VerificationError)
     })
 })

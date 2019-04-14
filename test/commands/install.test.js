@@ -4,11 +4,8 @@ import targz from 'targz'
 import { resolveStable } from '../../src/util/alias'
 import { YARN_RELEASE_TAGS_URL } from '../../src/util/constants'
 import * as download from '../../src/util/download'
-import {
-    ensureVersionInstalled,
-    install,
-    getPublicKeyPath,
-} from '../../src/commands/install'
+import { getPublicKeyPath } from '../../src/util/verification'
+import { ensureVersionInstalled, install } from '../../src/commands/install'
 import log from '../../src/util/log'
 import { yvmPath as rootPath } from '../../src/util/path'
 import {
