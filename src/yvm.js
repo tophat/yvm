@@ -30,6 +30,7 @@ argParser
     .alias('i')
     .option('-l, --latest', signPosting`install latest`)
     .option('-s, --stable', signPosting`install stable`)
+    .option('--verify', 'Verifies GPG signature')
     .description(messageOptionalVersion`Install the specified version of Yarn`)
     .action(async (maybeVersion, command) => {
         const { install } = await import('./commands/install')
@@ -37,6 +38,7 @@ argParser
             latest: command.latest,
             stable: command.stable,
             version: maybeVersion,
+            verifyGPG: command.verify,
         })
         process.exit(exitCode)
     })

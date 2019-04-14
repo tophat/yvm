@@ -1,11 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 import targz from 'targz'
-import * as openpgp from 'openpgp'
 
-import { YARN_PUBLIC_KEY_URL, YARN_RELEASE_TAGS_URL } from '../util/constants'
+import { YARN_RELEASE_TAGS_URL } from '../util/constants'
 import { LATEST, STABLE } from '../util/alias'
-import { downloadFile } from '../util/download'
+import { downloadFile, getDownloadPath } from '../util/download'
 import log from '../util/log'
 import { yvmPath } from '../util/path'
 import {
@@ -14,16 +13,7 @@ import {
     getVersionDownloadUrl,
 } from '../util/utils'
 import { getSplitVersionAndArgs, resolveVersion } from '../util/version'
-
-export const getDownloadPath = (version, rootPath) =>
-    path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)
-
-const getSignatureDownloadPath = (version, rootPath) =>
-    `${getDownloadPath(version, rootPath)}.asc`
-
-export const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
-
-const getSignatureUrl = version => `${getVersionDownloadUrl(version)}.asc`
+import { verifySignature, VerificationError } from '../util/verification'
 
 const isVersionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
@@ -43,45 +33,7 @@ const downloadVersion = async (version, rootPath) => {
     }
 }
 
-const downloadSignature = (version, rootPath) => {
-    const url = getSignatureUrl(version)
-    const filePath = getSignatureDownloadPath(version, rootPath)
-    return downloadFile(url, filePath)
-}
-
-const getPublicKey = async rootPath => {
-    const publicKeyPath = getPublicKeyPath(rootPath)
-
-    if (fs.existsSync(publicKeyPath)) {
-        log.info('GPG public key file already downloaded')
-    } else {
-        log.info('Downloading GPG public key file')
-        await downloadFile(YARN_PUBLIC_KEY_URL, publicKeyPath)
-    }
-    return fs.readFileSync(publicKeyPath)
-}
-
-const verifySignature = async (version, rootPath) => {
-    await downloadSignature(version, rootPath)
-
-    const filePath = getDownloadPath(version, rootPath)
-    const signatureFilePath = getSignatureDownloadPath(version, rootPath)
-    const publicKey = await getPublicKey(rootPath)
-
-    const file = fs.readFileSync(filePath)
-    const sig = fs.readFileSync(signatureFilePath)
-    fs.unlinkSync(signatureFilePath)
-
-    const verified = await openpgp.verify({
-        message: await openpgp.message.fromBinary(file),
-        signature: await openpgp.signature.readArmored(sig),
-        publicKeys: (await openpgp.key.readArmored(publicKey)).keys,
-    })
-
-    return verified.signatures.length && verified.signatures[0].valid
-}
-
-const extractYarn = (version, rootPath) => {
+const extractYarn = async (version, rootPath) => {
     const destPath = getExtractionPath(version, rootPath)
     const tmpPath = `${destPath}.tar.gz.tmp`
     const srcPath = getDownloadPath(version, rootPath)
@@ -114,6 +66,7 @@ const extractYarn = (version, rootPath) => {
 
 export const installVersion = async ({
     version: versionString,
+    verifyGPG,
     rootPath = yvmPath,
 }) => {
     const version = await resolveVersion({
@@ -138,9 +91,13 @@ Please retry with the next available version`)
     }
     log(`Finished downloading yarn version ${version}`)
 
-    log('Validating...')
-    await verifySignature(version, rootPath)
-    log('GPG signature validated')
+    if (verifyGPG) {
+        log('Validating...')
+        await verifySignature(version, rootPath)
+        log('GPG signature validated')
+    } else {
+        log('Skipping GPG validation...')
+    }
 
     log('Extracting...')
     await extractYarn(version, rootPath)
@@ -152,7 +109,22 @@ export const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
     await installVersion({ version, rootPath })
 }
 
-export const install = async ({ latest, stable, version } = {}) => {
+const logHelpful = error => {
+    if (error instanceof VerificationError) {
+        log(
+            'Unable to verify GPG signature. If you would like to ' +
+                'proceed anyway, re-run yvm install without the --verify ' +
+                'flag. Note, this may happen on older yarn versions if ' +
+                'the public key used to sign those versions has expired.',
+        )
+        return
+    }
+
+    log(error.message)
+    log.info(error.stack)
+}
+
+export const install = async ({ latest, stable, version, verifyGPG } = {}) => {
     try {
         if (stable) {
             version = STABLE
@@ -161,11 +133,10 @@ export const install = async ({ latest, stable, version } = {}) => {
         } else if (!version) {
             version = (await getSplitVersionAndArgs())[0]
         }
-        await installVersion({ version })
+        await installVersion({ version, verifyGPG })
         return 0
     } catch (e) {
-        log(e.message)
-        log.info(e.stack)
+        logHelpful(e)
         return 1
     }
 }

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import request from 'request'
+import path from 'path'
 
 import { USER_AGENT } from './constants'
 
@@ -18,3 +19,6 @@ export const downloadFile = (url, filePath) =>
             .pipe(fs.createWriteStream(filePath))
             .on('finish', () => resolve())
     })
+
+export const getDownloadPath = (version, rootPath) =>
+    path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)

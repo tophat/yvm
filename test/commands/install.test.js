@@ -7,7 +7,6 @@ import * as download from '../../src/util/download'
 import {
     ensureVersionInstalled,
     install,
-    getDownloadPath,
     getPublicKeyPath,
 } from '../../src/commands/install'
 import log from '../../src/util/log'
@@ -145,7 +144,7 @@ describe('yvm install', () => {
 
     it('Print warning on install defective yarn release version', async () => {
         const version = '1.3.0'
-        const downloadPath = getDownloadPath(version, rootPath)
+        const downloadPath = download.getDownloadPath(version, rootPath)
         const extractionPath = getExtractionPath(version, rootPath)
         downloadFile.mockImplementationOnce(() => {
             throw new Error('download failed')
