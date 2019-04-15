@@ -2,17 +2,17 @@
 
 exports[`configureShell configures all 1`] = `
 Object {
-  "mock-home/.bash_profile": "dummy",
-  "mock-home/.bashrc": "dummy
-export YVM_DIR=mock-home/.yvm
+  "config-mock-home/.bash_profile": "dummy",
+  "config-mock-home/.bashrc": "dummy
+export YVM_DIR=config-mock-home/.yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",
-  "mock-home/.config/fish/config.fish": "dummy
-set -x YVM_DIR mock-home/.yvm
+  "config-mock-home/.config/fish/config.fish": "dummy
+set -x YVM_DIR config-mock-home/.yvm
 . $YVM_DIR/yvm.fish
 ",
-  "mock-home/.zshrc": "dummy
-export YVM_DIR=mock-home/.yvm
+  "config-mock-home/.zshrc": "dummy
+export YVM_DIR=config-mock-home/.yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",
 }
@@ -20,10 +20,10 @@ export YVM_DIR=mock-home/.yvm
 
 exports[`configureShell configures none 1`] = `
 Object {
-  "mock-home/.bash_profile": null,
-  "mock-home/.bashrc": null,
-  "mock-home/.config/fish/config.fish": null,
-  "mock-home/.zshrc": null,
+  "config-mock-home/.bash_profile": null,
+  "config-mock-home/.bashrc": null,
+  "config-mock-home/.config/fish/config.fish": null,
+  "config-mock-home/.zshrc": null,
 }
 `;
 
@@ -31,64 +31,64 @@ exports[`configureShell configures none 2`] = `
 Array [
   Array [
     "Unable to configure BASH at",
-    "mock-home/.bashrc",
+    "config-mock-home/.bashrc",
     "or",
-    "mock-home/.bash_profile",
+    "config-mock-home/.bash_profile",
   ],
   Array [
     "Unable to configure FISH at",
-    "mock-home/.config/fish/config.fish",
+    "config-mock-home/.config/fish/config.fish",
   ],
   Array [
     "Unable to configure ZSH at",
-    "mock-home/.zshrc",
+    "config-mock-home/.zshrc",
   ],
 ]
 `;
 
 exports[`configureShell configures only bash_profile when no bashrc 1`] = `
 Object {
-  "mock-home/.bash_profile": "dummy
-export YVM_DIR=mock-install-dir/.yvm
+  "config-mock-home/.bash_profile": "dummy
+export YVM_DIR=config-mock-install-dir/.yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",
-  "mock-home/.bashrc": null,
-  "mock-home/.config/fish/config.fish": "dummy",
-  "mock-home/.zshrc": "dummy",
+  "config-mock-home/.bashrc": null,
+  "config-mock-home/.config/fish/config.fish": "dummy",
+  "config-mock-home/.zshrc": "dummy",
 }
 `;
 
 exports[`configureShell configures only bashrc 1`] = `
 Object {
-  "mock-home/.bash_profile": "dummy",
-  "mock-home/.bashrc": "dummy
+  "config-mock-home/.bash_profile": "dummy",
+  "config-mock-home/.bashrc": "dummy
 export YVM_DIR=some-install-dir
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",
-  "mock-home/.config/fish/config.fish": "dummy",
-  "mock-home/.zshrc": "dummy",
+  "config-mock-home/.config/fish/config.fish": "dummy",
+  "config-mock-home/.zshrc": "dummy",
 }
 `;
 
 exports[`configureShell configures only fish 1`] = `
 Object {
-  "mock-home/.bash_profile": "dummy",
-  "mock-home/.bashrc": "dummy",
-  "mock-home/.config/fish/config.fish": "dummy
-set -x YVM_DIR mock-home/.yvm
+  "config-mock-home/.bash_profile": "dummy",
+  "config-mock-home/.bashrc": "dummy",
+  "config-mock-home/.config/fish/config.fish": "dummy
+set -x YVM_DIR config-mock-home/.yvm
 . $YVM_DIR/yvm.fish
 ",
-  "mock-home/.zshrc": "dummy",
+  "config-mock-home/.zshrc": "dummy",
 }
 `;
 
 exports[`configureShell configures only zsh 1`] = `
 Object {
-  "mock-home/.bash_profile": "dummy",
-  "mock-home/.bashrc": "dummy",
-  "mock-home/.config/fish/config.fish": "dummy",
-  "mock-home/.zshrc": "dummy
-export YVM_DIR=mock-home/.yvm
+  "config-mock-home/.bash_profile": "dummy",
+  "config-mock-home/.bashrc": "dummy",
+  "config-mock-home/.config/fish/config.fish": "dummy",
+  "config-mock-home/.zshrc": "dummy
+export YVM_DIR=config-mock-home/.yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",
 }
