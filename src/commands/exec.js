@@ -1,10 +1,10 @@
 import path from 'path'
 import { execFileSync } from 'child_process'
 
-import { ensureVersionInstalled } from './install'
-import { getSplitVersionAndArgs } from '../util/version'
-import log from '../util/log'
-import { yvmPath } from '../util/path'
+import { ensureVersionInstalled } from 'commands/install'
+import { getSplitVersionAndArgs } from 'util/version'
+import log from 'util/log'
+import { yvmPath } from 'util/path'
 
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)

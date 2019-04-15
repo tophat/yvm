@@ -4,7 +4,7 @@ import path from 'path'
 
 import escapeRegExp from 'lodash.escaperegexp'
 
-import log from '../util/log'
+import log from 'util/log'
 
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false

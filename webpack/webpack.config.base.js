@@ -12,7 +12,7 @@ module.exports = {
     entry: {
         yvm: ['@babel/polyfill', './src/yvm.js'],
     },
-    externals: [nodeExternals()],
+    externals: [nodeExternals({ whitelist: [/^util/, /^commands/] })],
     output: {
         filename: '[name].js',
         path: outputPath,
@@ -25,6 +25,12 @@ module.exports = {
             { from: 'src/shim/yarn.js', to: './shim/yarn', toType: 'file' },
         ]),
     ],
+    resolve: {
+        modules: [
+            path.resolve(rootPath, 'src'),
+            path.resolve(rootPath, 'node_modules'),
+        ],
+    },
     module: {
         rules: [
             {
