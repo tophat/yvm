@@ -4,7 +4,7 @@ import targz from 'targz'
 import { resolveStable } from 'util/alias'
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import * as download from 'util/download'
-import { getPublicKeyPath } from 'util/verification'
+import * as verification from 'util/verification'
 import { ensureVersionInstalled, install } from 'commands/install'
 import log from 'util/log'
 import { yvmPath as rootPath } from 'util/path'
@@ -23,6 +23,7 @@ jest.mock('util/path', () => ({
 jest.spyOn(log, 'default')
 jest.spyOn(log, 'info')
 const downloadFile = jest.spyOn(download, 'downloadFile')
+const verifySignature = jest.spyOn(verification, 'verifySignature')
 const getSplitVersionAndArgs = jest.spyOn(version, 'getSplitVersionAndArgs')
 
 describe('yvm install', () => {
@@ -39,8 +40,16 @@ describe('yvm install', () => {
         jest.restoreAllMocks()
     })
 
+    const verifyLogPrints = (...expectedPhrases) => {
+        const logMessages = log.default.mock.calls
+            .map(args => args.join(' '))
+            .join(';')
+            .toLowerCase()
+        expectedPhrases.forEach(s => expect(logMessages).toMatch(s))
+    }
+
     it('Downloads public key signature if none exist locally', async () => {
-        const publicKeyPath = getPublicKeyPath(rootPath)
+        const publicKeyPath = verification.getPublicKeyPath(rootPath)
         fs.removeSync(publicKeyPath)
         const exitCode = await install({ version: '1.8.0' })
         expect(exitCode).toBe(0)
@@ -139,6 +148,35 @@ describe('yvm install', () => {
         })
     })
 
+    it('Prints warning on verification fails for yarn release', async () => {
+        const version = '1.7.0'
+        const { VerificationError } = verification
+        verifySignature.mockRejectedValueOnce(new VerificationError())
+        expect(await install({ version })).toBe(0)
+        expect(fs.statSync(getExtractionPath(version, rootPath))).toBeTruthy()
+        verifyLogPrints(
+            'unable to verify gpg signature',
+            'public key used to sign those versions has expired',
+        )
+    })
+
+    it('Fails on verification fails for yarn release', async () => {
+        const version = '1.7.0'
+        const downloadPath = download.getDownloadPath(version, rootPath)
+        const extractionPath = getExtractionPath(version, rootPath)
+        const { VerificationError } = verification
+        verifySignature.mockRejectedValueOnce(new VerificationError())
+        expect(await install({ version, verifyGPG: true })).toBe(1)
+        expect(fs.statSync(downloadPath)).toBeTruthy()
+        expect(() => fs.statSync(extractionPath)).toThrow()
+        verifyLogPrints(
+            'unable to verify gpg signature',
+            'public key used to sign those versions has expired',
+            'if you would like to proceed anyway',
+            `re-run 'yvm install' without the '--verify' flag`,
+        )
+    })
+
     it('Print warning on install defective yarn release version', async () => {
         const version = '1.3.0'
         const downloadPath = download.getDownloadPath(version, rootPath)
@@ -149,18 +187,13 @@ describe('yvm install', () => {
         expect(await install({ version })).toBe(1)
         expect(() => fs.statSync(downloadPath)).toThrow()
         expect(() => fs.statSync(extractionPath)).toThrow()
-        const logMessages = log.default.mock.calls
-            .map(args => args.join(' '))
-            .join(';')
-            .toLowerCase()
-        const expectedPhrases = [
+        verifyLogPrints(
             'installation aborted',
             'defective release',
             `${YARN_RELEASE_TAGS_URL}/v${version}`,
             'please retry',
             'next available version',
-        ]
-        expectedPhrases.forEach(s => expect(logMessages).toMatch(s))
+        )
     })
 
     it('Logs error on failed targz decompress', async () => {
