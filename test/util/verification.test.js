@@ -6,8 +6,6 @@ import { yvmPath as rootPath } from 'util/path'
 import { getVersionDownloadUrl } from 'util/utils'
 import { verifySignature, VerificationError } from 'util/verification'
 
-jest.setTimeout(10000)
-
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/util/verification/yvm',
     getPathEntries: () => [],
