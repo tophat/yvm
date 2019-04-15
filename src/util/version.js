@@ -4,20 +4,20 @@ import semver from 'semver'
 import cosmiconfig from 'cosmiconfig'
 import memoize from 'lodash.memoize'
 
-import log from './log'
-import { yvmPath as defaultYvmPath } from './path'
+import log from 'util/log'
+import { yvmPath as defaultYvmPath } from 'util/path'
 import {
     getVersionsFromTags,
     stripVersionPrefix,
     versionRootPath,
-} from './utils'
+} from 'util/utils'
 import {
     DEFAULT,
     isReserved,
     resolveAlias,
     resolveReserved,
     setAlias,
-} from './alias'
+} from 'util/alias'
 
 export const DEFAULT_VERSION_TEXT = 'Global Default'
 export const VERSION_IN_USE_SYMBOL = '\u2713'

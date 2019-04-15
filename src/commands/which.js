@@ -1,15 +1,15 @@
 import path from 'path'
 
-import log from '../util/log'
-import { SYSTEM } from '../util/alias'
+import log from 'util/log'
+import { SYSTEM } from 'util/alias'
 import {
     getSplitVersionAndArgs,
     getValidVersionString,
     getVersionInUse,
     getYarnVersions,
-} from '../util/version'
-import { getVersionsFromTags, versionRootPath } from '../util/utils'
-import { yvmPath } from '../util/path'
+} from 'util/version'
+import { getVersionsFromTags, versionRootPath } from 'util/utils'
+import { yvmPath } from 'util/path'
 
 export const which = async ({ version, rootPath = yvmPath }) => {
     let versionToUse = getValidVersionString(version || '')

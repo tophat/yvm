@@ -1,23 +1,23 @@
 import fs from 'fs-extra'
 import targz from 'targz'
 
-import { resolveStable } from '../../src/util/alias'
-import { YARN_RELEASE_TAGS_URL } from '../../src/util/constants'
-import * as download from '../../src/util/download'
-import { getPublicKeyPath } from '../../src/util/verification'
-import { ensureVersionInstalled, install } from '../../src/commands/install'
-import log from '../../src/util/log'
-import { yvmPath as rootPath } from '../../src/util/path'
+import { resolveStable } from 'util/alias'
+import { YARN_RELEASE_TAGS_URL } from 'util/constants'
+import * as download from 'util/download'
+import { getPublicKeyPath } from 'util/verification'
+import { ensureVersionInstalled, install } from 'commands/install'
+import log from 'util/log'
+import { yvmPath as rootPath } from 'util/path'
 import {
     getVersionsFromTags,
     getExtractionPath,
     versionRootPath,
-} from '../../src/util/utils'
-import * as version from '../../src/util/version'
+} from 'util/utils'
+import * as version from 'util/version'
 
 jest.setTimeout(10000)
-jest.mock('../../src/util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+jest.mock('util/path', () => ({
+    yvmPath: '/tmp/cmd/install/yvm',
     getPathEntries: () => [],
 }))
 jest.spyOn(log, 'default')

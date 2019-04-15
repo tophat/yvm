@@ -1,7 +1,7 @@
 import argParser from 'commander'
 
-import log from './util/log'
-import { yvmInstalledVersion } from './util/yvmInstalledVersion'
+import log from 'util/log'
+import { yvmInstalledVersion } from 'util/yvmInstalledVersion'
 
 const messageNoYvm = 'Unable to determine yvm version'
 const messageSourceYvm =
@@ -33,7 +33,7 @@ argParser
     .option('--verify', 'Verifies GPG signature')
     .description(messageOptionalVersion`Install the specified version of Yarn`)
     .action(async (maybeVersion, command) => {
-        const { install } = await import('./commands/install')
+        const { install } = await import('commands/install')
         const exitCode = await install({
             latest: command.latest,
             stable: command.stable,
@@ -44,7 +44,7 @@ argParser
     })
 
 const uninstallVersion = async version => {
-    const { remove } = await import('./commands/remove')
+    const { remove } = await import('commands/remove')
     process.exit(await remove(version))
 }
 argParser
@@ -67,7 +67,7 @@ argParser
     )
     .action(async () => {
         const [, , , maybeVersion, ...rest] = process.argv
-        const { exec } = await import('./commands/exec')
+        const { exec } = await import('commands/exec')
         process.exit(await exec(maybeVersion, rest))
     })
 
@@ -76,7 +76,7 @@ argParser
     .description('Display current active Yarn version')
     .action(async command => {
         log.info('Checking Yarn version')
-        const { current } = await import('./commands/current')
+        const { current } = await import('commands/current')
         process.exit(await current(command))
     })
 
@@ -85,7 +85,7 @@ argParser
     .alias('ls')
     .description('List the currently installed versions of Yarn.')
     .action(async () => {
-        const { list } = await import('./commands/list')
+        const { list } = await import('commands/list')
         process.exit(await list())
     })
 
@@ -94,7 +94,7 @@ argParser
     .alias('ls-remote')
     .description('List Yarn versions available to install.')
     .action(async () => {
-        const { listRemote } = await import('./commands/listRemote')
+        const { listRemote } = await import('commands/listRemote')
         process.exit(await listRemote())
     })
 
@@ -105,7 +105,7 @@ argParser.command(
 )
 argParser.command('alias', '', { noHelp: true }).action(async () => {
     const [, , , nameOrPattern, maybeVersion] = process.argv
-    const { alias } = await import('./commands/alias')
+    const { alias } = await import('commands/alias')
     process.exit(await alias(nameOrPattern, maybeVersion))
 })
 
@@ -115,7 +115,7 @@ argParser
     .option('-R, --recursive', 'Delete all dependant aliases as well')
     .description('Deletes the alias named <name>')
     .action(async (name, { force, recursive }) => {
-        const { unalias } = await import('./commands/unalias')
+        const { unalias } = await import('commands/unalias')
         process.exit(await unalias({ name, force, recursive }))
     })
 
@@ -124,7 +124,7 @@ argParser
     .description(messageOptionalVersion`Display path to Yarn version`)
     .action(async maybeVersion => {
         log.info('Getting path to Yarn version')
-        const { which } = await import('./commands/which')
+        const { which } = await import('commands/which')
         process.exit(await which({ version: maybeVersion }))
     })
 
@@ -141,7 +141,7 @@ argParser
         'Internal command: Configures any shell config files found for loading yvm on startup',
     )
     .action(async ({ home, shell }) => {
-        const { configureShell } = await import('./commands/configureShell')
+        const { configureShell } = await import('commands/configureShell')
         process.exit(await configureShell({ home, shell }))
     })
 
@@ -152,7 +152,7 @@ argParser
         'Internal command: Gets a new PATH string for "yvm use", installing the version if necessary',
     )
     .action(async (maybeVersion, { shell }) => {
-        const { getNewPath } = await import('./commands/getNewPath')
+        const { getNewPath } = await import('commands/getNewPath')
         process.exit(await getNewPath(maybeVersion, shell))
     })
 
@@ -174,7 +174,7 @@ argParser
     .command('set-default <version>')
     .description(signPosting`alias default <version>`)
     .action(async version => {
-        const { setDefault } = await import('./commands/setDefault')
+        const { setDefault } = await import('commands/setDefault')
         process.exit(await setDefault(version))
     })
 
@@ -182,9 +182,7 @@ argParser
     .command('get-default-version')
     .description(signPosting`alias default`)
     .action(async () => {
-        const {
-            getDefaultVersion,
-        } = await import('./commands/getDefaultVersion')
+        const { getDefaultVersion } = await import('commands/getDefaultVersion')
         process.exit(await getDefaultVersion())
     })
 

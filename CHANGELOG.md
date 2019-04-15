@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 * unload yvm from PATH command
 * unload yvm from shell command
 
+## [v3.2.1](https://github.com/tophat/yvm/compare/v3.2.0...v3.2.1) (2019-04-14)
+
+* **Fixed**: use yarn latest version link ([#365](https://github.com/tophat/yvm/issues/365)) ([b9ba1ba](https://github.com/tophat/yvm/commit/b9ba1ba))
+
 ## [v3.2.0](https://github.com/tophat/yvm/compare/v3.0.1...v3.0.2) (2019-04-12)
 
 * **Added**: shim yarn commands ([#163](https://github.com/tophat/yvm/issues/163)) ([28b9f42](https://github.com/tophat/yvm/commit/28b9f42))

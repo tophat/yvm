@@ -6,8 +6,8 @@ import {
     USER_AGENT,
     YARN_DOWNLOAD_URL,
     YARN_RELEASES_API_URL,
-} from './constants'
-import log from './log'
+} from 'util/constants'
+import log from 'util/log'
 
 export const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 

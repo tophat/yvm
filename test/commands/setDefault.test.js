@@ -1,7 +1,7 @@
-import log from '../../src/util/log'
-import * as version from '../../src/util/version'
+import log from 'util/log'
+import * as version from 'util/version'
 const setDefaultVersion = jest.spyOn(version, 'setDefaultVersion')
-import { setDefault } from '../../src/commands/setDefault'
+import { setDefault } from 'commands/setDefault'
 
 describe('setDefault', () => {
     jest.spyOn(log, 'capturable')

@@ -1,5 +1,5 @@
-import log from '../util/log'
-import { setDefaultVersion } from '../util/version'
+import log from 'util/log'
+import { setDefaultVersion } from 'util/version'
 
 export const setDefault = async version => {
     try {

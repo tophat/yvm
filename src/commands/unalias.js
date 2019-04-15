@@ -1,5 +1,5 @@
-import log from '../util/log'
-import { unsetAlias } from '../util/alias'
+import log from 'util/log'
+import { unsetAlias } from 'util/alias'
 
 export const unalias = async ({ name, force, recursive }) => {
     try {
