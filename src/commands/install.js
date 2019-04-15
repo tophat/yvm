@@ -2,9 +2,9 @@ import fs from 'fs'
 import path from 'path'
 import targz from 'targz'
 
-import { YARN_PUBLIC_KEY_URL, YARN_RELEASE_TAGS_URL } from 'util/constants'
+import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import { LATEST, STABLE } from 'util/alias'
-import { downloadFile } from 'util/download'
+import { downloadFile, getDownloadPath } from 'util/download'
 import log from 'util/log'
 import { yvmPath } from 'util/path'
 import {

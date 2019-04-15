@@ -1,13 +1,15 @@
 import fs from 'fs-extra'
 import * as openpgp from 'openpgp'
 
-import { downloadFile, getDownloadPath } from '../../src/util/download'
-import { yvmPath as rootPath } from '../../src/util/path'
-import { getVersionDownloadUrl } from '../../src/util/utils'
-import { verifySignature, VerificationError } from '../../src/util/verification'
+import { downloadFile, getDownloadPath } from 'util/download'
+import { yvmPath as rootPath } from 'util/path'
+import { getVersionDownloadUrl } from 'util/utils'
+import { verifySignature, VerificationError } from 'util/verification'
 
-jest.mock('../../src/util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+jest.setTimeout(10000)
+
+jest.mock('util/path', () => ({
+    yvmPath: '/tmp/util/verification/yvm',
     getPathEntries: () => [],
 }))
 
