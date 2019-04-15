@@ -1,7 +1,7 @@
 import fs from 'fs'
 import request from 'request'
 
-import { USER_AGENT } from './constants'
+import { USER_AGENT } from 'util/constants'
 
 const isErrorCode = httpStatusCode => httpStatusCode >= 400
 

@@ -1,10 +1,6 @@
-import log from '../util/log'
-import { getVersionsFromTags } from '../util/utils'
-import {
-    getVersionInUse,
-    getYarnVersions,
-    printVersions,
-} from '../util/version'
+import log from 'util/log'
+import { getVersionsFromTags } from 'util/utils'
+import { getVersionInUse, getYarnVersions, printVersions } from 'util/version'
 
 export const listRemote = async () => {
     log.info('Checking for available yarn versions...')

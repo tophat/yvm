@@ -1,10 +1,10 @@
 import path from 'path'
 
-import log from '../util/log'
-import { versionRootPath } from '../util/utils'
-import { getPathDelimiter, getPathEntries, yvmPath } from '../util/path'
-import { getSplitVersionAndArgs } from '../util/version'
-import { ensureVersionInstalled } from '../commands/install'
+import log from 'util/log'
+import { versionRootPath } from 'util/utils'
+import { getPathDelimiter, getPathEntries, yvmPath } from 'util/path'
+import { getSplitVersionAndArgs } from 'util/version'
+import { ensureVersionInstalled } from 'commands/install'
 
 export const buildNewPath = ({ version, rootPath = yvmPath, shell }) => {
     const pathDelimiter = getPathDelimiter(shell)

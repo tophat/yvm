@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
-import { yvmPath } from './path'
-import log from './log'
+import log from 'util/log'
+import { yvmPath } from 'util/path'
 
 export const yvmInstalledVersion = (inYvmPath = yvmPath) => {
     const versionStoragePath = path.join(inYvmPath, '.version')
