@@ -12,7 +12,7 @@ module.exports = {
     entry: {
         yvm: ['@babel/polyfill', './src/yvm.js'],
     },
-    externals: [nodeExternals({ whitelist: [/^util/, /^commands/] })],
+    externals: [nodeExternals({ modulesFromFile: true })],
     output: {
         filename: '[name].js',
         path: outputPath,
