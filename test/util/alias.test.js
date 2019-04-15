@@ -3,11 +3,11 @@ import mockFS from 'mock-fs'
 import childProcess from 'child_process'
 jest.spyOn(childProcess, 'execSync')
 
-import log from '../../src/util/log'
-import * as utils from '../../src/util/utils'
+import log from 'util/log'
+import * as utils from 'util/utils'
 jest.spyOn(utils, 'getRequest')
 jest.spyOn(utils, 'getVersionsFromTags')
-import * as alias from '../../src/util/alias'
+import * as alias from 'util/alias'
 
 describe('alias', () => {
     afterAll(jest.restoreAllMocks)
