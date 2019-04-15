@@ -2,8 +2,8 @@ import fs from 'fs-extra'
 import path from 'path'
 import os from 'os'
 
-import log from '../../src/util/log'
-import { configureShell, ensureConfig } from '../../src/commands/configureShell'
+import log from 'util/log'
+import { configureShell, ensureConfig } from 'commands/configureShell'
 
 const mockProp = (obj, prop, mockValue) => {
     const original = obj[prop]
