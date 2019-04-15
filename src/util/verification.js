@@ -43,12 +43,12 @@ export const verifySignature = async (version, rootPath) => {
     const publicKey = await getPublicKey(rootPath)
 
     const file = fs.readFileSync(filePath)
-    const sig = fs.readFileSync(signatureFilePath)
+    const detachedSig = fs.readFileSync(signatureFilePath)
     fs.unlinkSync(signatureFilePath)
 
     const verified = await openpgp.verify({
         message: await openpgp.message.fromBinary(file),
-        signature: await openpgp.signature.readArmored(sig),
+        signature: await openpgp.signature.readArmored(detachedSig),
         publicKeys: (await openpgp.key.readArmored(publicKey)).keys,
     })
 
