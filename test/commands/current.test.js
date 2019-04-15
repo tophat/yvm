@@ -1,14 +1,14 @@
 import fs from 'fs'
-import * as path from '../../src/util/path'
+import * as path from 'util/path'
 path.yvmPath = '/Users/tophat/.yvm'
-import * as version from '../../src/util/version'
+import * as version from 'util/version'
 const getVersionInUse = jest
     .spyOn(version, 'getVersionInUse')
     .mockResolvedValue('1.7.0')
-import { current } from '../../src/commands/current'
-import log from '../../src/util/log'
+import { current } from 'commands/current'
+import log from 'util/log'
 
-jest.mock('../../src/util/log')
+jest.mock('util/log')
 
 describe('yvm current command', () => {
     let processEnv

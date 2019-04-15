@@ -1,11 +1,11 @@
 import path from 'path'
 import fs from 'fs-extra'
 
-import log from '../../src/util/log'
-import { getExtractionPath, versionRootPath } from '../../src/util/utils'
-import * as version from '../../src/util/version'
+import log from 'util/log'
+import { getExtractionPath, versionRootPath } from 'util/utils'
+import * as version from 'util/version'
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
-import { remove } from '../../src/commands/remove'
+import { remove } from 'commands/remove'
 
 describe('yvm remove', () => {
     const rootPath = '/tmp/yvmRemove'

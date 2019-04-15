@@ -1,9 +1,5 @@
-import log from '../util/log'
-import {
-    getVersionInUse,
-    getYarnVersions,
-    printVersions,
-} from '../util/version'
+import log from 'util/log'
+import { getVersionInUse, getYarnVersions, printVersions } from 'util/version'
 
 export const listVersions = async rootPath => {
     const installedVersions = getYarnVersions(rootPath)

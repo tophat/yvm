@@ -1,17 +1,17 @@
 import request from 'request'
 
-import log from '../../src/util/log'
+import log from 'util/log'
 import {
     DEFAULT_VERSION_TEXT,
     VERSION_IN_USE_SYMBOL,
     VERSION_INSTALLED_SYMBOL,
     printVersions,
-} from '../../src/util/version'
+} from 'util/version'
 import {
     getReleasesFromTags,
     getRequest,
     getVersionsFromTags,
-} from '../../src/util/utils'
+} from 'util/utils'
 
 const versionInUse = '1.2.0'
 const defaultVersion = '1.3.0'

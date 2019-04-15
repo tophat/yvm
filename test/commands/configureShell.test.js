@@ -2,8 +2,8 @@ import fs from 'fs-extra'
 import path from 'path'
 import os from 'os'
 
-import log from '../../src/util/log'
-import { configureShell, ensureConfig } from '../../src/commands/configureShell'
+import log from 'util/log'
+import { configureShell, ensureConfig } from 'commands/configureShell'
 
 const mockProp = (obj, prop, mockValue) => {
     const original = obj[prop]
@@ -23,9 +23,9 @@ const mockProp = (obj, prop, mockValue) => {
 }
 
 describe('configureShell', () => {
-    const mockHomeValue = 'mock-home'
+    const mockHomeValue = 'config-mock-home'
     const envHomeMock = mockProp(process.env, 'HOME')
-    const mockInstallDir = 'mock-install-dir/.yvm'
+    const mockInstallDir = 'config-mock-install-dir/.yvm'
     const envYvmInstallDir = mockProp(process.env, 'YVM_INSTALL_DIR')
     jest.spyOn(os, 'homedir')
     jest.spyOn(log, 'default')
@@ -49,7 +49,6 @@ describe('configureShell', () => {
 
     beforeEach(() => {
         jest.clearAllMocks()
-        fs.removeSync(mockHomeValue)
         fs.mkdirSync(mockHomeValue)
         rcFilePaths.forEach(filePath => fs.outputFileSync(filePath, 'dummy'))
     })
@@ -57,13 +56,13 @@ describe('configureShell', () => {
     afterEach(() => {
         envHomeMock.reset()
         envYvmInstallDir.reset()
+        fs.removeSync(mockHomeValue)
     })
 
     afterAll(() => {
         jest.restoreAllMocks()
         envHomeMock.restore()
         envYvmInstallDir.restore()
-        fs.removeSync(mockHomeValue)
     })
 
     it('configures only bashrc', async () => {

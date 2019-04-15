@@ -1,15 +1,15 @@
 import fs from 'fs-extra'
 import path from 'path'
 
-import { alias } from '../../src/commands/alias'
-import { STORAGE_FILE, getUserAliases } from '../../src/util/alias'
-import log from '../../src/util/log'
-import { yvmPath as rootPath } from '../../src/util/path'
-import * as utils from '../../src/util/utils'
-import * as version from '../../src/util/version'
+import { alias } from 'commands/alias'
+import { STORAGE_FILE, getUserAliases } from 'util/alias'
+import log from 'util/log'
+import { yvmPath as rootPath } from 'util/path'
+import * as utils from 'util/utils'
+import * as version from 'util/version'
 
-jest.mock('../../src/util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+jest.mock('util/path', () => ({
+    yvmPath: '/tmp/cmd/alias/yvm',
     getPathEntries: () => [],
 }))
 
@@ -25,7 +25,7 @@ describe('alias', () => {
 
     const writeAliases = () => {
         const aliasFilePath = path.join(rootPath, STORAGE_FILE)
-        fs.writeFileSync(aliasFilePath, JSON.stringify(mockAliases))
+        fs.outputFileSync(aliasFilePath, JSON.stringify(mockAliases))
     }
 
     beforeAll(() => {

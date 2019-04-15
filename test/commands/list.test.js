@@ -1,14 +1,14 @@
 import fs from 'fs-extra'
 
-import { yvmPath as rootPath } from '../../src/util/path'
-import { getExtractionPath, versionRootPath } from '../../src/util/utils'
-import * as version from '../../src/util/version'
+import { yvmPath as rootPath } from 'util/path'
+import { getExtractionPath, versionRootPath } from 'util/utils'
+import * as version from 'util/version'
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 const printVersions = jest.spyOn(version, 'printVersions')
-import { list } from '../../src/commands/list'
+import { list } from 'commands/list'
 
-jest.mock('../../src/util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+jest.mock('util/path', () => ({
+    yvmPath: '/tmp/cmd/list/yvm',
     getPathEntries: () => [],
 }))
 

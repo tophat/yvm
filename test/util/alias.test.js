@@ -3,11 +3,11 @@ import mockFS from 'mock-fs'
 import childProcess from 'child_process'
 jest.spyOn(childProcess, 'execSync')
 
-import log from '../../src/util/log'
-import * as utils from '../../src/util/utils'
+import log from 'util/log'
+import * as utils from 'util/utils'
 jest.spyOn(utils, 'getRequest')
 jest.spyOn(utils, 'getVersionsFromTags')
-import * as alias from '../../src/util/alias'
+import * as alias from 'util/alias'
 
 describe('alias', () => {
     afterAll(jest.restoreAllMocks)
@@ -29,16 +29,15 @@ describe('alias', () => {
         })
 
         it('gets stable version', async () => {
-            utils.getRequest.mockReturnValueOnce(
-                '<html><body><span>Stable (1.15.2)</span></body></html>',
-            )
+            utils.getRequest.mockReturnValueOnce(' 1.15.2 ')
             expect(await alias.resolveStable()).toBe('1.15.2')
+            expect(utils.getRequest).toHaveBeenCalledWith(
+                'https://yarnpkg.com/latest-version',
+            )
         })
 
         it('does not get stable version', async () => {
-            utils.getRequest.mockReturnValueOnce(
-                '<html><body><span></span></body></html>',
-            )
+            utils.getRequest.mockReturnValueOnce('  ')
             expect(await alias.resolveStable()).toBe(alias.UNRESOLVED)
         })
     })

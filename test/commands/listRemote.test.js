@@ -1,9 +1,9 @@
-import log from '../../src/util/log'
-import { listRemote } from '../../src/commands/listRemote'
-import { getVersionsFromTags } from '../../src/util/utils'
-import { getVersionInUse, printVersions } from '../../src/util/version'
+import log from 'util/log'
+import { listRemote } from 'commands/listRemote'
+import { getVersionsFromTags } from 'util/utils'
+import { getVersionInUse, printVersions } from 'util/version'
 
-jest.mock('../../src/util/version', () => {
+jest.mock('util/version', () => {
     const MOCK_CURRENT_VERSION = '1.0.0'
     const MOCK_LOCAL_VERSIONS = ['1.0.0', '1.6.0']
     return {
@@ -16,7 +16,7 @@ jest.mock('../../src/util/version', () => {
         printVersions: jest.fn(),
     }
 })
-jest.mock('../../src/util/utils', () => {
+jest.mock('util/utils', () => {
     const MOCK_REMOTE_VERSIONS = ['1.0.0', '1.6.0', '1.7.0']
     return {
         getVersionsFromTags: jest.fn().mockImplementation(async () => {

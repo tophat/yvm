@@ -1,24 +1,23 @@
 import childProcess from 'child_process'
-import fs from 'fs-extra'
-// import path from 'path'
 jest.spyOn(childProcess, 'execFileSync')
-import * as install from '../../src/commands/install'
+import fs from 'fs-extra'
+import * as install from 'commands/install'
 jest.spyOn(install, 'ensureVersionInstalled')
-import { exec } from '../../src/commands/exec'
-// import { yvmPath as rootPath } from '../../src/util/path'
-import log from '../../src/util/log'
+import { exec } from 'commands/exec'
+import { yvmPath as rootPath } from 'util/path'
+import log from 'util/log'
 
 jest.spyOn(log, 'default')
 jest.spyOn(log, 'info')
-jest.mock('../../src/util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+jest.mock('util/path', () => ({
+    yvmPath: '/tmp/cmd/exec/yvm',
     getPathEntries: () => [],
 }))
 
 describe('exec command', () => {
     const rcVersion = '1.13.0'
     beforeAll(() => {
-        fs.writeFileSync('.yvmrc', `${rcVersion}\n`)
+        fs.outputFileSync('.yvmrc', `${rcVersion}\n`)
         childProcess.execFileSync.mockImplementation(() => {})
         install.ensureVersionInstalled.mockImplementation(() => {})
     })
@@ -30,7 +29,7 @@ describe('exec command', () => {
         expect(await exec(version, args)).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
         expect(childProcess.execFileSync).toHaveBeenCalledWith(
-            `/tmp/yvmInstall/versions/v${version}/bin/yarn.js`,
+            `${rootPath}/versions/v${version}/bin/yarn.js`,
             args,
             { stdio: 'inherit' },
         )
@@ -40,7 +39,7 @@ describe('exec command', () => {
         expect(await exec()).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
         expect(childProcess.execFileSync).toHaveBeenCalledWith(
-            `/tmp/yvmInstall/versions/v${rcVersion}/bin/yarn.js`,
+            `${rootPath}/versions/v${rcVersion}/bin/yarn.js`,
             [],
             { stdio: 'inherit' },
         )

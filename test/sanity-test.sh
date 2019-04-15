@@ -59,6 +59,14 @@ else
     fail ${test1_output}
 fi
 
+testing "yarn shimmed config"
+test_shim_config_output=$(yarn --version)
+if [[ ${test_shim_config_output} == "1.13.0" ]]; then
+    pass
+else
+    fail ${test_shim_config_output}
+fi
+
 testing "yvm use"
 yvm install 1.13.0
 yvm use 1.13.0

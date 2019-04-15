@@ -4,10 +4,10 @@ import path from 'path'
 import chalk from 'chalk'
 import memoize from 'lodash.memoize'
 
-import log from './log'
-import { getRequest, getVersionsFromTags } from './utils'
-import { getPathEntries, yvmPath as defaultYvmPath } from './path'
-import { YARN_INSTALL_PAGE_URL, YARN_INSTALL_STABLE_REGEX } from './constants'
+import log from 'util/log'
+import { getPathEntries, yvmPath as defaultYvmPath } from 'util/path'
+import { getRequest, getVersionsFromTags } from 'util/utils'
+import { YARN_STABLE_VERSION_URL } from 'util/constants'
 
 export const STORAGE_FILE = '.aliases'
 
@@ -26,9 +26,8 @@ export const resolveLatest = memoize(
 )
 
 export const resolveStable = memoize(async () => {
-    const body = await getRequest(YARN_INSTALL_PAGE_URL)
-    const matches = body.match(YARN_INSTALL_STABLE_REGEX)
-    return matches ? matches[1] : UNRESOLVED
+    const version = await getRequest(YARN_STABLE_VERSION_URL)
+    return (version && version.trim()) || UNRESOLVED
 })
 
 export const resolveSystem = memoize(

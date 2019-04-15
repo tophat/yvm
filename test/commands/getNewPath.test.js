@@ -1,10 +1,10 @@
 import path from 'path'
 
-import log from '../../src/util/log'
-import * as pathUtils from '../../src/util/path'
-import * as version from '../../src/util/version'
-import * as install from '../../src/commands/install'
-import { buildNewPath, getNewPath } from '../../src/commands/getNewPath'
+import log from 'util/log'
+import * as pathUtils from 'util/path'
+import * as version from 'util/version'
+import * as install from 'commands/install'
+import { buildNewPath, getNewPath } from 'commands/getNewPath'
 
 describe('getNewPath', () => {
     const mockVersion = '1.13.0'

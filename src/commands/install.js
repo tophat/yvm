@@ -3,17 +3,17 @@ import path from 'path'
 import targz from 'targz'
 import * as openpgp from 'openpgp'
 
-import { YARN_PUBLIC_KEY_URL, YARN_RELEASE_TAGS_URL } from '../util/constants'
-import { LATEST, STABLE } from '../util/alias'
-import { downloadFile } from '../util/download'
-import log from '../util/log'
-import { yvmPath } from '../util/path'
+import { YARN_PUBLIC_KEY_URL, YARN_RELEASE_TAGS_URL } from 'util/constants'
+import { LATEST, STABLE } from 'util/alias'
+import { downloadFile } from 'util/download'
+import log from 'util/log'
+import { yvmPath } from 'util/path'
 import {
     versionRootPath,
     getExtractionPath,
     getVersionDownloadUrl,
-} from '../util/utils'
-import { getSplitVersionAndArgs, resolveVersion } from '../util/version'
+} from 'util/utils'
+import { getSplitVersionAndArgs, resolveVersion } from 'util/version'
 
 export const getDownloadPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `yarn-v${version}.tar.gz`)

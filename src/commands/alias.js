@@ -1,11 +1,7 @@
-import log from '../util/log'
-import { getFormatter, resolveMatchingAliases, setAlias } from '../util/alias'
-import {
-    getVersionInUse,
-    getYarnVersions,
-    resolveVersion,
-} from '../util/version'
-import { getVersionsFromTags } from '../util/utils'
+import log from 'util/log'
+import { getFormatter, resolveMatchingAliases, setAlias } from 'util/alias'
+import { getVersionInUse, getYarnVersions, resolveVersion } from 'util/version'
+import { getVersionsFromTags } from 'util/utils'
 
 const safeResolveVersion = async versionString =>
     resolveVersion({ versionString }).catch(e => log.info(e.message))

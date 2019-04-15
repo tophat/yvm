@@ -1,6 +1,6 @@
-import * as alias from '../../src/util/alias'
-import log from '../../src/util/log'
-import { unalias } from '../../src/commands/unalias'
+import * as alias from 'util/alias'
+import log from 'util/log'
+import { unalias } from 'commands/unalias'
 
 describe('unalias', () => {
     jest.spyOn(log, 'default')

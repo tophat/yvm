@@ -1,10 +1,10 @@
 import mockFS from 'mock-fs'
 import childProcess from 'child_process'
 
-import log from '../../src/util/log'
-import * as alias from '../../src/util/alias'
-import { yvmPath } from '../../src/util/path'
-import { stripVersionPrefix } from '../../src/util/utils'
+import log from 'util/log'
+import * as alias from 'util/alias'
+import { yvmPath } from 'util/path'
+import { stripVersionPrefix } from 'util/utils'
 import {
     getDefaultVersion,
     getSplitVersionAndArgs,
@@ -16,7 +16,7 @@ import {
     isValidVersionString,
     resolveVersion,
     setDefaultVersion,
-} from '../../src/util/version'
+} from 'util/version'
 
 afterAll(jest.restoreAllMocks)
 

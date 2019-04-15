@@ -4,10 +4,10 @@ import {
     getRcFileVersion,
     getValidVersionString,
     getVersionInUse,
-} from '../util/version'
-import log from '../util/log'
-import { versionRootPath } from '../util/utils'
-import { getCurrentPath, getPathDelimiter, yvmPath } from '../util/path'
+} from 'util/version'
+import log from 'util/log'
+import { versionRootPath } from 'util/utils'
+import { getCurrentPath, getPathDelimiter, yvmPath } from 'util/path'
 
 export const current = async ({ path: pathToUse, shell } = {}) => {
     const pathDelimiter = getPathDelimiter(shell)
