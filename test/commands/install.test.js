@@ -21,7 +21,7 @@ import * as version from 'util/version'
 
 jest.setTimeout(10000)
 jest.mock('util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+    yvmPath: '/tmp/cmd/install/yvm',
     getPathEntries: () => [],
 }))
 jest.spyOn(log, 'default')

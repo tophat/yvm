@@ -8,7 +8,7 @@ const printVersions = jest.spyOn(version, 'printVersions')
 import { list } from 'commands/list'
 
 jest.mock('util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+    yvmPath: '/tmp/cmd/list/yvm',
     getPathEntries: () => [],
 }))
 

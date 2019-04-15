@@ -9,7 +9,7 @@ import * as utils from 'util/utils'
 import * as version from 'util/version'
 
 jest.mock('util/path', () => ({
-    yvmPath: '/tmp/yvmInstall',
+    yvmPath: '/tmp/cmd/alias/yvm',
     getPathEntries: () => [],
 }))
 
@@ -25,7 +25,7 @@ describe('alias', () => {
 
     const writeAliases = () => {
         const aliasFilePath = path.join(rootPath, STORAGE_FILE)
-        fs.writeFileSync(aliasFilePath, JSON.stringify(mockAliases))
+        fs.outputFileSync(aliasFilePath, JSON.stringify(mockAliases))
     }
 
     beforeAll(() => {
