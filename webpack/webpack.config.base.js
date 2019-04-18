@@ -1,18 +1,24 @@
 const path = require('path')
 
 const CopyPlugin = require('copy-webpack-plugin')
-const nodeExternals = require('webpack-node-externals')
 
 const rootPath = path.resolve(__dirname, '..')
 const artifactsPath = path.resolve(rootPath, 'artifacts')
 const outputPath = path.resolve(artifactsPath, 'webpack_build')
 
-module.exports = {
+const constants = {
+    paths: {
+        artifacts: artifactsPath,
+        output: outputPath,
+        root: rootPath,
+    },
+}
+
+const config = {
     mode: 'production',
     entry: {
         yvm: ['@babel/polyfill', './src/yvm.js'],
     },
-    externals: [nodeExternals({ modulesFromFile: true })],
     output: {
         filename: '[name].js',
         path: outputPath,
@@ -49,3 +55,5 @@ module.exports = {
         ],
     },
 }
+
+module.exports = { config, constants }

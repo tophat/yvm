@@ -1,11 +1,11 @@
 const WebpackShellPlugin = require('webpack-shell-plugin-next')
 
-const baseConfig = require('./webpack.config.base')
+const { config } = require('./webpack.config.base')
 
-Object.assign(baseConfig, {
+module.exports = Object.assign(config, {
     mode: 'development',
     plugins: [
-        ...baseConfig.plugins,
+        ...config.plugins,
         new WebpackShellPlugin({
             onBuildExit: {
                 scripts: ['source src/yvm.sh'],
@@ -14,5 +14,3 @@ Object.assign(baseConfig, {
         }),
     ],
 })
-
-module.exports = baseConfig
