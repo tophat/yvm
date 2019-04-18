@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import * as openpgp from 'openpgp'
+import kbpgp from 'kbpgp'
 
 import log from './log'
 
@@ -9,6 +9,7 @@ import { downloadFile, getDownloadPath } from './download'
 import { getVersionDownloadUrl } from './utils'
 
 export class VerificationError extends Error {}
+export class PublicKeyImportError extends Error {}
 
 export const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
 
@@ -46,14 +47,25 @@ export const verifySignature = async (version, rootPath) => {
     const detachedSig = fs.readFileSync(signatureFilePath)
     fs.unlinkSync(signatureFilePath)
 
-    const verified = await openpgp.verify({
-        message: await openpgp.message.fromBinary(file),
-        signature: await openpgp.signature.readArmored(detachedSig),
-        publicKeys: (await openpgp.key.readArmored(publicKey)).keys,
+    const keymanager = await new Promise((resolve, reject) => {
+        kbpgp.KeyManager.import_from_armored_pgp(
+            { armored: publicKey },
+            (err, keymanager) =>
+                err
+                    ? reject(new PublicKeyImportError(err))
+                    : resolve(keymanager),
+        )
     })
-
-    if (!verified.signatures.length || !verified.signatures[0].valid) {
-        throw new VerificationError()
-    }
-    return true
+    const keyRing = new kbpgp.keyring.KeyRing()
+    keyRing.add_key_manager(keymanager)
+    return new Promise((resolve, reject) => {
+        kbpgp.unbox(
+            {
+                keyfetch: keyRing,
+                armored: detachedSig,
+                data: file,
+            },
+            err => (err ? reject(new VerificationError(err)) : resolve(true)),
+        )
+    })
 }

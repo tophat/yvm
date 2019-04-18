@@ -1,10 +1,14 @@
 import fs from 'fs-extra'
-import * as openpgp from 'openpgp'
+import kbpgp from 'kbpgp'
 
 import { downloadFile, getDownloadPath } from 'util/download'
 import { yvmPath as rootPath } from 'util/path'
 import { getVersionDownloadUrl } from 'util/utils'
-import { verifySignature, VerificationError } from 'util/verification'
+import {
+    PublicKeyImportError,
+    VerificationError,
+    verifySignature,
+} from 'util/verification'
 
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/util/verification/yvm',
@@ -13,7 +17,8 @@ jest.mock('util/path', () => ({
 
 describe('verification', () => {
     const mockVersion = '1.15.2'
-    const mockVerify = jest.spyOn(openpgp, 'verify', 'get')
+    const importKeySpy = jest.spyOn(kbpgp.KeyManager, 'import_from_armored_pgp')
+    const unboxSpy = jest.spyOn(kbpgp, 'unbox')
     const downloadMockFile = downloadFile(
         getVersionDownloadUrl(mockVersion),
         getDownloadPath(mockVersion, rootPath),
@@ -31,13 +36,21 @@ describe('verification', () => {
         await expect(verification).resolves.toEqual(true)
     })
 
-    it('throws verification error on invalid signature', async () => {
-        expect.assertions(1)
+    it('throws public key error on import fail', async () => {
+        expect.assertions(2)
         await downloadMockFile
-        mockVerify.mockImplementationOnce(() => () =>
-            Promise.resolve({ signatures: [] }),
-        )
+        importKeySpy.mockImplementationOnce((_, cb) => cb('mock-error'))
+        const verification = verifySignature(mockVersion, rootPath)
+        await expect(verification).rejects.toThrow(PublicKeyImportError)
+        expect(importKeySpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('throws verification error on invalid signature', async () => {
+        expect.assertions(2)
+        await downloadMockFile
+        unboxSpy.mockImplementationOnce((_, cb) => cb('mock-error'))
         const verification = verifySignature(mockVersion, rootPath)
         await expect(verification).rejects.toThrow(VerificationError)
+        expect(unboxSpy).toHaveBeenCalledTimes(1)
     })
 })
