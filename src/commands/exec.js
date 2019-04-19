@@ -29,7 +29,7 @@ const runYarn = (version, extraArgs, rootPath = yvmPath) => {
             stdio: 'inherit',
         })
     } catch (error) {
-        log('yarn failed, non-zero exit')
+        log.info('yarn failed, non-zero exit')
         throw error
     }
 }

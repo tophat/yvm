@@ -52,7 +52,7 @@ describe('exec command', () => {
         })
         expect(await exec()).toBe(1)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(log.default).toHaveBeenCalledWith(
+        expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining('yarn failed'),
         )
         expect(log.default).toHaveBeenCalledWith(mockError.message)
