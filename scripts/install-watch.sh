@@ -3,8 +3,7 @@
 CURRENT_DIR=$(pwd)
 
 # Check if already watching
-if test -L "${HOME}/.yvm/yvm.sh" || test -L "${HOME}/.yvm/yvm.js"
-then
+if test -L "${HOME}/.yvm/yvm.sh" || test -L "${HOME}/.yvm/yvm.js" || test -L "${HOME}/.yvm/yvm.fish"; then
     echo "Unable to save existing files!"
     echo "Make sure you do not have install-watch already running."
     exit 1
@@ -19,8 +18,7 @@ save_and_link_file() {
 
 restore_file() {
     rm "${HOME}/.yvm/${1}"
-    if [ -f "${HOME}/.yvm/${1}.bak" ]
-    then
+    if [ -f "${HOME}/.yvm/${1}.bak" ]; then
         mv "${HOME}/.yvm/${1}.bak" "${HOME}/.yvm/${1}"
         echo "Restored ${1}"
     fi
@@ -31,11 +29,6 @@ save_and_link_file "yvm.sh"
 save_and_link_file "yvm.js"
 save_and_link_file "yvm.fish"
 save_and_link_file "shim/yarn"
-
-# Save and Link Node Modules
-echo "Saving+Linking node_modules"
-mv "${HOME}/.yvm/node_modules" "${HOME}/.yvm/node_modules.bak"
-ln -s ${CURRENT_DIR}/node_modules "${HOME}/.yvm/node_modules"
 
 # Trap interrupt signal
 int_trap() {
@@ -51,8 +44,3 @@ restore_file "yvm.sh"
 restore_file "yvm.js"
 restore_file "yvm.fish"
 restore_file "shim/yarn"
-
-# Restore Node Modules
-rm "${HOME}/.yvm/node_modules"
-mv "${HOME}/.yvm/node_modules.bak" "${HOME}/.yvm/node_modules"
-echo "Restored node_modules"
