@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 * unload yvm from PATH command
 * unload yvm from shell command
 
+## [v3.2.2](https://github.com/tophat/yvm/compare/v3.2.1...v3.2.2) (2019-04-18)
+
+* **Fixed**: install yarn verification ([#369](https://github.com/tophat/yvm/issues/369)) ([22a4e93](https://github.com/tophat/yvm/commit/22a4e93))
+
+Added a `--verify` flag to the install command to force a failure if there're any verification issues.
+
 ## [v3.2.1](https://github.com/tophat/yvm/compare/v3.2.0...v3.2.1) (2019-04-14)
 
 * **Fixed**: use yarn latest version link ([#365](https://github.com/tophat/yvm/issues/365)) ([b9ba1ba](https://github.com/tophat/yvm/commit/b9ba1ba))
