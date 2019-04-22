@@ -77,7 +77,7 @@ export const configureZsh = async ({ home, yvmDir }) => {
 
 export const configureShell = async ({ home, shell = '' } = {}) => {
     try {
-        const userHome = home || process.env.HOME || os.homedir()
+        const userHome = String(home || process.env.HOME || os.homedir())
         const yvmDir =
             process.env.YVM_INSTALL_DIR || path.join(userHome, '.yvm')
         const configHandlers = {
