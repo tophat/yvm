@@ -15,10 +15,7 @@
     "commit": "npx git-cz"
   },
   "jest": {
-    "moduleDirectories": [
-      "./src",
-      "./node_modules"
-    ],
+    "moduleDirectories": ["./src", "./node_modules"],
     "testPathIgnorePatterns": [
       "./artifacts/",
       "./node_modules/",
