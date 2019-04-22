@@ -151,7 +151,7 @@ describe('install yvm', () => {
         })
 
         it('creates specified install directory if does not exist', async () => {
-            const mockInstallDir = 'mock-install-dir/.yvm'
+            const mockInstallDir = 'mock-install-dir/.myvm'
             const envYvmInstallDir = jest
                 .spyOnProp(process.env, 'YVM_INSTALL_DIR')
                 .mockValue(mockInstallDir)
@@ -219,7 +219,7 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
+            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(fs.pathExistsSync(filePath)).toBe(true)

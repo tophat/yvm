@@ -5018,10 +5018,10 @@ jest-message-util@^24.0.0:
     slash "^2.0.0"
     stack-utils "^1.0.1"
 
-jest-mock-props@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/jest-mock-props/-/jest-mock-props-1.4.0.tgz#df968aa91b671a551ff60c54b61b82ed6579f12e"
-  integrity sha512-mTgmup0zGd6whf8A2HrlVhY666cEN4To+1XF/E3djdv4gSyY2bIHFAU37ZaG68hI5X9e00HfOw3IB3ZNhaAG2A==
+jest-mock-props@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/jest-mock-props/-/jest-mock-props-1.6.0.tgz#0fc482185be97f9e43f2dc436c14115bbb7011ac"
+  integrity sha512-8MzlE/AeTicjYCVeklpBU+kExm6LuBduhORy7dzAsGs2za4IFVxWRVXUBMSTK0O4MiQ9U8wpbL5vdHBMme+0BQ==
 
 jest-mock@^24.0.0:
   version "24.0.0"
