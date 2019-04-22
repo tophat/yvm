@@ -2,32 +2,17 @@ const os = require('os')
 const fs = require('fs-extra')
 const { execSync } = require('child_process')
 const https = require('https')
+const mockProps = require('jest-mock-props')
+mockProps.extend(jest)
 
 const { downloadFile, getConfig, preflightCheck, run } = require('../install')
-
-const mockProp = (obj, prop, mockValue) => {
-    const original = obj[prop]
-    const setValue = value => {
-        if (value === undefined) {
-            delete obj[prop]
-        } else {
-            obj[prop] = value
-        }
-    }
-    setValue(mockValue)
-    return {
-        mockValue: setValue,
-        reset: () => setValue(mockValue),
-        restore: () => setValue(original),
-    }
-}
 
 describe('install yvm', () => {
     const log = jest.spyOn(console, 'log')
     const mockHomeValue = 'mock-home'
-    const envHomeMock = mockProp(process.env, 'HOME')
-    const envUseLocal = mockProp(process.env, 'USE_LOCAL')
-    const envInstallVersion = mockProp(process.env, 'INSTALL_VERSION')
+    const envHomeMock = jest.spyOnProp(process.env, 'HOME')
+    const envUseLocal = jest.spyOnProp(process.env, 'USE_LOCAL')
+    const envInstallVersion = jest.spyOnProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
     const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
     const expectedConfigObject = ({ homePath, tagName = null, useLocal }) => ({
@@ -48,17 +33,12 @@ describe('install yvm', () => {
     afterEach(() => {
         jest.clearAllMocks()
         fs.removeSync(mockHomeValue)
-        envHomeMock.reset()
-        envUseLocal.reset()
-        envInstallVersion.reset()
+        envHomeMock.mockReset()
+        envUseLocal.mockReset()
+        envInstallVersion.mockReset()
     })
 
-    afterAll(() => {
-        jest.restoreAllMocks()
-        envHomeMock.restore()
-        envUseLocal.restore()
-        envInstallVersion.restore()
-    })
+    afterAll(jest.restoreAllMocks)
 
     describe('preflightCheck', () => {
         it('continues when no missing deps', () => {
@@ -125,7 +105,7 @@ describe('install yvm', () => {
         const mockHome = mockHomeValue
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            envUseLocal.mockValue(true)
+            envUseLocal.mockValue('true')
         })
 
         it('indicates successful completion', async () => {
@@ -171,15 +151,13 @@ describe('install yvm', () => {
         })
 
         it('creates specified install directory if does not exist', async () => {
-            const mockInstallDir = 'mock-install-dir/.yvm'
-            const envYvmInstallDir = mockProp(
-                process.env,
-                'YVM_INSTALL_DIR',
-                mockInstallDir,
-            )
+            const mockInstallDir = 'mock-install-dir/.myvm'
+            const envYvmInstallDir = jest
+                .spyOnProp(process.env, 'YVM_INSTALL_DIR')
+                .mockValue(mockInstallDir)
             expect(fs.pathExistsSync(mockInstallDir)).toBe(false)
             await run()
-            envYvmInstallDir.restore()
+            envYvmInstallDir.mockRestore()
             expect(fs.pathExistsSync(mockInstallDir)).toBe(true)
             fs.removeSync('mock-install-dir')
         })
@@ -241,7 +219,7 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
+            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(fs.pathExistsSync(filePath)).toBe(true)
