@@ -61,7 +61,7 @@
     "eslint-plugin-prettier": "^3.0.0",
     "gh-release": "^3.4.0",
     "git-cz": "^3.0.0",
-    "husky": "^1.2.0",
+    "husky": "^2.0.0",
     "jest": "^24.1.0",
     "jest-junit": "^6.0.1",
     "jest-mock-props": "^1.6.0",
