@@ -1,5 +1,5 @@
 #!/bin/sh
-set -q YVM_DIR; or set -U YVM_DIR "$HOME/.yvm"
+set -q YVM_DIR; or set -gx YVM_DIR "$HOME/.yvm"
 
 function yvm
     set command $argv[1]
@@ -15,7 +15,7 @@ function yvm
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
         else
-            set -U fish_user_paths (string split ' ' -- $NEW_FISH_USER_PATHS)
+            set -gx fish_user_paths (string split ' ' -- $NEW_FISH_USER_PATHS)
             set -l new_version (yarn --version)
             yvm_echo "Now using yarn version $new_version"
         end
@@ -40,7 +40,7 @@ function yvm
             yvm_err "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
             exit 1
         end
-        set -U fish_user_paths "$YVM_DIR/shim" $fish_user_paths
+        set -gx fish_user_paths "$YVM_DIR/shim" $fish_user_paths
     end
 
     if [ "$command" = "use" ]
