@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 * unload yvm from PATH command
 * unload yvm from shell command
+* bundle yvm into a single file
+
+## [v3.2.3](https://github.com/tophat/yvm/compare/v3.2.2...v3.2.3) (2019-04-27)
+
+* **Fixed**: replace fish universal variable with global export ([#381](https://github.com/tophat/yvm/issues/381)) ([27c1d2d](https://github.com/tophat/yvm/commit/27c1d2d))
 
 ## [v3.2.2](https://github.com/tophat/yvm/compare/v3.2.1...v3.2.2) (2019-04-18)
 
