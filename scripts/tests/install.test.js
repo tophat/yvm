@@ -198,7 +198,7 @@ describe('install yvm', () => {
             fs.removeSync(mockHome)
         })
 
-        it('indicates successful completion', async () => {
+        const installFn = async () => {
             const config = getConfig()
             expect(config).toMatchObject(
                 expectedConfigObject({
@@ -232,7 +232,10 @@ describe('install yvm', () => {
             expect(version).toMatch(/v(\d+.)+\d+/)
             // script is executable
             fs.accessSync(`${yvmHome}/yvm.sh`, fs.constants.X_OK)
-        })
+        }
+
+        it('indicates successful completion', installFn)
+        it('reinstalls removing existing files', installFn)
     })
 
     describe('specified version', () => {

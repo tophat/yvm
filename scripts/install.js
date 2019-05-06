@@ -150,9 +150,7 @@ function httpRequest(uri) {
  *
  * Only supports source URLs with the https scheme.
  *
- * @param {*} params
- * @param {string} params.source
- * @param {string} params.destination
+ * @param {{ source: string, destination: string }} params
  */
 async function downloadFile({ source, destination }) {
     return new Promise((resolve, reject) => {
@@ -188,8 +186,17 @@ async function downloadFile({ source, destination }) {
     })
 }
 
-async function removeFile(filePath) {
-    execSync(`rm -rf ${filePath}`)
+async function removeFile(maybeDir, recurse = false) {
+    if (!fs.existsSync(maybeDir)) return
+    if (fs.lstatSync(maybeDir).isDirectory() && recurse) {
+        fs.readdirSync(maybeDir).forEach(file => {
+            const maybeFile = path.join(maybeDir, file)
+            removeFile(maybeFile, recurse)
+        })
+        fs.rmdirSync(maybeDir)
+    } else {
+        fs.unlinkSync(maybeDir)
+    }
 }
 
 async function cleanYvmDir(yvmPath) {
@@ -199,7 +206,7 @@ async function cleanYvmDir(yvmPath) {
         .filter(f => !filesNotToRemove.has(f))
     await Promise.all(
         filesToRemove.map(file =>
-            removeFile(path.join(yvmPath, file)).catch(log),
+            removeFile(path.join(yvmPath, file), true).catch(log),
         ),
     )
 }
@@ -218,7 +225,7 @@ async function ensureScriptExecutable(filePath) {
         log(`${filePath} does not exist`)
         return
     }
-    execSync(`chmod +x ${filePath}`)
+    fs.chmodSync(filePath, '755')
 }
 
 async function run() {
