@@ -206,7 +206,7 @@ async function cleanYvmDir(yvmPath) {
         .filter(f => !filesNotToRemove.has(f))
     await Promise.all(
         filesToRemove.map(file =>
-            removeFile(path.join(yvmPath, file)).catch(log),
+            removeFile(path.join(yvmPath, file), true).catch(log),
         ),
     )
 }
