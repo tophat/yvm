@@ -14,7 +14,9 @@ jest.mock('util/path', () => ({
 }))
 
 describe('alias', () => {
+    const { resolveVersion } = version
     const currentYarnVersion = '1.15.2'
+    const pinnedStableVersion = currentYarnVersion
     const installedYarnVersions = [currentYarnVersion, '1.13.0', '1.7.0']
     const allYarnVersions = [...installedYarnVersions, '1.6.0', '1.3.0']
     const mockAliases = {
@@ -29,6 +31,13 @@ describe('alias', () => {
     }
 
     beforeAll(() => {
+        jest.spyOn(version, 'resolveVersion').mockImplementation(
+            async (...args) => {
+                if (args[0].versionString === 'stable')
+                    return pinnedStableVersion
+                return resolveVersion(...args)
+            },
+        )
         jest.spyOn(version, 'getVersionInUse').mockResolvedValue(
             currentYarnVersion,
         )
@@ -47,6 +56,8 @@ describe('alias', () => {
         getUserAliases.cache.clear()
         jest.clearAllMocks()
     })
+
+    afterAll(jest.restoreAllMocks)
 
     describe('setAlias', () => {
         it('sets alias correctly', async () => {
