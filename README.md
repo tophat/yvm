@@ -54,7 +54,7 @@ curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.j
 Or to install a specific version:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | INSTALL_VERSION="v0.9.26" node
+curl -fsSL https://raw.githubusercontent.com/tophat/yvm/v2.4.3/scripts/install.sh | INSTALL_VERSION="v2.4.3" bash
 ```
 
 ### Manual
