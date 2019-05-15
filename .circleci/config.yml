@@ -69,7 +69,7 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: make bundlewatch
-  sanity_test:
+  sanity_test_bash:
     <<: *docker_defaults
     working_directory: ~/repo
     steps:
@@ -77,7 +77,29 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: make install-local
-      - run: YVM_DIR=~/.yvm ./test/sanity-test.sh
+      - run: YVM_DIR=~/.yvm bash -e ./test/scripts/yvm.test.sh
+  sanity_test_fish:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: sudo apt-add-repository ppa:fish-shell/release-3
+      - run: sudo apt-get update
+      - run: sudo apt-get install fish
+      - run: make install-local
+      - run: YVM_DIR=~/.yvm fish ./test/scripts/yvm.test.fish
+  sanity_test_zsh:
+    <<: *docker_defaults
+    working_directory: ~/repo
+    steps:
+      - prep_env
+      - attach_workspace:
+          at: ~/repo
+      - run: sudo apt-get install zsh
+      - run: make install-local
+      - run: YVM_DIR=~/.yvm zsh test/scripts/yvm.test.sh
   deploy:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -128,7 +150,15 @@ workflows:
           requires:
             - node_modules
             - build
-      - sanity_test:
+      - sanity_test_bash:
+          requires:
+            - node_modules
+            - build
+      - sanity_test_fish:
+          requires:
+            - node_modules
+            - build
+      - sanity_test_zsh:
           requires:
             - node_modules
             - build
@@ -137,7 +167,9 @@ workflows:
             - node_modules
             - lint
             - unit_test
-            - sanity_test
+            - sanity_test_bash
+            - sanity_test_fish
+            - sanity_test_zsh
             - build
             - release_size_check
           filters:

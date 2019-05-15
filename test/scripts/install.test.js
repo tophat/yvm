@@ -5,7 +5,12 @@ const https = require('https')
 const mockProps = require('jest-mock-props')
 mockProps.extend(jest)
 
-const { downloadFile, getConfig, preflightCheck, run } = require('../install')
+const {
+    downloadFile,
+    getConfig,
+    preflightCheck,
+    run,
+} = require('../../scripts/install')
 
 describe('install yvm', () => {
     const log = jest.spyOn(console, 'log')
