@@ -58,7 +58,8 @@ describe('alias util', () => {
 
         afterEach(() => {
             alias.resolveSystem.cache.clear()
-            jest.resetAllMocks()
+            pathSpy.mockReset()
+            fishUserPathSpy.mockReset()
         })
 
         afterAll(() => {
@@ -81,7 +82,7 @@ describe('alias util', () => {
 
         it('gets first non yvm yarn executable in fish shell', async () => {
             fishUserPathSpy.mockValue(
-                `${yvmPath}/versions/v1.13.0/bin /usr/local/bin:`,
+                `${yvmPath}/versions/v1.13.0/bin /usr/local/bin`,
             )
             childProcess.execSync.mockReturnValueOnce('1.14.0')
             expect(await alias.resolveSystem({ shell: 'fish' })).toEqual(
@@ -93,13 +94,12 @@ describe('alias util', () => {
         })
 
         it('returns nothing if yarn not found in fish user path', async () => {
-            const oldPath = process.env.fish_user_paths
-            process.env.fish_user_paths =
-                '/Users/tophat/.nvm/versions/node/v6.11.5/bin '
+            fishUserPathSpy.mockValue(
+                '/Users/tophat/.nvm/versions/node/v6.11.5/bin ',
+            )
             expect(await alias.resolveSystem({ shell: 'fish' })).toEqual(
                 alias.NOT_AVAILABLE,
             )
-            process.env.fish_user_paths = oldPath
         })
     })
 
@@ -206,7 +206,7 @@ describe('alias util', () => {
                 await alias.setAlias({
                     name: 'test',
                     version: '1.7.0',
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             expect(await alias.getUserAliases(yvmPath)).toEqual({
@@ -222,7 +222,7 @@ describe('alias util', () => {
                     await alias.setAlias({
                         name: alias.STABLE,
                         version: '1.7.0',
-                        yvmPath: yvmPath,
+                        yvmPath,
                     }),
                 ).toBe(false)
                 expect(log.default).toHaveBeenCalledWith(
@@ -257,7 +257,7 @@ describe('alias util', () => {
             expect(
                 await alias.unsetAlias({
                     name: alias.STABLE,
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(false)
             expect(log.default).toHaveBeenCalledWith(
@@ -277,7 +277,7 @@ describe('alias util', () => {
             expect(
                 await alias.unsetAlias({
                     name: 'zero',
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(false)
             expect(fs.writeFileSync).not.toHaveBeenCalled()
@@ -301,7 +301,7 @@ describe('alias util', () => {
                 await alias.unsetAlias({
                     name: 'zero',
                     force: true,
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             delete mockAliases.zero
@@ -324,7 +324,7 @@ describe('alias util', () => {
                 await alias.unsetAlias({
                     name: 'zero',
                     recursive: true,
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -345,7 +345,7 @@ describe('alias util', () => {
                 await alias.unsetAlias({
                     name: 'zero',
                     recursive: true,
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -367,7 +367,7 @@ describe('alias util', () => {
                 await alias.unsetAlias({
                     name: 'two',
                     force: true,
-                    yvmPath: yvmPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             delete mockAliases.two
