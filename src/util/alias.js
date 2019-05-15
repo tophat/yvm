@@ -5,7 +5,7 @@ import chalk from 'chalk'
 import memoize from 'lodash.memoize'
 
 import log from 'util/log'
-import { getPathEntries, yvmPath as defaultYvmPath } from 'util/path'
+import { getNonYvmYarnPathEntries, yvmPath as defaultYvmPath } from 'util/path'
 import { getRequest, getVersionsFromTags } from 'util/utils'
 import { YARN_STABLE_VERSION_URL } from 'util/constants'
 
@@ -32,7 +32,7 @@ export const resolveStable = memoize(async () => {
 
 export const resolveSystem = memoize(
     async ({ shell, yvmPath = defaultYvmPath } = {}) => {
-        for (const pathEntry of getPathEntries(shell)) {
+        for (const pathEntry of getNonYvmYarnPathEntries(shell)) {
             if (
                 pathEntry === '' ||
                 pathEntry === '.' ||

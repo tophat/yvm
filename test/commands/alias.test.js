@@ -10,7 +10,7 @@ import * as version from 'util/version'
 
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/cmd/alias/yvm',
-    getPathEntries: () => [],
+    getNonYvmYarnPathEntries: () => [],
 }))
 
 describe('alias', () => {
