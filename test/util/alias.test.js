@@ -15,6 +15,7 @@ import * as alias from 'util/alias'
 
 describe('alias util', () => {
     const yvmPath = '/Users/tophat/.yvm'
+    jest.spyOn(log, 'info')
 
     afterAll(jest.restoreAllMocks)
 
@@ -64,6 +65,15 @@ describe('alias util', () => {
 
         afterAll(() => {
             mockFS.restore()
+        })
+
+        it('returns nothing if yarn executable fails to run', async () => {
+            const mockError = new Error('not executable')
+            childProcess.execSync.mockImplementationOnce(() => {
+                throw mockError
+            })
+            expect(await alias.resolveSystem()).toEqual(alias.NOT_AVAILABLE)
+            expect(log.info).toHaveBeenCalledWith(mockError.message)
         })
 
         it('gets first non yvm yarn executable', async () => {
