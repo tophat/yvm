@@ -13,7 +13,7 @@ jest.spyOn(utils, 'getRequest')
 jest.spyOn(utils, 'getVersionsFromTags')
 import * as alias from 'util/alias'
 
-describe('alias', () => {
+describe('alias util', () => {
     const yvmPath = '/Users/tophat/.yvm'
 
     afterAll(jest.restoreAllMocks)
