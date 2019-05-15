@@ -5,7 +5,7 @@ jest.spyOn(childProcess, 'execSync')
 import * as mockProps from 'jest-mock-props'
 mockProps.extend(jest)
 const pathSpy = jest.spyOnProp(process.env, 'PATH')
-const fishUserPathSpy = jest.spyOnProp(process.env, 'fish_user_path')
+const fishUserPathSpy = jest.spyOnProp(process.env, 'fish_user_paths')
 
 import log from 'util/log'
 import * as utils from 'util/utils'
