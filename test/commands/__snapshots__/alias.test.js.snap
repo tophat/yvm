@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`alias getAlias handles no matches for supplied pattern 1`] = `Array []`;
+exports[`alias command getAlias handles no matches for supplied pattern 1`] = `Array []`;
 
-exports[`alias getAlias matches all aliases with empty pattern 1`] = `
+exports[`alias command getAlias matches all aliases with empty pattern 1`] = `
 Array [
   Array [
     "[90m[32mdefault[90m → [37mstable[90m ([32m1.15.2[90m)[39m",
@@ -28,7 +28,7 @@ Array [
 ]
 `;
 
-exports[`alias getAlias matches only supplied pattern 1`] = `
+exports[`alias command getAlias matches only supplied pattern 1`] = `
 Array [
   Array [
     "[90m[31mabc[90m → [37mb[90m ([31mN/A[90m)[39m",
@@ -39,7 +39,7 @@ Array [
 ]
 `;
 
-exports[`alias setAlias handles invalid version 1`] = `
+exports[`alias command setAlias handles invalid version 1`] = `
 Array [
   Array [
     "[31m[90m[31mdef[90m → [37minvalid[90m ([31mN/A[90m)[31m[39m",
@@ -47,7 +47,7 @@ Array [
 ]
 `;
 
-exports[`alias setAlias sets alias correctly 1`] = `
+exports[`alias command setAlias sets alias correctly 1`] = `
 Array [
   Array [
     "[90m[32mdef[90m → [37m1.15[90m ([32m1.15.2[90m)[39m",

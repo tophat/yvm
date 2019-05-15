@@ -30,27 +30,17 @@ export const resolveStable = memoize(async () => {
     return (version && version.trim()) || UNRESOLVED
 })
 
-export const resolveSystem = memoize(
-    async ({ shell, yvmPath = defaultYvmPath } = {}) => {
-        for (const pathEntry of getNonYvmYarnPathEntries(shell)) {
-            if (
-                pathEntry === '' ||
-                pathEntry === '.' ||
-                pathEntry.includes(yvmPath)
-            ) {
-                continue
-            }
-            try {
-                const pathToExec = path.join(pathEntry, 'yarn')
-                const execCommand = `${pathToExec} --version 2> /dev/null`
-                return String(execSync(execCommand)).trim()
-            } catch (error) {
-                log.info(error.message)
-            }
+export const resolveSystem = memoize(async ({ shell } = {}) => {
+    for (const pathToExec of getNonYvmYarnPathEntries(shell)) {
+        try {
+            const execCommand = `${pathToExec} --version 2> /dev/null`
+            return String(execSync(execCommand)).trim()
+        } catch (error) {
+            log.info(error.message)
         }
-        return NOT_AVAILABLE
-    },
-)
+    }
+    return NOT_AVAILABLE
+})
 
 export const isReserved = name => RESERVED_NAMES.includes(name)
 

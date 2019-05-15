@@ -13,7 +13,7 @@ jest.mock('util/path', () => ({
     getNonYvmYarnPathEntries: () => [],
 }))
 
-describe('alias', () => {
+describe('alias command', () => {
     const { resolveVersion } = version
     const currentYarnVersion = '1.15.2'
     const pinnedStableVersion = currentYarnVersion

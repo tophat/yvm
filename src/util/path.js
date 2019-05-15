@@ -22,11 +22,13 @@ export const getPathEntries = shell =>
     getCurrentPath(shell).split(getPathDelimiter(shell))
 
 export const getYarnPathEntries = shell =>
-    getPathEntries(shell).filter(p => fs.existsSync(path.join(p, 'yarn')))
+    getPathEntries(shell)
+        .map(p => path.join(p, 'yarn'))
+        .filter(fs.existsSync)
 
 export const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
 
-export const isYvmPath = p => p.startsWith(yvmPath)
+export const isYvmPath = p => p && p.startsWith(yvmPath)
 
 export const getNonYvmYarnPathEntries = shell =>
     getYarnPathEntries(shell).filter(p => !isYvmPath(p))
