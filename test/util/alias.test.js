@@ -2,6 +2,10 @@ import fs from 'fs'
 import mockFS from 'mock-fs'
 import childProcess from 'child_process'
 jest.spyOn(childProcess, 'execSync')
+import * as mockProps from 'jest-mock-props'
+mockProps.extend(jest)
+const pathSpy = jest.spyOnProp(process.env, 'PATH')
+const fishUserPathSpy = jest.spyOnProp(process.env, 'fish_user_paths')
 
 import log from 'util/log'
 import * as utils from 'util/utils'
@@ -9,7 +13,10 @@ jest.spyOn(utils, 'getRequest')
 jest.spyOn(utils, 'getVersionsFromTags')
 import * as alias from 'util/alias'
 
-describe('alias', () => {
+describe('alias util', () => {
+    const yvmPath = '/Users/tophat/.yvm'
+    jest.spyOn(log, 'info')
+
     afterAll(jest.restoreAllMocks)
 
     describe('resolveLatest', () => {
@@ -43,54 +50,66 @@ describe('alias', () => {
     })
 
     describe('resolveSystem', () => {
-        const yvmPath = '/Users/tophat/.yvm'
+        beforeAll(() => {
+            log()
+            mockFS({
+                '/usr/local/bin/yarn': 'mock exec',
+            })
+        })
 
         afterEach(() => {
             alias.resolveSystem.cache.clear()
+            pathSpy.mockReset()
+            fishUserPathSpy.mockReset()
+        })
+
+        afterAll(() => {
+            mockFS.restore()
+        })
+
+        it('returns nothing if yarn executable fails to run', async () => {
+            const mockError = new Error('not executable')
+            childProcess.execSync.mockImplementationOnce(() => {
+                throw mockError
+            })
+            expect(await alias.resolveSystem()).toEqual(alias.NOT_AVAILABLE)
+            expect(log.info).toHaveBeenCalledWith(mockError.message)
         })
 
         it('gets first non yvm yarn executable', async () => {
-            const oldPath = process.env.PATH
-            process.env.PATH = `${yvmPath}/versions/v1.13.0/bin:/usr/local/bin:`
+            pathSpy.mockValue(`${yvmPath}/versions/v1.13.0/bin:/usr/local/bin:`)
             childProcess.execSync.mockReturnValueOnce('1.14.0')
-            expect(await alias.resolveSystem({ yvmPath })).toEqual('1.14.0')
+            expect(await alias.resolveSystem()).toEqual('1.14.0')
             expect(childProcess.execSync).toHaveBeenCalledWith(
                 expect.stringContaining('usr/local/bin/yarn'),
             )
-            process.env.PATH = oldPath
         })
 
         it('returns nothing if yarn not found in path', async () => {
-            const oldPath = process.env.PATH
-            process.env.PATH = '/Users/tophat/.nvm/versions/node/v6.11.5/bin:'
-            expect(await alias.resolveSystem({ yvmPath })).toEqual(
-                alias.NOT_AVAILABLE,
-            )
-            process.env.PATH = oldPath
+            pathSpy.mockValue('/Users/tophat/.nvm/versions/node/v6.11.5/bin:')
+            expect(await alias.resolveSystem()).toEqual(alias.NOT_AVAILABLE)
         })
 
         it('gets first non yvm yarn executable in fish shell', async () => {
-            const yvmPath = '/Users/tophat/.yvm'
-            const oldPath = process.env.fish_user_paths
-            process.env.fish_user_paths = `${yvmPath}/versions/v1.13.0/bin /usr/local/bin:`
+            fishUserPathSpy.mockValue(
+                `${yvmPath}/versions/v1.13.0/bin /usr/local/bin`,
+            )
             childProcess.execSync.mockReturnValueOnce('1.14.0')
-            expect(
-                await alias.resolveSystem({ shell: 'fish', yvmPath }),
-            ).toEqual('1.14.0')
+            expect(await alias.resolveSystem({ shell: 'fish' })).toEqual(
+                '1.14.0',
+            )
             expect(childProcess.execSync).toHaveBeenCalledWith(
                 expect.stringContaining('usr/local/bin/yarn'),
             )
-            process.env.fish_user_paths = oldPath
         })
 
         it('returns nothing if yarn not found in fish user path', async () => {
-            const oldPath = process.env.fish_user_paths
-            process.env.fish_user_paths =
-                '/Users/tophat/.nvm/versions/node/v6.11.5/bin '
-            expect(
-                await alias.resolveSystem({ shell: 'fish', yvmPath }),
-            ).toEqual(alias.NOT_AVAILABLE)
-            process.env.fish_user_paths = oldPath
+            fishUserPathSpy.mockValue(
+                '/Users/tophat/.nvm/versions/node/v6.11.5/bin ',
+            )
+            expect(await alias.resolveSystem({ shell: 'fish' })).toEqual(
+                alias.NOT_AVAILABLE,
+            )
         })
     })
 
@@ -105,8 +124,7 @@ describe('alias', () => {
     })
 
     describe('getUserAliases', () => {
-        const mockYVMPath = '/Users/tophat/.yvm'
-        const aliasesPath = `${mockYVMPath}/${alias.STORAGE_FILE}`
+        const aliasesPath = `${yvmPath}/${alias.STORAGE_FILE}`
         beforeEach(() => {
             log()
             mockFS({
@@ -120,7 +138,7 @@ describe('alias', () => {
         })
 
         it('sets default to stable', async () => {
-            expect(await alias.getUserAliases(mockYVMPath)).toEqual({
+            expect(await alias.getUserAliases(yvmPath)).toEqual({
                 [alias.DEFAULT]: alias.STABLE,
             })
         })
@@ -130,7 +148,7 @@ describe('alias', () => {
             mockFS({
                 [aliasesPath]: `{"default":"${mockDefaultAlias}"}`,
             })
-            expect(await alias.getUserAliases(mockYVMPath)).toEqual({
+            expect(await alias.getUserAliases(yvmPath)).toEqual({
                 [alias.DEFAULT]: mockDefaultAlias,
             })
         })
@@ -139,7 +157,7 @@ describe('alias', () => {
             mockFS({
                 [aliasesPath]: `"default":"testing"`,
             })
-            expect(await alias.getUserAliases(mockYVMPath)).toEqual({
+            expect(await alias.getUserAliases(yvmPath)).toEqual({
                 [alias.DEFAULT]: alias.STABLE,
             })
         })
@@ -158,7 +176,7 @@ describe('alias', () => {
                     [aliasesPath]: JSON.stringify(mockAliases),
                 })
                 expect(
-                    await alias.getMatchingAliases(undefined, mockYVMPath),
+                    await alias.getMatchingAliases(undefined, yvmPath),
                 ).toEqual(expectedAliases)
             })
 
@@ -171,16 +189,15 @@ describe('alias', () => {
                 mockFS({
                     [aliasesPath]: JSON.stringify(mockAliases),
                 })
-                expect(
-                    await alias.getMatchingAliases('oth', mockYVMPath),
-                ).toEqual(expectedAliases)
+                expect(await alias.getMatchingAliases('oth', yvmPath)).toEqual(
+                    expectedAliases,
+                )
             })
         })
     })
 
     describe('setAlias', () => {
-        const mockYVMPath = '/Users/tophat/.yvm'
-        const aliasesPath = `${mockYVMPath}/${alias.STORAGE_FILE}`
+        const aliasesPath = `${yvmPath}/${alias.STORAGE_FILE}`
         jest.spyOn(log, 'default')
         beforeEach(() => {
             log()
@@ -199,10 +216,10 @@ describe('alias', () => {
                 await alias.setAlias({
                     name: 'test',
                     version: '1.7.0',
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(true)
-            expect(await alias.getUserAliases(mockYVMPath)).toEqual({
+            expect(await alias.getUserAliases(yvmPath)).toEqual({
                 [alias.DEFAULT]: alias.STABLE,
                 test: '1.7.0',
             })
@@ -215,7 +232,7 @@ describe('alias', () => {
                     await alias.setAlias({
                         name: alias.STABLE,
                         version: '1.7.0',
-                        yvmPath: mockYVMPath,
+                        yvmPath,
                     }),
                 ).toBe(false)
                 expect(log.default).toHaveBeenCalledWith(
@@ -226,8 +243,7 @@ describe('alias', () => {
     })
 
     describe('unsetAlias', () => {
-        const mockYVMPath = '/Users/tophat/.yvm'
-        const aliasesPath = `${mockYVMPath}/${alias.STORAGE_FILE}`
+        const aliasesPath = `${yvmPath}/${alias.STORAGE_FILE}`
         jest.spyOn(fs, 'writeFileSync')
         jest.spyOn(log, 'default')
 
@@ -251,7 +267,7 @@ describe('alias', () => {
             expect(
                 await alias.unsetAlias({
                     name: alias.STABLE,
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(false)
             expect(log.default).toHaveBeenCalledWith(
@@ -267,11 +283,11 @@ describe('alias', () => {
                     zero: '1.7.0',
                 }),
             })
-            await alias.getUserAliases(mockYVMPath)
+            await alias.getUserAliases(yvmPath)
             expect(
                 await alias.unsetAlias({
                     name: 'zero',
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(false)
             expect(fs.writeFileSync).not.toHaveBeenCalled()
@@ -290,12 +306,12 @@ describe('alias', () => {
                     zero: '1.7.0',
                 }),
             })
-            const mockAliases = await alias.getUserAliases(mockYVMPath)
+            const mockAliases = await alias.getUserAliases(yvmPath)
             expect(
                 await alias.unsetAlias({
                     name: 'zero',
                     force: true,
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             delete mockAliases.zero
@@ -313,12 +329,12 @@ describe('alias', () => {
                     zero: '1.7.0',
                 }),
             })
-            await alias.getUserAliases(mockYVMPath)
+            await alias.getUserAliases(yvmPath)
             expect(
                 await alias.unsetAlias({
                     name: 'zero',
                     recursive: true,
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -339,7 +355,7 @@ describe('alias', () => {
                 await alias.unsetAlias({
                     name: 'zero',
                     recursive: true,
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -356,12 +372,12 @@ describe('alias', () => {
                     zero: '1.7.0',
                 }),
             })
-            const mockAliases = await alias.getUserAliases(mockYVMPath)
+            const mockAliases = await alias.getUserAliases(yvmPath)
             expect(
                 await alias.unsetAlias({
                     name: 'two',
                     force: true,
-                    yvmPath: mockYVMPath,
+                    yvmPath,
                 }),
             ).toBe(true)
             delete mockAliases.two
@@ -373,8 +389,7 @@ describe('alias', () => {
     })
 
     describe('resolveAliases', () => {
-        const mockYVMPath = '/Users/tophat/.yvm'
-        const aliasesPath = `${mockYVMPath}/${alias.STORAGE_FILE}`
+        const aliasesPath = `${yvmPath}/${alias.STORAGE_FILE}`
         jest.spyOn(fs, 'writeFileSync')
         jest.spyOn(log, 'default')
 
@@ -404,7 +419,7 @@ describe('alias', () => {
             })
             const result = await alias.resolveMatchingAliases(
                 undefined,
-                mockYVMPath,
+                yvmPath,
             )
             mockFS.restore()
             expect(result).toMatchSnapshot()
@@ -420,7 +435,7 @@ describe('alias', () => {
             })
             const result = await alias.resolveMatchingAliases(
                 undefined,
-                mockYVMPath,
+                yvmPath,
             )
             mockFS.restore()
             expect(result).toMatchSnapshot()
@@ -435,9 +450,9 @@ describe('alias', () => {
                     zero: version,
                 }),
             })
-            expect(
-                await alias.resolveMatchingAliases('one', mockYVMPath),
-            ).toEqual([{ name: 'one', value: { value: 'zero', version } }])
+            expect(await alias.resolveMatchingAliases('one', yvmPath)).toEqual([
+                { name: 'one', value: { value: 'zero', version } },
+            ])
         })
 
         it('returns not available when unable to resolve reserved', async () => {

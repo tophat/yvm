@@ -10,10 +10,10 @@ import * as version from 'util/version'
 
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/cmd/alias/yvm',
-    getPathEntries: () => [],
+    getNonYvmYarnPathEntries: () => [],
 }))
 
-describe('alias', () => {
+describe('alias command', () => {
     const { resolveVersion } = version
     const currentYarnVersion = '1.15.2'
     const pinnedStableVersion = currentYarnVersion

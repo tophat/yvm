@@ -5,7 +5,7 @@ import chalk from 'chalk'
 import memoize from 'lodash.memoize'
 
 import log from 'util/log'
-import { getPathEntries, yvmPath as defaultYvmPath } from 'util/path'
+import { getNonYvmYarnPathEntries, yvmPath as defaultYvmPath } from 'util/path'
 import { getRequest, getVersionsFromTags } from 'util/utils'
 import { YARN_STABLE_VERSION_URL } from 'util/constants'
 
@@ -30,27 +30,17 @@ export const resolveStable = memoize(async () => {
     return (version && version.trim()) || UNRESOLVED
 })
 
-export const resolveSystem = memoize(
-    async ({ shell, yvmPath = defaultYvmPath } = {}) => {
-        for (const pathEntry of getPathEntries(shell)) {
-            if (
-                pathEntry === '' ||
-                pathEntry === '.' ||
-                pathEntry.includes(yvmPath)
-            ) {
-                continue
-            }
-            try {
-                const pathToExec = path.join(pathEntry, 'yarn')
-                const execCommand = `${pathToExec} --version 2> /dev/null`
-                return String(execSync(execCommand)).trim()
-            } catch (error) {
-                log.info(error.message)
-            }
+export const resolveSystem = memoize(async ({ shell } = {}) => {
+    for (const pathToExec of getNonYvmYarnPathEntries(shell)) {
+        try {
+            const execCommand = `${pathToExec} --version 2> /dev/null`
+            return String(execSync(execCommand)).trim()
+        } catch (error) {
+            log.info(error.message)
         }
-        return NOT_AVAILABLE
-    },
-)
+    }
+    return NOT_AVAILABLE
+})
 
 export const isReserved = name => RESERVED_NAMES.includes(name)
 
