@@ -77,7 +77,7 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: make install-local
-      - run: YVM_DIR=~/.yvm bash -e ./test/scripts/yvm.test.sh
+      - run: YVM_DIR=~/.yvm bash ./test/scripts/yvm.test.sh
   sanity_test_fish:
     <<: *docker_defaults
     working_directory: ~/repo
@@ -87,7 +87,7 @@ jobs:
           at: ~/repo
       - run: sudo apt-get update
       - run: sudo apt-get install software-properties-common
-      - run: sudo apt-add-repository ppa:fish-shell/release-3
+      - run: sudo apt-add-repository ppa:fish-shell/release-3 -y
       - run: sudo apt-get install fish
       - run: touch ~/.config/fish/config.fish
       - run: make install-local
