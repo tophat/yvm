@@ -41,7 +41,7 @@ testing "yvm set default version"
 source ~/.yvm/yvm.fish
 
 testing "yvm exec alias version"
-set test0_output=(yvm exec default --version)
+set test0_output (yvm exec default --version)
 if test "$test0_output" = "1.12.0"
     pass
 else
@@ -51,7 +51,7 @@ end
 testing "yvm install version"
 yvm install 1.11.0
 testing "yvm exec version command"
-set test1_output=(yvm exec 1.11.0 --version)
+set test1_output (yvm exec 1.11.0 --version)
 if test "$test1_output" = "1.11.0"
     pass
 else
@@ -59,7 +59,7 @@ else
 end
 
 testing "yarn shimmed config"
-set test_shim_config_output=(yarn --version)
+set test_shim_config_output (yarn --version)
 if test "$test_shim_config_output" = "1.13.0"
     pass
 else
@@ -69,7 +69,7 @@ end
 testing "yvm use"
 yvm install 1.13.0
 yvm use 1.13.0
-set test2_output=(yvm exec --version)
+set test2_output (yvm exec --version)
 if test "$test2_output" = "1.13.0"
     pass
 else
@@ -77,7 +77,7 @@ else
 end
 
 testing "yvm use set yarn"
-set test3_output=(yarn --version)
+set test3_output (yarn --version)
 if test "$test3_output" = "1.13.0"
     pass
 else
