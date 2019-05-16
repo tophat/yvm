@@ -39,6 +39,7 @@ function getConfig() {
             home,
             yvm: yvmDir,
             yvmSh: path.join(yvmDir, 'yvm.sh'),
+            yvmFish: path.join(yvmDir, 'yvm.fish'),
             yarnShim: path.join(yvmDir, 'shim', 'yarn'),
             zip: path.join(useLocal ? 'artifacts' : yvmDir, zipFile),
         },
@@ -266,6 +267,7 @@ async function run() {
     }
     ongoingTasks.push(
         ensureScriptExecutable(paths.yvmSh),
+        ensureScriptExecutable(paths.yvmFish),
         ensureScriptExecutable(paths.yarnShim),
     )
     try {

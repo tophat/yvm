@@ -7,7 +7,7 @@ set NC '\033[0m' # No Color
 function testing
     echo
     echo
-    echo -e "$GREEN>>> $argv[0] $NC"
+    echo -e "$GREEN>>> $argv $NC"
 end
 
 function pass
@@ -17,7 +17,7 @@ end
 function fail
     echo -e "$RED TEST FAILED! $NC"
     echo "Test output::"
-    echo $argv[0]
+    echo $argv
     exit 1
 end
 
