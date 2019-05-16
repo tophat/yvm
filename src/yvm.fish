@@ -58,4 +58,8 @@ function yvm
     end
 end
 
-yvm init-sh
+if count $argv > /dev/null
+    yvm $argv
+else
+    yvm init-sh
+end
