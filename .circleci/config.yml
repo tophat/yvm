@@ -85,10 +85,11 @@ jobs:
       - prep_env
       - attach_workspace:
           at: ~/repo
+      - run: sudo apt-get update
       - run: sudo apt-get install software-properties-common
       - run: sudo apt-add-repository ppa:fish-shell/release-3
-      - run: sudo apt-get update
       - run: sudo apt-get install fish
+      - run: touch ~/.config/fish/config.fish
       - run: make install-local
       - run: YVM_DIR=~/.yvm fish ./test/scripts/yvm.test.fish
   sanity_test_zsh:
@@ -99,6 +100,7 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: sudo apt-get install zsh
+      - run: touch ~/.zshrc
       - run: make install-local
       - run: YVM_DIR=~/.yvm zsh test/scripts/yvm.test.sh
   deploy:
