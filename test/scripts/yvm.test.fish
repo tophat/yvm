@@ -99,3 +99,11 @@ if test $status -eq 0
 else
     fail "yvm uninstall default failed"
 end
+
+testing "yvm current command"
+set test4_output (yvm current)
+if test "$test4_output" = "1.13.0"
+    pass
+else
+    fail "yvm current command failed: $test4_output"
+end
