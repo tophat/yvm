@@ -99,3 +99,11 @@ if [[ $? -eq 0 ]]; then
 else
     fail "yvm uninstall default failed"
 fi
+
+testing "yvm current command"
+test4_output=$(yvm current)
+if [[ $test4_output == "1.13.0" ]]; then
+    pass
+else
+    fail "yvm current command failed: $test4_output"
+fi
