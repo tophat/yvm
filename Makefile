@@ -114,15 +114,15 @@ test-snapshots:
 
 .PHONY: sanities-bash
 sanities-bash:
-	YVM_DIR=~/.yvm bash ./test/scripts/yvm.sanities.sh
+	YVM_DIR=~/.yvm bash ./test/scripts/yvm.test.sh
 
 .PHONY: sanities-fish
 sanities-fish:
-	YVM_DIR=~/.yvm fish ./test/scripts/yvm.sanities.fish
+	YVM_DIR=~/.yvm fish ./test/scripts/yvm.test.fish
 
 .PHONY: sanities-zsh
 sanities-zsh:
-	YVM_DIR=~/.yvm zsh ./test/scripts/yvm.sanities.sh
+	YVM_DIR=~/.yvm zsh ./test/scripts/yvm.test.sh
 
 # ----------------- Helpers ------------------
 
