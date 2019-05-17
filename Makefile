@@ -34,8 +34,9 @@ help:
 	echo $(JEST)
 	@echo "--------------------- Useful Commands for Development ----------------------"
 	@echo "make help                            - show tasks you can run"
-	@echo "make install-watch                   - runs install, and watches code for local development"
 	@echo "make build                           - builds a bundle with development settings"
+	@echo "make build-watch                     - builds and watches code for local development"
+	@echo "make install-watch                   - runs install, and build-watch"
 	@echo "----------------------- Other Commands  -------------------------"
 	@echo "make install                         - runs a set of scripts to ensure your environment is ready"
 	@echo "make lint                            - runs eslint"
@@ -154,3 +155,6 @@ clean_node_modules:
 .PHONY: clean_webpack_build
 clean_webpack_build:
 	rm -rf ${BUILD_DIR}
+
+.PHONY: clean
+clean: clean_node_modules clean_webpack_build
