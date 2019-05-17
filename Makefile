@@ -8,14 +8,12 @@ ifdef CI
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--pure-lockfile --ci
-    YARN=$(HOME)/.yvm/yvm.sh exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
     YARN_INSTALL_ARGS=
-    YARN=yarn
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
@@ -139,12 +137,12 @@ use-docker:
 
 .PHONY: node_modules
 node_modules:
-	$(YARN) install ${YARN_INSTALL_ARGS}
+	yarn install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
 .PHONY: node_modules_production
 node_modules_production:
-	$(YARN) install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
+	yarn install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
 	touch node_modules_production
 
 .PHONY: clean_node_modules
