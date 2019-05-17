@@ -7,6 +7,8 @@ const url = require('url')
 
 const log = (...args) => console.log(...args) // eslint-disable-line no-console
 
+const binFile = 'yvm.js'
+
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
@@ -16,6 +18,8 @@ function getConfig() {
             home,
             yvm: yvmDir,
             yvmSh: path.join(yvmDir, 'yvm.sh'),
+            yvmFish: path.join(yvmDir, 'yvm.fish'),
+            yarnShim: path.join(yvmDir, 'shim', 'yarn'),
         },
         releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
         releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
@@ -196,6 +200,8 @@ async function run() {
     const { version, paths, useLocal } = config
     ensureDir(paths.yvm)
     await cleanYvmDir(paths.yvm)
+
+    const yvmBinFile = path.join(paths.yvm, binFile)
     if (!useLocal) {
         const { releaseApiUrl, releasesApiUrl } = config
         if (version.tagName) {
@@ -211,8 +217,11 @@ async function run() {
         }
         await downloadFile({
             source: version.downloadUrl,
-            destination: path.join(paths.yvm, 'yvm.js'),
+            destination: yvmBinFile,
         })
+    } else {
+        const localBinFile = path.join('artifacts', 'webpack_build', binFile)
+        fs.copyFileSync(localBinFile, yvmBinFile)
     }
     if (version.tagName) {
         log(`Installing Version: ${version.tagName}`)
@@ -225,7 +234,7 @@ async function run() {
     try {
         const configureCommand = [
             'node',
-            path.join(paths.yvm, 'yvm.js'),
+            yvmBinFile,
             'configure-shell',
             '--home',
             paths.home,

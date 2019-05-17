@@ -16,7 +16,7 @@ import yarnShim from '!!raw-loader!shell/yarn_shim.js'
  */
 const unpackShellScript = (content, filename) => {
     if (fs.existsSync(filename)) return false
-    fs.writeFileSync(filename, content, {
+    fs.outputFileSync(filename, content, {
         encoding: 'utf8',
         mode: 0o755,
     })
