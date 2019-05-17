@@ -195,6 +195,7 @@ async function run() {
     const config = getConfig()
     const { version, paths, useLocal } = config
     ensureDir(paths.yvm)
+    await cleanYvmDir(paths.yvm)
     if (!useLocal) {
         const { releaseApiUrl, releasesApiUrl } = config
         if (version.tagName) {
@@ -216,7 +217,6 @@ async function run() {
     if (version.tagName) {
         log(`Installing Version: ${version.tagName}`)
     }
-    await cleanYvmDir(paths.yvm)
 
     const ongoingTasks = []
     if (version.tagName) {
