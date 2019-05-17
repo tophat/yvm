@@ -67,7 +67,7 @@ install-watch: node_modules
 # ---- Webpack ----
 
 .PHONY: build-production
-build-production: node_modules_production node_modules clean_webpack_build
+build-production: node_modules clean_webpack_build
 	$(WEBPACK) --config webpack/webpack.config.prod.js
 
 .PHONY: build
@@ -140,15 +140,9 @@ node_modules:
 	yarn install ${YARN_INSTALL_ARGS}
 	touch node_modules
 
-.PHONY: node_modules_production
-node_modules_production:
-	yarn install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
-	touch node_modules_production
-
 .PHONY: clean_node_modules
 clean_node_modules:
 	rm -rf node_modules
-	rm -rf node_modules_production
 
 .PHONY: clean_webpack_build
 clean_webpack_build:

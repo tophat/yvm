@@ -1,6 +1,5 @@
 artifacts
 node_modules
-node_modules_production
 *.log
 .yvm
 yvm
