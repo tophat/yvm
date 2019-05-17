@@ -5,12 +5,7 @@ const https = require('https')
 const mockProps = require('jest-mock-props')
 mockProps.extend(jest)
 
-const {
-    downloadFile,
-    getConfig,
-    preflightCheck,
-    run,
-} = require('../../scripts/install')
+const { downloadFile, getConfig, run } = require('../../scripts/install')
 
 describe('install yvm', () => {
     const log = jest.spyOn(console, 'log')
@@ -49,18 +44,6 @@ describe('install yvm', () => {
     })
 
     afterAll(jest.restoreAllMocks)
-
-    describe('preflightCheck', () => {
-        it('continues when no missing deps', () => {
-            preflightCheck('node')
-        })
-
-        it('throws error when missing deps', () => {
-            expect(() => preflightCheck('somemissingbin')).toThrow(
-                /The install cannot proceed due missing dependencies/,
-            )
-        })
-    })
 
     describe('downloadFile', () => {
         const mockResponseProps = {
@@ -129,7 +112,6 @@ describe('install yvm', () => {
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
-                'All dependencies satisfied',
                 'yvm successfully installed',
                 `source ${yvmHome}`,
             ]
@@ -221,7 +203,6 @@ describe('install yvm', () => {
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
-                'All dependencies satisfied',
                 'Querying github release API to determine latest version',
                 'yvm successfully installed',
                 `source ${yvmHome}`,
@@ -272,7 +253,6 @@ describe('install yvm', () => {
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
-                'All dependencies satisfied',
                 'Installing Version',
                 'yvm successfully installed',
                 `source ${yvmHome}`,
