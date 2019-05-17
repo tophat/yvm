@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import os from 'os'
 import path from 'path'
 
-import escapeRegExp from 'lodash/escaperegexp'
+import { escapeRegExp } from 'lodash'
 
 import log from '../util/log'
 import bashScript from '!!raw-loader!shell/yvm.sh'
