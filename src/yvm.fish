@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env fish
 set -q YVM_DIR; or set -gx YVM_DIR "$HOME/.yvm"
 
 function yvm
@@ -58,4 +58,8 @@ function yvm
     end
 end
 
-yvm init-sh
+if count $argv > /dev/null
+    yvm $argv
+else
+    yvm init-sh
+end
