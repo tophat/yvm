@@ -65,7 +65,6 @@ install-local:
 install-watch: node_modules
 	scripts/install-watch.sh
 
-
 # ---- Webpack ----
 
 .PHONY: build-production
@@ -76,6 +75,9 @@ build-production: node_modules_production node_modules clean_webpack_build
 build: node_modules clean_webpack_build
 	$(WEBPACK) --config webpack/webpack.config.dev.js
 
+.PHONY: build-watch
+build-watch: node_modules clean_webpack_build
+	$(WEBPACK) --config webpack/webpack.config.dev.js --watch
 
 # -------------- Linting --------------
 
