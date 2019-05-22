@@ -103,7 +103,11 @@ export const configureShim = async ({ yvmDir }) => {
     return unpackShellScript(yarnShim, shimFile)
 }
 
-export const configureShell = async ({ home, shim, shell = '' } = {}) => {
+export const configureShell = async ({
+    home,
+    shim = true,
+    shell = '',
+} = {}) => {
     try {
         const userHome = home || process.env.HOME || os.homedir()
         const yvmDir =
@@ -114,7 +118,6 @@ export const configureShell = async ({ home, shim, shell = '' } = {}) => {
             zsh: configureZsh,
         }
         const updatingShellConfigs = []
-        if (shim) updatingShellConfigs.push(configureShim({ yvmDir }))
         for (const supportedShell of Object.keys(configHandlers)) {
             if (supportedShell.includes(shell)) {
                 updatingShellConfigs.push(
@@ -122,10 +125,15 @@ export const configureShell = async ({ home, shim, shell = '' } = {}) => {
                 )
             }
         }
+        const shimSuccessful = shim
+            ? configureShim({ yvmDir })
+            : Promise.resolve(true)
         const result = await Promise.all(updatingShellConfigs)
         const allSuccessful = result.every(a => a)
         const anySuccessful = result.some(a => a)
-        const isSuccessful = allSuccessful || (anySuccessful && !shell)
+        const isSuccessful =
+            (allSuccessful || (anySuccessful && !shell)) &&
+            (await shimSuccessful)
         if (!isSuccessful) {
             return 1
         }
