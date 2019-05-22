@@ -23,7 +23,6 @@ describe('install yvm', () => {
     const envUseLocal = jest.spyOnProp(process.env, 'USE_LOCAL')
     const envInstallVersion = jest.spyOnProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
-    const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
     const expectedConfigObject = ({
         homePath,
         paths = {},
@@ -34,7 +33,6 @@ describe('install yvm', () => {
             ...paths,
             home: homePath,
             yvm: `${homePath}/.yvm`,
-            yvmSh: `${homePath}/.yvm/yvm.sh`,
         },
         useLocal,
         version: { tagName },
@@ -208,9 +206,6 @@ describe('install yvm', () => {
                 expectedConfigObject({
                     homePath: mockHome,
                     useLocal: false,
-                    paths: {
-                        yvmFish: `${mockHome}/.yvm/yvm.fish`,
-                    },
                 }),
             )
             await run()
@@ -225,18 +220,22 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
-            installFiles.forEach(file => {
+            const installFiles = [
+                ['yvm.sh', true],
+                ['yvm.js', false],
+                ['yvm.fish', true],
+                ['shim/yarn', true],
+            ]
+            installFiles.forEach(([file, isExecutable]) => {
                 const filePath = `${yvmHome}/${file}`
                 expect(filePath).toBeExistingFile()
+                // script is executable
+                if (isExecutable) fs.accessSync(filePath, fs.constants.X_OK)
             })
 
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
             expect(version).toMatch(/v(\d+.)+\d+/)
-            // script is executable
-            fs.accessSync(config.paths.yvmSh, fs.constants.X_OK)
-            fs.accessSync(config.paths.yvmFish, fs.constants.X_OK)
         }
 
         it('indicates successful completion', installFn)
@@ -277,17 +276,21 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
-            installFiles.forEach(file => {
+            const installFiles = [
+                ['yvm.sh', true],
+                ['yvm.js', false],
+                ['yvm.fish', false],
+            ]
+            installFiles.forEach(([file, isExecutable]) => {
                 const filePath = `${yvmHome}/${file}`
                 expect(filePath).toBeExistingFile()
+                // script is executable
+                if (isExecutable) fs.accessSync(filePath, fs.constants.X_OK)
             })
 
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
             expect(version).toMatch(installVersion)
-            // script is executable
-            fs.accessSync(config.paths.yvmSh, fs.constants.X_OK)
         }
 
         it.each(['v2.3.0', '2.4'].map(a => [a]))(
@@ -320,6 +323,7 @@ describe('install yvm', () => {
             // should not have created version tag
             expect(`${yvmHome}/.version`).not.toBeExistingFile()
             // should not have extracted files
+            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
                 expect(filePath).not.toBeExistingFile()

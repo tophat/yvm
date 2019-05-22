@@ -19,9 +19,6 @@ function getConfig() {
         paths: {
             home,
             yvm: yvmDir,
-            yvmSh: path.join(yvmDir, 'yvm.sh'), // obsolete
-            yvmFish: path.join(yvmDir, 'yvm.fish'), // obsolete
-            yarnShim: path.join(yvmDir, 'shim', 'yarn'), // obsolete
         },
         releaseApiUrl,
         releasesApiUrl: path.join(releaseApiUrl, 'all'),
@@ -265,8 +262,9 @@ async function run() {
     }
     await Promise.all(ongoingTasks)
 
-    log(`yvm successfully installed in ${paths.yvm} as ${paths.yvmSh}
-Open another terminal window to start using, or type "source ${paths.yvmSh}"`)
+    const sourceCommand = `source ${paths.yvm}/yvm.{sh,fish}`
+    log(`yvm successfully installed in ${paths.yvm}
+Open another terminal window to start using, or "${sourceCommand}"`)
 }
 
 if (!module.parent) {
