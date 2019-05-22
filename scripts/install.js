@@ -13,16 +13,18 @@ function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
     const yvmDir = process.env.YVM_INSTALL_DIR || path.join(home, '.yvm')
+    const yvmGateway = 'https://d236jo9e8rrdox.cloudfront.net'
+    const releaseApiUrl = path.join(yvmGateway, 'yvm-releases')
     return {
         paths: {
             home,
             yvm: yvmDir,
-            yvmSh: path.join(yvmDir, 'yvm.sh'),
-            yvmFish: path.join(yvmDir, 'yvm.fish'),
-            yarnShim: path.join(yvmDir, 'shim', 'yarn'),
+            yvmSh: path.join(yvmDir, 'yvm.sh'), // obsolete
+            yvmFish: path.join(yvmDir, 'yvm.fish'), // obsolete
+            yarnShim: path.join(yvmDir, 'shim', 'yarn'), // obsolete
         },
-        releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
-        releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
+        releaseApiUrl,
+        releasesApiUrl: path.join(releaseApiUrl, 'all'),
         useLocal,
         version: {
             tagName: process.env.INSTALL_VERSION || null,
@@ -214,6 +216,24 @@ async function run() {
         } else {
             log('Querying github release API to determine latest version')
             Object.assign(version, await getLatestYvmVersion(releaseApiUrl))
+        }
+        if (version.downloadUrl.endsWith('yvm.zip')) {
+            log(`Compatibility install: ${version.downloadUrl}`)
+            const yvmCompatInstallScript = 'yvm-install.sh'
+            await downloadFile({
+                source: `https://raw.githubusercontent.com/tophat/yvm/${
+                    version.tagName
+                }/scripts/install.sh`,
+                destination: yvmCompatInstallScript,
+            })
+            return execSync(
+                `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${
+                    version.tagName
+                }' bash ${yvmCompatInstallScript}`,
+            )
+                .toString()
+                .split('\n')
+                .forEach(l => log(l))
         }
         await downloadFile({
             source: version.downloadUrl,
