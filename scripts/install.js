@@ -223,7 +223,7 @@ async function run() {
                 }/scripts/install.sh`,
                 destination: yvmCompatInstallScript,
             })
-            return execSync(
+            execSync(
                 `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${
                     version.tagName
                 }' bash ${yvmCompatInstallScript}`,
@@ -231,6 +231,7 @@ async function run() {
                 .toString()
                 .split('\n')
                 .forEach(l => log(l))
+            return fs.unlinkSync(yvmCompatInstallScript)
         }
         await downloadFile({
             source: version.downloadUrl,

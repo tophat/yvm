@@ -4,7 +4,7 @@ import path from 'path'
 
 import { escapeRegExp } from 'lodash'
 
-import log from '../util/log'
+import log from 'util/log'
 import bashScript from '!!raw-loader!shell/yvm.sh'
 import fishScript from '!!raw-loader!shell/yvm.fish'
 import yarnShim from '!!raw-loader!shell/yarn_shim.js'
@@ -15,11 +15,12 @@ import yarnShim from '!!raw-loader!shell/yarn_shim.js'
  * target file already exists.
  */
 const unpackShellScript = (content, filename) => {
-    if (fs.existsSync(filename)) return false
-    fs.outputFileSync(filename, content, {
-        encoding: 'utf8',
-        mode: 0o755,
-    })
+    if (!fs.existsSync(filename)) {
+        fs.outputFileSync(filename, content, {
+            encoding: 'utf8',
+            mode: 0o755,
+        })
+    }
     return true
 }
 

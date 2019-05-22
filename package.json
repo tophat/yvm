@@ -16,6 +16,9 @@
   },
   "jest": {
     "moduleDirectories": ["./src", "./node_modules"],
+    "moduleNameMapper": {
+      "raw-loader!": "<rootDir>/test/rawLoaderStub.js"
+    },
     "testPathIgnorePatterns": [
       "./artifacts/",
       "./node_modules/"

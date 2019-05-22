@@ -7,6 +7,7 @@ mockProps.extend(jest)
 
 const { downloadFile, getConfig, run } = require('../../scripts/install')
 
+jest.setTimeout(10000)
 const n = p => (p ? 'not ' : '')
 expect.extend({
     toBeExistingFile: received => {
