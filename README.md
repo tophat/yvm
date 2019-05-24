@@ -48,31 +48,26 @@ brew install tophat/bar/yvm
 Execute the following in your terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | node
+curl -s https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | node
 ```
 
 Or to install a specific version:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tophat/yvm/v2.4.3/scripts/install.sh | INSTALL_VERSION="v2.4.3" bash
+curl -s https://raw.githubusercontent.com/tophat/yvm/v2.4.3/scripts/install.sh | INSTALL_VERSION="v2.4.3" bash
 ```
 
 ### Manual
 
-Navigate to [yvm releases](https://github.com/tophat/yvm/releases) and download the `yvm.zip` file for the latest release to your home directory.
+Navigate to [yvm releases](https://github.com/tophat/yvm/releases) and download the `yvm.js` file for the latest release into your desired yvm install directory.
 
-Next, unzip that file to the .yvm dir in your home directory and make extracted yvm.sh executable
-
-```bash
-unzip yvm.zip -d $HOME/.yvm
-chmod a+x $HOME/.yvm/yvm.sh
-```
-
-Finally, run the following command to configure your shell rc file
+Typically `.yvm` your home directory, then run the following command to configure your shell.
 
 ```bash
-./home/joe_user/.yvm/yvm.sh configure-shell
+node ./home/joe_user/.yvm/yvm.js configure-shell
 ```
+
+You will need to reload the shell to get yvm, or source the generated `yvm.{sh,fish}` scripts.
 
 ### Upgrade
 
