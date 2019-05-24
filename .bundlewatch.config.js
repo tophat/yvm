@@ -1,7 +1,7 @@
 module.exports = {
     "files": [
         {
-            "path": "artifacts/yvm.js",
+            "path": "artifacts/webpack_build/yvm.js",
             "maxSize": "2mb"
         },
         {
