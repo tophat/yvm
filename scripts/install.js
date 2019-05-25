@@ -202,6 +202,33 @@ async function saveVersion(version, yvmPath) {
     fs.writeFileSync(filePath, JSON.stringify({ version }))
 }
 
+async function compatInstall({ paths, version }) {
+    log(`Compatibility install: ${version.downloadUrl}`)
+    const yvmCompatInstallScript = 'yvm-install-script'
+    const yvmCompatDownloadPath = `https://raw.githubusercontent.com/tophat/yvm/${
+        version.tagName
+    }/scripts/install.`
+    for (const [source, envBin] of [
+        [`${yvmCompatDownloadPath}js`, 'node'],
+        [`${yvmCompatDownloadPath}sh`, 'bash'],
+    ]) {
+        try {
+            await downloadFile({ source, destination: yvmCompatInstallScript })
+            execSync(
+                `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${
+                    version.tagName
+                }' ${envBin} ${yvmCompatInstallScript}`,
+            )
+                .toString()
+                .split('\n')
+                .forEach(l => log(l))
+            return fs.unlinkSync(yvmCompatInstallScript)
+        } catch (e) {
+            continue
+        }
+    }
+}
+
 async function run() {
     const config = getConfig()
     const { version, paths, useLocal } = config
@@ -222,24 +249,8 @@ async function run() {
             log('Querying github release API to determine latest version')
             Object.assign(version, await getLatestYvmVersion(releaseApiUrl))
         }
-        if (version.downloadUrl.endsWith('yvm.zip')) {
-            log(`Compatibility install: ${version.downloadUrl}`)
-            const yvmCompatInstallScript = 'yvm-install.sh'
-            await downloadFile({
-                source: `https://raw.githubusercontent.com/tophat/yvm/${
-                    version.tagName
-                }/scripts/install.sh`,
-                destination: yvmCompatInstallScript,
-            })
-            execSync(
-                `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${
-                    version.tagName
-                }' bash ${yvmCompatInstallScript}`,
-            )
-                .toString()
-                .split('\n')
-                .forEach(l => log(l))
-            return fs.unlinkSync(yvmCompatInstallScript)
+        if (version.downloadUrl.endsWith(zipFile)) {
+            return compatInstall({ paths, version })
         }
         await downloadFile({
             source: version.downloadUrl,
