@@ -5,7 +5,47 @@ const https = require('https')
 const mockProps = require('jest-mock-props')
 mockProps.extend(jest)
 
-const { downloadFile, getConfig, run } = require('../../scripts/install')
+const {
+    downloadFile,
+    getConfig,
+    getTagAndUrlFromRelease,
+    run,
+} = require('../../scripts/install')
+
+const mockReleases = [
+    {
+        tag_name: 'v3.4.0',
+        name: 'v3.4.0',
+        assets: [
+            {
+                name: 'yvm.zip',
+                browser_download_url:
+                    'https://github.com/tophat/yvm/releases/download/v3.4.0/yvm.zip',
+            },
+            {
+                name: 'yvm.js',
+                browser_download_url:
+                    'https://github.com/tophat/yvm/releases/download/v3.4.0/yvm.js',
+            },
+        ],
+    },
+    {
+        tag_name: 'v3.3.0',
+        name: 'v3.3.0',
+        assets: [
+            {
+                name: 'yvm.zip',
+                browser_download_url:
+                    'https://github.com/tophat/yvm/releases/download/v3.3.0/yvm.zip',
+            },
+        ],
+    },
+    {
+        tag_name: 'bad-release',
+        name: 'bad-release',
+        assets: [],
+    },
+]
 
 jest.setTimeout(10000)
 const n = p => (p ? 'not ' : '')
@@ -100,6 +140,15 @@ describe('install yvm', () => {
             await downloadFile({ source: 'https://400.example.com' })
             expect(https.get).toHaveBeenCalledTimes(2)
         })
+    })
+
+    describe('getTagAndUrlFromRelease', () => {
+        it.each(mockReleases.map(Array))(
+            'gets correct release asset',
+            releaseData => {
+                expect(getTagAndUrlFromRelease(releaseData)).toMatchSnapshot()
+            },
+        )
     })
 
     describe('local version', () => {

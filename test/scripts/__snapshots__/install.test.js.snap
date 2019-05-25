@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`install yvm getTagAndUrlFromRelease gets correct release asset 1`] = `
+Object {
+  "downloadUrl": "https://github.com/tophat/yvm/releases/download/v3.4.0/yvm.js",
+  "tagName": "v3.4.0",
+}
+`;
+
+exports[`install yvm getTagAndUrlFromRelease gets correct release asset 2`] = `
+Object {
+  "downloadUrl": "https://github.com/tophat/yvm/releases/download/v3.3.0/yvm.zip",
+  "tagName": "v3.3.0",
+}
+`;
+
+exports[`install yvm getTagAndUrlFromRelease gets correct release asset 3`] = `undefined`;

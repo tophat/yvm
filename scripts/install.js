@@ -7,7 +7,9 @@ const url = require('url')
 
 const log = (...args) => console.log(...args) // eslint-disable-line no-console
 
+const zipFile = 'yvm.zip'
 const binFile = 'yvm.js'
+const releaseAssetsByPreference = [binFile, zipFile]
 
 function getConfig() {
     const home = process.env.HOME || os.homedir()
@@ -49,11 +51,17 @@ function ensureDir(dirPath) {
 }
 
 function getTagAndUrlFromRelease(data) {
-    const {
-        tag_name: tagName,
-        assets: [{ browser_download_url: downloadUrl }],
-    } = data
-    return { tagName, downloadUrl }
+    const { tag_name: tagName, assets } = data
+    const assetsByName = assets.reduce(
+        (acc, ass) => Object.assign(acc, { [ass.name]: ass }),
+        {},
+    )
+    for (const name of releaseAssetsByPreference) {
+        if (name in assetsByName) {
+            const { browser_download_url: downloadUrl } = assetsByName[name]
+            return { tagName, downloadUrl }
+        }
+    }
 }
 
 async function getYvmVersion(versionTag, releasesApiUrl) {
@@ -278,5 +286,6 @@ if (!module.parent) {
 module.exports = {
     downloadFile,
     getConfig,
+    getTagAndUrlFromRelease,
     run,
 }
