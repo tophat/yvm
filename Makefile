@@ -51,19 +51,6 @@ help:
 	@echo "make use-docker                      - loads this project inside a docker container for the CI environment"
 
 
-# ---- YVM Command Stuff ----
-
-.PHONY: install
-install: build-production install-local
-
-.PHONY: install-local
-install-local:
-	@USE_LOCAL=true node scripts/install.js
-
-.PHONY: install-watch
-install-watch: node_modules
-	scripts/install-watch.sh
-
 # ---- Webpack ----
 
 .PHONY: build-production
@@ -78,8 +65,20 @@ build: node_modules clean_webpack_build
 build-watch: node_modules clean_webpack_build
 	$(WEBPACK) --config webpack/webpack.config.dev.js --watch
 
-# -------------- Linting --------------
+# ---- YVM Command Stuff ----
 
+.PHONY: install-local
+install-local:
+	@USE_LOCAL=true node scripts/install.js
+
+.PHONY: install
+install: build-production install-local
+
+.PHONY: install-watch
+install-watch: node_modules clean_webpack_build
+	$(WEBPACK) --config webpack/webpack.config.dev.js --watch --env.INSTALL=true
+
+# -------------- Linting --------------
 
 .PHONY: lint
 lint:
