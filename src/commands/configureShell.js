@@ -2,9 +2,27 @@ import fs from 'fs-extra'
 import os from 'os'
 import path from 'path'
 
-import escapeRegExp from 'lodash.escaperegexp'
+import { escapeRegExp } from 'lodash'
 
 import log from 'util/log'
+import bashScript from '!!raw-loader!shell/yvm.sh'
+import fishScript from '!!raw-loader!shell/yvm.fish'
+import yarnShim from '!!raw-loader!shell/yarn_shim.js'
+
+/**
+ * Helper utility for unpacking an executable script
+ * from yvm.js into a target file. Is a no-op if the
+ * target file already exists.
+ */
+const unpackShellScript = (content, filename) => {
+    if (!fs.existsSync(filename)) {
+        fs.outputFileSync(filename, content, {
+            encoding: 'utf8',
+            mode: 0o755,
+        })
+    }
+    return true
+}
 
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
@@ -32,10 +50,11 @@ const yvmDirVarName = 'YVM_DIR'
 export const configureBash = async ({ home, yvmDir }) => {
     const bashRcFile = path.join(home, '.bashrc')
     const bashProFile = path.join(home, '.bash_profile')
-    const shPath = path.join(yvmDirVarName, 'yvm.sh')
+    const shFile = 'yvm.sh'
+    const shPathVariable = path.join(yvmDirVarName, shFile)
     const bashConfig = [
         `export ${yvmDirVarName}=${yvmDir}`,
-        `[ -r $${shPath} ] && . $${shPath}`,
+        `[ -r $${shPathVariable} ] && . $${shPathVariable}`,
     ]
     let configured = false
     if (fs.existsSync(bashRcFile)) {
@@ -45,37 +64,50 @@ export const configureBash = async ({ home, yvmDir }) => {
     }
     if (!configured) {
         log('Unable to configure BASH at', bashRcFile, 'or', bashProFile)
+        return false
     }
-    return configured
+    return unpackShellScript(bashScript, path.join(yvmDir, shFile))
 }
 
 export const configureFish = async ({ home, yvmDir }) => {
     const configFile = path.join(home, '.config', 'fish', 'config.fish')
-    const fishPath = path.join(yvmDirVarName, 'yvm.fish')
+    const fishFile = 'yvm.fish'
     const configured = await ensureConfig(configFile, [
         `set -x ${yvmDirVarName} ${yvmDir}`,
-        `. $${fishPath}`,
+        `. $${path.join(yvmDirVarName, fishFile)}`,
     ])
     if (!configured) {
         log('Unable to configure FISH at', configFile)
+        return false
     }
-    return configured
+    return unpackShellScript(fishScript, path.join(yvmDir, fishFile))
 }
 
 export const configureZsh = async ({ home, yvmDir }) => {
-    const shPath = path.join(yvmDirVarName, 'yvm.sh')
     const configFile = path.join(home, '.zshrc')
+    const zshFile = 'yvm.sh'
+    const shPathVariable = path.join(yvmDirVarName, zshFile)
     const configured = await ensureConfig(configFile, [
         `export ${yvmDirVarName}=${yvmDir}`,
-        `[ -r $${shPath} ] && . $${shPath}`,
+        `[ -r $${shPathVariable} ] && . $${shPathVariable}`,
     ])
     if (!configured) {
         log('Unable to configure ZSH at', configFile)
+        return false
     }
-    return configured
+    return unpackShellScript(bashScript, path.join(yvmDir, zshFile))
 }
 
-export const configureShell = async ({ home, shell = '' } = {}) => {
+export const configureShim = async ({ yvmDir }) => {
+    const shimFile = path.join(yvmDir, 'shim', 'yarn')
+    return unpackShellScript(yarnShim, shimFile)
+}
+
+export const configureShell = async ({
+    home,
+    shim = true,
+    shell = '',
+} = {}) => {
     try {
         const userHome = home || process.env.HOME || os.homedir()
         const yvmDir =
@@ -93,10 +125,15 @@ export const configureShell = async ({ home, shell = '' } = {}) => {
                 )
             }
         }
+        const shimSuccessful = shim
+            ? configureShim({ yvmDir })
+            : Promise.resolve(true)
         const result = await Promise.all(updatingShellConfigs)
         const allSuccessful = result.every(a => a)
         const anySuccessful = result.some(a => a)
-        const isSuccessful = allSuccessful || (anySuccessful && !shell)
+        const isSuccessful =
+            (allSuccessful || (anySuccessful && !shell)) &&
+            (await shimSuccessful)
         if (!isSuccessful) {
             return 1
         }

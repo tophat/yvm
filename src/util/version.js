@@ -2,7 +2,7 @@ import fs from 'fs'
 import { execSync } from 'child_process'
 import semver from 'semver'
 import cosmiconfig from 'cosmiconfig'
-import memoize from 'lodash.memoize'
+import { memoize } from 'lodash'
 
 import log from 'util/log'
 import { yvmPath as defaultYvmPath } from 'util/path'

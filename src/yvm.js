@@ -137,12 +137,13 @@ argParser
     .command('configure-shell', '', { noHelp: true })
     .option('--home [home]', 'Alternate path to home directory')
     .option('--shell [shell]', 'Shell to configure, defaults to all')
+    .option('--no-shim', 'Skips yarn shim')
     .description(
         'Internal command: Configures any shell config files found for loading yvm on startup',
     )
-    .action(async ({ home, shell }) => {
+    .action(async ({ home, shell, shim }) => {
         const { configureShell } = await import('commands/configureShell')
-        process.exit(await configureShell({ home, shell }))
+        process.exit(await configureShell({ home, shell, shim }))
     })
 
 argParser

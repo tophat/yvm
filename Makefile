@@ -8,14 +8,12 @@ ifdef CI
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--pure-lockfile --ci
-    YARN=$(HOME)/.yvm/yvm.sh exec
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
     JEST_ARGS=
     WEBPACK_ARGS=--progress
     YARN_INSTALL_ARGS=
-    YARN=yarn
 endif
 
 ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
@@ -69,7 +67,7 @@ install-watch: node_modules
 # ---- Webpack ----
 
 .PHONY: build-production
-build-production: node_modules_production node_modules clean_webpack_build
+build-production: node_modules clean_webpack_build
 	$(WEBPACK) --config webpack/webpack.config.prod.js
 
 .PHONY: build
@@ -139,18 +137,12 @@ use-docker:
 
 .PHONY: node_modules
 node_modules:
-	$(YARN) install ${YARN_INSTALL_ARGS}
+	yarn install ${YARN_INSTALL_ARGS}
 	touch node_modules
-
-.PHONY: node_modules_production
-node_modules_production:
-	$(YARN) install ${YARN_INSTALL_ARGS} --modules-folder node_modules_production --production
-	touch node_modules_production
 
 .PHONY: clean_node_modules
 clean_node_modules:
 	rm -rf node_modules
-	rm -rf node_modules_production
 
 .PHONY: clean_webpack_build
 clean_webpack_build:
@@ -158,3 +150,4 @@ clean_webpack_build:
 
 .PHONY: clean
 clean: clean_node_modules clean_webpack_build
+	rm -rf ${ARTIFACT_DIR}

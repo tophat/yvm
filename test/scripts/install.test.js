@@ -8,9 +8,54 @@ mockProps.extend(jest)
 const {
     downloadFile,
     getConfig,
-    preflightCheck,
+    getTagAndUrlFromRelease,
     run,
 } = require('../../scripts/install')
+
+const mockReleases = [
+    {
+        tag_name: 'v3.4.0',
+        name: 'v3.4.0',
+        assets: [
+            {
+                name: 'yvm.zip',
+                browser_download_url:
+                    'https://github.com/tophat/yvm/releases/download/v3.4.0/yvm.zip',
+            },
+            {
+                name: 'yvm.js',
+                browser_download_url:
+                    'https://github.com/tophat/yvm/releases/download/v3.4.0/yvm.js',
+            },
+        ],
+    },
+    {
+        tag_name: 'v3.3.0',
+        name: 'v3.3.0',
+        assets: [
+            {
+                name: 'yvm.zip',
+                browser_download_url:
+                    'https://github.com/tophat/yvm/releases/download/v3.3.0/yvm.zip',
+            },
+        ],
+    },
+    {
+        tag_name: 'bad-release',
+        name: 'bad-release',
+        assets: [],
+    },
+]
+
+jest.setTimeout(10000)
+const n = p => (p ? 'not ' : '')
+expect.extend({
+    toBeExistingFile: received => {
+        const pass = fs.pathExistsSync(received)
+        const message = () => `expected file '${received}' to ${n(pass)}exist`
+        return { pass, message }
+    },
+})
 
 describe('install yvm', () => {
     const log = jest.spyOn(console, 'log')
@@ -19,13 +64,16 @@ describe('install yvm', () => {
     const envUseLocal = jest.spyOnProp(process.env, 'USE_LOCAL')
     const envInstallVersion = jest.spyOnProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
-    const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
-    const expectedConfigObject = ({ homePath, tagName = null, useLocal }) => ({
+    const expectedConfigObject = ({
+        homePath,
+        paths = {},
+        tagName = null,
+        useLocal,
+    }) => ({
         paths: {
+            ...paths,
             home: homePath,
             yvm: `${homePath}/.yvm`,
-            yvmSh: `${homePath}/.yvm/yvm.sh`,
-            zip: `${useLocal ? 'artifacts' : `${homePath}/.yvm`}/yvm.zip`,
         },
         useLocal,
         version: { tagName },
@@ -44,18 +92,6 @@ describe('install yvm', () => {
     })
 
     afterAll(jest.restoreAllMocks)
-
-    describe('preflightCheck', () => {
-        it('continues when no missing deps', () => {
-            preflightCheck('node')
-        })
-
-        it('throws error when missing deps', () => {
-            expect(() => preflightCheck('somemissingbin')).toThrow(
-                /The install cannot proceed due missing dependencies/,
-            )
-        })
-    })
 
     describe('downloadFile', () => {
         const mockResponseProps = {
@@ -106,6 +142,15 @@ describe('install yvm', () => {
         })
     })
 
+    describe('getTagAndUrlFromRelease', () => {
+        it.each(mockReleases.map(Array))(
+            'gets correct release asset',
+            releaseData => {
+                expect(getTagAndUrlFromRelease(releaseData)).toMatchSnapshot()
+            },
+        )
+    })
+
     describe('local version', () => {
         const mockHome = mockHomeValue
         beforeEach(() => {
@@ -124,7 +169,6 @@ describe('install yvm', () => {
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
-                'All dependencies satisfied',
                 'yvm successfully installed',
                 `source ${yvmHome}`,
             ]
@@ -133,41 +177,38 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            installFiles.forEach(file => {
-                const filePath = `${yvmHome}/${file}`
-                expect(fs.pathExistsSync(filePath)).toBe(true)
-            })
-
-            // should not delete zip file
-            expect(fs.pathExistsSync(config.paths.zip)).toBe(true)
             // does not create version tag
-            expect(fs.pathExistsSync(`${yvmHome}/.version`)).toBe(false)
-            // script is executable
-            fs.accessSync(`${yvmHome}/yvm.sh`, fs.constants.X_OK)
+            expect(`${yvmHome}/.version`).not.toBeExistingFile()
         })
 
         it('creates home install directory if does not exist', async () => {
             const testHomePath = 'mock-create-home'
-            expect(fs.pathExistsSync(testHomePath)).toBe(false)
+            fs.removeSync(testHomePath)
+            expect(testHomePath).not.toBeExistingFile()
             envHomeMock.mockValue(testHomePath)
             await run()
-            expect(fs.pathExistsSync(`${testHomePath}/.yvm`)).toBe(true)
+            expect(`${testHomePath}/.yvm`).toBeExistingFile()
             fs.removeSync(testHomePath)
         })
 
         it('creates specified install directory if does not exist', async () => {
             const mockInstallDir = 'mock-install-dir/.myvm'
+            fs.removeSync('mock-install-dir')
             const envYvmInstallDir = jest
                 .spyOnProp(process.env, 'YVM_INSTALL_DIR')
                 .mockValue(mockInstallDir)
-            expect(fs.pathExistsSync(mockInstallDir)).toBe(false)
+            expect(mockInstallDir).not.toBeExistingFile()
             await run()
             envYvmInstallDir.mockRestore()
-            expect(fs.pathExistsSync(mockInstallDir)).toBe(true)
+            expect(mockInstallDir).toBeExistingFile()
             fs.removeSync('mock-install-dir')
         })
 
-        const rcFiles = ['.bashrc', '.zshrc', '.config/fish/config.fish']
+        const rcFiles = [
+            ['.bashrc', 'yvm.sh'],
+            ['.zshrc', 'yvm.sh'],
+            ['.config/fish/config.fish', 'yvm.fish'],
+        ]
         const shConfigs = {
             [`${mockHomeValue}/.bashrc`]: [
                 `export YVM_DIR=${mockHomeValue}/.yvm`,
@@ -182,14 +223,18 @@ describe('install yvm', () => {
                 '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
             ],
         }
-        it.each(rcFiles.map(file => [file]))('configures %s', async rcFile => {
+        it.each(rcFiles)('configures %s', async (rcFile, yvmScript) => {
             const filePath = `${mockHomeValue}/${rcFile}`
             fs.outputFileSync(filePath, 'dummy')
             await run()
             const content = fs.readFileSync(filePath, 'utf8')
             shConfigs[filePath].forEach(string => {
-                expect(content.includes(string)).toBe(true)
+                expect(content).toContain(string)
             })
+            const yvmShellScript = `${mockHomeValue}/.yvm/${yvmScript}`
+            expect(yvmShellScript).toBeExistingFile()
+            // script is executable
+            fs.accessSync(yvmShellScript, fs.constants.X_OK)
         })
     })
 
@@ -197,6 +242,8 @@ describe('install yvm', () => {
         const mockHome = 'other-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
+            fs.ensureFile(`${mockHome}/.bashrc`)
+            fs.ensureFile(`${mockHome}/.config/fish/config.fish`)
         })
 
         afterAll(() => {
@@ -214,7 +261,6 @@ describe('install yvm', () => {
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
-                'All dependencies satisfied',
                 'Querying github release API to determine latest version',
                 'yvm successfully installed',
                 `source ${yvmHome}`,
@@ -224,19 +270,22 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
-            installFiles.forEach(file => {
+            const installFiles = [
+                ['yvm.sh', true],
+                ['yvm.js', false],
+                ['yvm.fish', true],
+                ['shim/yarn', true],
+            ]
+            installFiles.forEach(([file, isExecutable]) => {
                 const filePath = `${yvmHome}/${file}`
-                expect(fs.pathExistsSync(filePath)).toBe(true)
+                expect(filePath).toBeExistingFile()
+                // script is executable
+                if (isExecutable) fs.accessSync(filePath, fs.constants.X_OK)
             })
 
-            // should delete zip file
-            expect(fs.pathExistsSync(config.paths.zip)).toBe(false)
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
             expect(version).toMatch(/v(\d+.)+\d+/)
-            // script is executable
-            fs.accessSync(`${yvmHome}/yvm.sh`, fs.constants.X_OK)
         }
 
         it('indicates successful completion', installFn)
@@ -247,6 +296,8 @@ describe('install yvm', () => {
         const mockHome = 'another-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
+            fs.ensureFile(`${mockHome}/.bashrc`)
+            fs.ensureFile(`${mockHome}/.config/fish/config.fish`)
         })
 
         afterEach(() => {
@@ -266,7 +317,6 @@ describe('install yvm', () => {
             await run()
             const yvmHome = config.paths.yvm
             const expectedOutput = [
-                'All dependencies satisfied',
                 'Installing Version',
                 'yvm successfully installed',
                 `source ${yvmHome}`,
@@ -276,19 +326,21 @@ describe('install yvm', () => {
                     expect.stringContaining(output),
                 ),
             )
-            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish']
-            installFiles.forEach(file => {
+            const installFiles = [
+                ['yvm.sh', true],
+                ['yvm.js', false],
+                ['yvm.fish', false],
+            ]
+            installFiles.forEach(([file, isExecutable]) => {
                 const filePath = `${yvmHome}/${file}`
-                expect(fs.pathExistsSync(filePath)).toBe(true)
+                expect(filePath).toBeExistingFile()
+                // script is executable
+                if (isExecutable) fs.accessSync(filePath, fs.constants.X_OK)
             })
 
-            // should delete zip file
-            expect(fs.pathExistsSync(config.paths.zip)).toBe(false)
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
             expect(version).toMatch(installVersion)
-            // script is executable
-            fs.accessSync(`${yvmHome}/yvm.sh`, fs.constants.X_OK)
         }
 
         it.each(['v2.3.0', '2.4'].map(a => [a]))(
@@ -318,14 +370,13 @@ describe('install yvm', () => {
                 expect(e.message).toMatch(/No release version/)
             }
             const yvmHome = config.paths.yvm
-            // should not have downloaded zip file
-            expect(fs.pathExistsSync(config.paths.zip)).toBe(false)
             // should not have created version tag
-            expect(fs.pathExistsSync(`${yvmHome}/.version`)).toBe(false)
+            expect(`${yvmHome}/.version`).not.toBeExistingFile()
             // should not have extracted files
+            const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
             installFiles.forEach(file => {
                 const filePath = `${yvmHome}/${file}`
-                expect(fs.pathExistsSync(filePath)).toBe(false)
+                expect(filePath).not.toBeExistingFile()
             })
             done()
         })

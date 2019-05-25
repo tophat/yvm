@@ -7,44 +7,23 @@ const url = require('url')
 
 const log = (...args) => console.log(...args) // eslint-disable-line no-console
 
-const dependencies = ['unzip']
-
-function preflightCheck(...dependencies) {
-    const missing = []
-    dependencies.forEach(pkg => {
-        try {
-            execSync(`command -v ${pkg}`)
-        } catch (e) {
-            missing.push(pkg)
-        }
-    })
-    if (missing.length) {
-        const prepzn = missing.length > 1 ? 'are' : 'is'
-        throw new Error(
-            `The install cannot proceed due missing dependencies.
-"${missing.join('", "')}" ${prepzn} not installed or in your PATH.`,
-        )
-    }
-    log('All dependencies satisfied.')
-}
-
 const zipFile = 'yvm.zip'
+const binFile = 'yvm.js'
+const releaseAssetsByPreference = [binFile, zipFile]
 
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const useLocal = process.env.USE_LOCAL || false
     const yvmDir = process.env.YVM_INSTALL_DIR || path.join(home, '.yvm')
+    const yvmGateway = 'https://d236jo9e8rrdox.cloudfront.net'
+    const releaseApiUrl = path.join(yvmGateway, 'yvm-releases')
     return {
         paths: {
             home,
             yvm: yvmDir,
-            yvmSh: path.join(yvmDir, 'yvm.sh'),
-            yvmFish: path.join(yvmDir, 'yvm.fish'),
-            yarnShim: path.join(yvmDir, 'shim', 'yarn'),
-            zip: path.join(useLocal ? 'artifacts' : yvmDir, zipFile),
         },
-        releaseApiUrl: 'https://d236jo9e8rrdox.cloudfront.net/yvm-releases',
-        releasesApiUrl: 'https://api.github.com/repos/tophat/yvm/releases',
+        releaseApiUrl,
+        releasesApiUrl: path.join(releaseApiUrl, 'all'),
         useLocal,
         version: {
             tagName: process.env.INSTALL_VERSION || null,
@@ -72,11 +51,17 @@ function ensureDir(dirPath) {
 }
 
 function getTagAndUrlFromRelease(data) {
-    const {
-        tag_name: tagName,
-        assets: [{ browser_download_url: downloadUrl }],
-    } = data
-    return { tagName, downloadUrl }
+    const { tag_name: tagName, assets } = data
+    const assetsByName = assets.reduce(
+        (acc, ass) => Object.assign(acc, { [ass.name]: ass }),
+        {},
+    )
+    for (const name of releaseAssetsByPreference) {
+        if (name in assetsByName) {
+            const { browser_download_url: downloadUrl } = assetsByName[name]
+            return { tagName, downloadUrl }
+        }
+    }
 }
 
 async function getYvmVersion(versionTag, releasesApiUrl) {
@@ -201,7 +186,7 @@ async function removeFile(maybeDir, recurse = false) {
 }
 
 async function cleanYvmDir(yvmPath) {
-    const filesNotToRemove = new Set(['versions', zipFile])
+    const filesNotToRemove = new Set(['versions'])
     const filesToRemove = fs
         .readdirSync(yvmPath)
         .filter(f => !filesNotToRemove.has(f))
@@ -212,28 +197,18 @@ async function cleanYvmDir(yvmPath) {
     )
 }
 
-async function unzipFile(filePath, yvmPath) {
-    execSync(`unzip -o -q ${filePath} -d ${yvmPath}`)
-}
-
 async function saveVersion(version, yvmPath) {
     const filePath = path.join(yvmPath, '.version')
     fs.writeFileSync(filePath, JSON.stringify({ version }))
 }
 
-async function ensureScriptExecutable(filePath) {
-    if (!fs.existsSync(filePath)) {
-        log(`${filePath} does not exist`)
-        return
-    }
-    fs.chmodSync(filePath, '755')
-}
-
 async function run() {
-    preflightCheck(...dependencies)
     const config = getConfig()
     const { version, paths, useLocal } = config
     ensureDir(paths.yvm)
+    await cleanYvmDir(paths.yvm)
+
+    const yvmBinFile = path.join(paths.yvm, binFile)
     if (!useLocal) {
         const { releaseApiUrl, releasesApiUrl } = config
         if (version.tagName) {
@@ -247,33 +222,45 @@ async function run() {
             log('Querying github release API to determine latest version')
             Object.assign(version, await getLatestYvmVersion(releaseApiUrl))
         }
+        if (version.downloadUrl.endsWith('yvm.zip')) {
+            log(`Compatibility install: ${version.downloadUrl}`)
+            const yvmCompatInstallScript = 'yvm-install.sh'
+            await downloadFile({
+                source: `https://raw.githubusercontent.com/tophat/yvm/${
+                    version.tagName
+                }/scripts/install.sh`,
+                destination: yvmCompatInstallScript,
+            })
+            execSync(
+                `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${
+                    version.tagName
+                }' bash ${yvmCompatInstallScript}`,
+            )
+                .toString()
+                .split('\n')
+                .forEach(l => log(l))
+            return fs.unlinkSync(yvmCompatInstallScript)
+        }
         await downloadFile({
             source: version.downloadUrl,
-            destination: paths.zip,
+            destination: yvmBinFile,
         })
+    } else {
+        const localBinFile = path.join('artifacts', 'webpack_build', binFile)
+        fs.copyFileSync(localBinFile, yvmBinFile)
     }
     if (version.tagName) {
         log(`Installing Version: ${version.tagName}`)
     }
-    await cleanYvmDir(paths.yvm)
-    await unzipFile(paths.zip, paths.yvm)
 
     const ongoingTasks = []
-    if (!useLocal) {
-        ongoingTasks.push(removeFile(paths.zip))
-    }
     if (version.tagName) {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
-    ongoingTasks.push(
-        ensureScriptExecutable(paths.yvmSh),
-        ensureScriptExecutable(paths.yvmFish),
-        ensureScriptExecutable(paths.yarnShim),
-    )
     try {
         const configureCommand = [
             'node',
-            path.join(paths.yvm, 'yvm.js'),
+            yvmBinFile,
             'configure-shell',
             '--home',
             paths.home,
@@ -281,12 +268,12 @@ async function run() {
         execSync(configureCommand)
     } catch (e) {
         log('Unable to configure shell')
-        log(`Run '${paths.yvmSh} configure-shell' to complete this step`)
     }
     await Promise.all(ongoingTasks)
 
-    log(`yvm successfully installed in ${paths.yvm} as ${paths.yvmSh}
-Open another terminal window to start using, or type "source ${paths.yvmSh}"`)
+    const sourceCommand = `source ${paths.yvm}/yvm.{sh,fish}`
+    log(`yvm successfully installed in ${paths.yvm}
+Open another terminal window to start using, or "${sourceCommand}"`)
 }
 
 if (!module.parent) {
@@ -299,6 +286,6 @@ if (!module.parent) {
 module.exports = {
     downloadFile,
     getConfig,
-    preflightCheck,
+    getTagAndUrlFromRelease,
     run,
 }

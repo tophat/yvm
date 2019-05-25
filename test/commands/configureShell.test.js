@@ -42,12 +42,13 @@ describe('configureShell', () => {
         envHomeMock.mockReset()
         envYvmInstallDir.mockReset()
         fs.removeSync(mockHomeValue)
+        fs.removeSync('config-mock-install-dir')
     })
 
     afterAll(jest.restoreAllMocks)
 
     it('configures only bashrc', async () => {
-        envYvmInstallDir.mockValue('some-install-dir')
+        envYvmInstallDir.mockValue(mockInstallDir)
         expect(
             await configureShell({ home: mockHomeValue, shell: 'bash' }),
         ).toBe(0)
