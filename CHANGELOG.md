@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 * unload yvm from PATH command
 * unload yvm from shell command
-* bundle yvm into a single file
+
+## [v3.4.0](https://github.com/tophat/yvm/compare/v3.3.0...v3.4.0) (2019-05-25) 🎉
+
+* **Added**: bundle all of yvm into a single release file `yvm.js` ([#368](https://github.com/tophat/yvm/issues/368)) ([2789af9](https://github.com/tophat/yvm/commit/2789af9))
+
+## [v3.3.0](https://github.com/tophat/yvm/compare/v3.2.3...v3.3.0) (2019-05-17)
+
+* **Added**: update current command to return only version string ([#392](https://github.com/tophat/yvm/issues/392)) ([8ba8c5b](https://github.com/tophat/yvm/commit/8ba8c5b))
 
 ## [v3.2.3](https://github.com/tophat/yvm/compare/v3.2.2...v3.2.3) (2019-04-27)
 
@@ -41,7 +48,7 @@ Added a `--verify` flag to the install command to force a failure if there're an
 
 * **Fixed**: use correct fish_user_paths env variable ([#356](https://github.com/tophat/yvm/issues/356)) ([033b460](https://github.com/tophat/yvm/commit/033b460))
 
-## [v3.0.1](https://github.com/tophat/yvm/compare/v3.0.0...v3.0.1) (2019-04-06)
+## [v3.0.1](https://github.com/tophat/yvm/compare/v3.0.0...v3.0.1) (2019-04-06) 🚀
 
 * **Fixed**: commands break inelegantly without internet connection ([#352](https://github.com/tophat/yvm/issues/352)) ([1f5d73b](https://github.com/tophat/yvm/commit/1f5d73b))
 
@@ -74,7 +81,7 @@ which command now outputs path to yarn not version in use
 
 * **Added**: support for yarn engine config in package json ([#307](https://github.com/tophat/yvm/issues/307)) ([de9aa10](https://github.com/tophat/yvm/commit/de9aa10))
 
-## [v2.3.0](https://github.com/tophat/yvm/compare/v2.2.0...v2.3.0) (2019-02-11)
+## [v2.3.0](https://github.com/tophat/yvm/compare/v2.2.0...v2.3.0) (2019-02-11) 🎣
 
 * **Added**: fish shell support ([#273](https://github.com/tophat/yvm/issues/273)) ([b58057a](https://github.com/tophat/yvm/commit/b58057a))
 * **Fixed**: print versions ([#296](https://github.com/tophat/yvm/issues/296)) ([2c662a8](https://github.com/tophat/yvm/commit/2c662a8))
