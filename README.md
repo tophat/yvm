@@ -211,7 +211,7 @@ We welcome contributions from the community, Top Hatters and non-Top Hatters ali
 1. Ensure the problem you are solving [is an issue](https://github.com/tophat/yvm/issues) or you've created one
 2. Clone the repo
 3. We use make. `make help` will show you a list of development commands
-4. `make install-watch` will install yvm on your shell, update when you make changes, and automatically source yvm.sh. Make sure to only run this in the root yvm directory. It will fail elsewhere.
+4. `make install-watch` will install yvm on your shell and update when you make changes. Make sure to only run this in the root yvm directory, it will fail elsewhere.
 5. `make test` and `make lint` are also commonly helpful
 
 Make sure all changes are well documented. Our documentation can be found inside the `docs` section of this repo. Be sure to read it carefully and make modifications wherever necessary.
