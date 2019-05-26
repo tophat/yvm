@@ -11,7 +11,7 @@ const installYVMPlugin = new ShellPlugin({
     onBuildEnter: ['mv -n "${HOME}/.yvm/yvm.js" "${HOME}/.yvm/yvm.js.bak"'],
     onBuildEnd: [
         ...clearYvmCommands,
-        'mv "./artifacts/webpack_build/yvm.js" "${HOME}/.yvm/yvm.js"',
+        'cp "./artifacts/webpack_build/yvm.js" "${HOME}/.yvm/yvm.js"',
         configureYvmCmd,
     ],
     onBuildExit: [

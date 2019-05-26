@@ -37,7 +37,7 @@ module.exports = class ShellPlugin {
 
         // catch ctrl+c event and exit normally
         process.on('SIGINT', () => {
-            log('\nCtrl-C...')
+            log('\nCaught Exit...')
             process.exit(2)
         })
 
