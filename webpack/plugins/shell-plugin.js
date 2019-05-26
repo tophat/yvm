@@ -16,7 +16,11 @@ module.exports = class ShellPlugin {
     }
 
     handleScript(script) {
-        return execSync(script, { stdio: 'inherit' })
+        try {
+            return execSync(script, { stdio: 'inherit' })
+        } catch (e) {
+            log(e.message)
+        }
     }
 
     executeScripts(scripts) {
@@ -50,17 +54,15 @@ module.exports = class ShellPlugin {
     }
 
     validateInput(options) {
-        if (typeof options.onBuildEnter === 'string') {
-            options.onBuildEnter = options.onBuildEnter.split('&&')
-        }
-        if (typeof options.onBuildStart === 'string') {
-            options.onBuildStart = options.onBuildStart.split('&&')
-        }
-        if (typeof options.onBuildEnd === 'string') {
-            options.onBuildEnd = options.onBuildEnd.split('&&')
-        }
-        if (typeof options.onBuildExit === 'string') {
-            options.onBuildExit = options.onBuildExit.split('&&')
+        for (const p of [
+            'onBuildEnter',
+            'onBuildStart',
+            'onBuildEnd',
+            'onBuildExit',
+        ]) {
+            if (typeof options[p] === 'string') {
+                options[p] = [options[p]]
+            }
         }
         return options
     }
