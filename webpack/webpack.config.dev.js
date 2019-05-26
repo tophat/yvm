@@ -1,22 +1,36 @@
 const { config } = require('./webpack.config.base')
 const ShellPlugin = require('./plugins/shell-plugin')
 
+const joinCommands = (...cmds) => cmds.join(' && ')
+const fileExists = filePath => `[ -f "${filePath}" ]`
+
+const yvmBinFile = '${HOME}/.yvm/yvm.js'
+const yvmBinFileBak = `${yvmBinFile}.bak`
 const clearYvmCommands = [
     'rm "${HOME}/.yvm/yvm.sh"',
     'rm "${HOME}/.yvm/yvm.fish"',
     'rm -rf "${HOME}/.yvm/shim"',
 ]
-const configureYvmCmd = 'node "${HOME}/.yvm/yvm.js" configure-shell'
+const configureYvmCmd = joinCommands(
+    fileExists(yvmBinFile),
+    `node ${yvmBinFile} configure-shell`,
+)
 const installYVMPlugin = new ShellPlugin({
-    onBuildEnter: ['mv -n "${HOME}/.yvm/yvm.js" "${HOME}/.yvm/yvm.js.bak"'],
+    onBuildEnter: joinCommands(
+        fileExists(yvmBinFile),
+        `mv -n "${yvmBinFile}" "${yvmBinFileBak}"`,
+    ),
     onBuildEnd: [
         ...clearYvmCommands,
-        'cp "./artifacts/webpack_build/yvm.js" "${HOME}/.yvm/yvm.js"',
+        `cp "./artifacts/webpack_build/yvm.js" "${yvmBinFile}"`,
         configureYvmCmd,
     ],
     onBuildExit: [
         ...clearYvmCommands,
-        'mv "${HOME}/.yvm/yvm.js.bak" "${HOME}/.yvm/yvm.js"',
+        joinCommands(
+            fileExists(yvmBinFileBak),
+            `mv "${yvmBinFile}.bak" "${yvmBinFile}"`,
+        ),
         configureYvmCmd,
     ],
 })
