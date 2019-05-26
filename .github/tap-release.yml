@@ -10,12 +10,17 @@ template: >
 
     bottle :unneeded
 
-    depends_on "node" => [:recommended] # Can be ignored if node already managed
+    depends_on "node" => [:recommended] # Can be ignored if node is already managed
 
     conflicts_with "hadoop", :because => "both install `yarn` binaries"
     conflicts_with "yarn", :because => "yvm installs and manages yarn"
 
     def install
+      File.write("#{ENV["HOME"]}/.bashrc", "")
+      mkdir_p "#{ENV["HOME"]}/.config/fish"
+      File.write("#{ENV["HOME"]}/.config/fish/config.fish", "")
+      ENV["YVM_INSTALL_DIR"] = "."
+      system "node", "yvm.js", "configure-shell"
       update_self_disabled = "echo 'YVM update-self disabled. Use `brew upgrade yvm`.'"
       inreplace "yvm.sh" do |s|
         s.gsub! 'YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}', "YVM_DIR='#{prefix}'"
@@ -25,8 +30,6 @@ template: >
         s.gsub! 'set -q YVM_DIR; or set -gx YVM_DIR "$HOME/.yvm"', "set -gx YVM_DIR '#{prefix}'"
         s.gsub! "env YVM_INSTALL_DIR=$YVM_DIR curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | node", update_self_disabled
       end
-      chmod 0755, "yvm.sh"
-      chmod 0755, "shim/yarn"
       mkdir_p "/usr/local/var/yvm/versions"
       ln_sf "/usr/local/var/yvm/versions", "./versions"
       File.write(".version", "{ \"version\": \"#{version}\" }")
@@ -48,7 +51,7 @@ template: >
     test do
       File.write("#{ENV["HOME"]}/.bashrc", "")
       ENV["YVM_INSTALL_DIR"] = prefix.to_s
-      system "#{prefix}/yvm.sh", "configure-shell"
+      system "node", "#{prefix}/yvm.js", "configure-shell"
       system "bash -i -c 'echo $YVM_DIR'"
       system "bash -i -c 'yvm ls-remote'"
       ENV["YVM_DIR"] = prefix.to_s
