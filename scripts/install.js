@@ -205,9 +205,7 @@ async function saveVersion(version, yvmPath) {
 async function compatInstall({ paths, version }) {
     log(`Compatibility install: ${version.downloadUrl}`)
     const yvmCompatInstallScript = 'yvm-install-script'
-    const yvmCompatDownloadPath = `https://raw.githubusercontent.com/tophat/yvm/${
-        version.tagName
-    }/scripts/install.`
+    const yvmCompatDownloadPath = `https://raw.githubusercontent.com/tophat/yvm/${version.tagName}/scripts/install.`
     for (const [source, envBin] of [
         [`${yvmCompatDownloadPath}js`, 'node'],
         [`${yvmCompatDownloadPath}sh`, 'bash'],
@@ -215,9 +213,7 @@ async function compatInstall({ paths, version }) {
         try {
             await downloadFile({ source, destination: yvmCompatInstallScript })
             execSync(
-                `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${
-                    version.tagName
-                }' ${envBin} ${yvmCompatInstallScript}`,
+                `YVM_INSTALL_DIR='${paths.yvm}' INSTALL_VERSION='${version.tagName}' ${envBin} ${yvmCompatInstallScript}`,
             )
                 .toString()
                 .split('\n')
