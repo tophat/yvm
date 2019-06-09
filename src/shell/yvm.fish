@@ -1,8 +1,13 @@
 #!/usr/bin/env fish
-set -q YVM_DIR; or set -gx YVM_DIR "$HOME/.yvm"
+set -q YVM_DIR
+or set -gx YVM_DIR "$HOME/.yvm"
 
 function yvm
     set command $argv[1]
+
+    function set_fish_user_paths
+        set -gx fish_user_paths (string split ' ' -- $argv[1])
+    end
 
     function yvm_use
         if test (count $argv) -gt 0
@@ -14,11 +19,45 @@ function yvm
         end
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
+            exit 1
         else
-            set -gx fish_user_paths (string split ' ' -- $NEW_FISH_USER_PATHS)
+            set_fish_user_paths $NEW_FISH_USER_PATHS
             set -l new_version (yarn --version)
             yvm_echo "Now using yarn version $new_version"
         end
+    end
+
+    function yvm_shim
+        begin
+            set NEW_FISH_USER_PATHS (yvm_call_node_script get-shim-path --shell=fish)
+        end
+        if [ -z "$NEW_FISH_USER_PATHS" ]
+            yvm_err "Could not get shim path from yvm"
+            exit 1
+        else
+            set_fish_user_paths $NEW_FISH_USER_PATHS
+            yvm_echo "Now shimming yarn"
+        end
+    end
+
+    function yvm_deactivate
+        begin
+            set NEW_FISH_USER_PATHS (yvm_call_node_script get-old-path --shell=fish)
+        end
+        if [ -z "$NEW_FISH_USER_PATHS" ]
+            yvm_err "Could not remove yvm from system path"
+            exit 1
+        else
+            set_fish_user_paths $NEW_FISH_USER_PATHS
+            yvm_echo "YVM yarn versions and shim removed from PATH"
+        end
+    end
+
+    function yvm_unload
+        yvm_deactivate
+        set -e YVM_DIR
+        functions -e yvm
+        yvm_echo "YVM unloaded from shell"
     end
 
     function yvm_echo
@@ -40,7 +79,7 @@ function yvm
             yvm_err "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
             exit 1
         end
-        set -gx fish_user_paths "$YVM_DIR/shim" $fish_user_paths
+        yvm_shim
     end
 
     if [ "$command" = "use" ]
@@ -53,12 +92,18 @@ function yvm
         env YVM_INSTALL_DIR=$YVM_DIR curl -fsSL https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js | node
     else if [ "$command" = "init-sh" ]
         yvm_init_sh
+    else if [ "$command" = "shim" ]
+        yvm_shim
+    else if [ "$command" = "deactivate" ]
+        yvm_deactivate
+    else if [ "$command" = "unload" ]
+        yvm_unload
     else
         yvm_call_node_script $argv[1..-1]
     end
 end
 
-if count $argv > /dev/null
+if count $argv >/dev/null
     yvm $argv
 else
     yvm init-sh

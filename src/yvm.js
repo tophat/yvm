@@ -100,7 +100,6 @@ argParser
 
 argParser
     .command('deactivate')
-    .alias('unuse')
     .description('Undo effects of `yvm` on current shell')
     .action(() => log(messageSourceYvm))
 
@@ -166,6 +165,26 @@ argParser
     .action(async (maybeVersion, { shell }) => {
         const { getNewPath } = await import('commands/getNewPath')
         process.exit(await getNewPath(maybeVersion, shell))
+    })
+
+argParser
+    .command('get-old-path', '', { noHelp: true })
+    .option('--shell [shell]', 'Shell used when getting PATH')
+    .description(
+        'Internal command: Gets a new PATH string for "yvm deactivate"',
+    )
+    .action(async ({ shell }) => {
+        const { getOldPath } = await import('commands/getOldPath')
+        process.exit(await getOldPath(shell))
+    })
+
+argParser
+    .command('get-shim-path', '', { noHelp: true })
+    .option('--shell [shell]', 'Shell used when getting PATH')
+    .description('Internal command: Gets a new PATH string for "yvm shim"')
+    .action(async ({ shell }) => {
+        const { getShimPath } = await import('commands/getShimPath')
+        process.exit(await getShimPath(shell))
     })
 
 argParser

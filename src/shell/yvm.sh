@@ -9,6 +9,7 @@ yvm() {
         NEW_PATH=$(yvm_call_node_script get-new-path ${PROVIDED_VERSION})
         if [ -z "${NEW_PATH}" ]; then
             yvm_err "Could not get new path from yvm"
+            exit 1
         else
             PATH=${NEW_PATH}
             yvm_echo "Now using yarn version $(yarn --version)"
@@ -20,7 +21,7 @@ yvm() {
     }
 
     yvm_err() {
-        >&2 yvm_echo "$@"
+        yvm_echo >&2 "$@"
     }
 
     yvm_call_node_script() {
@@ -29,9 +30,10 @@ yvm() {
     }
 
     yvm_init_sh() {
-        if ! type "node" > /dev/null; then
+        if ! type "node" >/dev/null; then
             yvm_err "YVM Could not find node executable."
             yvm_err "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bashrc"
+            exit 1
         fi
         export PATH="${YVM_DIR}/shim":$PATH
     }
