@@ -4,7 +4,8 @@ set -q YVM_DIR; or set -gx YVM_DIR "$HOME/.yvm"
 function yvm
     set command $argv[1]
 
-    function set_fish_user_paths
+    function yvm_set_fish_user_paths
+        set -gx PATH (yvm_call_node_script get-old-path)
         set -gx fish_user_paths (string split ' ' -- $argv[1])
     end
 
@@ -20,7 +21,7 @@ function yvm
             yvm_err "Could not get new path from yvm"
             exit 1
         else
-            set_fish_user_paths $NEW_FISH_USER_PATHS
+            yvm_set_fish_user_paths $NEW_FISH_USER_PATHS
             set -l new_version (yarn --version)
             yvm_echo "Now using yarn version $new_version"
         end
@@ -34,7 +35,7 @@ function yvm
             yvm_err "Could not get shim path from yvm"
             exit 1
         else
-            set_fish_user_paths $NEW_FISH_USER_PATHS
+            yvm_set_fish_user_paths $NEW_FISH_USER_PATHS
         end
     end
 
@@ -46,14 +47,14 @@ function yvm
             yvm_err "Could not remove yvm from system path"
             exit 1
         else
-            set_fish_user_paths $NEW_FISH_USER_PATHS
+            yvm_set_fish_user_paths $NEW_FISH_USER_PATHS
         end
     end
 
     function yvm_unload
         yvm_deactivate
         set -e YVM_DIR
-        functions -e set_fish_user_paths
+        functions -e yvm_set_fish_user_paths
         functions -e yvm_use
         functions -e yvm_shim
         functions -e yvm_deactivate

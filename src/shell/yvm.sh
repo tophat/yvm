@@ -43,7 +43,7 @@ yvm() {
     yvm_unload() {
         yvm_deactivate
         unset YVM_DIR
-        unset -f set_fish_user_paths
+        unset -f yvm_set_user_path
         unset -f yvm_use
         unset -f yvm_shim
         unset -f yvm_deactivate
