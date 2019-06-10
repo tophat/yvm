@@ -30,6 +30,10 @@ List the currently installed versions of Yarn.
 
 List Yarn versions available to install.
 
+## `deactivate`
+
+Undo effects of `yvm` on current shell. This removes shimming and any used versions from the system path.
+
 ## `which [version]`
 
 Display file path to a version of Yarn.
@@ -49,6 +53,18 @@ Show a list of registered version aliases. These can be used in place of `[versi
 ## `alias <name> <version>`
 
 Register a new alias that can be used. Used internally to refer to `default`, `latest`, `stable` etc.
+
+## `unalias <name>`
+
+Deregisters an alias using the name specified.
+
+### `--force|-F`
+
+Removes an alias even while there are references to it from other aliases.
+
+### `--recursive|-R`
+
+Removes an alias, including all dependant aliases and their own dependants.
 
 ## `update-self`
 
