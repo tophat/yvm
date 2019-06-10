@@ -48,7 +48,6 @@ function yvm
             exit 1
         else
             set_fish_user_paths $NEW_FISH_USER_PATHS
-            yvm_echo "YVM yarn versions and shim removed from PATH"
         end
     end
 
@@ -64,7 +63,7 @@ function yvm
         functions -e yvm_call_node_script
         functions -e yvm_init_sh
         functions -e yvm
-        yvm_echo "YVM unloaded from shell"
+        yvm_echo "YVM configuration unloaded from shell"
         functions -e yvm_echo
     end
 
@@ -105,6 +104,7 @@ function yvm
         yvm_echo "Now shimming yarn"
     else if [ "$command" = "deactivate" ]
         yvm_deactivate
+        yvm_echo "YVM shim and yarn versions removed from PATH"
     else if [ "$command" = "unload" ]
         yvm_unload
     else
