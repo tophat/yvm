@@ -2,7 +2,7 @@ import log from 'util/log'
 import { getNonYvmPathEntries, toPathString } from 'util/path'
 
 export const buildOldPath = shell =>
-    toPathString({ shell, paths: new Set(getNonYvmPathEntries(shell)) })
+    toPathString({ shell, paths: [...new Set(getNonYvmPathEntries(shell))] })
 
 export const getOldPath = async shell => {
     try {

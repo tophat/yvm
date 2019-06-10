@@ -1,8 +1,12 @@
 import log from 'util/log'
-import { shimPath, getNonYvmShimPathEntries, toPathString } from 'util/path'
+import { shimRootPath } from 'util/utils'
+import { getNonYvmShimPathEntries, toPathString, yvmPath } from 'util/path'
 
 export const buildShimPath = shell => {
-    const updatedPath = [shimPath, ...new Set(getNonYvmShimPathEntries(shell))]
+    const updatedPath = [
+        shimRootPath(yvmPath),
+        ...new Set(getNonYvmShimPathEntries(shell)),
+    ]
     return toPathString({ shell, paths: updatedPath })
 }
 
