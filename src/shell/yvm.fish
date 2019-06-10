@@ -55,8 +55,17 @@ function yvm
     function yvm_unload
         yvm_deactivate
         set -e YVM_DIR
+        functions -e set_fish_user_paths
+        functions -e yvm_use
+        functions -e yvm_shim
+        functions -e yvm_deactivate
+        functions -e yvm_unload
+        functions -e yvm_err
+        functions -e yvm_call_node_script
+        functions -e yvm_init_sh
         functions -e yvm
         yvm_echo "YVM unloaded from shell"
+        functions -e yvm_echo
     end
 
     function yvm_echo
