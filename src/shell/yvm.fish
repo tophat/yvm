@@ -1,6 +1,5 @@
 #!/usr/bin/env fish
-set -q YVM_DIR
-or set -gx YVM_DIR "$HOME/.yvm"
+set -q YVM_DIR; or set -gx YVM_DIR "$HOME/.yvm"
 
 function yvm
     set command $argv[1]

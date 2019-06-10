@@ -91,8 +91,8 @@ describe('buildNewPath', () => {
     })
 
     describe('fish', () => {
-        const shell = 'fish'
-        const toPathString = paths => pathUtils.toPathString({ shell, paths })
+        const toPathString = paths =>
+            pathUtils.toPathString({ shell: 'fish', paths })
 
         beforeAll(() => jest.spyOnProp(process.env, 'fish_user_paths'))
 
@@ -100,10 +100,7 @@ describe('buildNewPath', () => {
             const mockVersion = '1.7.0'
             const mockRootPath = '/some/path'
             const mockSplitPath = ['abc', 'def']
-            process.env.fish_user_paths = pathUtils.toPathString({
-                shell,
-                paths: mockSplitPath,
-            })
+            process.env.fish_user_paths = toPathString(mockSplitPath)
 
             const expectedPathString = toPathString([
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
@@ -111,7 +108,7 @@ describe('buildNewPath', () => {
             ])
             expect(
                 buildNewPath({
-                    shell,
+                    shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,
                 }),
@@ -136,7 +133,7 @@ describe('buildNewPath', () => {
             ])
             expect(
                 buildNewPath({
-                    shell,
+                    shell: 'fish',
                     version: mockVersion,
                     rootPath: mockRootPath,
                 }),
