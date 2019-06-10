@@ -36,7 +36,6 @@ function yvm
             exit 1
         else
             set_fish_user_paths $NEW_FISH_USER_PATHS
-            yvm_echo "Now shimming yarn"
         end
     end
 
@@ -94,6 +93,7 @@ function yvm
         yvm_init_sh
     else if [ "$command" = "shim" ]
         yvm_shim
+        yvm_echo "Now shimming yarn"
     else if [ "$command" = "deactivate" ]
         yvm_deactivate
     else if [ "$command" = "unload" ]
