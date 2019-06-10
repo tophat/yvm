@@ -9,6 +9,7 @@ import {
 } from 'util/constants'
 import log from 'util/log'
 
+export const shimRootPath = rootPath => path.resolve(rootPath, 'shim')
 export const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
 
 export const getExtractionPath = (version, rootPath) =>

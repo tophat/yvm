@@ -3,7 +3,7 @@ import path from 'path'
 import fs from 'fs'
 import { negate } from 'lodash'
 
-import { versionRootPath } from 'util/utils'
+import { shimRootPath, versionRootPath } from 'util/utils'
 
 const isFishShell = shell => shell === 'fish'
 
@@ -25,12 +25,11 @@ export const getCurrentPath = shell => {
 }
 
 export const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
-export const shimPath = `${yvmPath}/shim`
 
 export const isYvmPath = p => p && p.startsWith(yvmPath)
 const isYvmVersionPath = ({ p, rootPath = yvmPath }) =>
     p.startsWith(versionRootPath(rootPath))
-const isShimPath = p => p && p.endsWith(shimPath)
+const isShimPath = p => p && p.endsWith(shimRootPath(yvmPath))
 
 export const getPathEntries = shell =>
     getCurrentPath(shell).split(getPathDelimiter(shell))
@@ -42,7 +41,7 @@ export const getNonYvmVersionPathEntries = ({ shell, rootPath = yvmPath }) =>
     getPathEntries(shell).filter(p => !isYvmVersionPath({ p, rootPath }))
 
 export const getNonYvmShimPathEntries = shell =>
-    getNonYvmPathEntries(shell).filter(negate(isShimPath))
+    getPathEntries(shell).filter(negate(isShimPath))
 
 export const getYarnPathEntries = shell =>
     getPathEntries(shell)
