@@ -98,6 +98,11 @@ argParser
         process.exit(await listRemote())
     })
 
+argParser
+    .command('deactivate')
+    .description('Undo effects of `yvm` on current shell')
+    .action(() => log(messageSourceYvm))
+
 argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')
 argParser.command(
     'alias <name> <version>',
@@ -118,6 +123,11 @@ argParser
         const { unalias } = await import('commands/unalias')
         process.exit(await unalias({ name, force, recursive }))
     })
+
+argParser
+    .command('unload')
+    .description('Unload `yvm` from shell')
+    .action(() => log(messageSourceYvm))
 
 argParser
     .command('which [version]')
@@ -155,6 +165,26 @@ argParser
     .action(async (maybeVersion, { shell }) => {
         const { getNewPath } = await import('commands/getNewPath')
         process.exit(await getNewPath(maybeVersion, shell))
+    })
+
+argParser
+    .command('get-old-path', '', { noHelp: true })
+    .option('--shell [shell]', 'Shell used when getting PATH')
+    .description(
+        'Internal command: Gets a new PATH string for "yvm deactivate"',
+    )
+    .action(async ({ shell }) => {
+        const { getOldPath } = await import('commands/getOldPath')
+        process.exit(await getOldPath(shell))
+    })
+
+argParser
+    .command('get-shim-path', '', { noHelp: true })
+    .option('--shell [shell]', 'Shell used when getting PATH')
+    .description('Internal command: Gets a new PATH string for "yvm shim"')
+    .action(async ({ shell }) => {
+        const { getShimPath } = await import('commands/getShimPath')
+        process.exit(await getShimPath(shell))
     })
 
 argParser

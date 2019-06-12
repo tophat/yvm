@@ -1,4 +1,5 @@
-import path from 'path'
+import mockProps from 'jest-mock-props'
+mockProps.extend(jest)
 
 import log from 'util/log'
 import * as pathUtils from 'util/path'
@@ -38,21 +39,23 @@ describe('getNewPath', () => {
 })
 
 describe('buildNewPath', () => {
-    beforeAll(() => {
-        jest.spyOn(pathUtils, 'getPathEntries')
-    })
+    beforeAll(() => jest.spyOnProp(process.env, 'PATH'))
     afterAll(jest.restoreAllMocks)
 
     it('Returns a new PATH string with a yarn directory prepended', () => {
         const mockVersion = '1.7.0'
         const mockRootPath = '/some/path'
         const mockSplitPath = ['abc', 'def']
-        pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
+        process.env.PATH = pathUtils.toPathString({
+            paths: mockSplitPath,
+        })
 
-        const expectedPathString = [
-            `${mockRootPath}/versions/v${mockVersion}/bin`,
-            ...mockSplitPath,
-        ].join(path.delimiter)
+        const expectedPathString = pathUtils.toPathString({
+            paths: [
+                `${mockRootPath}/versions/v${mockVersion}/bin`,
+                ...mockSplitPath,
+            ],
+        })
         expect(
             buildNewPath({
                 version: mockVersion,
@@ -70,13 +73,15 @@ describe('buildNewPath', () => {
             'def',
             `${mockRootPath}/versions/v1.5.0/bin`,
         ]
-        pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
+        process.env.PATH = pathUtils.toPathString({ paths: mockSplitPath })
 
-        const expectedPathString = [
-            `${mockRootPath}/versions/v${mockVersion}/bin`,
-            'abc',
-            'def',
-        ].join(path.delimiter)
+        const expectedPathString = pathUtils.toPathString({
+            paths: [
+                `${mockRootPath}/versions/v${mockVersion}/bin`,
+                'abc',
+                'def',
+            ],
+        })
         expect(
             buildNewPath({
                 version: mockVersion,
@@ -86,17 +91,21 @@ describe('buildNewPath', () => {
     })
 
     describe('fish', () => {
-        const FISH_ARRAY_DELIMITER = ' '
+        const toPathString = paths =>
+            pathUtils.toPathString({ shell: 'fish', paths })
+
+        beforeAll(() => jest.spyOnProp(process.env, 'fish_user_paths'))
+
         it('Returns a new fish_user_path string with a yarn directory prepended', () => {
             const mockVersion = '1.7.0'
             const mockRootPath = '/some/path'
             const mockSplitPath = ['abc', 'def']
-            pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
+            process.env.fish_user_paths = toPathString(mockSplitPath)
 
-            const expectedPathString = [
+            const expectedPathString = toPathString([
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
                 ...mockSplitPath,
-            ].join(FISH_ARRAY_DELIMITER)
+            ])
             expect(
                 buildNewPath({
                     shell: 'fish',
@@ -115,13 +124,13 @@ describe('buildNewPath', () => {
                 'def',
                 `${mockRootPath}/versions/v1.5.0/bin`,
             ]
-            pathUtils.getPathEntries.mockReturnValueOnce(mockSplitPath)
+            process.env.fish_user_paths = toPathString(mockSplitPath)
 
-            const expectedPathString = [
+            const expectedPathString = toPathString([
                 `${mockRootPath}/versions/v${mockVersion}/bin`,
                 'abc',
                 'def',
-            ].join(FISH_ARRAY_DELIMITER)
+            ])
             expect(
                 buildNewPath({
                     shell: 'fish',

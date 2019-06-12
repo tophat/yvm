@@ -2,18 +2,16 @@ import path from 'path'
 
 import log from 'util/log'
 import { versionRootPath } from 'util/utils'
-import { getPathDelimiter, getPathEntries, yvmPath } from 'util/path'
+import { getNonYvmVersionPathEntries, toPathString, yvmPath } from 'util/path'
 import { getSplitVersionAndArgs } from 'util/version'
 import { ensureVersionInstalled } from 'commands/install'
 
 export const buildNewPath = ({ version, rootPath = yvmPath, shell }) => {
-    const pathDelimiter = getPathDelimiter(shell)
-    const destPath = versionRootPath(rootPath)
-    const newPathSegment = path.resolve(destPath, `v${version}`, 'bin')
-    const isNotYvmYarnPath = pathSegment => !pathSegment.startsWith(destPath)
-    const nonYvmPathEntries = getPathEntries(shell).filter(isNotYvmYarnPath)
-    const updatedPath = [newPathSegment, ...new Set(nonYvmPathEntries)]
-    return updatedPath.join(pathDelimiter).trim()
+    const updatedPath = [
+        path.resolve(versionRootPath(rootPath), `v${version}`, 'bin'),
+        ...new Set(getNonYvmVersionPathEntries({ shell, rootPath })),
+    ]
+    return toPathString({ shell, paths: updatedPath })
 }
 
 export const getNewPath = async (maybeVersion, shell) => {
