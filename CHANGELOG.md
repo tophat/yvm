@@ -5,10 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is somewhat based on [Keep a Changelog](https://keepachangelog.com),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased](https://github.com/tophat/yvm/pulls)
+## [In Progress](https://github.com/tophat/yvm/pulls)
 
-* unload yvm from PATH command
-* unload yvm from shell command
+See open [issues](https://github.com/tophat/yvm/issues)
+
+## [3.5.0](https://github.com/tophat/yvm/compare/v3.4.0...v3.5.0) (2019-06-12)
+
+* **Added**: undo yvm effects on the shell commands ([#400](https://github.com/tophat/yvm/issues/400)) ([32a2ebc](https://github.com/tophat/yvm/commit/32a2ebc))
 
 ## [v3.4.0](https://github.com/tophat/yvm/compare/v3.3.0...v3.4.0) (2019-05-25) 🎉
 
