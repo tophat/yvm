@@ -8,9 +8,9 @@
     "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
-    "docusaurus": "^1.8.0"
+    "docusaurus": "^1.11.1"
   },
   "dependencies": {
-    "react": "^16.6.3"
+    "react": "^16.8.6"
   }
 }
