@@ -1650,10 +1650,10 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
 
-axios@^0.18.0:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.1.tgz#ff3f0de2e7b5d180e757ad98000f1081b87bcea3"
-  integrity sha512-0BfJq4NSfQXd+SkFdrvFbG7addhYSBA2mQwISr46pD6E5iqkWg02RAs8vyTT/j0RTnoYmeXauBuSv1qKwR179g==
+axios@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.0.tgz#8e09bff3d9122e133f7b8101c8fbdd00ed3d2ab8"
+  integrity sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==
   dependencies:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
@@ -2039,12 +2039,12 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
 
-bundlewatch@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/bundlewatch/-/bundlewatch-0.2.1.tgz#3bf5279f49c098c7b27c31f7c172397154eb2e65"
-  integrity sha512-H8zE5K/0+eJqjOb3aebLIJoUjLqSM4URavKISuQOaDij0OCW2fA/ZFSjftBHhlvv7x8tej1vDL0YlBxUyRC3ag==
+bundlewatch@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/bundlewatch/-/bundlewatch-0.2.2.tgz#73ff00886205a5ec757b0f7b7b672dfe93897b9c"
+  integrity sha512-0eqKY5yREliDfKBnl285E2cfRU/T9KGs0ZSdU3AXiyx3CQt76pHAY9jwi0S0Q7JmjeYA0iB9OW0rRuUDLTdQMw==
   dependencies:
-    axios "^0.18.0"
+    axios "^0.19.0"
     bytes "^3.0.0"
     chalk "^2.4.0"
     commander "^2.15.1"
