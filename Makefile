@@ -7,7 +7,7 @@ ifdef CI
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
     JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
     WEBPACK_ARGS=
-    YARN_INSTALL_ARGS=--pure-lockfile --ignore-engines --ci
+    YARN_INSTALL_ARGS=--pure-lockfile --ci
 else
     ESLINT_EXTRA_ARGS=
     JEST_ENV_VARIABLES=
