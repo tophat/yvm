@@ -2041,10 +2041,10 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
 
-bundlewatch@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/bundlewatch/-/bundlewatch-0.2.4.tgz#ebc185250b1143a4d7800af4ddddd803db481721"
-  integrity sha512-YkGJF/CvftU7xCKG6YaTIWFPnr/Ec/PoJr7gnBeQdvxBhj94ZHP/Fc7B3+f3uNss8707gQuUzuPg3hBuEh0l8w==
+bundlewatch@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/bundlewatch/-/bundlewatch-0.2.5.tgz#c5fd76fb29ca2e324cf3282733fbc7be07863fc0"
+  integrity sha512-woAzcef9345Y9yC3lxkkKDZfjIbAV7jGt8Je4FL9WlkS6R3n/39v2cIfivkgN2zRDH9l88sRuWxvyvgr9U90Gg==
   dependencies:
     axios "^0.19.0"
     bytes "^3.0.0"
