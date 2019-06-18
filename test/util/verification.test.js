@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import { vol } from 'memfs'
 import kbpgp from 'kbpgp'
 
 import { downloadFile, getDownloadPath } from 'util/download'
@@ -23,10 +23,11 @@ describe('verification', () => {
         getVersionDownloadUrl(mockVersion),
         getDownloadPath(mockVersion, rootPath),
     )
-    beforeAll(() => {
-        fs.mkdirsSync(rootPath)
+    beforeEach(() => {
+        vol.fromJSON({ [rootPath]: {} })
+        jest.clearAllMocks()
     })
-    beforeEach(jest.clearAllMocks)
+    afterEach(vol.reset)
     afterAll(jest.restoreAllMocks)
 
     it('executes successfully on valid signature', async () => {
