@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { fs, vol } from 'memfs'
 import * as path from 'util/path'
 const getYarnPathEntries = jest.spyOn(path, 'getYarnPathEntries')
 const isYvmPath = jest.spyOn(path, 'isYvmPath')
@@ -13,8 +13,15 @@ describe('yvm current command', () => {
     const mockYvmPath = '/User/tophat/.yvm'
     jest.spyOn(log, 'default')
 
+    beforeAll(() => {
+        vol.fromJSON({
+            '.yvmrc': '1.13.0',
+        })
+    })
+
     afterAll(() => {
         jest.restoreAllMocks()
+        vol.reset()
     })
 
     it('fails if yarn not installed and active', async () => {
