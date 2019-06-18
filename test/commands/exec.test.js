@@ -1,6 +1,6 @@
 import childProcess from 'child_process'
 jest.spyOn(childProcess, 'execFileSync')
-import fs from 'fs-extra'
+import { vol } from 'memfs'
 import * as install from 'commands/install'
 jest.spyOn(install, 'ensureVersionInstalled')
 import { exec } from 'commands/exec'
@@ -17,7 +17,9 @@ jest.mock('util/path', () => ({
 describe('exec command', () => {
     const rcVersion = '1.13.0'
     beforeAll(() => {
-        fs.outputFileSync('.yvmrc', `${rcVersion}\n`)
+        vol.fromJSON({
+            '.yvmrc': `${rcVersion}\n`,
+        })
         childProcess.execFileSync.mockImplementation(() => {})
         install.ensureVersionInstalled.mockImplementation(() => {})
     })
