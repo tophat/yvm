@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import { fs, vol } from 'memfs'
 import targz from 'targz'
 
 import { resolveStable } from 'util/alias'
@@ -8,11 +8,7 @@ import * as verification from 'util/verification'
 import { ensureVersionInstalled, install } from 'commands/install'
 import log from 'util/log'
 import { yvmPath as rootPath } from 'util/path'
-import {
-    getVersionsFromTags,
-    getExtractionPath,
-    versionRootPath,
-} from 'util/utils'
+import { getVersionsFromTags, getExtractionPath } from 'util/utils'
 import * as version from 'util/version'
 
 jest.setTimeout(10000)
@@ -27,17 +23,17 @@ const verifySignature = jest.spyOn(verification, 'verifySignature')
 const getSplitVersionAndArgs = jest.spyOn(version, 'getSplitVersionAndArgs')
 
 describe('yvm install', () => {
-    beforeAll(() => {
-        fs.mkdirsSync(rootPath)
+    beforeEach(() => {
+        vol.fromJSON({ [rootPath]: {} })
     })
 
     afterEach(() => {
-        fs.removeSync(versionRootPath(rootPath))
         jest.clearAllMocks()
     })
 
     afterAll(() => {
         jest.restoreAllMocks()
+        vol.reset()
     })
 
     const verifyLogPrints = (...expectedPhrases) => {
@@ -50,7 +46,6 @@ describe('yvm install', () => {
 
     it('Downloads public key signature if none exist locally', async () => {
         const publicKeyPath = verification.getPublicKeyPath(rootPath)
-        fs.removeSync(publicKeyPath)
         const exitCode = await install({ version: '1.8.0' })
         expect(exitCode).toBe(0)
         expect(fs.existsSync(publicKeyPath)).toBeTruthy()
@@ -137,7 +132,6 @@ describe('yvm install', () => {
 
         it('Only attempts installation if version not installed', async () => {
             const version = '1.7.0'
-            fs.removeSync(versionRootPath(rootPath))
             await ensureVersionInstalled(version, rootPath)
             expect(
                 fs.statSync(getExtractionPath(version, rootPath)),
@@ -213,7 +207,7 @@ describe('yvm install', () => {
         const expectedErrorMessage = 'Unable to locate extracted package'
         jest.spyOn(targz, 'decompress').mockImplementationOnce(
             ({ dest }, callback) => {
-                fs.emptyDirSync(dest)
+                vol.fromJSON({ [dest]: {} })
                 callback()
             },
         )
