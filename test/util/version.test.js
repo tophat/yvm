@@ -1,4 +1,4 @@
-import mockFS from 'mock-fs'
+import { vol } from 'memfs'
 import childProcess from 'child_process'
 
 import log from 'util/log'
@@ -27,8 +27,7 @@ describe('yvm default version', () => {
     jest.spyOn(log, 'info')
     const resolveReserved = jest.spyOn(alias, 'resolveReserved')
     beforeEach(() => {
-        log() // see https://github.com/facebook/jest/issues/5792
-        mockFS({
+        vol.fromJSON({
             [mockYVMDir]: {},
         })
         jest.clearAllMocks()
@@ -37,7 +36,7 @@ describe('yvm default version', () => {
         alias.getUserAliases.cache.clear()
         alias.resolveAlias.cache.clear()
     })
-    afterEach(mockFS.restore)
+    afterEach(vol.reset)
     afterAll(jest.restoreAllMocks)
 
     it('Logs failure to set default version', async () => {
@@ -79,15 +78,14 @@ describe('yvm default version', () => {
 
 describe('yvm config version', () => {
     const mockRC = versionString => {
-        mockFS({
+        vol.fromJSON({
             '.yvmrc': versionString,
         })
     }
 
-    beforeEach(() => log())
     afterEach(() => {
         jest.clearAllMocks()
-        mockFS.restore()
+        vol.reset()
     })
 
     it('Uses supplied version if valid', async () => {
@@ -125,7 +123,7 @@ describe('yvm config version', () => {
     })
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
-        mockFS({
+        vol.fromJSON({
             [yvmPath]: {},
         })
         await setDefaultVersion({
@@ -203,10 +201,9 @@ describe('yvm installed versions', () => {
         ),
     }
     beforeEach(() => {
-        log()
-        mockFS({ [mockYVMDir]: mockYVMDirContents })
+        vol.fromJSON({ [mockYVMDir]: mockYVMDirContents })
     })
-    afterEach(mockFS.restore)
+    afterEach(vol.reset)
 
     it('Valid version folders', () => {
         const expectedVersions = mockValid.map(stripVersionPrefix)

@@ -1,4 +1,4 @@
-import mockFS from 'mock-fs'
+import { vol } from 'memfs'
 
 import log from 'util/log'
 import { yvmInstalledVersion } from 'util/yvmInstalledVersion'
@@ -8,12 +8,12 @@ describe('yvm installed version', () => {
     jest.spyOn(log, 'default')
 
     beforeEach(jest.clearAllMocks)
-    afterEach(mockFS.restore)
+    afterEach(vol.reset)
     afterAll(jest.restoreAllMocks)
 
     it('Finds version if installed', () => {
         const mockVersion = 'v1.2.3'
-        mockFS({
+        vol.fromJSON({
             [mockYVMDir]: {
                 '.version': `{ "version": "${mockVersion}" }`,
             },
@@ -30,7 +30,7 @@ describe('yvm installed version', () => {
     it('fails to find version if file does not contain valid json', () => {
         delete process.env.YVM_VERBOSE
         const mockVersion = 'v1.2.3'
-        mockFS({
+        vol.fromJSON({
             [mockYVMDir]: {
                 '.version': `{ "${mockVersion}" }`,
             },
@@ -42,7 +42,7 @@ describe('yvm installed version', () => {
     it('fails to find version if file does not valid json with "version" key', () => {
         delete process.env.YVM_VERBOSE
         const mockVersion = 'v1.2.3'
-        mockFS({
+        vol.fromJSON({
             [mockYVMDir]: {
                 '.version': `{ "version_not_key": "${mockVersion}" }`,
             },

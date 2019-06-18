@@ -1,5 +1,4 @@
-import fs from 'fs'
-import mockFS from 'mock-fs'
+import { fs, vol } from 'memfs'
 import childProcess from 'child_process'
 jest.spyOn(childProcess, 'execSync')
 import * as mockProps from 'jest-mock-props'
@@ -51,8 +50,7 @@ describe('alias util', () => {
 
     describe('resolveSystem', () => {
         beforeAll(() => {
-            log()
-            mockFS({
+            vol.fromJSON({
                 '/usr/local/bin/yarn': 'mock exec',
             })
         })
@@ -64,7 +62,7 @@ describe('alias util', () => {
         })
 
         afterAll(() => {
-            mockFS.restore()
+            vol.reset()
         })
 
         it('returns nothing if yarn executable fails to run', async () => {
@@ -126,15 +124,14 @@ describe('alias util', () => {
     describe('getUserAliases', () => {
         const aliasesPath = `${yvmPath}/${alias.STORAGE_FILE}`
         beforeEach(() => {
-            log()
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: '',
             })
             alias.getUserAliases.cache.clear()
         })
 
         afterAll(() => {
-            mockFS.restore()
+            vol.reset()
         })
 
         it('sets default to stable', async () => {
@@ -145,7 +142,7 @@ describe('alias util', () => {
 
         it('overwrites default with loaded value', async () => {
             const mockDefaultAlias = 'someothervalue'
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: `{"default":"${mockDefaultAlias}"}`,
             })
             expect(await alias.getUserAliases(yvmPath)).toEqual({
@@ -154,7 +151,7 @@ describe('alias util', () => {
         })
 
         it('uses default when aliases file is corrupted', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: `"default":"testing"`,
             })
             expect(await alias.getUserAliases(yvmPath)).toEqual({
@@ -172,7 +169,7 @@ describe('alias util', () => {
                     { name: 'default', value: '1.15.0' },
                     { name: 'other', value: '1.2.0' },
                 ]
-                mockFS({
+                vol.fromJSON({
                     [aliasesPath]: JSON.stringify(mockAliases),
                 })
                 expect(
@@ -186,7 +183,7 @@ describe('alias util', () => {
                     other: '1.2.0',
                 }
                 const expectedAliases = [{ name: 'other', value: '1.2.0' }]
-                mockFS({
+                vol.fromJSON({
                     [aliasesPath]: JSON.stringify(mockAliases),
                 })
                 expect(await alias.getMatchingAliases('oth', yvmPath)).toEqual(
@@ -200,15 +197,14 @@ describe('alias util', () => {
         const aliasesPath = `${yvmPath}/${alias.STORAGE_FILE}`
         jest.spyOn(log, 'default')
         beforeEach(() => {
-            log()
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: '',
             })
             alias.getUserAliases.cache.clear()
         })
 
         afterAll(() => {
-            mockFS.restore()
+            vol.reset()
         })
 
         it('sets user alias', async () => {
@@ -248,8 +244,7 @@ describe('alias util', () => {
         jest.spyOn(log, 'default')
 
         beforeEach(() => {
-            log()
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: '',
             })
         })
@@ -260,7 +255,7 @@ describe('alias util', () => {
         })
 
         afterAll(() => {
-            mockFS.restore()
+            vol.reset()
         })
 
         it('does not unset reserved alias', async () => {
@@ -276,7 +271,7 @@ describe('alias util', () => {
         })
 
         it('does not unset aliases with dependants', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -299,7 +294,7 @@ describe('alias util', () => {
         })
 
         it('unset aliases with dependants with the force option', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -322,7 +317,7 @@ describe('alias util', () => {
         })
 
         it('unset all dependant aliases with the recursive option', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -344,7 +339,7 @@ describe('alias util', () => {
         })
 
         it('does not crash on cyclic alias dependancy', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -365,7 +360,7 @@ describe('alias util', () => {
         })
 
         it('unsets alias successfully', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -394,14 +389,13 @@ describe('alias util', () => {
         jest.spyOn(log, 'default')
 
         beforeEach(() => {
-            log()
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: '',
             })
         })
 
         afterEach(() => {
-            mockFS.restore()
+            vol.reset()
             jest.clearAllMocks()
             alias.getUserAliases.cache.clear()
             alias.resolveAliases.cache.clear()
@@ -410,7 +404,7 @@ describe('alias util', () => {
 
         it('matches all aliases on empty pattern', async () => {
             const version = '1.8.0'
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -421,12 +415,11 @@ describe('alias util', () => {
                 undefined,
                 yvmPath,
             )
-            mockFS.restore()
             expect(result).toMatchSnapshot()
         })
 
         it('does not crash on cyclic alias dependancy', async () => {
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
@@ -437,13 +430,12 @@ describe('alias util', () => {
                 undefined,
                 yvmPath,
             )
-            mockFS.restore()
             expect(result).toMatchSnapshot()
         })
 
         it('resolves only matching aliases', async () => {
             const version = '1.8.0'
-            mockFS({
+            vol.fromJSON({
                 [aliasesPath]: JSON.stringify({
                     one: 'zero',
                     two: 'one',
