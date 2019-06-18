@@ -1,5 +1,5 @@
 import path from 'path'
-import fs from 'fs-extra'
+import { fs, vol } from 'memfs'
 
 import log from 'util/log'
 import { getExtractionPath, versionRootPath } from 'util/utils'
@@ -14,13 +14,16 @@ describe('yvm remove', () => {
 
     beforeAll(() => {
         jest.spyOn(log, 'default')
-        fs.mkdirsSync(rootPath)
+    })
+
+    beforeEach(() => {
+        vol.fromJSON({ [rootPath]: {} })
     })
 
     afterEach(() => {
-        fs.removeSync(versionRootPath(rootPath))
         getVersionInUse.mockReset()
         jest.clearAllMocks()
+        vol.reset()
     })
 
     afterAll(jest.restoreAllMocks)
@@ -29,7 +32,7 @@ describe('yvm remove', () => {
         const version = '1.7.0'
         getVersionInUse.mockReturnValue('')
         const versionInstallationPath = getExtractionPath(version, rootPath)
-        fs.mkdirsSync(versionInstallationPath)
+        vol.mkdirsSync(versionInstallationPath)
         expect(await remove(version, rootPath)).toBe(0)
         expect(fs.existsSync(versionPath(version))).toBe(false)
         expect(log.default).toHaveBeenCalledWith(
@@ -41,7 +44,7 @@ describe('yvm remove', () => {
         const version = '1.7.0'
         getVersionInUse.mockReturnValue(version)
         const versionInstallationPath = getExtractionPath(version, rootPath)
-        fs.mkdirsSync(versionInstallationPath)
+        vol.mkdirsSync(versionInstallationPath)
         expect(await remove(version, rootPath)).toBe(1)
         expect(fs.existsSync(versionPath(version))).toBe(true)
         expect(log.default).toHaveBeenCalledWith(
