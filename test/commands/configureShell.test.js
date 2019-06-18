@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import { fs, vol } from 'memfs'
 import path from 'path'
 import os from 'os'
 import mockProps from 'jest-mock-props'
@@ -34,15 +34,19 @@ describe('configureShell', () => {
 
     beforeEach(() => {
         jest.clearAllMocks()
-        fs.mkdirSync(mockHomeValue)
-        rcFilePaths.forEach(filePath => fs.outputFileSync(filePath, 'dummy'))
+        const dummyContent = 'dummy'
+        vol.fromJSON({
+            [rcFiles.bashrc]: dummyContent,
+            [rcFiles.bashpro]: dummyContent,
+            [rcFiles.zshrc]: dummyContent,
+            [rcFiles.fishconf]: dummyContent,
+        })
     })
 
     afterEach(() => {
         envHomeMock.mockReset()
         envYvmInstallDir.mockReset()
-        fs.removeSync(mockHomeValue)
-        fs.removeSync('config-mock-install-dir')
+        vol.reset()
     })
 
     afterAll(jest.restoreAllMocks)
@@ -134,7 +138,7 @@ describe('configureShell', () => {
     })
 
     it('configures none', async () => {
-        fs.emptyDirSync(mockHomeValue)
+        vol.reset()
         expect(await configureShell({ home: mockHomeValue })).toBe(1)
         rcFilePaths.forEach(file => expect(fs.existsSync(file)).toBe(false))
         confirmShellConfig()
@@ -161,10 +165,12 @@ that should be replaced`
             const expected = `with
 specific existing line
 that should be replaced`
-            fs.outputFileSync(fileName, initial)
+            vol.fromJSON({
+                [fileName]: initial,
+            })
             await ensureConfig(fileName, ['specific existing line'])
             expect(fs.readFileSync(fileName, 'utf8')).toEqual(expected)
-            fs.unlinkSync(fileName)
+            vol.reset()
         })
     })
 })
