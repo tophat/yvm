@@ -27,9 +27,7 @@ describe('yvm default version', () => {
     jest.spyOn(log, 'info')
     const resolveReserved = jest.spyOn(alias, 'resolveReserved')
     beforeEach(() => {
-        vol.fromJSON({
-            [mockYVMDir]: {},
-        })
+        vol.fromJSON({ [mockYVMDir]: {} })
         jest.clearAllMocks()
         resolveVersion.cache.clear()
         getVersionFromRange.cache.clear()
@@ -77,11 +75,7 @@ describe('yvm default version', () => {
 })
 
 describe('yvm config version', () => {
-    const mockRC = versionString => {
-        vol.fromJSON({
-            '.yvmrc': versionString,
-        })
-    }
+    const mockRC = versionString => vol.fromJSON({ '.yvmrc': versionString })
 
     afterEach(() => {
         jest.clearAllMocks()
@@ -123,9 +117,7 @@ describe('yvm config version', () => {
     })
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
-        vol.fromJSON({
-            [yvmPath]: {},
-        })
+        vol.fromJSON({ [yvmPath]: {} })
         await setDefaultVersion({
             version: mockVersion,
         })

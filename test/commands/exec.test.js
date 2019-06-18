@@ -17,9 +17,7 @@ jest.mock('util/path', () => ({
 describe('exec command', () => {
     const rcVersion = '1.13.0'
     beforeAll(() => {
-        vol.fromJSON({
-            '.yvmrc': `${rcVersion}\n`,
-        })
+        vol.fromJSON({ '.yvmrc': `${rcVersion}\n` })
         childProcess.execFileSync.mockImplementation(() => {})
         install.ensureVersionInstalled.mockImplementation(() => {})
     })

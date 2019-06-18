@@ -165,9 +165,7 @@ that should be replaced`
             const expected = `with
 specific existing line
 that should be replaced`
-            vol.fromJSON({
-                [fileName]: initial,
-            })
+            vol.fromJSON({ [fileName]: initial })
             await ensureConfig(fileName, ['specific existing line'])
             expect(fs.readFileSync(fileName, 'utf8')).toEqual(expected)
             vol.reset()

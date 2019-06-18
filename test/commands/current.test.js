@@ -14,9 +14,7 @@ describe('yvm current command', () => {
     jest.spyOn(log, 'default')
 
     beforeAll(() => {
-        vol.fromJSON({
-            '.yvmrc': '1.13.0',
-        })
+        vol.fromJSON({ '.yvmrc': '1.13.0' })
     })
 
     afterAll(() => {
