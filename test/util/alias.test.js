@@ -49,7 +49,7 @@ describe('alias util', () => {
     })
 
     describe('resolveSystem', () => {
-        beforeAll(() => {
+        beforeEach(() => {
             vol.fromJSON({
                 '/usr/local/bin/yarn': 'mock exec',
             })
