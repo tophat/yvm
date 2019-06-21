@@ -8,7 +8,7 @@ describe('yvm installed version', () => {
     jest.spyOn(log, 'default')
 
     beforeEach(jest.clearAllMocks)
-    afterEach(vol.reset)
+    afterEach(() => vol.reset())
     afterAll(jest.restoreAllMocks)
 
     it('Finds version if installed', () => {

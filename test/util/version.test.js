@@ -34,7 +34,7 @@ describe('yvm default version', () => {
         alias.getUserAliases.cache.clear()
         alias.resolveAlias.cache.clear()
     })
-    afterEach(vol.reset)
+    afterEach(() => vol.reset())
     afterAll(jest.restoreAllMocks)
 
     it('Logs failure to set default version', async () => {
@@ -195,7 +195,7 @@ describe('yvm installed versions', () => {
     beforeEach(() => {
         vol.fromJSON({ [mockYVMDir]: mockYVMDirContents })
     })
-    afterEach(vol.reset)
+    afterEach(() => vol.reset())
 
     it('Valid version folders', () => {
         const expectedVersions = mockValid.map(stripVersionPrefix)

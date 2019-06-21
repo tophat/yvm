@@ -27,7 +27,7 @@ describe('verification', () => {
         vol.fromJSON({ [rootPath]: {} })
         jest.clearAllMocks()
     })
-    afterEach(vol.reset)
+    afterEach(() => vol.reset())
     afterAll(jest.restoreAllMocks)
 
     it('executes successfully on valid signature', async () => {
