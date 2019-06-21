@@ -1,4 +1,4 @@
-const fs = require('fs')
+const { fs, vol } = require('memfs')
 
 const {
     findSection,
@@ -81,13 +81,13 @@ Replacement Content`)
         const sourceFile =
             '<!-- TAGNAME:START -->will replace target<!-- TAGNAME:END -->'
         beforeEach(() => {
-            fs.writeFileSync('sourceFile', sourceFile)
-            fs.writeFileSync('targetFile', '<!-- TAGNAME:PLACEHOLDER -->')
+            vol.fromJSON({
+                sourceFile,
+                targetFile: '<!-- TAGNAME:PLACEHOLDER -->',
+            })
         })
-        afterAll(() => {
-            fs.unlinkSync('sourceFile')
-            fs.unlinkSync('targetFile')
-        })
+        afterEach(() => vol.reset())
+
         it('writes replaced target to fs', () => {
             syncDoc('TAGNAME', 'sourceFile', 'targetFile')
             expect(fs.readFileSync('targetFile', 'utf8')).toEqual(sourceFile)
@@ -95,11 +95,12 @@ Replacement Content`)
     })
 
     describe('defintions', () => {
+        const nodefs = jest.requireActual('fs')
         const cases = syncDefinitions.map(def => [def.tag, def])
         it.each(cases)(
             'has correct tags in source for %s',
             (_, { tag, source }) => {
-                const sourceFileContent = fs.readFileSync(source, 'utf8')
+                const sourceFileContent = nodefs.readFileSync(source, 'utf8')
                 expect(findSection(tag, sourceFileContent)).toBeTruthy()
                 expect(
                     findSectionTag(tag, tags.PLACEHOLDER, sourceFileContent),
@@ -109,7 +110,7 @@ Replacement Content`)
         it.each(cases)(
             'has correct tags in target for %s',
             (_, { tag, target }) => {
-                const targetFileContent = fs.readFileSync(target, 'utf8')
+                const targetFileContent = nodefs.readFileSync(target, 'utf8')
                 expect(findSection(tag, targetFileContent)).toBeNull()
                 expect(
                     findSectionTag(tag, tags.PLACEHOLDER, targetFileContent),
