@@ -1,10 +1,11 @@
 const os = require('os')
-const { fs, vol } = require('memfs')
+const fs = require('fs-extra')
 const { execSync } = require('child_process')
 const https = require('https')
 const mockProps = require('jest-mock-props')
 mockProps.extend(jest)
 
+jest.unmock('fs')
 const {
     downloadFile,
     getConfig,
@@ -85,7 +86,7 @@ describe('install yvm', () => {
 
     afterEach(() => {
         jest.clearAllMocks()
-        vol.reset()
+        fs.removeSync(mockHomeValue)
         envHomeMock.mockReset()
         envUseLocal.mockReset()
         envInstallVersion.mockReset()
@@ -183,17 +184,17 @@ describe('install yvm', () => {
 
         it('creates home install directory if does not exist', async () => {
             const testHomePath = 'mock-create-home'
-            vol.reset()
+            fs.removeSync(testHomePath)
             expect(testHomePath).not.toBeExistingFile()
             envHomeMock.mockValue(testHomePath)
             await run()
             expect(`${testHomePath}/.yvm`).toBeExistingFile()
-            vol.reset()
+            fs.removeSync(testHomePath)
         })
 
         it('creates specified install directory if does not exist', async () => {
             const mockInstallDir = 'mock-install-dir/.myvm'
-            vol.reset()
+            fs.removeSync('mock-install-dir')
             const envYvmInstallDir = jest
                 .spyOnProp(process.env, 'YVM_INSTALL_DIR')
                 .mockValue(mockInstallDir)
@@ -201,7 +202,7 @@ describe('install yvm', () => {
             await run()
             envYvmInstallDir.mockRestore()
             expect(mockInstallDir).toBeExistingFile()
-            vol.reset()
+            fs.removeSync('mock-install-dir')
         })
 
         const rcFiles = [
@@ -225,7 +226,7 @@ describe('install yvm', () => {
         }
         it.each(rcFiles)('configures %s', async (rcFile, yvmScript) => {
             const filePath = `${mockHomeValue}/${rcFile}`
-            vol.fromJSON({ [filePath]: 'dummy' })
+            fs.outputFileSync(filePath, 'dummy')
             await run()
             const content = fs.readFileSync(filePath, 'utf8')
             shConfigs[filePath].forEach(string => {
@@ -242,13 +243,13 @@ describe('install yvm', () => {
         const mockHome = 'other-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            vol.fromJSON({
-                [`${mockHome}/.bashrc`]: '',
-                [`${mockHome}/.config/fish/config.fish`]: '',
-            })
+            fs.ensureFile(`${mockHome}/.bashrc`)
+            fs.ensureFile(`${mockHome}/.config/fish/config.fish`)
         })
 
-        afterEach(() => vol.reset())
+        afterAll(() => {
+            fs.removeSync(mockHome)
+        })
 
         const installFn = async () => {
             const config = getConfig()
@@ -296,13 +297,13 @@ describe('install yvm', () => {
         const mockHome = 'another-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            vol.fromJSON({
-                [`${mockHome}/.bashrc`]: '',
-                [`${mockHome}/.config/fish/config.fish`]: '',
-            })
+            fs.ensureFile(`${mockHome}/.bashrc`)
+            fs.ensureFile(`${mockHome}/.config/fish/config.fish`)
         })
 
-        afterEach(() => vol.reset())
+        afterEach(() => {
+            fs.removeSync(mockHome)
+        })
 
         const testFn = async installVersion => {
             envInstallVersion.mockValue(installVersion)
@@ -357,13 +358,15 @@ describe('install yvm', () => {
             envInstallVersion.mockValue(installVersion)
         })
 
-        afterEach(() => vol.reset())
+        afterAll(() => {
+            fs.removeSync(mockHome)
+        })
 
-        it('indicates invalid version tag', async () => {
+        it('indicates invalid version tag', async done => {
             const config = getConfig()
             try {
                 await run()
-                throw new Error(`Run did not throw an error`)
+                done.fail(`Run did not throw an error`)
             } catch (e) {
                 expect(e.message).toMatch(/No release version/)
             }
@@ -376,6 +379,7 @@ describe('install yvm', () => {
                 const filePath = `${yvmHome}/${file}`
                 expect(filePath).not.toBeExistingFile()
             })
+            done()
         })
     })
 })
