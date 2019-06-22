@@ -32,7 +32,7 @@ describe('yvm remove', () => {
         const version = '1.7.0'
         getVersionInUse.mockReturnValue('')
         const versionInstallationPath = getExtractionPath(version, rootPath)
-        vol.mkdirsSync(versionInstallationPath)
+        vol.fromJSON({ [versionInstallationPath]: {} })
         expect(await remove(version, rootPath)).toBe(0)
         expect(fs.existsSync(versionPath(version))).toBe(false)
         expect(log.default).toHaveBeenCalledWith(
@@ -44,7 +44,7 @@ describe('yvm remove', () => {
         const version = '1.7.0'
         getVersionInUse.mockReturnValue(version)
         const versionInstallationPath = getExtractionPath(version, rootPath)
-        vol.mkdirsSync(versionInstallationPath)
+        vol.fromJSON({ [versionInstallationPath]: {} })
         expect(await remove(version, rootPath)).toBe(1)
         expect(fs.existsSync(versionPath(version))).toBe(true)
         expect(log.default).toHaveBeenCalledWith(

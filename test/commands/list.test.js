@@ -50,6 +50,7 @@ describe('yvm list', () => {
     })
 
     it('Prints nothing if nothing installed', async () => {
+        vol.reset()
         expect(await list()).toBe(0)
         expect(printVersions).not.toHaveBeenCalled()
     })

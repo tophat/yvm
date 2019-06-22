@@ -70,7 +70,7 @@ describe('configureShell', () => {
 
     it('configures only bash_profile when no bashrc', async () => {
         envYvmInstallDir.mockValue(mockInstallDir)
-        fs.removeSync(rcFiles.bashrc)
+        fs.unlinkSync(rcFiles.bashrc)
         expect(
             await configureShell({ home: mockHomeValue, shell: 'bash' }),
         ).toBe(0)
