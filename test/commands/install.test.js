@@ -33,7 +33,6 @@ describe('yvm install', () => {
 
     afterAll(() => {
         jest.restoreAllMocks()
-        vol.reset()
     })
 
     const verifyLogPrints = (...expectedPhrases) => {

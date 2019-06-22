@@ -19,7 +19,6 @@ describe('yvm current command', () => {
 
     afterAll(() => {
         jest.restoreAllMocks()
-        vol.reset()
     })
 
     it('fails if yarn not installed and active', async () => {

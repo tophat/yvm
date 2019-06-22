@@ -21,9 +21,9 @@ describe('yvm remove', () => {
     })
 
     afterEach(() => {
+        vol.reset()
         getVersionInUse.mockReset()
         jest.clearAllMocks()
-        vol.reset()
     })
 
     afterAll(jest.restoreAllMocks)

@@ -23,11 +23,10 @@ describe('verification', () => {
         getVersionDownloadUrl(mockVersion),
         getDownloadPath(mockVersion, rootPath),
     )
-    beforeEach(() => {
+    beforeAll(() => {
         vol.fromJSON({ [rootPath]: {} })
-        jest.clearAllMocks()
     })
-    afterEach(() => vol.reset())
+    beforeEach(jest.clearAllMocks)
     afterAll(jest.restoreAllMocks)
 
     it('executes successfully on valid signature', async () => {
