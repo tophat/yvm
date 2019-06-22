@@ -186,18 +186,16 @@ describe('yvm installed versions', () => {
     const mockValid = ['v1.1.1', 'v1.2.3', 'v12.11.10-test-b2']
     const mockInvalid = ['v1.0', 'v1.0-a', '1.1.2', 'va1.1.3']
     const mockYVMDir = '/mock-yvm-root-dir'
-    const mockYVMDirContents = {
-        versions: [...mockValid, ...mockInvalid].reduce(
-            (a, v) => Object.assign(a, { [v]: {} }),
-            {},
-        ),
-    }
+    const mockYVMDirContents = [...mockValid, ...mockInvalid].reduce(
+        (a, v) => ({ [`${mockYVMDir}/versions/${v}`]: {}, ...a }),
+        {},
+    )
     beforeEach(() => {
-        vol.fromJSON({ [mockYVMDir]: mockYVMDirContents })
+        vol.fromJSON(mockYVMDirContents)
     })
     afterEach(() => vol.reset())
 
-    it('Valid version folders', () => {
+    it('reads valid version folders', () => {
         const expectedVersions = mockValid.map(stripVersionPrefix)
         expect(getYarnVersions(mockYVMDir)).toEqual(expectedVersions)
     })

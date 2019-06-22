@@ -14,9 +14,7 @@ describe('yvm installed version', () => {
     it('Finds version if installed', () => {
         const mockVersion = 'v1.2.3'
         vol.fromJSON({
-            [mockYVMDir]: {
-                '.version': `{ "version": "${mockVersion}" }`,
-            },
+            [`${mockYVMDir}/.version`]: `{ "version": "${mockVersion}" }`,
         })
         expect(yvmInstalledVersion(mockYVMDir)).toEqual(mockVersion)
     })
@@ -31,9 +29,7 @@ describe('yvm installed version', () => {
         delete process.env.YVM_VERBOSE
         const mockVersion = 'v1.2.3'
         vol.fromJSON({
-            [mockYVMDir]: {
-                '.version': `{ "${mockVersion}" }`,
-            },
+            [`${mockYVMDir}/.version`]: `{ "${mockVersion}" }`,
         })
         expect(yvmInstalledVersion(mockYVMDir)).toBeUndefined()
         expect(log.default).not.toHaveBeenCalled()
@@ -43,9 +39,7 @@ describe('yvm installed version', () => {
         delete process.env.YVM_VERBOSE
         const mockVersion = 'v1.2.3'
         vol.fromJSON({
-            [mockYVMDir]: {
-                '.version': `{ "version_not_key": "${mockVersion}" }`,
-            },
+            [`${mockYVMDir}/.version`]: `{ "version_not_key": "${mockVersion}" }`,
         })
         expect(yvmInstalledVersion(mockYVMDir)).toBeUndefined()
         expect(log.default).not.toHaveBeenCalled()
