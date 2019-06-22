@@ -188,14 +188,15 @@ export const printVersions = async ({
     log(message)
 
     versionInUse = versionInUse.trim()
-    defaultVersion = defaultVersion || (await getDefaultVersion(defaultYvmPath))
+    const versionDefault =
+        defaultVersion || (await getDefaultVersion(defaultYvmPath))
 
     const versionsMap = {}
 
     list.forEach(versionPadded => {
         const version = versionPadded.trim()
         const isCurrent = version === versionInUse
-        const isDefault = version === defaultVersion
+        const isDefault = version === versionDefault
         const isInstalled = localVersions.includes(version)
 
         let toLog = ' '
