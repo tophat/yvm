@@ -16,6 +16,7 @@ import {
 import * as version from 'util/version'
 
 jest.setTimeout(10000)
+jest.unmock('fs')
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/cmd/install/yvm',
     getPathEntries: () => [],

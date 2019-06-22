@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import { vol } from 'memfs'
 import kbpgp from 'kbpgp'
 
 import { downloadFile, getDownloadPath } from 'util/download'
@@ -24,7 +24,7 @@ describe('verification', () => {
         getDownloadPath(mockVersion, rootPath),
     )
     beforeAll(() => {
-        fs.mkdirsSync(rootPath)
+        vol.fromJSON({ [rootPath]: {} })
     })
     beforeEach(jest.clearAllMocks)
     afterAll(jest.restoreAllMocks)

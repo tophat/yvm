@@ -5,6 +5,7 @@ const https = require('https')
 const mockProps = require('jest-mock-props')
 mockProps.extend(jest)
 
+jest.unmock('fs')
 const {
     downloadFile,
     getConfig,
