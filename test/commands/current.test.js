@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { fs, vol } from 'memfs'
 import * as path from 'util/path'
 const getYarnPathEntries = jest.spyOn(path, 'getYarnPathEntries')
 const isYvmPath = jest.spyOn(path, 'isYvmPath')
@@ -12,6 +12,10 @@ import log from 'util/log'
 describe('yvm current command', () => {
     const mockYvmPath = '/User/tophat/.yvm'
     jest.spyOn(log, 'default')
+
+    beforeAll(() => {
+        vol.fromJSON({ '.yvmrc': '1.13.0' })
+    })
 
     afterAll(() => {
         jest.restoreAllMocks()

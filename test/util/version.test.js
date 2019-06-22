@@ -1,4 +1,4 @@
-import mockFS from 'mock-fs'
+import { vol } from 'memfs'
 import childProcess from 'child_process'
 
 import log from 'util/log'
@@ -27,17 +27,14 @@ describe('yvm default version', () => {
     jest.spyOn(log, 'info')
     const resolveReserved = jest.spyOn(alias, 'resolveReserved')
     beforeEach(() => {
-        log() // see https://github.com/facebook/jest/issues/5792
-        mockFS({
-            [mockYVMDir]: {},
-        })
+        vol.fromJSON({ [mockYVMDir]: {} })
         jest.clearAllMocks()
         resolveVersion.cache.clear()
         getVersionFromRange.cache.clear()
         alias.getUserAliases.cache.clear()
         alias.resolveAlias.cache.clear()
     })
-    afterEach(mockFS.restore)
+    afterEach(() => vol.reset())
     afterAll(jest.restoreAllMocks)
 
     it('Logs failure to set default version', async () => {
@@ -78,16 +75,11 @@ describe('yvm default version', () => {
 })
 
 describe('yvm config version', () => {
-    const mockRC = versionString => {
-        mockFS({
-            '.yvmrc': versionString,
-        })
-    }
+    const mockRC = versionString => vol.fromJSON({ '.yvmrc': versionString })
 
-    beforeEach(() => log())
     afterEach(() => {
         jest.clearAllMocks()
-        mockFS.restore()
+        vol.reset()
     })
 
     it('Uses supplied version if valid', async () => {
@@ -125,9 +117,7 @@ describe('yvm config version', () => {
     })
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
-        mockFS({
-            [yvmPath]: {},
-        })
+        vol.fromJSON({ [yvmPath]: {} })
         await setDefaultVersion({
             version: mockVersion,
         })
@@ -196,19 +186,16 @@ describe('yvm installed versions', () => {
     const mockValid = ['v1.1.1', 'v1.2.3', 'v12.11.10-test-b2']
     const mockInvalid = ['v1.0', 'v1.0-a', '1.1.2', 'va1.1.3']
     const mockYVMDir = '/mock-yvm-root-dir'
-    const mockYVMDirContents = {
-        versions: [...mockValid, ...mockInvalid].reduce(
-            (a, v) => Object.assign(a, { [v]: {} }),
-            {},
-        ),
-    }
+    const mockYVMDirContents = [...mockValid, ...mockInvalid].reduce(
+        (a, v) => ({ [`${mockYVMDir}/versions/${v}`]: {}, ...a }),
+        {},
+    )
     beforeEach(() => {
-        log()
-        mockFS({ [mockYVMDir]: mockYVMDirContents })
+        vol.fromJSON(mockYVMDirContents)
     })
-    afterEach(mockFS.restore)
+    afterEach(() => vol.reset())
 
-    it('Valid version folders', () => {
+    it('reads valid version folders', () => {
         const expectedVersions = mockValid.map(stripVersionPrefix)
         expect(getYarnVersions(mockYVMDir)).toEqual(expectedVersions)
     })

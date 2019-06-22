@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import { vol } from 'memfs'
 import path from 'path'
 
 import { alias } from 'commands/alias'
@@ -25,11 +25,6 @@ describe('alias command', () => {
         xyz: '1.13',
     }
 
-    const writeAliases = () => {
-        const aliasFilePath = path.join(rootPath, STORAGE_FILE)
-        fs.outputFileSync(aliasFilePath, JSON.stringify(mockAliases))
-    }
-
     beforeAll(() => {
         jest.spyOn(version, 'resolveVersion').mockImplementation(
             async (...args) => {
@@ -52,7 +47,9 @@ describe('alias command', () => {
     })
 
     beforeEach(() => {
-        writeAliases()
+        vol.fromJSON({
+            [path.join(rootPath, STORAGE_FILE)]: JSON.stringify(mockAliases),
+        })
         getUserAliases.cache.clear()
         jest.clearAllMocks()
     })

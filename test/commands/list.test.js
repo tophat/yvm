@@ -1,7 +1,7 @@
-import fs from 'fs-extra'
+import { vol } from 'memfs'
 
 import { yvmPath as rootPath } from 'util/path'
-import { getExtractionPath, versionRootPath } from 'util/utils'
+import { getExtractionPath } from 'util/utils'
 import * as version from 'util/version'
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 const printVersions = jest.spyOn(version, 'printVersions')
@@ -13,66 +13,49 @@ jest.mock('util/path', () => ({
 }))
 
 describe('yvm list', () => {
-    const garbageInDirectory = ['haxor']
     const versionsInDirectory = ['1.6.0', '1.7.0']
 
-    const getList = async () => {
-        versionsInDirectory.forEach(version => {
-            fs.mkdirsSync(getExtractionPath(version, rootPath))
+    beforeEach(() => {
+        vol.fromJSON({
+            [getExtractionPath('1.6.0', rootPath)]: {},
+            [getExtractionPath('1.7.0', rootPath)]: {},
+            [getExtractionPath('haxor', rootPath)]: {},
         })
-        garbageInDirectory.forEach(trash => {
-            fs.mkdirsSync(getExtractionPath(trash, rootPath))
-        })
-        return versionsInDirectory
-    }
-
-    beforeAll(() => {
-        fs.mkdirsSync(rootPath)
     })
 
     afterEach(() => {
-        fs.removeSync(versionRootPath(rootPath))
+        vol.reset()
         printVersions.mockReset()
         version.getYarnVersions.cache.clear()
     })
 
     it('Lists only yarn versions in the installation directory', async () => {
-        const listOutput = await getList()
         expect(await list()).toBe(0)
         expect(printVersions).toHaveBeenCalledWith(
             expect.objectContaining({
-                list: listOutput,
+                list: versionsInDirectory,
             }),
         )
-        versionsInDirectory.forEach(item => {
-            expect(listOutput.indexOf(item)).toBeGreaterThan(-1)
-        })
-        garbageInDirectory.forEach(item => {
-            expect(listOutput.indexOf(item)).toBe(-1)
-        })
     })
 
     it('Correctly passes active yarn version', async () => {
-        const [versionInUse, listOutput] = await Promise.all([
-            version.getVersionInUse(),
-            getList(),
-        ])
+        const versionInUse = await version.getVersionInUse()
         expect(await list()).toBe(0)
         expect(printVersions).toHaveBeenCalledWith(
             expect.objectContaining({
-                list: listOutput,
+                list: versionsInDirectory,
                 versionInUse,
             }),
         )
     })
 
     it('Prints nothing if nothing installed', async () => {
+        vol.reset()
         expect(await list()).toBe(0)
         expect(printVersions).not.toHaveBeenCalled()
     })
 
     it('Handles failures', async () => {
-        await getList()
         getVersionInUse.mockRejectedValueOnce(new Error('mock error'))
         expect(await list()).toBe(2)
     })
