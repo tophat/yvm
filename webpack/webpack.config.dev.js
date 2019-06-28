@@ -44,7 +44,7 @@ const installYVMPlugin = new WebpackCompilerPlugin({
             ...clearYvmCommands,
             linkCommands(
                 fileExists(yvmBinFileBak),
-                `mv "${yvmBinFile}.bak" "${yvmBinFile}"`,
+                `mv "${yvmBinFileBak}" "${yvmBinFile}"`,
             ),
             configureYvmCmd,
         ]),
