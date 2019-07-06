@@ -34,7 +34,7 @@
   "author": "Top Hat <opensource@tophat.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@babel/polyfill": "^7.2.5",
+    "@babel/polyfill": "^7.4.4",
     "chalk": "^2.4.2",
     "commander": "^2.15.1",
     "cosmiconfig": "^5.1.0",
