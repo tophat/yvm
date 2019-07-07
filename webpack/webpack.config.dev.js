@@ -15,16 +15,17 @@ const handleScript = script => {
 const executeScripts = scripts => scripts.forEach(handleScript)
 const scriptExecutor = scripts => () => executeScripts(scripts)
 
-const yvmBinFile = '${HOME}/.yvm/yvm.js'
+const yvmDir = '${YVM_DIR}'
+const yvmBinFile = `${yvmDir}/yvm.js`
 const yvmBinFileBak = `${yvmBinFile}.bak`
 const clearYvmCommands = [
-    'rm "${HOME}/.yvm/yvm.sh"',
-    'rm "${HOME}/.yvm/yvm.fish"',
-    'rm -rf "${HOME}/.yvm/shim"',
+    `rm "${yvmDir}/yvm.sh"`,
+    `rm "${yvmDir}/yvm.fish"`,
+    `rm -rf "${yvmDir}/shim"`,
 ]
 const configureYvmCmd = linkCommands(
     fileExists(yvmBinFile),
-    `node ${yvmBinFile} configure-shell`,
+    `YVM_INSTALL_DIR="${yvmDir}" node ${yvmBinFile} configure-shell`,
 )
 const installYVMPlugin = new WebpackCompilerPlugin({
     name: 'install-yvm-plugin',
