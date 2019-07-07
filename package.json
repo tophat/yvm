@@ -34,13 +34,14 @@
   "author": "Top Hat <opensource@tophat.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "chalk": "^2.4.2",
     "commander": "^2.15.1",
+    "core-js": "^3.1.4",
     "cosmiconfig": "^5.1.0",
     "fs-extra": "^8.0.0",
     "kbpgp": "^2.1.0",
     "lodash": "^4.17.11",
+    "regenerator-runtime": "^0.13.2",
     "request": "^2.87.0",
     "semver": "^6.0.0",
     "targz": "^1.0.1"

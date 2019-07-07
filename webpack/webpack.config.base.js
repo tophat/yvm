@@ -15,7 +15,7 @@ const constants = {
 const config = {
     mode: 'production',
     entry: {
-        yvm: ['@babel/polyfill', './src/yvm.js'],
+        yvm: ['./src/yvm.js'],
     },
     output: {
         filename: '[name].js',
