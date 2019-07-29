@@ -93,12 +93,7 @@ describe('configureShell', () => {
 
     it('configures only fish', async () => {
         envHomeMock.mockValue(mockHomeValue)
-        expect(
-            await configureShell({
-                shell: 'fish',
-                yvmDir: `${mockHomeValue}/.yvm`,
-            }),
-        ).toBe(0)
+        expect(await configureShell({ shell: 'fish', yvmDir })).toBe(0)
         confirmShellConfig()
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining('Configured'),
