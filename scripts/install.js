@@ -13,6 +13,7 @@ const releaseAssetsByPreference = [binFile, zipFile]
 
 function getConfig() {
     const home = process.env.HOME || os.homedir()
+    const profile = process.env.PROFILE || null
     const useLocal = process.env.USE_LOCAL || false
     const yvmDir = process.env.YVM_INSTALL_DIR || path.join(home, '.yvm')
     const yvmGateway = 'https://d236jo9e8rrdox.cloudfront.net'
@@ -20,6 +21,7 @@ function getConfig() {
     return {
         paths: {
             home,
+            profile,
             yvm: yvmDir,
         },
         releaseApiUrl,
@@ -265,14 +267,13 @@ async function run() {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
     try {
-        const configureCommand = [
-            'node',
-            yvmBinFile,
-            'configure-shell',
-            '--home',
-            paths.home,
-        ].join(' ')
-        execSync(configureCommand)
+        const configureCommand = ['node', yvmBinFile, 'configure-shell']
+        configureCommand.push('--home', paths.home)
+        configureCommand.push('--yvmDir', paths.yvm)
+        if (paths.profile) {
+            configureCommand.push('--profile', paths.profile)
+        }
+        execSync(configureCommand.join(' '))
     } catch (e) {
         log('Unable to configure shell')
     }
