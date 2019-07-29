@@ -30,16 +30,16 @@ Object {
 exports[`configureShell configures none 2`] = `
 Array [
   Array [
-    "Unable to configure BASH at",
-    "config-mock-home/.bashrc or config-mock-home/.bash_profile",
-  ],
-  Array [
     "Unable to configure FISH at",
     "config-mock-home/.config/fish/config.fish",
   ],
   Array [
     "Unable to configure ZSH at",
     "config-mock-home/.zshrc",
+  ],
+  Array [
+    "Unable to configure BASH at",
+    "config-mock-home/.bashrc or config-mock-home/.bash_profile",
   ],
 ]
 `;

@@ -49,7 +49,7 @@ export async function ensureConfig(configFile, configLines) {
 const yvmDirVarName = 'YVM_DIR'
 
 export const configureBash = async ({ home, profile, yvmDir }) => {
-    const profiles = [
+    const configFiles = [
         profile,
         path.join(home, '.bashrc'),
         path.join(home, '.bash_profile'),
@@ -60,12 +60,12 @@ export const configureBash = async ({ home, profile, yvmDir }) => {
         `export ${yvmDirVarName}=${yvmDir}`,
         `[ -r $${shPathVariable} ] && . $${shPathVariable}`,
     ]
-    for (const file of profiles) {
-        if (fs.existsSync(file) && (await ensureConfig(file, bashConfig))) {
+    for (const file of configFiles) {
+        if (await ensureConfig(file, bashConfig)) {
             return unpackShellScript(bashScript, path.join(yvmDir, shFile))
         }
     }
-    log('Unable to configure BASH at', profiles.join(' or '))
+    log('Unable to configure BASH at', configFiles.join(' or '))
 }
 
 export const configureFish = async ({ home, profile, yvmDir }) => {
@@ -79,13 +79,11 @@ export const configureFish = async ({ home, profile, yvmDir }) => {
         `. $${path.join(yvmDirVarName, fishFile)}`,
     ]
     for (const file of configFiles) {
-        const configured = await ensureConfig(file, fishConfig)
-        if (!configured) {
-            log('Unable to configure FISH at', file)
-            return false
+        if (await ensureConfig(file, fishConfig)) {
+            return unpackShellScript(fishScript, path.join(yvmDir, fishFile))
         }
-        return unpackShellScript(fishScript, path.join(yvmDir, fishFile))
     }
+    log('Unable to configure FISH at', configFiles.join(' or '))
 }
 
 export const configureZsh = async ({ home, profile, yvmDir }) => {
@@ -97,13 +95,11 @@ export const configureZsh = async ({ home, profile, yvmDir }) => {
         `[ -r $${shPathVariable} ] && . $${shPathVariable}`,
     ]
     for (const file of configFiles) {
-        const configured = await ensureConfig(file, zshConfig)
-        if (!configured) {
-            log('Unable to configure ZSH at', file)
-            return false
+        if (await ensureConfig(file, zshConfig)) {
+            return unpackShellScript(bashScript, path.join(yvmDir, zshFile))
         }
-        return unpackShellScript(bashScript, path.join(yvmDir, zshFile))
     }
+    log('Unable to configure ZSH at', configFiles.join(' or '))
 }
 
 export const configureShim = async ({ yvmDir }) => {
