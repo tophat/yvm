@@ -31,9 +31,7 @@ exports[`configureShell configures none 2`] = `
 Array [
   Array [
     "Unable to configure BASH at",
-    "config-mock-home/.bashrc",
-    "or",
-    "config-mock-home/.bash_profile",
+    "config-mock-home/.bashrc or config-mock-home/.bash_profile",
   ],
   Array [
     "Unable to configure FISH at",
