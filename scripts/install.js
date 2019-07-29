@@ -266,15 +266,24 @@ async function run() {
     if (version.tagName) {
         ongoingTasks.push(saveVersion(version.tagName, paths.yvm))
     }
-    try {
-        const configureCommand = ['node', yvmBinFile, 'configure-shell']
-        configureCommand.push('--home', paths.home)
-        configureCommand.push('--yvmDir', paths.yvm)
-        if (paths.profile) {
-            configureCommand.push('--profile', paths.profile)
+    const configureCommand = ['node', yvmBinFile, 'configure-shell']
+    if (paths.home) configureCommand.push('--home', paths.home)
+    if (paths.profile) configureCommand.push('--profile', paths.profile)
+    // Run without --yvmDir flag for n-1 compatibility
+    const commandStrings = [configureCommand.join(' ')]
+    if (paths.yvm) configureCommand.push('--yvmDir', paths.yvm)
+    commandStrings.unshift(configureCommand.join(' '))
+    let configured = false
+    for (const cmd of commandStrings) {
+        try {
+            execSync(cmd)
+            configured = true
+            break
+        } catch (e) {
+            continue
         }
-        execSync(configureCommand.join(' '))
-    } catch (e) {
+    }
+    if (!configured) {
         log('Unable to configure shell')
     }
     await Promise.all(ongoingTasks)
