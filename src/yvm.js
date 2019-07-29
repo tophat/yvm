@@ -150,6 +150,7 @@ argParser
     .option('--home [home]', 'Alternate path to home directory')
     .option('--shell [shell]', 'Shell to configure, defaults to all')
     .option('--profile [profile]', 'Alternate path to shell profile')
+    .option('--yvmDir [yvmDir]', 'Alternate path to yvm install path')
     .option('--no-shim', 'Skips yarn shim')
     .description(
         'Internal command: Configures any shell config files found for loading yvm on startup',
