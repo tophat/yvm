@@ -18,6 +18,7 @@ describe('configureShell', () => {
 
     const fileToPath = ([file]) => path.join(mockHomeValue, file)
     const rcFiles = {
+        custom: fileToPath`.custom_profile`,
         bashrc: fileToPath`.bashrc`,
         bashpro: fileToPath`.bash_profile`,
         zshrc: fileToPath`.zshrc`,
@@ -36,6 +37,7 @@ describe('configureShell', () => {
         jest.clearAllMocks()
         const dummyContent = 'dummy'
         vol.fromJSON({
+            [rcFiles.custom]: dummyContent,
             [rcFiles.bashrc]: dummyContent,
             [rcFiles.bashpro]: dummyContent,
             [rcFiles.zshrc]: dummyContent,
@@ -49,6 +51,26 @@ describe('configureShell', () => {
     })
 
     afterAll(jest.restoreAllMocks)
+
+    it('configures custom profile', async () => {
+        expect(
+            await configureShell({
+                shell: 'bash',
+                profile: fileToPath`.custom_profile`,
+                yvmDir: mockInstallDir,
+            }),
+        ).toBe(0)
+        confirmShellConfig()
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining('Configured'),
+        )
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining(rcFiles.custom),
+        )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
+        )
+    })
 
     it('configures only bashrc', async () => {
         expect(
