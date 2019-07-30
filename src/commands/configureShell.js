@@ -125,15 +125,14 @@ export const configureShell = async ({
         const configHandler = sh => configHandlers[sh](config)
         const configShells = Object.keys(configHandlers)
         const supportedShells = configShells.filter(sh => sh.includes(shell))
-        const updatingShellConfigs =
+        const updatingShellConfigs = [].concat(
             profile && !shell
-                ? [
-                      supportedShells.reduce(
-                          (conf, sh) => conf.then(r => r || configHandler(sh)),
-                          Promise.resolve(false),
-                      ),
-                  ]
-                : supportedShells.map(configHandler)
+                ? supportedShells.reduce(
+                      (conf, sh) => conf.then(r => r || configHandler(sh)),
+                      Promise.resolve(false),
+                  )
+                : supportedShells.map(configHandler),
+        )
         const shimSuccessful = shim
             ? configureShim({ yvmDir })
             : Promise.resolve(true)
