@@ -19,8 +19,7 @@ template: >
       File.write("#{ENV["HOME"]}/.bashrc", "")
       mkdir_p "#{ENV["HOME"]}/.config/fish"
       File.write("#{ENV["HOME"]}/.config/fish/config.fish", "")
-      ENV["YVM_INSTALL_DIR"] = "."
-      system "node", "yvm.js", "configure-shell"
+      system "node", "yvm.js", "configure-shell", "--yvmDir", "."
       update_self_disabled = "echo 'YVM update-self disabled. Use `brew upgrade yvm`.'"
       inreplace "yvm.sh" do |s|
         s.gsub! 'YVM_DIR=${YVM_DIR-"${HOME}/.yvm"}', "YVM_DIR='#{prefix}'"
@@ -50,8 +49,7 @@ template: >
 
     test do
       File.write("#{ENV["HOME"]}/.bashrc", "")
-      ENV["YVM_INSTALL_DIR"] = prefix.to_s
-      system "node", "#{prefix}/yvm.js", "configure-shell"
+      system "node", "#{prefix}/yvm.js", "configure-shell", "--yvmDir", prefix.to_s
       system "bash -i -c 'echo $YVM_DIR'"
       system "bash -i -c 'yvm ls-remote'"
       ENV["YVM_DIR"] = prefix.to_s
