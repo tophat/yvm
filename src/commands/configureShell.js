@@ -122,14 +122,22 @@ export const configureShell = async ({
             fish: configureFish,
             zsh: configureZsh,
         }
-        const updatingShellConfigs = []
-        for (const supportedShell of Object.keys(configHandlers)) {
-            if (supportedShell.includes(shell)) {
-                updatingShellConfigs.push(
-                    configHandlers[supportedShell](config),
-                )
-            }
-        }
+        const configShells = Object.keys(configHandlers)
+        const supportedShells = configShells.filter(s => s.includes(shell))
+        const updatingShellConfigs =
+            profile && !shell
+                ? [
+                      supportedShells
+                          .map(sh => () => configHandlers[sh](config))
+                          .reduce(
+                              (lastConfPromise, nextConfPromiseFactory) =>
+                                  lastConfPromise.then(
+                                      r => r || nextConfPromiseFactory(),
+                                  ),
+                              Promise.resolve(false),
+                          ),
+                  ]
+                : supportedShells.map(sh => configHandlers[sh](config))
         const shimSuccessful = shim
             ? configureShim({ yvmDir })
             : Promise.resolve(true)

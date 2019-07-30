@@ -25,6 +25,19 @@ Object {
   "config-mock-home/.bashrc": "dummy",
   "config-mock-home/.config/fish/config.fish": "dummy",
   "config-mock-home/.custom_profile": "dummy
+set -x YVM_DIR config-mock-install-dir/.yvm
+. $YVM_DIR/yvm.fish
+",
+  "config-mock-home/.zshrc": "dummy",
+}
+`;
+
+exports[`configureShell configures first supported shell for custom profile 1`] = `
+Object {
+  "config-mock-home/.bash_profile": "dummy",
+  "config-mock-home/.bashrc": "dummy",
+  "config-mock-home/.config/fish/config.fish": "dummy",
+  "config-mock-home/.custom_profile": "dummy
 export YVM_DIR=config-mock-install-dir/.yvm
 [ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ",

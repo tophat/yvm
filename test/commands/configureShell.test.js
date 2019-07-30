@@ -55,7 +55,26 @@ describe('configureShell', () => {
     it('configures custom profile', async () => {
         expect(
             await configureShell({
-                shell: 'bash',
+                shell: 'fish',
+                profile: fileToPath`.custom_profile`,
+                yvmDir: mockInstallDir,
+            }),
+        ).toBe(0)
+        confirmShellConfig()
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining('Configured'),
+        )
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining(rcFiles.custom),
+        )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
+        )
+    })
+
+    it('configures first supported shell for custom profile', async () => {
+        expect(
+            await configureShell({
                 profile: fileToPath`.custom_profile`,
                 yvmDir: mockInstallDir,
             }),
