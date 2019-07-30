@@ -1,3 +1,10 @@
+# [3.6.0](https://github.com/tophat/yvm/compare/v3.5.0...v3.6.0) (2019-07-30)
+
+
+### Features
+
+* support configurable shell profiles ([#439](https://github.com/tophat/yvm/issues/439)) ([bcfe8bb](https://github.com/tophat/yvm/commit/bcfe8bb))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
