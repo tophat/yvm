@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/tophat/yvm/compare/v3.6.0...v3.6.1) (2019-07-30)
+
+
+### Bug Fixes
+
+* do not configure the custom profile for multiple shells ([#440](https://github.com/tophat/yvm/issues/440)) ([d616d43](https://github.com/tophat/yvm/commit/d616d43))
+
 # [3.6.0](https://github.com/tophat/yvm/compare/v3.5.0...v3.6.0) (2019-07-30)
 
 
