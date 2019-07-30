@@ -39,7 +39,7 @@ template: >
     def caveats
       emptor = <<~EOS
         Run the following command to configure your shell rc file
-        $ YVM_INSTALL_DIR="#{prefix}" node "#{prefix}/yvm.js" configure-shell
+        $ node "#{prefix}/yvm.js" configure-shell --yvmDir "#{prefix}"
 
         If you have previously installed YVM, link the versions folder
         to allow all brewed YVM access to the managed yarn distributions

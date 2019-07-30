@@ -9,15 +9,16 @@ import { configureShell, ensureConfig } from 'commands/configureShell'
 
 describe('configureShell', () => {
     const mockHomeValue = 'config-mock-home'
+    const yvmDir = `${mockHomeValue}/.yvm`
     const envHomeMock = jest.spyOnProp(process.env, 'HOME')
     const mockInstallDir = 'config-mock-install-dir/.yvm'
-    const envYvmInstallDir = jest.spyOnProp(process.env, 'YVM_INSTALL_DIR')
     jest.spyOn(os, 'homedir')
     jest.spyOn(log, 'default')
     jest.spyOn(log, 'info')
 
     const fileToPath = ([file]) => path.join(mockHomeValue, file)
     const rcFiles = {
+        custom: fileToPath`.custom_profile`,
         bashrc: fileToPath`.bashrc`,
         bashpro: fileToPath`.bash_profile`,
         zshrc: fileToPath`.zshrc`,
@@ -36,6 +37,7 @@ describe('configureShell', () => {
         jest.clearAllMocks()
         const dummyContent = 'dummy'
         vol.fromJSON({
+            [rcFiles.custom]: dummyContent,
             [rcFiles.bashrc]: dummyContent,
             [rcFiles.bashpro]: dummyContent,
             [rcFiles.zshrc]: dummyContent,
@@ -45,16 +47,38 @@ describe('configureShell', () => {
 
     afterEach(() => {
         envHomeMock.mockReset()
-        envYvmInstallDir.mockReset()
         vol.reset()
     })
 
     afterAll(jest.restoreAllMocks)
 
-    it('configures only bashrc', async () => {
-        envYvmInstallDir.mockValue(mockInstallDir)
+    it('configures custom profile', async () => {
         expect(
-            await configureShell({ home: mockHomeValue, shell: 'bash' }),
+            await configureShell({
+                shell: 'bash',
+                profile: fileToPath`.custom_profile`,
+                yvmDir: mockInstallDir,
+            }),
+        ).toBe(0)
+        confirmShellConfig()
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining('Configured'),
+        )
+        expect(log.info).toHaveBeenCalledWith(
+            expect.stringContaining(rcFiles.custom),
+        )
+        expect(log.default).toHaveBeenCalledWith(
+            'Shell configured successfully',
+        )
+    })
+
+    it('configures only bashrc', async () => {
+        expect(
+            await configureShell({
+                home: mockHomeValue,
+                shell: 'bash',
+                yvmDir: mockInstallDir,
+            }),
         ).toBe(0)
         confirmShellConfig()
         expect(log.info).toHaveBeenCalledWith(
@@ -69,10 +93,13 @@ describe('configureShell', () => {
     })
 
     it('configures only bash_profile when no bashrc', async () => {
-        envYvmInstallDir.mockValue(mockInstallDir)
         fs.unlinkSync(rcFiles.bashrc)
         expect(
-            await configureShell({ home: mockHomeValue, shell: 'bash' }),
+            await configureShell({
+                home: mockHomeValue,
+                shell: 'bash',
+                yvmDir: mockInstallDir,
+            }),
         ).toBe(0)
         confirmShellConfig()
         expect(log.info).toHaveBeenCalledWith(
@@ -88,7 +115,7 @@ describe('configureShell', () => {
 
     it('configures only fish', async () => {
         envHomeMock.mockValue(mockHomeValue)
-        expect(await configureShell({ shell: 'fish' })).toBe(0)
+        expect(await configureShell({ shell: 'fish', yvmDir })).toBe(0)
         confirmShellConfig()
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining('Configured'),
@@ -104,7 +131,7 @@ describe('configureShell', () => {
     it('configures only zsh', async () => {
         envHomeMock.mockValue()
         os.homedir.mockReturnValueOnce(mockHomeValue)
-        expect(await configureShell({ shell: 'zsh' })).toBe(0)
+        expect(await configureShell({ shell: 'zsh', yvmDir })).toBe(0)
         confirmShellConfig()
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining('Configured'),
@@ -118,7 +145,7 @@ describe('configureShell', () => {
     })
 
     it('configures all', async () => {
-        expect(await configureShell({ home: mockHomeValue })).toBe(0)
+        expect(await configureShell({ home: mockHomeValue, yvmDir })).toBe(0)
         confirmShellConfig()
         expect(log.info).toHaveBeenCalledWith(
             expect.stringContaining('Configured'),

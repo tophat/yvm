@@ -25,7 +25,7 @@ const clearYvmCommands = [
 ]
 const configureYvmCmd = linkCommands(
     fileExists(yvmBinFile),
-    `YVM_INSTALL_DIR="${yvmDir}" node ${yvmBinFile} configure-shell`,
+    `node ${yvmBinFile} configure-shell --yvmDir "${yvmDir}"`,
 )
 const installYVMPlugin = new WebpackCompilerPlugin({
     name: 'install-yvm-plugin',
