@@ -26,6 +26,9 @@ MADGE := $(NODE_MODULES_BIN)/madge --circular src
 BUNDLEWATCH := $(NODE_MODULES_BIN)/bundlewatch --config .bundlewatch.config.js
 JEST := $(JEST_ENV_VARIABLES) $(NODE_MODULES_BIN)/jest $(JEST_ARGS)
 WEBPACK := $(NODE_MODULES_BIN)/webpack $(WEBPACK_ARGS)
+WEBPACK_BUILD_ := $(WEBPACK) --config webpack/webpack.config
+WEBPACK_BUILD_DEV := $(WEBPACK_BUILD_).dev.js
+WEBPACK_BUILD_DEV_WATCH := $(WEBPACK_BUILD_DEV) --watch
 
 .PHONY: help
 help:
@@ -55,15 +58,15 @@ help:
 
 .PHONY: build-production
 build-production: node_modules clean_webpack_build
-	$(WEBPACK) --config webpack/webpack.config.prod.js
+	 $(WEBPACK_BUILD_).prod.js
 
 .PHONY: build
 build: node_modules clean_webpack_build
-	$(WEBPACK) --config webpack/webpack.config.dev.js
+	$(WEBPACK_BUILD_DEV)
 
 .PHONY: build-watch
 build-watch: node_modules clean_webpack_build
-	$(WEBPACK) --config webpack/webpack.config.dev.js --watch
+	$(WEBPACK_BUILD_DEV_WATCH)
 
 # ---- YVM Command Stuff ----
 
@@ -76,7 +79,7 @@ install: build-production install-local
 
 .PHONY: install-watch
 install-watch: node_modules clean_webpack_build
-	$(WEBPACK) --config webpack/webpack.config.dev.js --watch --env.INSTALL=true
+	$(WEBPACK_BUILD_DEV_WATCH) --env.INSTALL=true
 
 # -------------- Linting --------------
 
