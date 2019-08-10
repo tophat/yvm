@@ -1,3 +1,10 @@
+## [3.6.2](https://github.com/tophat/yvm/compare/v3.6.1...v3.6.2) (2019-08-10)
+
+
+### Bug Fixes
+
+* pin install version in legacy shell install script ([#443](https://github.com/tophat/yvm/issues/443)) ([00ebfa7](https://github.com/tophat/yvm/commit/00ebfa7))
+
 ## [3.6.1](https://github.com/tophat/yvm/compare/v3.6.0...v3.6.1) (2019-07-30)
 
 
