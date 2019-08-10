@@ -8,10 +8,10 @@
   },
   "main": "yvm.js",
   "scripts": {
+    "commit": "npx git-cz",
     "contributors:add": "all-contributors add",
-    "contributors:generate": "all-contributors generate",
     "contributors:check": "all-contributors check",
-    "commit": "npx git-cz"
+    "contributors:generate": "all-contributors generate"
   },
   "jest": {
     "moduleDirectories": [
@@ -88,6 +88,9 @@
   "lint-staged": {
     "*.js": [
       "node_modules/.bin/eslint"
+    ],
+    "yarn.lock": [
+      "node_modules/.bin/yarn-deduplicate --list --fail"
     ]
   },
   "config": {
@@ -97,7 +100,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn-deduplicate && lint-staged"
+      "pre-commit": "lint-staged"
     }
   }
 }
