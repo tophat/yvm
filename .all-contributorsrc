@@ -210,6 +210,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "derekedelaney",
+      "name": "Derek Delaney",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/14036573?v=4",
+      "profile": "https://github.com/derekedelaney",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
