@@ -219,7 +219,45 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "dependabot[bot]",
+      "name": "dependabot[bot]",
+      "avatar_url": "https://avatars0.githubusercontent.com/in/29110?v=4",
+      "profile": "https://github.com/apps/dependabot",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
+      "login": "allcontributors[bot]",
+      "name": "allcontributors[bot]",
+      "avatar_url": "https://avatars0.githubusercontent.com/in/23186?v=4",
+      "profile": "https://github.com/apps/allcontributors",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "umar-ahmed",
+      "name": "Umar Ahmed",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8302959?v=4",
+      "profile": "https://github.com/umar-ahmed",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "abinoda",
+      "name": "Abi Noda",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/50083?v=4",
+      "profile": "http://twitter.com/abi",
+      "contributions": [
+        "doc",
+        "projectManagement"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "commitConvention": "none"
 }

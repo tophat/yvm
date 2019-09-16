@@ -12,7 +12,7 @@
 [![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm)
 [![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm)
 [![Green Keeper](https://badges.greenkeeper.io/tophat/yvm.svg)](https://greenkeeper.io)
-[![All Contributors](https://img.shields.io/badge/all_contributors-23-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-27-orange.svg?style=flat-square)](#contributors-)
 [![Slack workspace](https://slackinvite.dev.tophat.com/badge.svg)](https://opensource.tophat.com/slack)
 [![Maturity badge - level 3](https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg)](https://github.com/tophat/getting-started/blob/master/scorecard.md)
 [![Pull Reminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
@@ -239,7 +239,8 @@ yvm <your-command-here>
 Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 <table>
   <tr>
     <td align="center"><a href="https://github.com/francoiscampbell"><img src="https://avatars3.githubusercontent.com/u/3876970?v=4" width="100px;" alt="Francois Campbell"/><br /><sub><b>Francois Campbell</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=francoiscampbell" title="Code">💻</a></td>
@@ -271,9 +272,15 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
   <tr>
     <td align="center"><a href="https://noahnu.com"><img src="https://avatars0.githubusercontent.com/u/1297096?v=4" width="100px;" alt="Noah"/><br /><sub><b>Noah</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=noahnu" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/derekedelaney"><img src="https://avatars0.githubusercontent.com/u/14036573?v=4" width="100px;" alt="Derek Delaney"/><br /><sub><b>Derek Delaney</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=derekedelaney" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/apps/dependabot"><img src="https://avatars0.githubusercontent.com/in/29110?v=4" width="100px;" alt="dependabot[bot]"/><br /><sub><b>dependabot[bot]</b></sub></a><br /><a href="#infra-dependabot[bot]" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+    <td align="center"><a href="https://github.com/apps/allcontributors"><img src="https://avatars0.githubusercontent.com/in/23186?v=4" width="100px;" alt="allcontributors[bot]"/><br /><sub><b>allcontributors[bot]</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=allcontributors[bot]" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/umar-ahmed"><img src="https://avatars1.githubusercontent.com/u/8302959?v=4" width="100px;" alt="Umar Ahmed"/><br /><sub><b>Umar Ahmed</b></sub></a><br /><a href="https://github.com/tophat/yvm/issues?q=author%3Aumar-ahmed" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://twitter.com/abi"><img src="https://avatars0.githubusercontent.com/u/50083?v=4" width="100px;" alt="Abi Noda"/><br /><sub><b>Abi Noda</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=abinoda" title="Documentation">📖</a> <a href="#projectManagement-abinoda" title="Project Management">📆</a></td>
   </tr>
 </table>
 
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
