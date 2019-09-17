@@ -60,7 +60,7 @@ end
 
 testing "yarn shimmed config"
 set test_shim_config_output (yarn --version)
-if test "$test_shim_config_output" = "1.16.0"
+if test "$test_shim_config_output" = "1.17.3"
     pass
 else
     fail $test_shim_config_output
@@ -70,7 +70,7 @@ testing "yvm use"
 yvm install 1.13.0
 yvm use 1.13.0
 set test2_output (yvm exec --version)
-if test "$test2_output" = "1.16.0"
+if test "$test2_output" = "1.17.3"
     pass
 else
     fail $test2_output
