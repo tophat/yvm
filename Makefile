@@ -135,7 +135,7 @@ bundlewatch:
 
 .PHONY: use-docker
 use-docker:
-	docker run -it --env CI=1 --mount src=$(PWD),target=/yvm,type=bind circleci/node:8.14.0
+	docker run -it --env CI=1 --mount src=$(PWD),target=/yvm,type=bind circleci/node:8.16.0
 
 .PHONY: node_modules
 node_modules:
