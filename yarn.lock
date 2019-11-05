@@ -976,9 +976,9 @@
     read-pkg-up "^6.0.0"
 
 "@tophat/eslint-config@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@tophat/eslint-config/-/eslint-config-0.2.0.tgz#7f2021e328efc0426b21f6ee5f0a17f99e5b06ec"
-  integrity sha512-Q1DJN3uBN7JbgfZKAwg9V0jyGD3sj/8bbTmlL1JQB/z6uQiLgdqV3c4oVYqucfarQ3gIxBw7h9tdtvHXoA6KRA==
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@tophat/eslint-config/-/eslint-config-0.2.1.tgz#6689dba91ef304f21f8a9201057cd718ae3f34bc"
+  integrity sha512-cmHkESCDXUeIhxfF6jqFTOBLm29LCE4M4Fphm0PzdeaAtNUkEub+t5tATMS47dJcXthTODhGoy+TIEvIx3rqAA==
 
 "@types/babel__core@^7.1.0":
   version "7.1.2"
