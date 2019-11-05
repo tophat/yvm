@@ -34,7 +34,7 @@ export const getRequest = memoize(async url => {
                     if (error) {
                         log(error)
                     }
-                    return reject(responseBody)
+                    return reject(new Error(responseBody))
                 }
                 return reject(error)
             }

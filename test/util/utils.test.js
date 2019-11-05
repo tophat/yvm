@@ -60,11 +60,9 @@ describe('getRequest', () => {
         request.get.mockImplementationOnce((_, callback) => {
             callback(mockError, null, null)
         })
-        try {
-            await getRequest('https://invalid.url')
-        } catch (rejection) {
-            expect(rejection).toBe(mockError)
-        }
+        await expect(getRequest('https://invalid.url')).rejects.toThrow(
+            mockError,
+        )
     })
 
     it('rejects with response body', async () => {
@@ -72,12 +70,10 @@ describe('getRequest', () => {
         request.get.mockImplementationOnce((_, callback) => {
             callback(null, { statusCode: 400, body: mockResponseBody })
         })
-        try {
-            await getRequest('https://wrong.url')
-        } catch (rejection) {
-            expect(log.default).not.toHaveBeenCalled()
-            expect(rejection).toBe(mockResponseBody)
-        }
+        await expect(getRequest('https://wrong.url')).rejects.toThrow(
+            mockResponseBody,
+        )
+        expect(log.default).not.toHaveBeenCalled()
     })
 
     it('rejects with response body and logs error', async () => {
@@ -86,12 +82,10 @@ describe('getRequest', () => {
         request.get.mockImplementationOnce((_, callback) => {
             callback(mockError, { statusCode: 400, body: mockResponseBody })
         })
-        try {
-            await getRequest('https://wrong.invalid.url')
-        } catch (rejection) {
-            expect(log.default).toHaveBeenCalledWith(mockError)
-            expect(rejection).toBe(mockResponseBody)
-        }
+        await expect(getRequest('https://wrong.invalid.url')).rejects.toThrow(
+            mockResponseBody,
+        )
+        expect(log.default).toHaveBeenCalledWith(mockError)
     })
 })
 
