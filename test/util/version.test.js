@@ -127,13 +127,10 @@ describe('yvm config version', () => {
     it('Throws error when unable to parse or find any version', async () => {
         jest.spyOn(log, 'error')
         mockRC('')
-        try {
-            await getSplitVersionAndArgs('va0.1.1')
-        } catch (e) {
-            expect(e.message).toEqual(
-                expect.stringContaining('No yarn version supplied'),
-            )
-        }
+        await setDefaultVersion({ version: null })
+        await expect(getSplitVersionAndArgs('va0.1.1')).rejects.toThrow(
+            'No yarn version supplied',
+        )
     })
 })
 

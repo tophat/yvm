@@ -109,21 +109,17 @@ describe('install yvm', () => {
 
         it('throws error on non-secure URL', async () => {
             expect.assertions(1)
-            try {
-                await downloadFile({ source: 'http://example.com' })
-            } catch (err) {
-                expect(err.toString()).toMatch(/Only https scheme is supported/)
-            }
+            return expect(
+                downloadFile({ source: 'http://example.com' }),
+            ).rejects.toThrow('Only https scheme is supported')
         })
 
         it('throws error on status error codes', async () => {
             expect.assertions(1)
             https.get.mockImplementation((_, cb) => cb({ statusCode: 400 }))
-            try {
-                await downloadFile({ source: 'https://400.example.com' })
-            } catch (err) {
-                expect(err.toString()).toMatch(/Failed to download file/)
-            }
+            await expect(
+                downloadFile({ source: 'https://400.example.com' }),
+            ).rejects.toThrow('Failed to download file')
         })
 
         it('follows redirect paths', async () => {
@@ -251,7 +247,10 @@ describe('install yvm', () => {
             fs.removeSync(mockHome)
         })
 
-        const installFn = async () => {
+        it.each([
+            ['indicates successful completion'],
+            ['reinstalls removing existing files'],
+        ])('%s', async () => {
             const config = getConfig()
             expect(config).toMatchObject(
                 expectedConfigObject({
@@ -287,10 +286,7 @@ describe('install yvm', () => {
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
             expect(version).toMatch(/v(\d+.)+\d+/)
-        }
-
-        it('indicates successful completion', installFn)
-        it('reinstalls removing existing files', installFn)
+        })
     })
 
     describe('specified version', () => {
@@ -362,14 +358,9 @@ describe('install yvm', () => {
             fs.removeSync(mockHome)
         })
 
-        it('indicates invalid version tag', async done => {
+        it('indicates invalid version tag', async () => {
             const config = getConfig()
-            try {
-                await run()
-                done.fail(`Run did not throw an error`)
-            } catch (e) {
-                expect(e.message).toMatch(/No release version/)
-            }
+            await expect(run()).rejects.toThrow('No release version')
             const yvmHome = config.paths.yvm
             // should not have created version tag
             expect(`${yvmHome}/.version`).not.toBeExistingFile()
@@ -379,7 +370,6 @@ describe('install yvm', () => {
                 const filePath = `${yvmHome}/${file}`
                 expect(filePath).not.toBeExistingFile()
             })
-            done()
         })
     })
 })
