@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { execSync } from 'child_process'
 import semver from 'semver'
-import cosmiconfig from 'cosmiconfig'
+import { cosmiconfigSync } from 'cosmiconfig'
 import { memoize } from 'lodash'
 
 import log from 'util/log'
@@ -92,7 +92,7 @@ export const setDefaultVersion = async ({
 
 export const getRcFileVersion = () => {
     const moduleName = 'yvm'
-    const explorer = cosmiconfig(moduleName, {
+    const explorer = cosmiconfigSync(moduleName, {
         packageProp: 'engines.yarn',
         searchPlaces: [
             'package.json',
@@ -105,7 +105,7 @@ export const getRcFileVersion = () => {
             `.yarnversion`,
         ],
     })
-    const result = explorer.searchSync()
+    const result = explorer.search()
     if (!result || result.isEmpty || !result.config) {
         return null
     }
