@@ -1,13 +1,14 @@
 import path from 'path'
+
+import request from 'request'
+import { memoize } from 'lodash'
+
 import {
     USER_AGENT,
     YARN_DOWNLOAD_URL,
     YARN_RELEASES_API_URL,
 } from 'util/constants'
 import log from 'util/log'
-
-import request from 'request'
-import { memoize } from 'lodash'
 
 export const shimRootPath = rootPath => path.resolve(rootPath, 'shim')
 export const versionRootPath = rootPath => path.resolve(rootPath, 'versions')

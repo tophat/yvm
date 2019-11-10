@@ -1,10 +1,10 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
+import argParser from 'commander'
+
 import log from 'util/log'
 import { yvmInstalledVersion } from 'util/yvmInstalledVersion'
-
-import argParser from 'commander'
 
 const messageNoYvm = 'Unable to determine yvm version'
 const messageSourceYvm =

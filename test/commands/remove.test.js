@@ -1,12 +1,13 @@
 import path from 'path'
-import log from 'util/log'
-import { getExtractionPath, versionRootPath } from 'util/utils'
-import * as version from 'util/version'
 
 import { fs, vol } from 'memfs'
 
-const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
+import log from 'util/log'
+import { getExtractionPath, versionRootPath } from 'util/utils'
+import * as version from 'util/version'
 import { remove } from 'commands/remove'
+
+const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 
 describe('yvm remove', () => {
     const rootPath = '/tmp/yvmRemove'

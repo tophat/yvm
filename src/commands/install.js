@@ -1,5 +1,8 @@
 import fs from 'fs'
 import path from 'path'
+
+import targz from 'targz'
+
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import { LATEST, STABLE } from 'util/alias'
 import { downloadFile, getDownloadPath } from 'util/download'
@@ -12,8 +15,6 @@ import {
 } from 'util/utils'
 import { getSplitVersionAndArgs, resolveVersion } from 'util/version'
 import { VerificationError, verifySignature } from 'util/verification'
-
-import targz from 'targz'
 
 const isVersionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
@@ -70,6 +71,17 @@ Note, this may happen on older yarn versions if the public key used to sign thos
     extraMessage && log(extraMessage)
 }
 
+const logHelpful = error => {
+    if (error instanceof VerificationError) {
+        return logVerifyNotice(
+            `If you would like to proceed anyway, re-run 'yvm install' without the '--verify' flag`,
+        )
+    }
+
+    log(error.message)
+    log.info(error.stack)
+}
+
 export const installVersion = async ({
     version: versionString,
     verifyGPG = false,
@@ -117,17 +129,6 @@ Please retry with the next available version`)
 export const ensureVersionInstalled = async (version, rootPath = yvmPath) => {
     if (isVersionInstalled(version, rootPath)) return
     await installVersion({ version, rootPath })
-}
-
-const logHelpful = error => {
-    if (error instanceof VerificationError) {
-        return logVerifyNotice(
-            `If you would like to proceed anyway, re-run 'yvm install' without the '--verify' flag`,
-        )
-    }
-
-    log(error.message)
-    log.info(error.stack)
 }
 
 export const install = async ({ latest, stable, version, verifyGPG } = {}) => {

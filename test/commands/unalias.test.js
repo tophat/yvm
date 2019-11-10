@@ -1,6 +1,5 @@
 import * as alias from 'util/alias'
 import log from 'util/log'
-
 import { unalias } from 'commands/unalias'
 
 describe('unalias', () => {

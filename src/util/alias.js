@@ -1,19 +1,41 @@
 import fs from 'fs'
 import { execSync } from 'child_process'
 import path from 'path'
+
+import { memoize } from 'lodash'
+import chalk from 'chalk'
+
 import log from 'util/log'
 import { yvmPath as defaultYvmPath, getNonYvmYarnPathEntries } from 'util/path'
 import { getRequest, getVersionsFromTags } from 'util/utils'
 import { YARN_STABLE_VERSION_URL } from 'util/constants'
 
-import { memoize } from 'lodash'
-import chalk from 'chalk'
+const filterAliasesByName = (pattern, aliases) => {
+    return Object.keys(aliases)
+        .filter(name => new RegExp(pattern).test(name))
+        .map(name => ({ name, value: aliases[name] }))
+}
+
+const getAllDependants = ({ name, aliases }) => {
+    const visited = []
+    const dependants = [name]
+    const aliasNames = Object.keys(aliases)
+    while (dependants.length) {
+        const aliasName = dependants.shift()
+        if (visited.includes(aliasName)) {
+            continue
+        }
+        visited.push(aliasName)
+        dependants.push(...aliasNames.filter(d => aliases[d] === aliasName))
+    }
+    return visited
+}
 
 export const STORAGE_FILE = '.aliases'
 
 export const DEFAULT = 'default'
 export const LATEST = 'latest'
-const LTS = 'lts' // TODO: resolve long term support version
+export const LTS = 'lts' // TODO: resolve long term support version
 export const STABLE = 'stable'
 export const SYSTEM = 'system'
 export const UNRESOLVED = undefined
@@ -73,12 +95,6 @@ export const getUserAliases = memoize(async (yvmPath = defaultYvmPath) => {
     return aliases
 })
 
-const filterAliasesByName = (pattern, aliases) => {
-    return Object.keys(aliases)
-        .filter(name => new RegExp(pattern).test(name))
-        .map(name => ({ name, value: aliases[name] }))
-}
-
 export const getMatchingAliases = async (pattern, yvmPath = defaultYvmPath) => {
     return filterAliasesByName(pattern, await getUserAliases(yvmPath))
 }
@@ -98,21 +114,6 @@ export const setAlias = async ({ name, version, yvmPath = defaultYvmPath }) => {
         log.info(e.stack)
         return false
     }
-}
-
-const getAllDependants = ({ name, aliases }) => {
-    const visited = []
-    const dependants = [name]
-    const aliasNames = Object.keys(aliases)
-    while (dependants.length) {
-        const aliasName = dependants.shift()
-        if (visited.includes(aliasName)) {
-            continue
-        }
-        visited.push(aliasName)
-        dependants.push(...aliasNames.filter(d => aliases[d] === aliasName))
-    }
-    return visited
 }
 
 export const unsetAlias = async ({

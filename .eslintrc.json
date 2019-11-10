@@ -3,5 +3,12 @@
   "extends": [
     "@tophat",
     "@tophat/eslint-config/jest"
-  ]
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
+  }
 }

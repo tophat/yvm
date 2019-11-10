@@ -1,7 +1,6 @@
 import log from 'util/log'
 import { getVersionsFromTags } from 'util/utils'
 import { getVersionInUse, printVersions } from 'util/version'
-
 import { listRemote } from 'commands/listRemote'
 
 jest.mock('util/version', () => {

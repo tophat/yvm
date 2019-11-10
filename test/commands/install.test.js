@@ -1,3 +1,6 @@
+import targz from 'targz'
+import fs from 'fs-extra'
+
 import { resolveStable } from 'util/alias'
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import * as download from 'util/download'
@@ -10,10 +13,7 @@ import {
     versionRootPath,
 } from 'util/utils'
 import * as version from 'util/version'
-
 import { ensureVersionInstalled, install } from 'commands/install'
-import targz from 'targz'
-import fs from 'fs-extra'
 
 jest.setTimeout(10000)
 jest.unmock('fs')

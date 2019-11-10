@@ -1,3 +1,5 @@
+import request from 'request'
+
 import log from 'util/log'
 import {
     DEFAULT_VERSION_TEXT,
@@ -10,8 +12,6 @@ import {
     getRequest,
     getVersionsFromTags,
 } from 'util/utils'
-
-import request from 'request'
 
 const versionInUse = '1.2.0'
 const defaultVersion = '1.3.0'
