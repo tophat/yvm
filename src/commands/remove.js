@@ -3,7 +3,6 @@ import fs from 'fs-extra'
 import { getExtractionPath } from 'util/utils'
 import { getVersionInUse, resolveVersion } from 'util/version'
 import { yvmPath } from 'util/path'
-
 import log from 'util/log'
 
 export const remove = async (versionString, rootPath = yvmPath) => {

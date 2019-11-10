@@ -1,14 +1,17 @@
-import fs from 'fs-extra'
+/* eslint-disable import/no-unresolved */
+import bashScript from '!!raw-loader!shell/yvm.sh'
+import fishScript from '!!raw-loader!shell/yvm.fish'
+import yarnShim from '!!raw-loader!shell/yarn_shim.js'
+/* eslint-enable import/no-unresolved */
+
 import os from 'os'
 import path from 'path'
 
 import { escapeRegExp } from 'lodash'
+import fs from 'fs-extra'
 
 import log from 'util/log'
 import { yvmPath } from 'util/path'
-import bashScript from '!!raw-loader!shell/yvm.sh'
-import fishScript from '!!raw-loader!shell/yvm.fish'
-import yarnShim from '!!raw-loader!shell/yarn_shim.js'
 
 /**
  * Helper utility for unpacking an executable script
@@ -24,6 +27,8 @@ const unpackShellScript = (content, filename) => {
     }
     return true
 }
+
+const yvmDirVarName = 'YVM_DIR'
 
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
@@ -45,8 +50,6 @@ export async function ensureConfig(configFile, configLines) {
     log.info(`Configured '${configFile}'`)
     return true
 }
-
-const yvmDirVarName = 'YVM_DIR'
 
 export const configureBash = async ({ home, profile, yvmDir }) => {
     const configFiles = [

@@ -1,19 +1,19 @@
-import fs from 'fs-extra'
 import targz from 'targz'
+import fs from 'fs-extra'
 
 import { resolveStable } from 'util/alias'
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import * as download from 'util/download'
 import * as verification from 'util/verification'
-import { ensureVersionInstalled, install } from 'commands/install'
 import log from 'util/log'
 import { yvmPath as rootPath } from 'util/path'
 import {
-    getVersionsFromTags,
     getExtractionPath,
+    getVersionsFromTags,
     versionRootPath,
 } from 'util/utils'
 import * as version from 'util/version'
+import { ensureVersionInstalled, install } from 'commands/install'
 
 jest.setTimeout(10000)
 jest.unmock('fs')

@@ -1,8 +1,10 @@
 const os = require('os')
-const fs = require('fs-extra')
 const { execSync } = require('child_process')
 const https = require('https')
+
+const fs = require('fs-extra')
 const mockProps = require('jest-mock-props')
+
 mockProps.extend(jest)
 
 jest.unmock('fs')
