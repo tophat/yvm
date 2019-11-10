@@ -1,4 +1,5 @@
 const path = require('path')
+
 const ZipFilesPlugin = require('webpack-zip-files-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 

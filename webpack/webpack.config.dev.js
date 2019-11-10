@@ -1,6 +1,8 @@
 const { execSync } = require('child_process')
-const { config } = require('./webpack.config.base')
+
 const { WebpackCompilerPlugin } = require('webpack-compiler-plugin')
+
+const { config } = require('./webpack.config.base')
 
 const log = console.log.bind(console) // eslint-disable-line no-console
 const linkCommands = (...cmds) => cmds.join(' && ')

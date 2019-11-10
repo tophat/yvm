@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
+
 import kbpgp from 'kbpgp'
 
 import log from './log'
-
 import { YARN_PUBLIC_KEY_URL } from './constants'
 import { downloadFile, getDownloadPath } from './download'
 import { getVersionDownloadUrl } from './utils'

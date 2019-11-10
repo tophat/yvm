@@ -1,16 +1,19 @@
-import { fs, vol } from 'memfs'
 import childProcess from 'child_process'
+
 jest.spyOn(childProcess, 'execSync')
-import * as mockProps from 'jest-mock-props'
 mockProps.extend(jest)
 const pathSpy = jest.spyOnProp(process.env, 'PATH')
 const fishUserPathSpy = jest.spyOnProp(process.env, 'fish_user_paths')
 
 import log from 'util/log'
 import * as utils from 'util/utils'
+
 jest.spyOn(utils, 'getRequest')
 jest.spyOn(utils, 'getVersionsFromTags')
 import * as alias from 'util/alias'
+
+import * as mockProps from 'jest-mock-props'
+import { fs, vol } from 'memfs'
 
 describe('alias util', () => {
     const yvmPath = '/Users/tophat/.yvm'

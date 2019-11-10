@@ -1,19 +1,19 @@
 import fs from 'fs'
 import path from 'path'
-import targz from 'targz'
-
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import { LATEST, STABLE } from 'util/alias'
 import { downloadFile, getDownloadPath } from 'util/download'
 import log from 'util/log'
 import { yvmPath } from 'util/path'
 import {
-    versionRootPath,
     getExtractionPath,
     getVersionDownloadUrl,
+    versionRootPath,
 } from 'util/utils'
 import { getSplitVersionAndArgs, resolveVersion } from 'util/version'
-import { verifySignature, VerificationError } from 'util/verification'
+import { VerificationError, verifySignature } from 'util/verification'
+
+import targz from 'targz'
 
 const isVersionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)

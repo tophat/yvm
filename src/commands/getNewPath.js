@@ -1,9 +1,9 @@
 import path from 'path'
-
 import log from 'util/log'
 import { versionRootPath } from 'util/utils'
 import { getNonYvmVersionPathEntries, toPathString, yvmPath } from 'util/path'
 import { getSplitVersionAndArgs } from 'util/version'
+
 import { ensureVersionInstalled } from 'commands/install'
 
 export const buildNewPath = ({ version, rootPath = yvmPath, shell }) => {

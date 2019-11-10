@@ -1,8 +1,9 @@
-import { vol } from 'memfs'
-
 import { yvmPath as rootPath } from 'util/path'
 import { getExtractionPath } from 'util/utils'
 import * as version from 'util/version'
+
+import { vol } from 'memfs'
+
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 const printVersions = jest.spyOn(version, 'printVersions')
 import { list } from 'commands/list'

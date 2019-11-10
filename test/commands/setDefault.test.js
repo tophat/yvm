@@ -1,5 +1,6 @@
 import log from 'util/log'
 import * as version from 'util/version'
+
 const setDefaultVersion = jest.spyOn(version, 'setDefaultVersion')
 import { setDefault } from 'commands/setDefault'
 

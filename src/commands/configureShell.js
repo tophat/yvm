@@ -1,14 +1,14 @@
-import fs from 'fs-extra'
-import os from 'os'
-import path from 'path'
-
-import { escapeRegExp } from 'lodash'
-
-import log from 'util/log'
-import { yvmPath } from 'util/path'
 import bashScript from '!!raw-loader!shell/yvm.sh'
 import fishScript from '!!raw-loader!shell/yvm.fish'
 import yarnShim from '!!raw-loader!shell/yarn_shim.js'
+
+import os from 'os'
+import path from 'path'
+import log from 'util/log'
+import { yvmPath } from 'util/path'
+
+import { escapeRegExp } from 'lodash'
+import fs from 'fs-extra'
 
 /**
  * Helper utility for unpacking an executable script

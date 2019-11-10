@@ -1,6 +1,3 @@
-import { vol } from 'memfs'
-import kbpgp from 'kbpgp'
-
 import { downloadFile, getDownloadPath } from 'util/download'
 import { yvmPath as rootPath } from 'util/path'
 import { getVersionDownloadUrl } from 'util/utils'
@@ -9,6 +6,9 @@ import {
     VerificationError,
     verifySignature,
 } from 'util/verification'
+
+import kbpgp from 'kbpgp'
+import { vol } from 'memfs'
 
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/util/verification/yvm',

@@ -1,6 +1,4 @@
-import { vol } from 'memfs'
 import childProcess from 'child_process'
-
 import log from 'util/log'
 import * as alias from 'util/alias'
 import { yvmPath } from 'util/path'
@@ -17,6 +15,8 @@ import {
     resolveVersion,
     setDefaultVersion,
 } from 'util/version'
+
+import { vol } from 'memfs'
 
 afterAll(jest.restoreAllMocks)
 

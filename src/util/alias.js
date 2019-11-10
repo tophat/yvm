@@ -1,13 +1,13 @@
 import fs from 'fs'
 import { execSync } from 'child_process'
 import path from 'path'
-import chalk from 'chalk'
-import { memoize } from 'lodash'
-
 import log from 'util/log'
-import { getNonYvmYarnPathEntries, yvmPath as defaultYvmPath } from 'util/path'
+import { yvmPath as defaultYvmPath, getNonYvmYarnPathEntries } from 'util/path'
 import { getRequest, getVersionsFromTags } from 'util/utils'
 import { YARN_STABLE_VERSION_URL } from 'util/constants'
+
+import { memoize } from 'lodash'
+import chalk from 'chalk'
 
 export const STORAGE_FILE = '.aliases'
 

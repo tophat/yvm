@@ -1,7 +1,7 @@
-import { vol } from 'memfs'
-
 import log from 'util/log'
 import { yvmInstalledVersion } from 'util/yvmInstalledVersion'
+
+import { vol } from 'memfs'
 
 describe('yvm installed version', () => {
     const mockYVMDir = '/mock-yvm-root-dir'

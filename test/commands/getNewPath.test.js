@@ -1,9 +1,10 @@
-import mockProps from 'jest-mock-props'
 mockProps.extend(jest)
 
 import log from 'util/log'
 import * as pathUtils from 'util/path'
 import * as version from 'util/version'
+
+import mockProps from 'jest-mock-props'
 import * as install from 'commands/install'
 import { buildNewPath, getNewPath } from 'commands/getNewPath'
 

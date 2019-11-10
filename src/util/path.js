@@ -1,9 +1,9 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
-import { negate } from 'lodash'
-
 import { shimRootPath, versionRootPath } from 'util/utils'
+
+import { negate } from 'lodash'
 
 const isFishShell = shell => shell === 'fish'
 

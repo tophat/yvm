@@ -1,13 +1,16 @@
-import { fs, vol } from 'memfs'
 import * as path from 'util/path'
+
 const getYarnPathEntries = jest.spyOn(path, 'getYarnPathEntries')
 const isYvmPath = jest.spyOn(path, 'isYvmPath')
 import * as version from 'util/version'
+
 const getVersionInUse = jest
     .spyOn(version, 'getVersionInUse')
     .mockResolvedValue('1.7.0')
-import { current } from 'commands/current'
 import log from 'util/log'
+
+import { current } from 'commands/current'
+import { fs, vol } from 'memfs'
 
 describe('yvm current command', () => {
     const mockYvmPath = '/User/tophat/.yvm'

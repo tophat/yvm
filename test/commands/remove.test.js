@@ -1,9 +1,10 @@
 import path from 'path'
-import { fs, vol } from 'memfs'
-
 import log from 'util/log'
 import { getExtractionPath, versionRootPath } from 'util/utils'
 import * as version from 'util/version'
+
+import { fs, vol } from 'memfs'
+
 const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 import { remove } from 'commands/remove'
 
