@@ -1,11 +1,17 @@
 import os from 'os'
 import path from 'path'
 import fs from 'fs'
+
 import { negate } from 'lodash'
 
 import { shimRootPath, versionRootPath } from 'util/utils'
 
 const isFishShell = shell => shell === 'fish'
+
+const isYvmVersionPath = ({ p, rootPath = yvmPath }) =>
+    p.startsWith(versionRootPath(rootPath))
+
+const isShimPath = p => p && p.endsWith(shimRootPath(yvmPath))
 
 export const getPathDelimiter = shell => {
     if (isFishShell(shell)) {
@@ -27,9 +33,6 @@ export const getCurrentPath = shell => {
 export const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
 
 export const isYvmPath = p => p && p.startsWith(yvmPath)
-const isYvmVersionPath = ({ p, rootPath = yvmPath }) =>
-    p.startsWith(versionRootPath(rootPath))
-const isShimPath = p => p && p.endsWith(shimRootPath(yvmPath))
 
 export const getPathEntries = shell =>
     getCurrentPath(shell).split(getPathDelimiter(shell))

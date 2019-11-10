@@ -1,12 +1,13 @@
-import { vol } from 'memfs'
 import path from 'path'
 
-import { alias } from 'commands/alias'
+import { vol } from 'memfs'
+
 import { STORAGE_FILE, getUserAliases } from 'util/alias'
 import log from 'util/log'
 import { yvmPath as rootPath } from 'util/path'
 import * as utils from 'util/utils'
 import * as version from 'util/version'
+import { alias } from 'commands/alias'
 
 jest.mock('util/path', () => ({
     yvmPath: '/tmp/cmd/alias/yvm',

@@ -1,6 +1,7 @@
+import path from 'path'
+
 import fs from 'fs-extra'
 import request from 'request'
-import path from 'path'
 
 import { USER_AGENT } from 'util/constants'
 

@@ -3,8 +3,8 @@ import request from 'request'
 import log from 'util/log'
 import {
     DEFAULT_VERSION_TEXT,
-    VERSION_IN_USE_SYMBOL,
     VERSION_INSTALLED_SYMBOL,
+    VERSION_IN_USE_SYMBOL,
     printVersions,
 } from 'util/version'
 import {

@@ -1,12 +1,14 @@
 import childProcess from 'child_process'
-jest.spyOn(childProcess, 'execFileSync')
+
 import { vol } from 'memfs'
+
 import * as install from 'commands/install'
-jest.spyOn(install, 'ensureVersionInstalled')
 import { exec } from 'commands/exec'
 import { yvmPath as rootPath } from 'util/path'
 import log from 'util/log'
 
+jest.spyOn(childProcess, 'execFileSync')
+jest.spyOn(install, 'ensureVersionInstalled')
 jest.spyOn(log, 'default')
 jest.spyOn(log, 'info')
 jest.mock('util/path', () => ({

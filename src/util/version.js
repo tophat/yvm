@@ -1,8 +1,9 @@
 import fs from 'fs'
 import { execSync } from 'child_process'
-import semver from 'semver'
-import { cosmiconfigSync } from 'cosmiconfig'
+
 import { memoize } from 'lodash'
+import { cosmiconfigSync } from 'cosmiconfig'
+import semver from 'semver'
 
 import log from 'util/log'
 import { yvmPath as defaultYvmPath } from 'util/path'

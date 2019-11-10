@@ -1,17 +1,12 @@
 import fs from 'fs'
 import path from 'path'
+
 import kbpgp from 'kbpgp'
 
 import log from './log'
-
 import { YARN_PUBLIC_KEY_URL } from './constants'
 import { downloadFile, getDownloadPath } from './download'
 import { getVersionDownloadUrl } from './utils'
-
-export class VerificationError extends Error {}
-export class PublicKeyImportError extends Error {}
-
-export const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
 
 const getSignatureUrl = version => `${getVersionDownloadUrl(version)}.asc`
 
@@ -35,6 +30,11 @@ const getPublicKey = async rootPath => {
     }
     return fs.readFileSync(publicKeyPath)
 }
+
+export class VerificationError extends Error {}
+export class PublicKeyImportError extends Error {}
+
+export const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
 
 export const verifySignature = async (version, rootPath) => {
     await downloadSignature(version, rootPath)

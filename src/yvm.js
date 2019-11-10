@@ -1,5 +1,6 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
+
 import argParser from 'commander'
 
 import log from 'util/log'

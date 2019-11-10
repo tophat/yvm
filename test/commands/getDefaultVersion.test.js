@@ -1,7 +1,8 @@
 import log from 'util/log'
 import * as version from 'util/version'
-const getDefault = jest.spyOn(version, 'getDefaultVersion')
 import { getDefaultVersion } from 'commands/getDefaultVersion'
+
+const getDefault = jest.spyOn(version, 'getDefaultVersion')
 
 describe('getDefaultVersion', () => {
     jest.spyOn(log, 'capturable')

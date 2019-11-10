@@ -1,5 +1,5 @@
-import { vol } from 'memfs'
 import kbpgp from 'kbpgp'
+import { vol } from 'memfs'
 
 import { downloadFile, getDownloadPath } from 'util/download'
 import { yvmPath as rootPath } from 'util/path'
