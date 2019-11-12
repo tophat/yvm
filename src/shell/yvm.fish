@@ -76,7 +76,7 @@ function yvm
     end
 
     function yvm_call_node_script
-        set -lx sh_user_paths (string replace -r '^PATH=' '' (env | grep '^PATH='))
+        set -lx sh_user_paths (string join ':' $PATH)
         set -lx fish_user_paths $fish_user_paths
         node "$YVM_DIR/yvm.js" $argv
     end
