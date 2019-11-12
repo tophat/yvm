@@ -5,7 +5,7 @@ BUILD_DIR?=$(ARTIFACT_DIR)/webpack_build
 ifdef CI
     ESLINT_EXTRA_ARGS=--format junit --output-file $(TEST_REPORTS_DIR)/lint/eslint.junit.xml
     JEST_ENV_VARIABLES=JEST_SUITE_NAME=yvm JEST_JUNIT_OUTPUT=$(TEST_REPORTS_DIR)/tests/jest.junit.xml
-    JEST_ARGS=--ci --maxWorkers=2 --reporters jest-junit
+    JEST_ARGS=--ci --maxWorkers=2 --testResultsProcessor jest-junit
     WEBPACK_ARGS=
     YARN_INSTALL_ARGS=--pure-lockfile --ci
 else
