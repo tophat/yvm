@@ -5,25 +5,25 @@ exports[`alias command getAlias handles no matches for supplied pattern 1`] = `A
 exports[`alias command getAlias matches all aliases with empty pattern 1`] = `
 Array [
   Array [
-    "[90m[32mdefault[90m → [37mstable[90m ([32m1.15.2[90m)[39m",
+    "[90m[32mdefault[39m[90m → [37mstable[39m[90m ([32m1.15.2[39m[90m)[39m",
   ],
   Array [
-    "[90m[31mabc[90m → [37mb[90m ([31mN/A[90m)[39m",
+    "[90m[31mabc[39m[90m → [37mb[39m[90m ([31mN/A[39m[90m)[39m",
   ],
   Array [
-    "[90m[31mbcd[90m → [37mz[90m ([31mN/A[90m)[39m",
+    "[90m[31mbcd[39m[90m → [37mz[39m[90m ([31mN/A[39m[90m)[39m",
   ],
   Array [
-    "[90m[33mxyz[90m → [37m1.13[90m ([33m1.13.0[90m)[39m",
+    "[90m[33mxyz[39m[90m → [37m1.13[39m[90m ([33m1.13.0[39m[90m)[39m",
   ],
   Array [
-    "[90m[32m[1mlatest[22m[90m → [32m[1m1.15.2[22m[90m[39m",
+    "[90m[32m[1mlatest[22m[39m[90m → [32m[1m1.15.2[22m[39m[90m[39m",
   ],
   Array [
-    "[90m[32m[1mstable[22m[90m → [32m[1m1.15.2[22m[90m[39m",
+    "[90m[32m[1mstable[22m[39m[90m → [32m[1m1.15.2[22m[39m[90m[39m",
   ],
   Array [
-    "[90m[31m[1msystem[22m[90m → [31m[1mN/A[22m[90m[39m",
+    "[90m[31m[1msystem[22m[39m[90m → [31m[1mN/A[22m[39m[90m[39m",
   ],
 ]
 `;
@@ -31,10 +31,10 @@ Array [
 exports[`alias command getAlias matches only supplied pattern 1`] = `
 Array [
   Array [
-    "[90m[31mabc[90m → [37mb[90m ([31mN/A[90m)[39m",
+    "[90m[31mabc[39m[90m → [37mb[39m[90m ([31mN/A[39m[90m)[39m",
   ],
   Array [
-    "[90m[31mbcd[90m → [37mz[90m ([31mN/A[90m)[39m",
+    "[90m[31mbcd[39m[90m → [37mz[39m[90m ([31mN/A[39m[90m)[39m",
   ],
 ]
 `;
@@ -42,7 +42,7 @@ Array [
 exports[`alias command setAlias handles invalid version 1`] = `
 Array [
   Array [
-    "[31m[90m[31mdef[90m → [37minvalid[90m ([31mN/A[90m)[31m[39m",
+    "[31m[90m[31mdef[39m[31m[90m → [37minvalid[39m[31m[90m ([31mN/A[39m[31m[90m)[39m[31m[39m",
   ],
 ]
 `;
@@ -50,7 +50,7 @@ Array [
 exports[`alias command setAlias sets alias correctly 1`] = `
 Array [
   Array [
-    "[90m[32mdef[90m → [37m1.15[90m ([32m1.15.2[90m)[39m",
+    "[90m[32mdef[39m[90m → [37m1.15[39m[90m ([32m1.15.2[39m[90m)[39m",
   ],
 ]
 `;
