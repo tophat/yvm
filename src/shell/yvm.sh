@@ -66,6 +66,7 @@ yvm() {
 
     yvm_call_node_script() {
         # do not add anything that outputs stuff to stdout in function, its output is stored in a variable
+        export sh_user_paths=$PATH
         node "${YVM_DIR}/yvm.js" $@
     }
 

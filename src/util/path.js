@@ -27,7 +27,7 @@ export const getCurrentPath = shell => {
     if (isFishShell(shell)) {
         return process.env.fish_user_paths || ''
     }
-    return process.env.PATH || ''
+    return process.env.sh_user_paths || process.env.PATH || ''
 }
 
 export const yvmPath = process.env.YVM_DIR || path.resolve(os.homedir(), '.yvm')
