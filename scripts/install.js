@@ -66,7 +66,8 @@ function getTagAndUrlFromRelease(data) {
     }
 }
 
-async function getYvmVersion(versionTag, releasesApiUrl) {
+async function getYvmVersion(version, releasesApiUrl) {
+    const versionTag = version.startsWith('v') ? version : `v${version}`
     const data = await downloadFile({ source: releasesApiUrl })
     for (const release of JSON.parse(data)) {
         const { tagName } = getTagAndUrlFromRelease(release)
