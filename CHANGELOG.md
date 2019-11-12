@@ -1,3 +1,10 @@
+## [3.6.3](https://github.com/tophat/yvm/compare/v3.6.2...v3.6.3) (2019-11-12)
+
+
+### Bug Fixes
+
+* match version tags with v prefix in install script ([#487](https://github.com/tophat/yvm/issues/487)) ([ac9f45b](https://github.com/tophat/yvm/commit/ac9f45b))
+
 ## [3.6.2](https://github.com/tophat/yvm/compare/v3.6.1...v3.6.2) (2019-08-10)
 
 
