@@ -1,4 +1,4 @@
-import { fs, vol } from 'memfs'
+import { vol } from 'memfs'
 
 import * as path from 'util/path'
 import * as version from 'util/version'
@@ -7,10 +7,8 @@ import { current } from 'commands/current'
 
 const getYarnPathEntries = jest.spyOn(path, 'getYarnPathEntries')
 const isYvmPath = jest.spyOn(path, 'isYvmPath')
-
-const getVersionInUse = jest
-    .spyOn(version, 'getVersionInUse')
-    .mockResolvedValue('1.7.0')
+const getRcFileVersion = jest.spyOn(version, 'getRcFileVersion')
+const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 
 describe('yvm current command', () => {
     const mockYvmPath = '/User/tophat/.yvm'
@@ -18,6 +16,10 @@ describe('yvm current command', () => {
 
     beforeAll(() => {
         vol.fromJSON({ '.yvmrc': '1.13.0' })
+    })
+
+    afterEach(() => {
+        jest.resetAllMocks()
     })
 
     afterAll(() => {
@@ -33,6 +35,7 @@ describe('yvm current command', () => {
     })
 
     it('fails to find yarn version if yvm not installed', async () => {
+        getVersionInUse.mockResolvedValueOnce('1.17.0')
         getYarnPathEntries.mockReturnValueOnce(['/usr/local/bin/yarn'])
         expect(await current()).toBe(2)
         expect(log.default).toHaveBeenCalledWith(
@@ -40,27 +43,43 @@ describe('yvm current command', () => {
         )
     })
 
-    it('Succeeds if yvm version matches .yvmrc', async () => {
-        const version = fs.readFileSync('.yvmrc', 'utf8').trim()
-        isYvmPath.mockReturnValueOnce(true)
-        getVersionInUse.mockResolvedValueOnce(version)
-        getYarnPathEntries.mockReturnValueOnce([
-            `${mockYvmPath}/versions/v${version}/bin`,
-        ])
-        expect(await current()).toBe(0)
-        expect(log.default).toHaveBeenCalledWith(
-            expect.stringContaining(`version matches your PATH version`),
-        )
-    })
+    it.each([
+        ['1.13.0', '1.13.0'],
+        ['>=1.16.0', '1.17.0'],
+        ['^1.18.0', '1.19.2'],
+    ])(
+        'Succeeds if yvm yarn version matches yvm config version',
+        async (rcVersion, version) => {
+            isYvmPath.mockReturnValueOnce(true)
+            getRcFileVersion.mockReturnValueOnce(rcVersion)
+            getVersionInUse.mockResolvedValueOnce(version)
+            getYarnPathEntries.mockReturnValueOnce([
+                `${mockYvmPath}/versions/v${version}/bin`,
+            ])
+            expect(await current()).toBe(0)
+            expect(log.default).toHaveBeenCalledWith(
+                expect.stringContaining(`version matches your PATH version`),
+            )
+        },
+    )
 
-    it('Succeeds if yvm version does not match .yvmrc', async () => {
-        isYvmPath.mockReturnValueOnce(true)
-        getYarnPathEntries.mockReturnValueOnce([
-            `${mockYvmPath}/versions/v0.0.0/bin`,
-        ])
-        expect(await current()).toBe(0)
-        expect(log.default).toHaveBeenCalledWith(
-            expect.stringContaining(`don't match`),
-        )
-    })
+    it.each([
+        ['1.13.0', '1.12.0'],
+        ['>=1.16.0', '1.15.0'],
+        ['^1.18.0', '2.0.0'],
+    ])(
+        'Succeeds even if yarn version does not match config version',
+        async (rcVersion, version) => {
+            isYvmPath.mockReturnValueOnce(true)
+            getRcFileVersion.mockReturnValueOnce(rcVersion)
+            getVersionInUse.mockResolvedValueOnce(version)
+            getYarnPathEntries.mockReturnValueOnce([
+                `${mockYvmPath}/versions/v${version}/bin`,
+            ])
+            expect(await current()).toBe(0)
+            expect(log.default).toHaveBeenCalledWith(
+                expect.stringContaining(`don't match`),
+            )
+        },
+    )
 })

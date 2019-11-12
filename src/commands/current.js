@@ -1,3 +1,5 @@
+import semver from 'semver'
+
 import log from 'util/log'
 import { getYarnPathEntries, isYvmPath } from 'util/path'
 import { NOT_AVAILABLE, SYSTEM } from 'util/alias'
@@ -21,7 +23,7 @@ export const current = async ({ shell } = {}) => {
     }
     const rcVersion = getRcFileVersion()
     if (rcVersion !== null) {
-        if (versionInUse === rcVersion) {
+        if (semver.satisfies(versionInUse, rcVersion)) {
             log('Your .yvmrc version matches your PATH version, good job!')
         } else {
             log(
