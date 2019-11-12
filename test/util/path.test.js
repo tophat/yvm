@@ -19,7 +19,7 @@ describe('util.path', () => {
     const mockSystemPaths = ['/path/one', '/some/other/path', '/some/new/path']
     const mockPathEntries = [mockShimPath, mockVersionPath, ...mockSystemPaths]
 
-    jest.spyOnProp(process.env, 'PATH').mockValue(
+    jest.spyOnProp(process.env, 'sh_user_paths').mockValue(
         toPathString({
             paths: mockPathEntries,
         }),
