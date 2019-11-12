@@ -303,51 +303,46 @@ describe('install yvm', () => {
             fs.removeSync(mockHome)
         })
 
-        const testFn = async installVersion => {
-            envInstallVersion.mockValue(installVersion)
-            const config = getConfig()
-            expect(config).toMatchObject(
-                expectedConfigObject({
-                    homePath: mockHome,
-                    useLocal: false,
-                    tagName: installVersion,
-                }),
-            )
-            await run()
-            const yvmHome = config.paths.yvm
-            const expectedOutput = [
-                'Installing Version',
-                'yvm successfully installed',
-                `source ${yvmHome}`,
-            ]
-            expectedOutput.forEach(output =>
-                expect(log).toHaveBeenCalledWith(
-                    expect.stringContaining(output),
-                ),
-            )
-            const installFiles = [
-                ['yvm.sh', true],
-                ['yvm.js', false],
-                ['yvm.fish', false],
-            ]
-            installFiles.forEach(([file, isExecutable]) => {
-                const filePath = `${yvmHome}/${file}`
-                expect(filePath).toBeExistingFile()
-                // script is executable
-                if (isExecutable) fs.accessSync(filePath, fs.constants.X_OK)
-            })
-
-            // creates version tag
-            const { version } = fs.readJsonSync(`${yvmHome}/.version`)
-            const versionToMatch = installVersion.startsWith('v')
-                ? installVersion
-                : `v${installVersion}`
-            expect(version).toMatch(versionToMatch)
-        }
-
-        it.each(['v2.3.0', '2.4'].map(a => [a]))(
+        it.each([['v2.3.0', 'v2.3.0'], ['2.4', 'v2.4.3']])(
             'indicates successful completion %s',
-            testFn,
+            async (installVersion, versionToMatch) => {
+                envInstallVersion.mockValue(installVersion)
+                const config = getConfig()
+                expect(config).toMatchObject(
+                    expectedConfigObject({
+                        homePath: mockHome,
+                        useLocal: false,
+                        tagName: installVersion,
+                    }),
+                )
+                await run()
+                const yvmHome = config.paths.yvm
+                const expectedOutput = [
+                    'Installing Version',
+                    'yvm successfully installed',
+                    `source ${yvmHome}`,
+                ]
+                expectedOutput.forEach(output =>
+                    expect(log).toHaveBeenCalledWith(
+                        expect.stringContaining(output),
+                    ),
+                )
+                const installFiles = [
+                    ['yvm.sh', true],
+                    ['yvm.js', false],
+                    ['yvm.fish', false],
+                ]
+                installFiles.forEach(([file, isExecutable]) => {
+                    const filePath = `${yvmHome}/${file}`
+                    expect(filePath).toBeExistingFile()
+                    // script is executable
+                    if (isExecutable) fs.accessSync(filePath, fs.constants.X_OK)
+                })
+
+                // creates version tag
+                const { version } = fs.readJsonSync(`${yvmHome}/.version`)
+                expect(version).toMatch(versionToMatch)
+            },
         )
     })
 
