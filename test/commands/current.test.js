@@ -46,7 +46,7 @@ describe('yvm current command', () => {
     it.each([
         ['1.13.0', '1.13.0'],
         ['>=1.16.0', '1.17.0'],
-        ['^1.18.0', '1.18.2'],
+        ['^1.18.0', '1.19.2'],
     ])(
         'Succeeds if yvm yarn version matches yvm config version',
         async (rcVersion, version) => {
@@ -66,7 +66,7 @@ describe('yvm current command', () => {
     it.each([
         ['1.13.0', '1.12.0'],
         ['>=1.16.0', '1.15.0'],
-        ['^1.18.0', '1.19.1'],
+        ['^1.18.0', '2.0.0'],
     ])(
         'Succeeds even if yarn version does not match config version',
         async (rcVersion, version) => {
