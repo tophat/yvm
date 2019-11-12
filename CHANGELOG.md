@@ -1,3 +1,11 @@
+## [3.6.4](https://github.com/tophat/yvm/compare/v3.6.3...v3.6.4) (2019-11-12)
+
+
+### Bug Fixes
+
+* check for semver satisfaction of yvm config ([#489](https://github.com/tophat/yvm/issues/489)) ([136d7bc](https://github.com/tophat/yvm/commit/136d7bc))
+* use parent shell path in place of node process path ([#488](https://github.com/tophat/yvm/issues/488)) ([f83d5a8](https://github.com/tophat/yvm/commit/f83d5a8))
+
 ## [3.6.3](https://github.com/tophat/yvm/compare/v3.6.2...v3.6.3) (2019-11-12)
 
 
