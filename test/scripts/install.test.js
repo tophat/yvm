@@ -339,7 +339,10 @@ describe('install yvm', () => {
 
             // creates version tag
             const { version } = fs.readJsonSync(`${yvmHome}/.version`)
-            expect(version.substring(1).startsWith(installVersion)).toBe(true)
+            const versionToMatch = installVersion.startsWith('v')
+                ? installVersion
+                : `v${installVersion}`
+            expect(version).toMatch(versionToMatch)
         }
 
         it.each(['v2.3.0', '2.4'].map(a => [a]))(
