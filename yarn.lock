@@ -6685,10 +6685,10 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-memfs@^2.15.4:
-  version "2.15.5"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-2.15.5.tgz#9cf189cd4a81c1593c1629e081cd6ae98b37d441"
-  integrity sha512-x8v6Uok7FRuPt8RNXnIk3HzSFB2kaJtoT6ztpfIxxURjBPPsu4eKA+ZDLQ5GdV8+Lx71+vdMaBzHxy51vLQ7dw==
+memfs@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.0.0.tgz#51197997f479c725e58f66a54280e1e4dfe9c94b"
+  integrity sha512-GmCjl40ke3OSSbwet/VQtoq320gIavoO8bMCe4NDbxuLEFV3Cj47+2I1wnv8af3a6JErJIn7Q6/5GUTiPEysaw==
   dependencies:
     fast-extend "0.0.2"
     fs-monkey "^0.3.3"
