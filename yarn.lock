@@ -975,10 +975,10 @@
     lodash "^4.17.4"
     read-pkg-up "^6.0.0"
 
-"@tophat/eslint-config@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@tophat/eslint-config/-/eslint-config-0.3.0.tgz#917ff9edc3555724fb93690b485db752d2a4b3fd"
-  integrity sha512-ekRGMceEQyB7XnoaAxjl2TUh8/+39VV0N7X1FdaPshXJ/XM71RjXbal5VGToOrgqesgXjiXPZ0iqhKIhmML+UQ==
+"@tophat/eslint-config@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@tophat/eslint-config/-/eslint-config-0.4.0.tgz#eca7e04fcea11fc66eff988d0ab301d4b4c08a2f"
+  integrity sha512-xEedBuMbB1E3sY/BFby39S/JfcFjW2Ho3ujz13197Mi+AlnEiiL4DobgcoTz4jPN4wcKFyymrm7xFICpzkIb0Q==
 
 "@types/babel__core@^7.1.0":
   version "7.1.2"
