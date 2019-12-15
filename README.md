@@ -184,14 +184,14 @@ Next, edit `$HOME/.bashrc` and `$HOME/.zshrc` and remove those lines:
 
 ```bash
 export YVM_DIR=/home/joe_user/.yvm
-[ -r $YVM_DIR/yvm.sh ] && source $YVM_DIR/yvm.sh
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
 ```
 
 Remove in `$HOME/.config/fish/config.fish` for fishers:
 
 ```fish
 set -x YVM_DIR /home/joe_user/.yvm
-. $YVM_DIR/yvm.fish
+[ -f $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish
 ```
 
 In case you had older version of yvm installed, there could also be a line like
