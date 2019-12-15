@@ -191,7 +191,7 @@ Remove in `$HOME/.config/fish/config.fish` for fishers:
 
 ```fish
 set -x YVM_DIR /home/joe_user/.yvm
-[ -f $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish
+[ -r $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish
 ```
 
 In case you had older version of yvm installed, there could also be a line like

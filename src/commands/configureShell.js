@@ -80,7 +80,7 @@ export const configureFish = async ({ home, profile, yvmDir }) => {
     const fishPathVariable = path.join(yvmDirVarName, fishFile)
     const fishConfig = [
         `set -x ${yvmDirVarName} ${yvmDir}`,
-        `[ -f $${fishPathVariable} ]; and source $${fishPathVariable}`,
+        `[ -r $${fishPathVariable} ]; and source $${fishPathVariable}`,
     ]
     for (const file of configFiles) {
         if (await ensureConfig(file, fishConfig)) {
