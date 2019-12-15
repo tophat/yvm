@@ -1,4 +1,4 @@
-asset: yvm.zip
+asset: yvm.js
 tap: tophat/homebrew-bar/Formula/yvm.rb
 template: >
   class Yvm < Formula

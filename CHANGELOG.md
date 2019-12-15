@@ -1,3 +1,10 @@
+## [3.6.6](https://github.com/tophat/yvm/compare/v3.6.5...v3.6.6) (2019-12-15)
+
+
+### Bug Fixes
+
+* check if yvm script exists in fish shell before sourcing ([#506](https://github.com/tophat/yvm/issues/506)) ([f567362](https://github.com/tophat/yvm/commit/f5673620c0804e7762cd3a190781634067d7ad45))
+
 ## [3.6.5](https://github.com/tophat/yvm/compare/v3.6.4...v3.6.5) (2019-12-15)
 
 
