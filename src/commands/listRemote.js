@@ -5,9 +5,15 @@ import { getVersionInUse, getYarnVersions, printVersions } from 'util/version'
 export const listRemote = async () => {
     log.info('Checking for available yarn versions...')
     try {
-        const [remoteVersions, versionInUse, localVersions] = await Promise.all(
-            [getVersionsFromTags(), getVersionInUse(), getYarnVersions()],
-        )
+        const [
+            remoteVersions,
+            versionInUse,
+            localVersions,
+        ] = await Promise.all([
+            getVersionsFromTags(),
+            getVersionInUse(),
+            getYarnVersions(),
+        ])
         if (!remoteVersions.length) {
             throw new Error('No versions available for install')
         }
