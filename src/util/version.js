@@ -3,7 +3,10 @@ import { execSync } from 'child_process'
 
 import { memoize } from 'lodash'
 import { cosmiconfigSync } from 'cosmiconfig'
-import semver from 'semver'
+import valid from 'semver/functions/valid'
+import clean from 'semver/functions/clean'
+import maxSatisfying from 'semver/ranges/max-satisfying'
+import validRange from 'semver/ranges/valid'
 
 import log from 'util/log'
 import { yvmPath as defaultYvmPath } from 'util/path'
@@ -24,12 +27,11 @@ export const DEFAULT_VERSION_TEXT = 'Global Default'
 export const VERSION_IN_USE_SYMBOL = '\u2713'
 export const VERSION_INSTALLED_SYMBOL = '\u2192'
 
-export const isValidVersionString = version =>
-    semver.valid(version.trim()) !== null
+export const isValidVersionString = version => valid(version.trim()) !== null
 export const isValidVersionRange = versionRange => {
-    return semver.validRange(versionRange.trim()) !== null
+    return validRange(versionRange.trim()) !== null
 }
-export const getValidVersionString = version => semver.clean(version)
+export const getValidVersionString = version => clean(version)
 
 /**
  * Get the most recent yarn install version in the specified range
@@ -38,8 +40,8 @@ export const getValidVersionString = version => semver.clean(version)
  */
 export const getVersionFromRange = memoize(async versionRange => {
     const availableVersion =
-        semver.maxSatisfying(getYarnVersions(), versionRange) ||
-        semver.maxSatisfying(await getVersionsFromTags(), versionRange)
+        maxSatisfying(getYarnVersions(), versionRange) ||
+        maxSatisfying(await getVersionsFromTags(), versionRange)
     if (!availableVersion) {
         throw new Error(
             `Given version can not be satisfied by yarn: ${versionRange}
