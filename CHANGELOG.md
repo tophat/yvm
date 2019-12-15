@@ -1,3 +1,10 @@
+## [3.6.5](https://github.com/tophat/yvm/compare/v3.6.4...v3.6.5) (2019-12-15)
+
+
+### Performance Improvements
+
+* shim path from shell script only ([#501](https://github.com/tophat/yvm/issues/501)) ([c4aff5a](https://github.com/tophat/yvm/commit/c4aff5a49ae50fa57eff4036afb5a9818df1cdee))
+
 ## [3.6.4](https://github.com/tophat/yvm/compare/v3.6.3...v3.6.4) (2019-11-12)
 
 
