@@ -5,7 +5,6 @@ function yvm
     set command $argv[1]
 
     function yvm_set_fish_user_paths
-        set -gx PATH (yvm_call_node_script get-old-path)
         set -gx fish_user_paths (string split ' ' -- $argv[1])
     end
 
@@ -28,15 +27,7 @@ function yvm
     end
 
     function yvm_shim
-        begin
-            set NEW_FISH_USER_PATHS (yvm_call_node_script get-shim-path --shell=fish)
-        end
-        if [ -z "$NEW_FISH_USER_PATHS" ]
-            yvm_err "Could not get shim path from yvm"
-            exit 1
-        else
-            yvm_set_fish_user_paths $NEW_FISH_USER_PATHS
-        end
+        yvm_set_fish_user_paths "$fish_user_paths $YVM_DIR/shim"
     end
 
     function yvm_deactivate
