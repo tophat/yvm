@@ -9,7 +9,7 @@ export YVM_DIR=config-mock-home/.yvm
 ",
   "config-mock-home/.config/fish/config.fish": "dummy
 set -x YVM_DIR config-mock-home/.yvm
-. $YVM_DIR/yvm.fish
+[ -r $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish
 ",
   "config-mock-home/.custom_profile": "dummy",
   "config-mock-home/.zshrc": "dummy
@@ -26,7 +26,7 @@ Object {
   "config-mock-home/.config/fish/config.fish": "dummy",
   "config-mock-home/.custom_profile": "dummy
 set -x YVM_DIR config-mock-install-dir/.yvm
-. $YVM_DIR/yvm.fish
+[ -r $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish
 ",
   "config-mock-home/.zshrc": "dummy",
 }
@@ -104,7 +104,7 @@ Object {
   "config-mock-home/.bashrc": "dummy",
   "config-mock-home/.config/fish/config.fish": "dummy
 set -x YVM_DIR config-mock-home/.yvm
-. $YVM_DIR/yvm.fish
+[ -r $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish
 ",
   "config-mock-home/.custom_profile": "dummy",
   "config-mock-home/.zshrc": "dummy",
