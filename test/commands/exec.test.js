@@ -30,7 +30,9 @@ describe('exec command', () => {
         const args = ['extra', 'args']
         expect(await exec(version, args)).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(childProcess.execFileSync).toHaveBeenCalledWith(
+        expect(
+            childProcess.execFileSync,
+        ).toHaveBeenCalledWith(
             `${rootPath}/versions/v${version}/bin/yarn.js`,
             args,
             { stdio: 'inherit' },
@@ -40,7 +42,9 @@ describe('exec command', () => {
     it('executes yarn with correct rcVersion', async () => {
         expect(await exec()).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(childProcess.execFileSync).toHaveBeenCalledWith(
+        expect(
+            childProcess.execFileSync,
+        ).toHaveBeenCalledWith(
             `${rootPath}/versions/v${rcVersion}/bin/yarn.js`,
             [],
             { stdio: 'inherit' },

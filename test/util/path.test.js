@@ -32,14 +32,14 @@ describe('util.path', () => {
     )
 
     describe('toPathString', () => {
-        it.each([['bash', ':'], ['fish', ' ']])(
-            'builds correct path string for %s shell',
-            (shell, delimiter) => {
-                expect(toPathString({ shell, paths: mockPathEntries })).toEqual(
-                    mockPathEntries.join(delimiter),
-                )
-            },
-        )
+        it.each([
+            ['bash', ':'],
+            ['fish', ' '],
+        ])('builds correct path string for %s shell', (shell, delimiter) => {
+            expect(toPathString({ shell, paths: mockPathEntries })).toEqual(
+                mockPathEntries.join(delimiter),
+            )
+        })
     })
 
     describe('getPathEntries', () => {
