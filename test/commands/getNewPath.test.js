@@ -14,9 +14,10 @@ describe('getNewPath', () => {
         jest.spyOn(log, 'capturable')
         jest.spyOn(log, 'error')
         jest.spyOn(log, 'info')
-        jest.spyOn(install, 'ensureVersionInstalled').mockImplementation(
-            () => {},
-        )
+        jest.spyOn(
+            install,
+            'ensureVersionInstalled',
+        ).mockImplementation(() => {})
         jest.spyOn(version, 'getSplitVersionAndArgs').mockReturnValue([
             mockVersion,
         ])

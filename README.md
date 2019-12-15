@@ -1,6 +1,6 @@
 # Yarn Version Manager (yvm)
 
-<span><img align="right" width="200" height="200" src="https://github.com/tophat/yvm/blob/master/website/static/img/yarn.png" alt="Logo"></span>
+<span><img align="right" width="200" height="200" src="https://raw.githubusercontent.com/tophat/yvm/master/website/static/img/yarn.png" alt="Logo"></span>
 
 <!-- BADGES:START -->
 
@@ -11,7 +11,7 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm)
 [![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm)
-[![Green Keeper](https://badges.greenkeeper.io/tophat/yvm.svg)](https://greenkeeper.io)
+[![Dependabot](https://flat.badgen.net/dependabot/tophat/yvm?icon=dependabot)](https://app.dependabot.com/accounts/tophat/repos/137530684)
 [![All Contributors](https://img.shields.io/badge/all_contributors-27-orange.svg?style=flat-square)](#contributors-)
 [![Slack workspace](https://slackinvite.dev.tophat.com/badge.svg)](https://opensource.tophat.com/slack)
 [![Maturity badge - level 3](https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg)](https://github.com/tophat/getting-started/blob/master/scorecard.md)
@@ -42,6 +42,7 @@ Installs the latest stable version.
 ```sh
 brew install tophat/bar/yvm
 ```
+
 **NOTE**: Use the flag `--without-node` if you already have node installed.
 
 ### Script

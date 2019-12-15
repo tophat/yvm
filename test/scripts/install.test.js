@@ -303,7 +303,10 @@ describe('install yvm', () => {
             fs.removeSync(mockHome)
         })
 
-        it.each([['v2.3.0', 'v2.3.0'], ['2.4', 'v2.4.3']])(
+        it.each([
+            ['v2.3.0', 'v2.3.0'],
+            ['2.4', 'v2.4.3'],
+        ])(
             'indicates successful completion %s',
             async (installVersion, versionToMatch) => {
                 envInstallVersion.mockValue(installVersion)
