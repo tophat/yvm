@@ -21,13 +21,7 @@ yvm() {
     }
 
     yvm_shim() {
-        NEW_PATH=$(yvm_call_node_script get-shim-path)
-        if [ -z "${NEW_PATH}" ]; then
-            yvm_err "Could not get shim path from yvm"
-            exit 1
-        else
-            yvm_set_user_path $NEW_PATH
-        fi
+        yvm_set_user_path "$PATH:$YVM_DIR/shim"
     }
 
     yvm_deactivate() {

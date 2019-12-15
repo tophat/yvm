@@ -215,7 +215,7 @@ describe('install yvm', () => {
             ],
             [`${mockHomeValue}/.config/fish/config.fish`]: [
                 `set -x YVM_DIR ${mockHomeValue}/.yvm`,
-                '. $YVM_DIR/yvm.fish',
+                '[ -r $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish',
             ],
             [`${mockHomeValue}/.zshrc`]: [
                 `export YVM_DIR=${mockHomeValue}/.yvm`,
