@@ -46,7 +46,7 @@
     "targz": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.0",
+    "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.5.0",
     "@semantic-release/changelog": "^3.0.5",
     "@semantic-release/git": "^7.0.17",
