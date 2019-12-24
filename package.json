@@ -79,7 +79,7 @@
     "prettier": "^1.19.1",
     "raw-loader": "^4.0.0",
     "semantic-release": "^15.14.0",
-    "typescript": "^3.7.2",
+    "typescript": "^3.7.4",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.0.8",
     "webpack-compiler-plugin": "^1.0.0",
