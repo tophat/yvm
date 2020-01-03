@@ -10,7 +10,7 @@ yvm cli docs following the header format;
 
 Install the specified version of Yarn. Will install the version of yarn found in the directory config if none is supplied.
 
-### --verify
+### `--verify`
 
 This forces a strict verification on the file signature. Any warnings from expired or invalid keys will cause the installation to fail
 
@@ -54,7 +54,7 @@ Show a list of registered version aliases. These can be used in place of `[versi
 
 Register a new alias that can be used. Used internally to refer to `default`, `latest`, `stable` etc.
 
-## `unalias <name>`
+## `unalias <name> [--force] [--recursive]`
 
 Deregisters an alias using the name specified.
 
