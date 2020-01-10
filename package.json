@@ -80,7 +80,7 @@
     "raw-loader": "^4.0.0",
     "semantic-release": "^15.14.0",
     "typescript": "^3.7.4",
-    "webpack": "^4.41.4",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.0.8",
     "webpack-compiler-plugin": "^1.0.0",
     "webpack-zip-files-plugin": "^1.0.0",
