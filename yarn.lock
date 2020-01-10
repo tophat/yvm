@@ -6725,10 +6725,10 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-memfs@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.0.1.tgz#efd259d5ff448a7c0678198d43cee0d1f60b74e1"
-  integrity sha512-v8MPoino1vfmwl2LDbFAg5tgPd7EPvKLvcSkx/CDJGB3JCGyHZSasRtC63wmM+iHFXh4cooYCu+cWCd1dqh2+A==
+memfs@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.0.3.tgz#31601d6d053db0b54ca0ab793b796794db6bcb52"
+  integrity sha512-uElu3oR/dM4GeKu86Fqi73eKdafJmmAaxEHx3iSayN+/zvCA0PTcsa6r1QhpN75SqxqdC7rfHqKZzzq3pgKQ5g==
   dependencies:
     fast-extend "1.0.2"
     fs-monkey "0.3.3"
