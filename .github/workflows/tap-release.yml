@@ -8,7 +8,8 @@ jobs:
       uses: mislav/bump-homebrew-formula-action@v1.4
       env:
         COMMITTER_TOKEN: ${{ secrets.GH_TOKEN }}
+      if: github.event.release.assets && !github.event.release.prerelease
       with:
         homebrew-tap: tophat/homebrew-bar
         formula-name: yvm
-        download-url: ${{ github.event.assets[0].browser_download_url }}
+        download-url: ${{ github.event.release.assets[0].browser_download_url }}
