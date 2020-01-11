@@ -4,11 +4,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Debug
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
     - name: Update formula
       uses: mislav/bump-homebrew-formula-action@v1.4
       env:
         COMMITTER_TOKEN: ${{ secrets.GH_TOKEN }}
-      if: github.event.release.assets && !github.event.release.prerelease
+      if: github.event.action == 'published' && github.event.release.assets && !github.event.release.prerelease
       with:
         homebrew-tap: tophat/homebrew-bar
         formula-name: yvm
