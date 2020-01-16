@@ -66,7 +66,7 @@
     "eslint-plugin-jest": "^23.3.0",
     "eslint-plugin-prettier": "^3.1.0",
     "gh-release": "^3.4.0",
-    "git-cz": "^3.0.0",
+    "git-cz": "^4.0.0",
     "husky": "^4.0.10",
     "jest": "^24.1.0",
     "jest-junit": "^10.0.0",
