@@ -11,10 +11,10 @@ jobs:
     - name: Update formula
       uses: mislav/bump-homebrew-formula-action@v1.6
       env:
-        COMMITTER_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: github.event.action == 'published' && github.event.release.assets && !github.event.release.prerelease
       with:
         homebrew-tap: tophat/homebrew-bar
         formula-name: yvm
         download-url: ${{ github.event.release.assets[0].browser_download_url }}
-        commit-message: 'chore: upgrade {{formulaName}} formula to version {{version}}'
+        commit-message: 'chore: upgrade {{formulaName}} formula to v{{version}}'
