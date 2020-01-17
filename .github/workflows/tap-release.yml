@@ -9,7 +9,7 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github.event) }}
       run: echo "$GITHUB_CONTEXT"
     - name: Update formula
-      uses: mislav/bump-homebrew-formula-action@v1.4
+      uses: mislav/bump-homebrew-formula-action@v1
       env:
         COMMITTER_TOKEN: ${{ secrets.GH_TOKEN }}
       if: github.event.action == 'published' && github.event.release.assets && !github.event.release.prerelease
