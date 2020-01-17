@@ -17,3 +17,4 @@ jobs:
         homebrew-tap: tophat/homebrew-bar
         formula-name: yvm
         download-url: ${{ github.event.release.assets[0].browser_download_url }}
+        commit-message: 'chore: upgrade {{formulaName}} formula to version {{version}}'
