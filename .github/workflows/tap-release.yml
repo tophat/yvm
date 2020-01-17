@@ -4,14 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Debug
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github.event) }}
-      run: echo "$GITHUB_CONTEXT"
     - name: Update formula
       uses: mislav/bump-homebrew-formula-action@v1.6
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COMMITTER_TOKEN: ${{ secrets.GH_TOKEN }}
       if: github.event.action == 'published' && github.event.release.assets && !github.event.release.prerelease
       with:
         homebrew-tap: tophat/homebrew-bar
