@@ -6144,10 +6144,10 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-kbpgp@^2.1.0:
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/kbpgp/-/kbpgp-2.1.6.tgz#552d5d8aabaa95677528b6f4986abaedb4f2833a"
-  integrity sha512-GNJibWhvJhyiCvD5W7u6U36wmzQzvQTu86n3j05Ia+o75xvz3GDKzDXQpwkaEzTO/V4vfAHgQ4zntcrChhb9mQ==
+kbpgp@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/kbpgp/-/kbpgp-2.1.7.tgz#8f24bf926c18201cedd20d1776eade7067fdde89"
+  integrity sha512-UwIbS38NGw8pny3Y5REthmQMrq4bJoVmvrvY/SBKyrulH72KloKhPVZ1lfm0OX6WzD28Au1s7BysCRYjAZEpqg==
   dependencies:
     bn "^1.0.5"
     bzip-deflate "^1.0.0"
