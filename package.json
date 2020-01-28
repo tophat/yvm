@@ -78,7 +78,7 @@
     "memfs": "^3.0.4",
     "prettier": "^1.19.1",
     "raw-loader": "^4.0.0",
-    "semantic-release": "^16.0.3",
+    "semantic-release": "^16.0.4",
     "typescript": "^3.7.5",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.0.8",
