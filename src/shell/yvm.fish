@@ -27,7 +27,7 @@ function yvm
     end
 
     function yvm_shim
-        yvm_set_fish_user_paths "$fish_user_paths $YVM_DIR/shim"
+        yvm_set_fish_user_paths "$YVM_DIR/shim $fish_user_paths"
     end
 
     function yvm_deactivate
