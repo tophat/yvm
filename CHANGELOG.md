@@ -1,3 +1,10 @@
+## [3.6.7](https://github.com/tophat/yvm/compare/v3.6.6...v3.6.7) (2020-02-07)
+
+
+### Bug Fixes
+
+* prepend shell path with yvm shim ([#564](https://github.com/tophat/yvm/issues/564)) ([3ae969b](https://github.com/tophat/yvm/commit/3ae969b9a22711789ba31457117bd6ea852c3804))
+
 ## [3.6.6](https://github.com/tophat/yvm/compare/v3.6.5...v3.6.6) (2019-12-15)
 
 
