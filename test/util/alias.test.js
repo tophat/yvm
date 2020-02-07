@@ -156,7 +156,7 @@ describe('alias util', () => {
 
         it('uses default when aliases file is corrupted', async () => {
             vol.fromJSON({
-                [aliasesPath]: `"default":"testing"`,
+                [aliasesPath]: '"default":"testing"',
             })
             expect(await alias.getUserAliases(yvmPath)).toEqual({
                 [alias.DEFAULT]: alias.STABLE,

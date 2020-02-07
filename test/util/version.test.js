@@ -94,7 +94,7 @@ describe('yvm config version', () => {
         expect(parsedVersion).toEqual('1.9.4')
     })
     it('Uses valid range from config', async () => {
-        mockRC(`'>=1.10.0 < 1.13'`)
+        mockRC("'>=1.10.0 < 1.13'")
         const [parsedVersion] = await getSplitVersionAndArgs()
         expect(parsedVersion).toEqual('1.12.3')
     })

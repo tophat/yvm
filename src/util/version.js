@@ -105,7 +105,7 @@ export const getRcFileVersion = () => {
             `.${moduleName}rc.yml`,
             `.${moduleName}rc.js`,
             `${moduleName}.config.js`,
-            `.yarnversion`,
+            '.yarnversion',
         ],
     })
     const result = explorer.search()
@@ -160,7 +160,7 @@ export const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
                 versionString: rcVersion,
             })
         } else {
-            log.info(`Attempting to use default version.`)
+            log.info('Attempting to use default version.')
             versionToUse = await getDefaultVersion()
         }
     } catch (e) {

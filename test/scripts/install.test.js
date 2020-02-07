@@ -83,7 +83,7 @@ describe('install yvm', () => {
     })
 
     beforeAll(() => {
-        execSync(`make install-local`)
+        execSync('make install-local')
     })
 
     afterEach(() => {

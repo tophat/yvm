@@ -174,7 +174,7 @@ describe('yvm install', () => {
             'unable to verify gpg signature',
             'public key used to sign those versions has expired',
             'if you would like to proceed anyway',
-            `re-run 'yvm install' without the '--verify' flag`,
+            "re-run 'yvm install' without the '--verify' flag",
         )
     })
 

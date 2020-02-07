@@ -74,7 +74,7 @@ Note, this may happen on older yarn versions if the public key used to sign thos
 const logHelpful = error => {
     if (error instanceof VerificationError) {
         return logVerifyNotice(
-            `If you would like to proceed anyway, re-run 'yvm install' without the '--verify' flag`,
+            "If you would like to proceed anyway, re-run 'yvm install' without the '--verify' flag",
         )
     }
 
