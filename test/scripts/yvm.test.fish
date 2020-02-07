@@ -78,6 +78,7 @@ else
 end
 
 testing "yvm use set yarn"
+yvm shim
 set test3_output (yarn --version)
 if test "$test3_output" = "1.13.0"
     pass
