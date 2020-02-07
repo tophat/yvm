@@ -146,7 +146,7 @@ async function downloadFile({ source, destination }) {
         if (!source.startsWith('https'))
             return reject(
                 new Error(
-                    `Only https scheme is supported for file download. ` +
+                    'Only https scheme is supported for file download. ' +
                         `Cannot download: ${source}.`,
                 ),
             )

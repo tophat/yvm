@@ -30,7 +30,7 @@ describe('yvm current command', () => {
         getVersionInUse.mockResolvedValueOnce('')
         expect(await current()).toBe(1)
         expect(log.default).toHaveBeenCalledWith(
-            expect.stringContaining(`yarn is NOT installed`),
+            expect.stringContaining('yarn is NOT installed'),
         )
     })
 
@@ -39,7 +39,7 @@ describe('yvm current command', () => {
         getYarnPathEntries.mockReturnValueOnce(['/usr/local/bin/yarn'])
         expect(await current()).toBe(2)
         expect(log.default).toHaveBeenCalledWith(
-            expect.stringContaining(`Yarn was NOT installed by yvm`),
+            expect.stringContaining('Yarn was NOT installed by yvm'),
         )
     })
 
@@ -58,7 +58,7 @@ describe('yvm current command', () => {
             ])
             expect(await current()).toBe(0)
             expect(log.default).toHaveBeenCalledWith(
-                expect.stringContaining(`version matches your PATH version`),
+                expect.stringContaining('version matches your PATH version'),
             )
         },
     )
@@ -78,7 +78,7 @@ describe('yvm current command', () => {
             ])
             expect(await current()).toBe(0)
             expect(log.default).toHaveBeenCalledWith(
-                expect.stringContaining(`don't match`),
+                expect.stringContaining("don't match"),
             )
         },
     )
