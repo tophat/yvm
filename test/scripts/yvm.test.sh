@@ -67,11 +67,10 @@ else
 fi
 
 testing "yvm use"
-yvm deactivate
 yvm install 1.13.0
 yvm use 1.13.0
 test2_output=$(yvm exec --version)
-if [[ ${test2_output} == "1.13.0" ]]; then
+if [[ ${test2_output} == "1.22.0" ]]; then
     pass
 else
     fail ${test2_output}

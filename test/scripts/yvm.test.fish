@@ -67,11 +67,10 @@ else
 end
 
 testing "yvm use"
-yvm deactivate
 yvm install 1.13.0
 yvm use 1.13.0
 set test2_output (yvm exec --version)
-if test "$test2_output" = "1.13.0"
+if test "$test2_output" = "1.22.0"
     pass
 else
     fail $test2_output
