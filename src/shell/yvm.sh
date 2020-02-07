@@ -21,7 +21,7 @@ yvm() {
     }
 
     yvm_shim() {
-        yvm_set_user_path "$PATH:$YVM_DIR/shim"
+        yvm_set_user_path "$YVM_DIR/shim:$PATH"
     }
 
     yvm_deactivate() {
