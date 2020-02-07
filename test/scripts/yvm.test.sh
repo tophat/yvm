@@ -77,7 +77,6 @@ else
 fi
 
 testing "yvm use set yarn"
-yvm shim
 test3_output=$(yarn --version)
 if [[ ${test3_output} == "1.13.0" ]]; then
     pass
