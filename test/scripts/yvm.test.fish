@@ -67,7 +67,7 @@ else
 end
 
 testing "yvm use"
-yvm unload
+yvm deactivate
 yvm install 1.13.0
 yvm use 1.13.0
 set test2_output (yvm exec --version)
