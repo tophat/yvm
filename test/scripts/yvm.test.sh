@@ -59,6 +59,7 @@ else
 fi
 
 testing "yarn shimmed config"
+echo '1.19.1' > '.yvmrc'
 test_shim_config_output=$(yarn --version)
 if [[ ${test_shim_config_output} == "1.19.1" ]]; then
     pass
