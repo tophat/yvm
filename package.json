@@ -41,7 +41,7 @@
     "kbpgp": "^2.1.8",
     "lodash": "^4.17.13",
     "regenerator-runtime": "^0.13.2",
-    "request": "^2.87.0",
+    "request": "^2.88.2",
     "semver": "^7.1.1",
     "targz": "^1.0.1"
   },
