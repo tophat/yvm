@@ -81,7 +81,7 @@
     "semantic-release": "^16.0.4",
     "typescript": "^3.7.5",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.0.8",
+    "webpack-cli": "^3.3.11",
     "webpack-compiler-plugin": "^1.0.3",
     "webpack-zip-files-plugin": "^1.0.0",
     "yarn-deduplicate": "^1.1.1"
