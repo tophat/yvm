@@ -84,7 +84,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-compiler-plugin": "^1.0.3",
     "webpack-zip-files-plugin": "^1.0.0",
-    "yarn-deduplicate": "^1.1.1"
+    "yarn-deduplicate": "^2.0.0"
   },
   "lint-staged": {
     "*.js": [
