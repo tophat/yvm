@@ -74,7 +74,7 @@
     "lint-staged": "^10.1.4",
     "lodash-webpack-plugin": "^0.11.5",
     "madge": "^3.8.0",
-    "marked": "^0.8.2",
+    "marked": "^1.0.0",
     "memfs": "^3.1.2",
     "prettier": "^2.0.4",
     "raw-loader": "^4.0.1",
