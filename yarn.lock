@@ -10882,10 +10882,10 @@ webpack-cli@^3.3.11:
     v8-compile-cache "2.0.3"
     yargs "13.2.4"
 
-webpack-compiler-plugin@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/webpack-compiler-plugin/-/webpack-compiler-plugin-1.1.0.tgz#4411e2d3432a88d9da3846a07ffd7309ce5fb4bc"
-  integrity sha512-709hvvm2K4RZBM5ul9YRO/0VQ0yPddX1krnPc/r4TpQuO4gxwMAtImfb5pemyLETRlAq4h32EC63W63ajsagMg==
+webpack-compiler-plugin@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/webpack-compiler-plugin/-/webpack-compiler-plugin-1.1.1.tgz#c8d6794bda1f24f36717c139ae1295196fd34c76"
+  integrity sha512-MhTXxeWTWZ9LEtulUEU20sBUC6J9gN6R1ywzEfcSRTEKeEI3Zvtwn4fXHk+IoeNY2m2Qj/1qEndmIPXMVSWyLA==
 
 webpack-sources@^1.4.0, webpack-sources@^1.4.1:
   version "1.4.3"
