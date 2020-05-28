@@ -4850,10 +4850,10 @@ ghauth@^3.2.0:
     read "~1.0.7"
     xtend "~4.0.1"
 
-git-cz@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/git-cz/-/git-cz-4.3.1.tgz#1a1a462c2730c17c9fcbfa023beee98fd7659934"
-  integrity sha512-z+mbD76lbra8ml2nMoOoFkQPJ2OQvg6vpZa8d9VzNEvygEQNysgMkzGPBxqFKw1VIwZ/PHoQgAf70BPp9uElJw==
+git-cz@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/git-cz/-/git-cz-4.6.2.tgz#ae3d02d88c2032e6ba3af6467dc08ae0cc4305bc"
+  integrity sha512-SDLLWmMmAkG33bqAMp5idrr9gbpduyaJ7JjRzC34HPpQ7UGRgG13C5hqc0S7bOTISQu0j8vD3CrK7cyCU99iFA==
 
 git-log-parser@^1.2.0:
   version "1.2.0"
