@@ -70,7 +70,7 @@
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "jest-junit": "^10.0.0",
-    "jest-mock-props": "^1.7.2",
+    "jest-mock-props": "^1.7.3",
     "lint-staged": "^10.2.6",
     "lodash-webpack-plugin": "^0.11.5",
     "madge": "^3.9.0",
