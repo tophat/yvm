@@ -71,7 +71,7 @@
     "jest": "^26.0.1",
     "jest-junit": "^10.0.0",
     "jest-mock-props": "^1.7.3",
-    "lint-staged": "^10.2.8",
+    "lint-staged": "^10.2.9",
     "lodash-webpack-plugin": "^0.11.5",
     "madge": "^3.9.0",
     "marked": "^1.1.0",
