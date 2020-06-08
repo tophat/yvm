@@ -52,7 +52,7 @@
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.0.7",
     "@tophat/eslint-config": "^0.6.1",
-    "all-contributors-cli": "^6.15.0",
+    "all-contributors-cli": "^6.16.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
