@@ -1288,10 +1288,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@tophat/eslint-config@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@tophat/eslint-config/-/eslint-config-0.6.1.tgz#6316a31d3c7b5f8e13510f6f71447ba5cdc22011"
-  integrity sha512-4xAqFbUqKxMqbAok5BxyDk2NnrnbZkzQfjl4keaRXP5lcoDyQUG9mr67klh1zeMFsjOWSeOnO2dSsTZ57QxeZg==
+"@tophat/eslint-config@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@tophat/eslint-config/-/eslint-config-0.7.0.tgz#63542479c880401ad6cd4a681ee578dab69a92bc"
+  integrity sha512-F5cn8Z53baJSwnPfEjKXgb1tMqXjRsegGqsrNQSPCLYF7b6AjFFWYf4DTs4i8vzh6DlR3zA64cE294AT6RsIcA==
 
 "@types/babel__core@^7.1.7":
   version "7.1.7"
