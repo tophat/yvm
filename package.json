@@ -69,7 +69,7 @@
     "git-cz": "^4.7.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
-    "jest-junit": "^10.0.0",
+    "jest-junit": "^11.0.1",
     "jest-mock-props": "^1.7.3",
     "lint-staged": "^10.2.11",
     "lodash-webpack-plugin": "^0.11.5",
