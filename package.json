@@ -39,7 +39,7 @@
     "cosmiconfig": "^6.0.0",
     "fs-extra": "^9.0.1",
     "kbpgp": "^2.1.15",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "regenerator-runtime": "^0.13.5",
     "request": "^2.88.2",
     "semver": "^7.3.2",
