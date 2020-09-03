@@ -60,7 +60,7 @@
     "bundlewatch": "^0.2.7",
     "codecov": "^3.7.2",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.5.0",
+    "eslint": "^7.8.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^23.20.0",
