@@ -1720,10 +1720,10 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.0, ajv@^6.12.4, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-all-contributors-cli@^6.16.1:
-  version "6.16.1"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.16.1.tgz#a08ff137df63a22a6f6bf20a8df3fdf79b1b6ca8"
-  integrity sha512-8Hu4vHwW8VF28EBmgCpyfleOG8jCU0RB5sEFMuHzIKy8lUidV2Qo/1GfQ1b78ekB4mYMgdMvfDJd5IKtfzUeGg==
+all-contributors-cli@^6.17.2:
+  version "6.17.2"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-6.17.2.tgz#fb3461de56c378d1846e0b982ca0bd7ce4359c18"
+  integrity sha512-1ip57waUGz92HWbM5VgiGOjBz25fWXOtCRtCFbjCuuiCuiYbygnvcb9iFYiyNz28RlECg1VPXWrXOJABq+h+MQ==
   dependencies:
     "@babel/runtime" "^7.7.6"
     async "^3.0.1"
@@ -1732,8 +1732,8 @@ all-contributors-cli@^6.16.1:
     inquirer "^7.0.4"
     json-fixer "^1.5.1"
     lodash "^4.11.2"
+    node-fetch "^2.6.0"
     pify "^5.0.0"
-    request "^2.72.0"
     yargs "^15.0.1"
 
 ansi-align@^2.0.0:
@@ -7453,7 +7453,7 @@ node-fetch-npm@^2.0.2:
     json-parse-better-errors "^1.0.0"
     safe-buffer "^5.1.1"
 
-node-fetch@^2.2.0, node-fetch@^2.3.0:
+node-fetch@^2.2.0, node-fetch@^2.3.0, node-fetch@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
@@ -9091,7 +9091,7 @@ request-promise-native@^1.0.8:
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
 
-request@^2.72.0, request@^2.82.0, request@^2.85.0, request@^2.88.0, request@^2.88.2:
+request@^2.82.0, request@^2.85.0, request@^2.88.0, request@^2.88.2:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
