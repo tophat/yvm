@@ -11,7 +11,8 @@
     "commit": "npx git-cz",
     "contributors:add": "all-contributors add",
     "contributors:check": "all-contributors check",
-    "contributors:generate": "all-contributors generate"
+    "contributors:generate": "all-contributors generate",
+    "postinstall": "yarn-deduplicate"
   },
   "jest": {
     "moduleDirectories": [
@@ -79,6 +80,7 @@
     "prettier": "^2.1.1",
     "raw-loader": "^4.0.1",
     "semantic-release": "^17.1.1",
+    "terser-webpack-plugin": "^1.4.5",
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
