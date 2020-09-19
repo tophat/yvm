@@ -61,7 +61,7 @@ yvm() {
     yvm_call_node_script() {
         # do not add anything that outputs stuff to stdout in function, its output is stored in a variable
         export sh_user_paths=$PATH
-        node "${YVM_DIR}/yvm.js" $@
+        node "${YVM_DIR}/yvm.js" "$@"
     }
 
     yvm_init_sh() {
@@ -88,7 +88,7 @@ yvm() {
     elif [ "${command}" = "unload" ]; then
         yvm_unload
     else
-        yvm_call_node_script $@
+        yvm_call_node_script "$@"
     fi
 }
 

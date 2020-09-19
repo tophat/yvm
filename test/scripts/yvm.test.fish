@@ -58,6 +58,19 @@ else
     fail $test1_output
 end
 
+testing "yvm exec passes orignal arguments"
+echo "#!/usr/bin/env node
+
+process.exit(process.argv[2] !== './*.js')" > "./fake.js"
+chmod +x "./fake.js"
+ln -sf (pwd)"/fake.js" "node_modules/.bin/fake"
+yvm exec fake './*.js'
+pass
+
+testing "yarn shim passes original arguments"
+yarn fake './*.js'
+pass
+
 testing "yarn shimmed config"
 set test_shim_config_output (yarn --version)
 if test "$test_shim_config_output" = "1.22.5"
