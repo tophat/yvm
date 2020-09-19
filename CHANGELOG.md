@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/tophat/yvm/compare/v3.6.7...v4.0.0) (2020-09-19)
+
+
+### chore
+
+* 🤖 drop support for node version <10 ([174bdf0](https://github.com/tophat/yvm/commit/174bdf0798e9ce6b1387abae2bfad3864d4bfe44))
+
+
+### BREAKING CHANGES
+
+* 🧨 Drops support for node version <10
+
 ## [3.6.7](https://github.com/tophat/yvm/compare/v3.6.6...v3.6.7) (2020-02-07)
 
 
