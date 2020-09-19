@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/tophat/yvm/compare/v4.0.0...v4.0.1) (2020-09-19)
+
+
+### Bug Fixes
+
+* do not expand variables before calling node script ([#775](https://github.com/tophat/yvm/issues/775)) ([04177ce](https://github.com/tophat/yvm/commit/04177ce1878a401403ce12f04150736a6253bd62))
+
 # [4.0.0](https://github.com/tophat/yvm/compare/v3.6.7...v4.0.0) (2020-09-19)
 
 
