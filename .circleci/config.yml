@@ -42,7 +42,7 @@ jobs:
           at: ~/repo
       - run: make test-coverage
       - store_test_results:
-          path: artifacts/reports
+          path: artifacts/reports/tests
   lint:
     <<: *docker_defaults
     working_directory: ~/repo
