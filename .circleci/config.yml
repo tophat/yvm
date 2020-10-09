@@ -16,6 +16,9 @@ commands:
       - run:
           name: "Install yvm release version"
           command: "node ~/repo/scripts/install.js"
+      - run:
+          name: Install missing node_modules
+          command: make node_modules
   save_env_cache:
     description: "Saves environment cache"
     steps:
@@ -31,7 +34,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - prep_env
-      - run: make node_modules
       - save_env_cache
   unit_test:
     <<: *docker_defaults
