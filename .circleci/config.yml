@@ -12,7 +12,7 @@ commands:
           path: ~/repo
       - restore_cache:
           name: Restore node_modules cache
-          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}{{ .Environment.CACHE_KEY }}
+          key: yvm-{{ checksum "yarn.lock" }}{{ .Environment.CACHE_KEY }}
       - run:
           name: "Install yvm release version"
           command: "node ~/repo/scripts/install.js"
@@ -21,7 +21,7 @@ commands:
     steps:
       - save_cache:
           name: Save node_modules cache
-          key: yvm-{{ .Branch }}-{{ checksum "yarn.lock" }}{{ .Environment.CACHE_KEY }}
+          key: yvm-{{ checksum "yarn.lock" }}{{ .Environment.CACHE_KEY }}
           paths:
             - node_modules/
 
