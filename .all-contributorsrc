@@ -256,8 +256,18 @@
         "doc",
         "projectManagement"
       ]
+    },
+    {
+      "login": "jdbdnz",
+      "name": "Josh Dean",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3292124?v=4",
+      "profile": "http://jdbd.nz",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "commitConvention": "none"
+  "commitConvention": "none",
+  "skipCi": true
 }
