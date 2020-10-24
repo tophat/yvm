@@ -1,7 +1,7 @@
 import path from 'path'
 import os from 'os'
 
-import mockProps from 'jest-mock-props'
+import * as mockProps from 'jest-mock-props'
 import { fs, vol } from 'memfs'
 
 mockProps.extend(jest)
