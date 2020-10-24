@@ -40,10 +40,10 @@ Node: >=10.0.0
 Installs the latest stable version.
 
 ```sh
-brew install tophat/bar/yvm
+brew install tophat/bar/yvm --without-node
 ```
 
-**NOTE**: Use the flag `--without-node` if you already have node installed.
+**NOTE**: Remove the flag `--without-node` to install with the node dependency.
 
 ### Script
 
