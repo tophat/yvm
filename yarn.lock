@@ -6297,10 +6297,10 @@ jest-message-util@^26.6.1:
     slash "^3.0.0"
     stack-utils "^2.0.2"
 
-jest-mock-props@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/jest-mock-props/-/jest-mock-props-1.8.1.tgz#1f0e929d9e99866caee613aaf89056ab85c98b8a"
-  integrity sha512-shSPNrVkgiWQwsL6RBKCgKLfqQEiqIVzO0fb/J3FF1oAMon4NFjGBN1zDostFxyVAEcTA5uuz0Ny3qASqgrzyQ==
+jest-mock-props@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/jest-mock-props/-/jest-mock-props-1.8.2.tgz#12c531b7c72d63efbffa8e18d4d8a7ace1979bc8"
+  integrity sha512-g3Pkf6O808nMsHlAAyzTOIFvdZ/Q1Almu/1WJsWXZlFJE/UnuIb76DEr8uB+fTiATGlGotrICDta7c7agaOGOQ==
 
 jest-mock@^26.6.1:
   version "26.6.1"
