@@ -11441,10 +11441,10 @@ webpack-cli@^4.2.0:
     v8-compile-cache "^2.2.0"
     webpack-merge "^4.2.2"
 
-webpack-compiler-plugin@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/webpack-compiler-plugin/-/webpack-compiler-plugin-1.1.3.tgz#8efcacce5c69582bd503f0c0d8f15b354045de5f"
-  integrity sha512-iOha0LuNIGLstfNDGW+m28butqibs2hcMibBWVO87zBQIh62zg+f0OQm7JCKSVhN3nc/RvuynlI90PrN8S3hZQ==
+webpack-compiler-plugin@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/webpack-compiler-plugin/-/webpack-compiler-plugin-1.1.4.tgz#3f4e2a0fff4346b87102dc36142afe618fb7af6b"
+  integrity sha512-+q06CpiyYj/Zdk5IEPPTChQt7XOPJCGv2Omyq3rA5+keJ7Z48H/RINFUdFhxiqrTVXCAaRcWxLu72a4rZgk3FA==
 
 webpack-merge@^4.2.2:
   version "4.2.2"
