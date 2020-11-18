@@ -1291,10 +1291,10 @@
     micromatch "^4.0.0"
     p-reduce "^2.0.0"
 
-"@semantic-release/github@^7.0.0", "@semantic-release/github@^7.1.2":
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/@semantic-release/github/-/github-7.1.2.tgz#49823166f4ae2d465ead8137b564b22dd97a0ad8"
-  integrity sha512-0cbQAQgZRUPvYWeJ5OSw/bbOhe0tsFArylL2gue9V66q0JgFNOL6CONGd+X5CQxQP1+t+t3Lr9OomuE3QLZgtw==
+"@semantic-release/github@^7.0.0", "@semantic-release/github@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@semantic-release/github/-/github-7.2.0.tgz#925f3efd91adabfc4bbe0de24b79fe1a8a38b4e2"
+  integrity sha512-tMRnWiiWb43whRHvbDGXq4DGEbKRi56glDpXDJZit4PIiwDPX7Kx3QzmwRtDOcG+8lcpGjpdPabYZ9NBxoI2mw==
   dependencies:
     "@octokit/rest" "^18.0.0"
     "@semantic-release/error" "^2.2.0"
