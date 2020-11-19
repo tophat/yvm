@@ -45,7 +45,11 @@ brew install tophat/bar/yvm --without-node
 
 **NOTE**: Remove the flag `--without-node` to install with the node dependency.
 
-### Script
+### Windows
+
+[TODO#435](https://github.com/tophat/yvm/issues/435)
+
+### Node
 
 Execute the following in your terminal:
 
@@ -54,6 +58,14 @@ curl -s https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js |
 ```
 
 Or to install a specific version:
+
+```bash
+curl -s https://raw.githubusercontent.com/tophat/yvm/v3.2.1/scripts/install.js | INSTALL_VERSION="v3.2.1" node
+```
+
+### Script
+
+Some older versions of yvm do not have the node installer enabled. If so the shell script installer can be used.
 
 ```bash
 curl -s https://raw.githubusercontent.com/tophat/yvm/v2.4.3/scripts/install.sh | INSTALL_VERSION="v2.4.3" bash
