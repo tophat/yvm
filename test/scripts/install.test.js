@@ -1,12 +1,20 @@
 const os = require('os')
-const { execSync } = require('child_process')
+const childProcess = require('child_process')
 const https = require('https')
 
 const fs = require('fs-extra')
 const mockProps = require('jest-mock-props')
 
 mockProps.extend(jest)
-
+const log = jest.spyOn(console, 'log')
+const mockHome = 'install-test-mock-home'
+const actualExecSync = childProcess.execSync
+const execSync = command => {
+    return actualExecSync(command, {
+        env: { HOME: `./${mockHome}` },
+    })
+}
+jest.spyOn(childProcess, 'execSync').mockImplementation(execSync)
 jest.unmock('fs')
 const {
     downloadFile,
@@ -61,12 +69,11 @@ expect.extend({
 })
 
 describe('install yvm', () => {
-    const log = jest.spyOn(console, 'log')
-    const mockHomeValue = 'mock-home'
     const envHomeMock = jest.spyOnProp(process.env, 'HOME')
     const envUseLocal = jest.spyOnProp(process.env, 'USE_LOCAL')
     const envInstallVersion = jest.spyOnProp(process.env, 'INSTALL_VERSION')
-    jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
+    jest.spyOn(os, 'homedir').mockReturnValue(mockHome)
+
     const expectedConfigObject = ({
         homePath,
         paths = {},
@@ -88,7 +95,6 @@ describe('install yvm', () => {
 
     afterEach(() => {
         jest.clearAllMocks()
-        fs.removeSync(mockHomeValue)
         envHomeMock.mockReset()
         envUseLocal.mockReset()
         envInstallVersion.mockReset()
@@ -151,7 +157,6 @@ describe('install yvm', () => {
     })
 
     describe('local version', () => {
-        const mockHome = mockHomeValue
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             envUseLocal.mockValue('true')
@@ -181,18 +186,16 @@ describe('install yvm', () => {
         })
 
         it('creates home install directory if does not exist', async () => {
-            const testHomePath = 'mock-create-home'
-            fs.removeSync(testHomePath)
-            expect(testHomePath).not.toBeExistingFile()
-            envHomeMock.mockValue(testHomePath)
+            fs.removeSync(mockHome)
+            expect(mockHome).not.toBeExistingFile()
+            envHomeMock.mockValue(mockHome)
             await run()
-            expect(`${testHomePath}/.yvm`).toBeExistingFile()
-            fs.removeSync(testHomePath)
+            expect(`${mockHome}/.yvm`).toBeExistingFile()
         })
 
         it('creates specified install directory if does not exist', async () => {
-            const mockInstallDir = 'mock-install-dir/.myvm'
-            fs.removeSync('mock-install-dir')
+            const mockInstallDir = `${mockHome}/.myvm`
+            fs.removeSync(mockHome)
             const envYvmInstallDir = jest
                 .spyOnProp(process.env, 'YVM_INSTALL_DIR')
                 .mockValue(mockInstallDir)
@@ -200,7 +203,6 @@ describe('install yvm', () => {
             await run()
             envYvmInstallDir.mockRestore()
             expect(mockInstallDir).toBeExistingFile()
-            fs.removeSync('mock-install-dir')
         })
 
         const rcFiles = [
@@ -209,28 +211,28 @@ describe('install yvm', () => {
             ['.config/fish/config.fish', 'yvm.fish'],
         ]
         const shConfigs = {
-            [`${mockHomeValue}/.bashrc`]: [
-                `export YVM_DIR=${mockHomeValue}/.yvm`,
+            [`${mockHome}/.bashrc`]: [
+                `export YVM_DIR=${mockHome}/.yvm`,
                 '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
             ],
-            [`${mockHomeValue}/.config/fish/config.fish`]: [
-                `set -x YVM_DIR ${mockHomeValue}/.yvm`,
+            [`${mockHome}/.config/fish/config.fish`]: [
+                `set -x YVM_DIR ${mockHome}/.yvm`,
                 '[ -r $YVM_DIR/yvm.fish ]; and source $YVM_DIR/yvm.fish',
             ],
-            [`${mockHomeValue}/.zshrc`]: [
-                `export YVM_DIR=${mockHomeValue}/.yvm`,
+            [`${mockHome}/.zshrc`]: [
+                `export YVM_DIR=${mockHome}/.yvm`,
                 '[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh',
             ],
         }
         it.each(rcFiles)('configures %s', async (rcFile, yvmScript) => {
-            const filePath = `${mockHomeValue}/${rcFile}`
+            const filePath = `${mockHome}/${rcFile}`
             fs.outputFileSync(filePath, 'dummy')
             await run()
             const content = fs.readFileSync(filePath, 'utf8')
             shConfigs[filePath].forEach(string => {
                 expect(content).toContain(string)
             })
-            const yvmShellScript = `${mockHomeValue}/.yvm/${yvmScript}`
+            const yvmShellScript = `${mockHome}/.yvm/${yvmScript}`
             expect(yvmShellScript).toBeExistingFile()
             // script is executable
             fs.accessSync(yvmShellScript, fs.constants.X_OK)
@@ -238,7 +240,6 @@ describe('install yvm', () => {
     })
 
     describe('latest version', () => {
-        const mockHome = 'other-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             fs.ensureFile(`${mockHome}/.bashrc`)
@@ -292,7 +293,6 @@ describe('install yvm', () => {
     })
 
     describe('specified version', () => {
-        const mockHome = 'another-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             fs.ensureFile(`${mockHome}/.bashrc`)
@@ -351,7 +351,6 @@ describe('install yvm', () => {
 
     describe('invalid version', () => {
         const installVersion = 'invalid-version-xyz'
-        const mockHome = 'invalid-mock-home'
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
             envInstallVersion.mockValue(installVersion)

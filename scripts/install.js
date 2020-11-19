@@ -7,17 +7,17 @@ const url = require('url')
 
 const log = (...args) => console.log(...args) // eslint-disable-line no-console
 
-const zipFile = 'yvm.zip'
-const binFile = 'yvm.js'
-const releaseAssetsByPreference = [binFile, zipFile]
+const ZIP_FILE = 'yvm.zip'
+const BIN_FILE = 'yvm.js'
+const RELEASE_ASSETS_BY_PREFERENCE = [BIN_FILE, ZIP_FILE]
+const YVM_GATEWAY = 'https://d236jo9e8rrdox.cloudfront.net'
 
 function getConfig() {
     const home = process.env.HOME || os.homedir()
     const profile = process.env.PROFILE || null
     const useLocal = process.env.USE_LOCAL || false
     const yvmDir = process.env.YVM_INSTALL_DIR || path.join(home, '.yvm')
-    const yvmGateway = 'https://d236jo9e8rrdox.cloudfront.net'
-    const releaseApiUrl = path.join(yvmGateway, 'yvm-releases')
+    const releaseApiUrl = path.join(YVM_GATEWAY, 'yvm-releases')
     return {
         paths: {
             home,
@@ -58,7 +58,7 @@ function getTagAndUrlFromRelease(data) {
         (acc, ass) => Object.assign(acc, { [ass.name]: ass }),
         {},
     )
-    for (const name of releaseAssetsByPreference) {
+    for (const name of RELEASE_ASSETS_BY_PREFERENCE) {
         if (name in assetsByName) {
             const { browser_download_url: downloadUrl } = assetsByName[name]
             return { tagName, downloadUrl }
@@ -234,7 +234,7 @@ async function run() {
     ensureDir(paths.yvm)
     await cleanYvmDir(paths.yvm)
 
-    const yvmBinFile = path.join(paths.yvm, binFile)
+    const yvmBinFile = path.join(paths.yvm, BIN_FILE)
     if (!useLocal) {
         const { releaseApiUrl, releasesApiUrl } = config
         if (version.tagName) {
@@ -248,7 +248,7 @@ async function run() {
             log('Querying github release API to determine latest version')
             Object.assign(version, await getLatestYvmVersion(releaseApiUrl))
         }
-        if (version.downloadUrl.endsWith(zipFile)) {
+        if (version.downloadUrl.endsWith(ZIP_FILE)) {
             return compatInstall({ paths, version })
         }
         await downloadFile({
@@ -256,7 +256,7 @@ async function run() {
             destination: yvmBinFile,
         })
     } else {
-        const localBinFile = path.join('artifacts', 'webpack_build', binFile)
+        const localBinFile = path.join('artifacts', 'webpack_build', BIN_FILE)
         fs.copyFileSync(localBinFile, yvmBinFile)
     }
     if (version.tagName) {

@@ -9,9 +9,8 @@
 [![Builds](https://img.shields.io/circleci/project/github/tophat/yvm/master.svg)](https://circleci.com/gh/tophat/yvm)
 [![codecov](https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophat/yvm)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![Deps](https://david-dm.org/tophat/yvm/status.svg)](https://david-dm.org/tophat/yvm)
-[![Dev Deps](https://david-dm.org/tophat/yvm/dev-status.svg)](https://david-dm.org/tophat/yvm)
-[![Dependabot](https://flat.badgen.net/dependabot/tophat/yvm?icon=dependabot)](https://app.dependabot.com/accounts/tophat/repos/137530684)
+[![Dependencies](https://img.shields.io/librariesio/github/tophat/yvm)](https://libraries.io/github/tophat/yvm)
+[![Dependabot](https://badgen.net/dependabot/tophat/yvm?icon=dependabot)](https://app.dependabot.com/accounts/tophat/repos/137530684)
 [![All Contributors](https://img.shields.io/badge/all_contributors-27-orange.svg?style=flat-square)](#contributors-)
 [![Slack workspace](https://slackinvite.dev.tophat.com/badge.svg)](https://opensource.tophat.com/slack)
 [![Maturity badge - level 3](https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg)](https://github.com/tophat/getting-started/blob/master/scorecard.md)
@@ -45,7 +44,11 @@ brew install tophat/bar/yvm --without-node
 
 **NOTE**: Remove the flag `--without-node` to install with the node dependency.
 
-### Script
+### Windows
+
+[TODO: #435](https://github.com/tophat/yvm/issues/435)
+
+### Node
 
 Execute the following in your terminal:
 
@@ -54,6 +57,14 @@ curl -s https://raw.githubusercontent.com/tophat/yvm/master/scripts/install.js |
 ```
 
 Or to install a specific version:
+
+```bash
+curl -s https://raw.githubusercontent.com/tophat/yvm/v3.2.1/scripts/install.js | INSTALL_VERSION="v3.2.1" node
+```
+
+### Script
+
+Some older versions of yvm do not have the node installer enabled. If so the shell script installer can be used.
 
 ```bash
 curl -s https://raw.githubusercontent.com/tophat/yvm/v2.4.3/scripts/install.sh | INSTALL_VERSION="v2.4.3" bash
