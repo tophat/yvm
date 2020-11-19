@@ -46,7 +46,7 @@ brew install tophat/bar/yvm --without-node
 
 ### Windows
 
-[TODO#435](https://github.com/tophat/yvm/issues/435)
+[TODO: #435](https://github.com/tophat/yvm/issues/435)
 
 ### Node
 
