@@ -95,7 +95,6 @@ describe('install yvm', () => {
 
     afterEach(() => {
         jest.clearAllMocks()
-        fs.removeSync(mockHome)
         envHomeMock.mockReset()
         envUseLocal.mockReset()
         envInstallVersion.mockReset()
@@ -187,18 +186,16 @@ describe('install yvm', () => {
         })
 
         it('creates home install directory if does not exist', async () => {
-            const testHomePath = 'mock-create-home'
-            fs.removeSync(testHomePath)
-            expect(testHomePath).not.toBeExistingFile()
-            envHomeMock.mockValue(testHomePath)
+            fs.removeSync(mockHome)
+            expect(mockHome).not.toBeExistingFile()
+            envHomeMock.mockValue(mockHome)
             await run()
-            expect(`${testHomePath}/.yvm`).toBeExistingFile()
-            fs.removeSync(testHomePath)
+            expect(`${mockHome}/.yvm`).toBeExistingFile()
         })
 
         it('creates specified install directory if does not exist', async () => {
-            const mockInstallDir = 'mock-install-dir/.myvm'
-            fs.removeSync('mock-install-dir')
+            const mockInstallDir = `${mockHome}/.myvm`
+            fs.removeSync(mockHome)
             const envYvmInstallDir = jest
                 .spyOnProp(process.env, 'YVM_INSTALL_DIR')
                 .mockValue(mockInstallDir)
@@ -206,7 +203,6 @@ describe('install yvm', () => {
             await run()
             envYvmInstallDir.mockRestore()
             expect(mockInstallDir).toBeExistingFile()
-            fs.removeSync('mock-install-dir')
         })
 
         const rcFiles = [
