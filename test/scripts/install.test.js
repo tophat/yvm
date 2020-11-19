@@ -1,12 +1,20 @@
 const os = require('os')
-const { execSync } = require('child_process')
+const childProcess = require('child_process')
 const https = require('https')
 
 const fs = require('fs-extra')
 const mockProps = require('jest-mock-props')
 
 mockProps.extend(jest)
-
+const log = jest.spyOn(console, 'log')
+const mockHomeValue = 'mock-home'
+const actualExecSync = childProcess.execSync
+const execSync = command => {
+    return actualExecSync(command, {
+        env: { HOME: `./${mockHomeValue}` },
+    })
+}
+jest.spyOn(childProcess, 'execSync').mockImplementation(execSync)
 jest.unmock('fs')
 const {
     downloadFile,
@@ -61,12 +69,11 @@ expect.extend({
 })
 
 describe('install yvm', () => {
-    const log = jest.spyOn(console, 'log')
-    const mockHomeValue = 'mock-home'
     const envHomeMock = jest.spyOnProp(process.env, 'HOME')
     const envUseLocal = jest.spyOnProp(process.env, 'USE_LOCAL')
     const envInstallVersion = jest.spyOnProp(process.env, 'INSTALL_VERSION')
     jest.spyOn(os, 'homedir').mockReturnValue(mockHomeValue)
+
     const expectedConfigObject = ({
         homePath,
         paths = {},
