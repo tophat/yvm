@@ -55,7 +55,7 @@
     "@tophat/eslint-config": "^0.7.0",
     "all-contributors-cli": "^6.19.0",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.1",
+    "babel-loader": "^8.2.2",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-lodash": "^3.3.4",
     "bundlewatch": "^0.3.1",
