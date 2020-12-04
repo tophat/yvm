@@ -4947,10 +4947,10 @@ gh-release-assets@^2.0.0:
     simple-get "^4.0.0"
     util-extend "^1.0.1"
 
-gh-release@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/gh-release/-/gh-release-4.0.3.tgz#3277aaaaad31b1f4faf7e0015f43bacea5001c72"
-  integrity sha512-aHbAn0tYhvnrYsqnPzUMRel2BuVLthla/ONaR9VriI1WzOPwa8C9G6l1cRygPjXOSF1Oyel7n5jZDqeshMyTdg==
+gh-release@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/gh-release/-/gh-release-4.0.4.tgz#c5e497e04eb0f8c9a0cff54386e38433152b8fd5"
+  integrity sha512-HkAQ44Gd/UZeDQNFUGRWOxgom5l5hcRp4KC7W8nMJApz/puwjEXrKKwhr1VuAcWjF80vDwObCuTh6hMakjwW5g==
   dependencies:
     chalk "^4.1.0"
     changelog-parser "^2.0.0"
