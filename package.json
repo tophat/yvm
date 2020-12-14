@@ -35,7 +35,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "chalk": "^4.1.0",
-    "commander": "^6.2.0",
+    "commander": "^6.2.1",
     "core-js": "^3.8.1",
     "cosmiconfig": "^7.0.0",
     "fs-extra": "^9.0.1",
