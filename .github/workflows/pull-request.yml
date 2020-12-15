@@ -59,8 +59,8 @@ jobs:
         with:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
-      - name: Install local
-        run: make install-local
+      - name: Install dependencies
+        run: make node_modules
       - name: Tests
         run: make test-coverage
       - name: Linting
