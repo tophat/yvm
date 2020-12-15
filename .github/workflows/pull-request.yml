@@ -59,6 +59,8 @@ jobs:
         with:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
+      - name: Install local
+        run: make install-local
       - name: Tests
         run: make test-coverage
       - name: Linting
@@ -101,7 +103,5 @@ jobs:
           sudo apt-get install fish
           mkdir -p ~/.config/fish
           touch ~/.config/fish/config.fish
-      - name: Install local
-        run: make install-local
       - name: Sanity test ${{ matrix.terminal }}
         run: make sanities-${{ matrix.terminal }}
