@@ -6,13 +6,13 @@ Array [
     "highlight installed versions",
   ],
   Array [
-    "[33m → 1.1.0[39m",
+    " → 1.1.0",
   ],
   Array [
-    "[32m ✓ 1.2.0[39m",
+    " ✓ 1.2.0",
   ],
   Array [
-    "[33m → 1.3.0 (Global Default)[39m",
+    " → 1.3.0 (Global Default)",
   ],
   Array [
     " - 1.4.0",
@@ -32,7 +32,7 @@ Array [
     " - 1.1.0",
   ],
   Array [
-    "[32m ✓ 1.2.0[39m",
+    " ✓ 1.2.0",
   ],
   Array [
     " - 1.3.0 (Global Default)",
@@ -55,7 +55,7 @@ Array [
     " - 1.1.0",
   ],
   Array [
-    "[32m ✓ 1.2.0[39m",
+    " ✓ 1.2.0",
   ],
   Array [
     " - 1.3.0",

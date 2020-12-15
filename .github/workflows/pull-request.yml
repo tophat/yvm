@@ -5,8 +5,6 @@ on: pull_request
 env:
   CI: 1
   ARTIFACT_DIR: ./artifacts
-  FORCE_COLOR: 0
-  PY_COLORS: 0
 
 jobs:
   build:
