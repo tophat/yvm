@@ -108,7 +108,7 @@ test-watch:
 # CODECOV_TOKEN is set by CIRCLE_CI
 .PHONY: test-coverage
 test-coverage:
-	$(JEST) --coverage  --no-colors
+	$(JEST) --coverage
 	$(CODECOV)
 
 .PHONY: test-snapshots

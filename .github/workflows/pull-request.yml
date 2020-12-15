@@ -5,6 +5,8 @@ on: pull_request
 env:
   CI: 1
   ARTIFACT_DIR: ./artifacts
+  FORCE_COLOR: 1
+  PY_COLORS: 1
 
 jobs:
   build:
@@ -76,7 +78,7 @@ jobs:
       needs: [build]
       strategy:
         matrix:
-          terminal: [bash, fish, zsh]
+          terminal: [bash, zsh, fish]
       steps:
       - uses: actions/checkout@v2
         with:

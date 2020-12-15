@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`alias util getFormatter formats and colors inputs correctly available alias 1`] = `"available → 1.5 (1.5.0)"`;
+exports[`alias util getFormatter formats and colors inputs correctly available alias 1`] = `"[90m[37mavailable[39m[90m → [37m1.5[39m[90m ([37m1.5.0[39m[90m)[39m"`;
 
-exports[`alias util getFormatter formats and colors inputs correctly current alias 1`] = `"current → ^1.1 (1.13.0)"`;
+exports[`alias util getFormatter formats and colors inputs correctly current alias 1`] = `"[90m[32mcurrent[39m[90m → [37m^1.1[39m[90m ([32m1.13.0[39m[90m)[39m"`;
 
-exports[`alias util getFormatter formats and colors inputs correctly installed alias 1`] = `"installed → 1.3 (1.3.0)"`;
+exports[`alias util getFormatter formats and colors inputs correctly installed alias 1`] = `"[90m[33minstalled[39m[90m → [37m1.3[39m[90m ([33m1.3.0[39m[90m)[39m"`;
 
-exports[`alias util getFormatter formats and colors inputs correctly stable alias 1`] = `"stable → 1.13.0"`;
+exports[`alias util getFormatter formats and colors inputs correctly stable alias 1`] = `"[90m[32m[1mstable[22m[39m[90m → [32m[1m1.13.0[22m[39m[90m[39m"`;
 
-exports[`alias util getFormatter formats and colors inputs correctly system alias 1`] = `"system → N/A"`;
+exports[`alias util getFormatter formats and colors inputs correctly system alias 1`] = `"[90m[31m[1msystem[22m[39m[90m → [31m[1mN/A[22m[39m[90m[39m"`;
 
-exports[`alias util getFormatter formats and colors inputs correctly unavailable alias 1`] = `"unavailable → 1.1 (N/A)"`;
+exports[`alias util getFormatter formats and colors inputs correctly unavailable alias 1`] = `"[90m[31munavailable[39m[90m → [37m1.1[39m[90m ([31mN/A[39m[90m)[39m"`;
 
-exports[`alias util getFormatter formats and colors inputs correctly undefined alias 1`] = `"undefined → 1.2.0 (N/A)"`;
+exports[`alias util getFormatter formats and colors inputs correctly undefined alias 1`] = `"[90m[31mundefined[39m[90m → [37m1.2.0[39m[90m ([31mN/A[39m[90m)[39m"`;
 
 exports[`alias util resolveAliases does not crash on cyclic alias dependancy 1`] = `
 Array [
