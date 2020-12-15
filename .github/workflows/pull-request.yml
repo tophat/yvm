@@ -65,7 +65,7 @@ jobs:
       - name: Tests
         run: make test-coverage
         env:
-          FORCE_COLOR=0
+          FORCE_COLOR: 0
       - name: Linting
         run: make lint
       - name: Circular Linting
