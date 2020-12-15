@@ -64,6 +64,8 @@ jobs:
         run: make node_modules
       - name: Tests
         run: make test-coverage
+        env:
+          FORCE_COLOR=0
       - name: Linting
         run: make lint
       - name: Circular Linting
@@ -94,6 +96,8 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
+      - name: Installl yvm
+        run: node ./scripts/install.js
       - name: Setup Env (zsh)
         if: matrix.terminal == 'zsh'
         run: |
