@@ -42,7 +42,7 @@ jobs:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
   tests:
-    name: Lint, Tests
+    name: Lint and Unit Tests
     runs-on: ubuntu-18.04
     needs: [build]
     steps:
@@ -59,12 +59,12 @@ jobs:
         with:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
+      - name: Tests
+        run: make test-coverage
       - name: Linting
         run: make lint
       - name: Circular Linting
         run: make lint-defend-circular
-      - name: Tests
-        run: make test-coverage
       - name: Release Size Check
         run: make bundlewatch
   sanity-tests:
