@@ -60,6 +60,7 @@ jobs:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
       - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
       - name: Tests
         run: make test-coverage
@@ -90,6 +91,9 @@ jobs:
         with:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: make node_modules
       - name: Setup Env (zsh)
         if: matrix.terminal == 'zsh'
         run: |
