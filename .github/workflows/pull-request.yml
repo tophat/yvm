@@ -5,6 +5,8 @@ on: pull_request
 env:
   CI: 1
   ARTIFACT_DIR: ./artifacts
+  FORCE_COLOR: 0
+  PY_COLORS: 0
 
 jobs:
   build:
@@ -64,8 +66,6 @@ jobs:
         run: make node_modules
       - name: Tests
         run: make test-coverage
-        env:
-          FORCE_COLOR: '0'
       - name: Linting
         run: make lint
       - name: Circular Linting
