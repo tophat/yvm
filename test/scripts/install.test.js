@@ -11,7 +11,7 @@ const mockHome = 'install-test-mock-home'
 const actualExecSync = childProcess.execSync
 const execSync = command => {
     return actualExecSync(command, {
-        env: { HOME: `./${mockHome}` },
+        env: { HOME: `./${mockHome}`, PATH: process.env.PATH },
     })
 }
 jest.spyOn(childProcess, 'execSync').mockImplementation(execSync)

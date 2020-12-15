@@ -7,8 +7,8 @@ env:
   ARTIFACT_DIR: ./artifacts
 
 jobs:
-  tests:
-    name: Lint, Tests and Build
+  build:
+    name: Install node modules and build
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -32,26 +32,48 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
+      - name: Build
+        run: make build-production
+      - name: Semantic release
+        run: yarn run semantic-release --dry-run
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: ${{ env.ARTIFACT_DIR }}
+  tests:
+    name: Lint, Tests
+    runs-on: ubuntu-18.04
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: ./.github/actions/detect-node
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Restore build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: ${{ env.ARTIFACT_DIR }}
       - name: Linting
         run: make lint
       - name: Circular Linting
         run: make lint-defend-circular
       - name: Tests
         run: make test-coverage
-      - name: Build
-        run: make build-production
-      - name: Semantic release
-        run: yarn run semantic-release --dry-run
       - name: Release Size Check
         run: make bundlewatch
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: reports-and-build-artifacts
-          path: ${{ env.ARTIFACT_DIR }}
   sanity-tests:
       name: bash, zsh and fish sanity tests
       runs-on: ubuntu-18.04
+      needs: [build]
+      strategy:
+        matrix:
+          terminal: [bash, fish, zsh]
       steps:
       - uses: actions/checkout@v2
         with:
@@ -61,40 +83,25 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Create artifacts directory
-        run: mkdir -p ${{ env.ARTIFACT_DIR }}
-      - name: Restore node modules cache
-        id: node-modules-cache
-        uses: actions/cache@v2
+      - name: Restore build artifacts
+        uses: actions/download-artifact@v2
         with:
-          path: ./node_modules
-          key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - name: Installl yvm
-        run: node ./scripts/install.js
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: make node_modules
+          name: build-artifacts
+          path: ${{ env.ARTIFACT_DIR }}
+      - name: Setup Env (zsh)
+        if: matrix.terminal == 'zsh'
+        run: |
+          sudo apt-get update
+          sudo apt-get install zsh
+          touch ~/.zshrc
+      - name: Setup Env (fish)
+        if: matrix.terminal == 'fish'
+        run: |
+          sudo apt-get update
+          sudo apt-get install fish
+          mkdir -p ~/.config/fish
+          touch ~/.config/fish/config.fish
       - name: Install local
         run: make install-local
-      - name: Sanity Test Bash
-        run: make sanities-bash
-      - name: Update apt-get
-        run: sudo apt-get update
-      - name: Install fish
-        run: sudo apt-get install fish
-      - name: Create Fish Directory
-        run: mkdir -p ~/.config/fish
-      - name: Touch Fish
-        run: touch ~/.config/fish/config.fish
-      - name: Install local
-        run: make install-local
-      - name: Sanity Test Fish
-        run: make sanities-fish
-      - name: Install zsh
-        run: sudo apt-get install zsh
-      - name: Touch zsh
-        run: touch ~/.zshrc
-      - name: Install local
-        run: make install-local
-      - name: Sanity Test zsh
-        run: make sanities-zsh
+      - name: Sanity test ${{ matrix.terminal }}
+        run: make sanities-${{ matrix.terminal }}
