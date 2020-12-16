@@ -121,6 +121,9 @@ jobs:
       runs-on: ubuntu-latest
       needs: [build, tests, sanity-tests]
       steps:
+        - uses: actions/checkout@v2
+          with:
+            ref: ${{ github.event.pull_request.head.sha }}
         - uses: ./.github/actions/detect-node
         - name: Setup Node.js
           uses: actions/setup-node@v1
