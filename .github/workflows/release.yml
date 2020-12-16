@@ -1,0 +1,47 @@
+name: Deploys
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: Deploy package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cycjimmy/semantic-release-action@v2
+        with:
+          branch: master
+          dry_run: false
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  deploy-website:
+    name: Deploy Website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/detect-node
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Restore node modules cache
+        id: node-modules-cache
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - uses: actions/checkout@v2
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: website
+          CLEAN: true
+
