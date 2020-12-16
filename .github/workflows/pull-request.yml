@@ -119,7 +119,6 @@ jobs:
   deploy-website:
       name: Deploy Website
       runs-on: ubuntu-latest
-      needs: [build, tests, sanity-tests]
       steps:
         - uses: actions/checkout@v2
           with:
@@ -129,14 +128,19 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: ${{ env.NODE_VERSION }}
-        - name: Restore build artifacts
-          uses: actions/download-artifact@v2
+        - name: Restore node modules cache
+          id: node-modules-cache
+          uses: actions/cache@v2
           with:
-            name: build-artifacts
-            path: ${{ env.ARTIFACT_DIR }}
+            path: ./node_modules
+            key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+        - name: Installl yvm
+          run: node ./scripts/install.js
         - name: Install dependencies
           if: steps.node-modules-cache.outputs.cache-hit != 'true'
           run: make node_modules
+        - name: Build
+          run: make build-production
         - run: yarn install --frozen-lockfile
         - run: yarn build
         - name: Deploy
