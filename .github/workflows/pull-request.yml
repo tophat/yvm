@@ -6,7 +6,6 @@ env:
   CI: 1
   ARTIFACT_DIR: ./artifacts
   FORCE_COLOR: 1
-  PY_COLORS: 1
 
 jobs:
   build:
@@ -111,5 +110,6 @@ jobs:
           sudo apt-get install fish
           mkdir -p ~/.config/fish
           touch ~/.config/fish/config.fish
+          node ./scripts/install.js
       - name: Sanity test ${{ matrix.terminal }}
         run: make sanities-${{ matrix.terminal }}
