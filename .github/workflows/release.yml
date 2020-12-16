@@ -13,7 +13,7 @@ jobs:
       - uses: cycjimmy/semantic-release-action@v2
         with:
           branch: master
-          dry_run: false
+          dry_run: true
           extra_plugins: |
             @semantic-release/changelog
             @semantic-release/git
@@ -41,7 +41,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          BRANCH: gh-pages
+          BRANCH: gh-pages-test
           FOLDER: website
           CLEAN: true
 

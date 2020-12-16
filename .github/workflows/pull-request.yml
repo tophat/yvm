@@ -1,6 +1,6 @@
 name: Continuous Integration
 
-on: pull_request_target
+on: pull_request
 
 env:
   CI: 1
@@ -10,7 +10,7 @@ env:
 jobs:
   build:
     name: Install node modules and build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,8 +35,11 @@ jobs:
         run: make node_modules
       - name: Build
         run: make build-production
-      - name: Semantic release
-        run: yarn run semantic-release --dry-run
+      - uses: cycjimmy/semantic-release-action@v2
+        with:
+          dry_run: true
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -44,7 +47,7 @@ jobs:
           path: ${{ env.ARTIFACT_DIR }}
   tests:
     name: Lint and Unit Tests
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
@@ -73,7 +76,7 @@ jobs:
         run: make bundlewatch
   sanity-tests:
       name: bash, zsh and fish sanity tests
-      runs-on: ubuntu-18.04
+      runs-on: ubuntu-latest
       needs: [build]
       strategy:
         matrix:
@@ -113,3 +116,29 @@ jobs:
           node ./scripts/install.js
       - name: Sanity test ${{ matrix.terminal }}
         run: make sanities-${{ matrix.terminal }}
+  deploy-website:
+      name: Deploy Website
+      runs-on: ubuntu-latest
+      needs: [build, tests, sanity-tests]
+      steps:
+        - uses: ./.github/actions/detect-node
+        - name: Setup Node.js
+          uses: actions/setup-node@v1
+          with:
+            node-version: ${{ env.NODE_VERSION }}
+        - name: Restore node modules cache
+          id: node-modules-cache
+          uses: actions/cache@v2
+          with:
+            path: ./node_modules
+            key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+        - run: yarn install --frozen-lockfile
+        - run: yarn build
+        - uses: actions/checkout@v2
+        - name: Deploy
+          uses: JamesIves/github-pages-deploy-action@3.7.1
+          with:
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+            BRANCH: gh-pages-test
+            FOLDER: website
+            CLEAN: true
