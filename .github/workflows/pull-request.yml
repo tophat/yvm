@@ -135,7 +135,7 @@ jobs:
             path: ./node_modules
             key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
         - name: Installl yvm
-            run: node ./scripts/install.js
+          run: node ./scripts/install.js
         - name: Install dependencies
           if: steps.node-modules-cache.outputs.cache-hit != 'true'
           run: make node_modules
