@@ -290,6 +290,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="http://twitter.com/abi"><img src="https://avatars0.githubusercontent.com/u/50083?v=4" width="100px;" alt=""/><br /><sub><b>Abi Noda</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=abinoda" title="Documentation">📖</a> <a href="#projectManagement-abinoda" title="Project Management">📆</a></td>
     <td align="center"><a href="http://jdbd.nz"><img src="https://avatars2.githubusercontent.com/u/3292124?v=4" width="100px;" alt=""/><br /><sub><b>Josh Dean</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=jdbdnz" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/akeshk"><img src="https://avatars2.githubusercontent.com/u/16065212?v=4" width="100px;" alt=""/><br /><sub><b>akeshk</b></sub></a><br /><a href="#infra-akeshk" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#tool-akeshk" title="Tools">🔧</a> <a href="https://github.com/tophat/yvm/commits?author=akeshk" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
