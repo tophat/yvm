@@ -1,6 +1,6 @@
 name: Continuous Integration
 
-on: pull_request_target
+on: pull_request
 
 env:
   CI: 1
