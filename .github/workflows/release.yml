@@ -39,22 +39,23 @@ jobs:
         id: node-modules-cache
         uses: actions/cache@v2
         with:
-          path: ./node_modules
-          key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+          path: ./website/node_modules
+          key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('./website/yarn.lock') }}
       - name: Install yvm
         run: node ./scripts/install.js
+        working-directory: ./website
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: make node_modules
-      - run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
+        working-directory: ./website
       - name: Build
-        run: make build-production
+        run: yarn build
+        working-directory: ./website
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: website
+          FOLDER: ./website/build/yvm
           CLEAN: true
           COMMIT_MESSAGE: 'docs: deploying website [skip ci]'
-
