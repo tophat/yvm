@@ -1,6 +1,6 @@
 name: Continuous Integration
 
-on: pull_request_target
+on: pull_request
 
 env:
   CI: 1
@@ -70,9 +70,13 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
       - name: Tests
-        run: make test-coverage
+        run: make test
       - name: Linting
         run: make lint
+      - name: Upload Coverage Report
+        run: ./.github/codecov.sh $GITHUB_EVENT_PATH
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Circular Linting
         run: make lint-defend-circular
       - name: Release Size Check
