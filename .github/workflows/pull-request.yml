@@ -78,7 +78,7 @@ jobs:
       - name: Release Size Check
         run: make bundlewatch
   sanity-tests:
-      name: bash, zsh and fish sanity tests
+      name: Sanity tests
       runs-on: ubuntu-latest
       needs: [build]
       strategy:
