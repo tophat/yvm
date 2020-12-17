@@ -8,6 +8,7 @@ jobs:
   release:
     name: Deploy package
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -24,6 +25,7 @@ jobs:
   deploy-website:
     name: Deploy Website
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -51,7 +53,8 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          BRANCH: gh-pages-test
+          BRANCH: gh-pages
           FOLDER: website
           CLEAN: true
+          COMMIT_MESSAGE: 'docs: deploying website [skip ci]'
 
