@@ -108,7 +108,6 @@ test-watch:
 .PHONY: test-coverage
 test-coverage:
 	$(JEST) --coverage
-	$(CODECOV)
 
 .PHONY: test-snapshots
 test-snapshots:

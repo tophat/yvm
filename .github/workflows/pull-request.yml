@@ -70,13 +70,13 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
       - name: Tests
-        run: make test
-      - name: Linting
-        run: make lint
+        run: make test-coverage
       - name: Upload Coverage Report
         run: ./.github/codecov.sh $GITHUB_EVENT_PATH
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Linting
+        run: make lint
       - name: Circular Linting
         run: make lint-defend-circular
       - name: Release Size Check
