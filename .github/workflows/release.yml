@@ -23,6 +23,10 @@ jobs:
     name: Deploy Website
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
       - uses: ./.github/actions/detect-node
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -34,9 +38,14 @@ jobs:
         with:
           path: ./node_modules
           key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+      - name: Installl yvm
+        run: node ./scripts/install.js
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: make node_modules
       - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - uses: actions/checkout@v2
+      - name: Build
+        run: make build-production
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
