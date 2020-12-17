@@ -28,7 +28,7 @@ jobs:
         with:
           path: ./node_modules
           key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - name: Installl yvm
+      - name: Install yvm
         run: node ./scripts/install.js
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
@@ -101,7 +101,7 @@ jobs:
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
-      - name: Installl yvm
+      - name: Install yvm
         run: node ./scripts/install.js
       - name: Setup Env (zsh)
         if: matrix.terminal == 'zsh'

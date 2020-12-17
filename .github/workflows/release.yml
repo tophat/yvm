@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    name: Deploy package
+    name: Release yvm
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
@@ -41,7 +41,7 @@ jobs:
         with:
           path: ./node_modules
           key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - name: Installl yvm
+      - name: Install yvm
         run: node ./scripts/install.js
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
