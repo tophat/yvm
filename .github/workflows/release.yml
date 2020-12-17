@@ -43,7 +43,6 @@ jobs:
           key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('./website/yarn.lock') }}
       - name: Install yvm
         run: node ./scripts/install.js
-        working-directory: ./website
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
