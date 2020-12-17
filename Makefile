@@ -51,7 +51,6 @@ help:
 	@echo "make clean                           - removes node_modules and built artifacts"
 	@echo "----------------------- CI Commands  -------------------------"
 	@echo "make build-production                - builds a bundle with production settings"
-	@echo "make use-docker                      - loads this project inside a docker container for the CI environment"
 
 
 # ---- Webpack ----
@@ -105,7 +104,7 @@ test:
 test-watch:
 	$(JEST) --watch
 
-# CODECOV_TOKEN is set by CIRCLE_CI
+# CODECOV_TOKEN is set by GitHub Actions
 .PHONY: test-coverage
 test-coverage:
 	$(JEST) --coverage
@@ -132,10 +131,6 @@ sanities-zsh:
 .PHONY: bundlewatch
 bundlewatch:
 	$(BUNDLEWATCH)
-
-.PHONY: use-docker
-use-docker:
-	docker run -it --env CI=1 --mount src=$(PWD),target=/yvm,type=bind circleci/node:8.16.0
 
 .PHONY: node_modules
 node_modules:

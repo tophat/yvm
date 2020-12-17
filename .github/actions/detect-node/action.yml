@@ -1,0 +1,11 @@
+name: detect-node
+description: Sets node and yarn version from nvmrc and yvmrc files.
+runs:
+  using: "composite"
+  steps:
+    - name: Determine Node Version
+      run: echo NODE_VERSION=$(cat .nvmrc | tr -d '\n') >> $GITHUB_ENV
+      shell: bash
+    - name: Determine Yarn Version
+      run: echo YARN_VERSION=$(cat .yvmrc | tr -d '\n') >> $GITHUB_ENV
+      shell: bash

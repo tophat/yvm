@@ -1,0 +1,60 @@
+name: Deploys
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: Release yvm
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: cycjimmy/semantic-release-action@v2
+        with:
+          branch: master
+          dry_run: true
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  deploy-website:
+    name: Deploy Website
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/detect-node
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Restore node modules cache
+        id: node-modules-cache
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+      - name: Install yvm
+        run: node ./scripts/install.js
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: make node_modules
+      - run: yarn install --frozen-lockfile
+      - name: Build
+        run: make build-production
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: website
+          CLEAN: true
+          COMMIT_MESSAGE: 'docs: deploying website [skip ci]'
+

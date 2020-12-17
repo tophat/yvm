@@ -6,7 +6,7 @@
 
 [![YVM Latest Version](https://img.shields.io/github/release/tophat/yvm.svg)](https://github.com/tophat/yvm/releases)
 [![Minimum Node Version](https://img.shields.io/badge/node-%3E%3D%2010-brightgreen.svg)](https://nodejs.org)
-[![Builds](https://img.shields.io/circleci/project/github/tophat/yvm/master.svg)](https://circleci.com/gh/tophat/yvm)
+[![Builds](https://github.com/tophat/yvm/workflows/Continuous%20Integration/badge.svg)](https://github.com/tophat/yvm/actions)
 [![codecov](https://codecov.io/gh/tophat/yvm/branch/master/graph/badge.svg?token=idXHLksicU)](https://codecov.io/gh/tophat/yvm)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Dependencies](https://img.shields.io/librariesio/github/tophat/yvm)](https://libraries.io/github/tophat/yvm)
