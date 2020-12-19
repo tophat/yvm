@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/detect-node
+      - uses: ./.github/actions/detect-env
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -127,6 +127,7 @@ jobs:
   release:
     name: Release yvm
     runs-on: ubuntu-latest
+    needs: [build, tests, sanities]
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
@@ -144,7 +145,7 @@ jobs:
   website:
     name: Deploy website
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    if: github.ref == 'ref/head/master' && "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -170,6 +171,7 @@ jobs:
         run: yarn build
         working-directory: ./website
       - name: Deploy
+        if: github.ref == 'ref/head/master'
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

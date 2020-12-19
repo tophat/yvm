@@ -1,4 +1,4 @@
-name: Homebrew
+name: Publish Release
 on: [release]
 jobs:
   homebrew:
