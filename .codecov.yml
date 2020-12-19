@@ -6,3 +6,6 @@ coverage:
       default:
         target: auto
         base: pr
+
+comment: off
+
