@@ -72,7 +72,7 @@ jobs:
       - name: Tests
         run: make test-coverage
       - name: Upload coverage report
-        uses: codecov/codecov-action@v1
+        run: ./.github/codecov.sh $GITHUB_EVENT_PATH
         env:
           verbose: true
       - name: Linting
