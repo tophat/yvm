@@ -20,7 +20,6 @@ ESLINT_ARGS=--max-warnings 0 $(ESLINT_EXTRA_ARGS)
 
 NODE_MODULES_BIN := node_modules/.bin
 
-CODECOV := $(NODE_MODULES_BIN)/codecov
 ESLINT := $(NODE_MODULES_BIN)/eslint $(ESLINT_ARGS)
 MADGE := $(NODE_MODULES_BIN)/madge --circular src
 BUNDLEWATCH := $(NODE_MODULES_BIN)/bundlewatch --config .bundlewatch.config.js

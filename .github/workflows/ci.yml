@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request_target:
+  pull_request:
     branches:
       - '!master'
 
@@ -85,45 +85,45 @@ jobs:
       - name: Release size check
         run: make bundlewatch
   sanities:
-      name: Sanity tests
-      runs-on: ubuntu-latest
-      needs: [build]
-      strategy:
-        matrix:
-          terminal: [bash, zsh, fish]
-      steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/detect-env
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Restore build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: build-artifacts
-          path: ${{ env.ARTIFACT_DIR }}
-      - name: Install dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: make node_modules
-      - name: Install yvm
-        run: node ./scripts/install.js
-      - name: Setup env (zsh)
-        if: matrix.terminal == 'zsh'
-        run: |
-          sudo apt-get update
-          sudo apt-get install zsh
-          touch ~/.zshrc
-      - name: Setup env (fish)
-        if: matrix.terminal == 'fish'
-        run: |
-          sudo apt-get update
-          sudo apt-get install fish
-          mkdir -p ~/.config/fish
-          touch ~/.config/fish/config.fish
-          node ./scripts/install.js
-      - name: Sanity test ${{ matrix.terminal }}
-        run: make sanities-${{ matrix.terminal }}
+    name: Sanity tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    strategy:
+      matrix:
+        terminal: [bash, zsh, fish]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./.github/actions/detect-env
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    - name: Restore build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: build-artifacts
+        path: ${{ env.ARTIFACT_DIR }}
+    - name: Install dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: make node_modules
+    - name: Install yvm
+      run: node ./scripts/install.js
+    - name: Setup env (zsh)
+      if: matrix.terminal == 'zsh'
+      run: |
+        sudo apt-get update
+        sudo apt-get install zsh
+        touch ~/.zshrc
+    - name: Setup env (fish)
+      if: matrix.terminal == 'fish'
+      run: |
+        sudo apt-get update
+        sudo apt-get install fish
+        mkdir -p ~/.config/fish
+        touch ~/.config/fish/config.fish
+        node ./scripts/install.js
+    - name: Sanity test ${{ matrix.terminal }}
+      run: make sanities-${{ matrix.terminal }}
   release:
     name: Release yvm
     runs-on: ubuntu-latest
