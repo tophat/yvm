@@ -18,6 +18,7 @@ describe('configureShell', () => {
     jest.spyOn(log, 'default')
     jest.spyOn(log, 'info')
 
+    const dummyContent = 'dummy'
     const fileToPath = ([file]) => path.join(mockHomeValue, file)
     const rcFiles = {
         custom: fileToPath`.custom_profile`,
@@ -37,7 +38,6 @@ describe('configureShell', () => {
 
     beforeEach(() => {
         jest.clearAllMocks()
-        const dummyContent = 'dummy'
         vol.fromJSON({
             [rcFiles.custom]: dummyContent,
             [rcFiles.bashrc]: dummyContent,
@@ -94,10 +94,12 @@ describe('configureShell', () => {
     })
 
     it('configures only bashrc', async () => {
+        vol.reset()
+        vol.fromJSON({ [rcFiles.bashrc]: dummyContent })
         expect(
             await configureShell({
                 home: mockHomeValue,
-                shell: 'bash',
+                shim: false,
                 yvmDir: mockInstallDir,
             }),
         ).toBe(0)
