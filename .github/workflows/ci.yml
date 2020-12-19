@@ -5,8 +5,8 @@ on:
     branches:
       - master
   pull_request:
-    branches-ignore:
-      - master
+    branches:
+      - "!master"
 
 env:
   CI: 1
@@ -144,7 +144,7 @@ jobs:
   website:
     name: Deploy website
     runs-on: ubuntu-latest
-    if: "github.ref == 'ref/head/master' && !contains(github.event.head_commit.message, 'skip ci')"
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     steps:
       - uses: actions/checkout@v2
         with:
