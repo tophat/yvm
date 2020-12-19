@@ -18,6 +18,7 @@ describe('configureShell', () => {
     jest.spyOn(log, 'default')
     jest.spyOn(log, 'info')
 
+    const dummyContent = 'dummy'
     const fileToPath = ([file]) => path.join(mockHomeValue, file)
     const rcFiles = {
         custom: fileToPath`.custom_profile`,
@@ -37,7 +38,6 @@ describe('configureShell', () => {
 
     beforeEach(() => {
         jest.clearAllMocks()
-        const dummyContent = 'dummy'
         vol.fromJSON({
             [rcFiles.custom]: dummyContent,
             [rcFiles.bashrc]: dummyContent,
@@ -94,10 +94,12 @@ describe('configureShell', () => {
     })
 
     it('configures only bashrc', async () => {
+        vol.reset()
+        vol.fromJSON({ [rcFiles.bashrc]: dummyContent })
         expect(
             await configureShell({
                 home: mockHomeValue,
-                shell: 'bash',
+                shim: false,
                 yvmDir: mockInstallDir,
             }),
         ).toBe(0)
@@ -135,6 +137,8 @@ describe('configureShell', () => {
     })
 
     it('configures only fish', async () => {
+        vol.reset()
+        vol.fromJSON({ [rcFiles.fishconf]: dummyContent })
         envHomeMock.mockValue(mockHomeValue)
         expect(await configureShell({ shell: 'fish', yvmDir })).toBe(0)
         confirmShellConfig()
@@ -150,6 +154,8 @@ describe('configureShell', () => {
     })
 
     it('configures only zsh', async () => {
+        vol.reset()
+        vol.fromJSON({ [rcFiles.zshrc]: dummyContent })
         envHomeMock.mockValue()
         os.homedir.mockReturnValueOnce(mockHomeValue)
         expect(await configureShell({ shell: 'zsh', yvmDir })).toBe(0)
