@@ -137,8 +137,6 @@ describe('configureShell', () => {
     })
 
     it('configures only fish', async () => {
-        vol.reset()
-        vol.fromJSON({ [rcFiles.fishconf]: dummyContent })
         envHomeMock.mockValue(mockHomeValue)
         expect(await configureShell({ shell: 'fish', yvmDir })).toBe(0)
         confirmShellConfig()
@@ -154,8 +152,6 @@ describe('configureShell', () => {
     })
 
     it('configures only zsh', async () => {
-        vol.reset()
-        vol.fromJSON({ [rcFiles.zshrc]: dummyContent })
         envHomeMock.mockValue()
         os.homedir.mockReturnValueOnce(mockHomeValue)
         expect(await configureShell({ shell: 'zsh', yvmDir })).toBe(0)
