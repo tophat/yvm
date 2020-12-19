@@ -37,14 +37,6 @@ jobs:
         run: make node_modules
       - name: Build
         run: make build-production
-      - uses: cycjimmy/semantic-release-action@v2
-        with:
-          dry_run: true
-          extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
