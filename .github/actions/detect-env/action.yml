@@ -1,4 +1,4 @@
-name: detect-node
+name: detect-env
 description: Sets node and yarn version from nvmrc and yvmrc files.
 runs:
   using: "composite"
