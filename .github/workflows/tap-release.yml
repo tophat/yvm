@@ -1,7 +1,7 @@
 name: Homebrew
 on: [release]
 jobs:
-  build:
+  homebrew:
     runs-on: ubuntu-latest
     steps:
     - name: Update formula

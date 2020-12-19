@@ -1,6 +1,12 @@
 name: Continuous Integration
 
-on: pull_request_target
+on:
+  push:
+    branches:
+      - master
+  pull_request_target:
+    branches:
+      - '!master'
 
 env:
   CI: 1
@@ -13,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./.github/actions/detect-node
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -43,20 +47,18 @@ jobs:
             @semantic-release/git
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      - name: Upload Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
           path: ${{ env.ARTIFACT_DIR }}
   tests:
-    name: Lint and Unit Tests
+    name: Run tests and lint
     runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: ./.github/actions/detect-node
+      - uses: ./.github/actions/detect-env
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -71,17 +73,18 @@ jobs:
         run: make node_modules
       - name: Tests
         run: make test-coverage
-      - name: Upload Coverage Report
-        run: ./.github/codecov.sh $GITHUB_EVENT_PATH
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
       - name: Linting
         run: make lint
-      - name: Circular Linting
+      - name: Lint circular check
         run: make lint-defend-circular
-      - name: Release Size Check
+      - name: Release size check
         run: make bundlewatch
-  sanity-tests:
+  sanities:
       name: Sanity tests
       runs-on: ubuntu-latest
       needs: [build]
@@ -90,9 +93,7 @@ jobs:
           terminal: [bash, zsh, fish]
       steps:
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: ./.github/actions/detect-node
+      - uses: ./.github/actions/detect-env
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -107,13 +108,13 @@ jobs:
         run: make node_modules
       - name: Install yvm
         run: node ./scripts/install.js
-      - name: Setup Env (zsh)
+      - name: Setup env (zsh)
         if: matrix.terminal == 'zsh'
         run: |
           sudo apt-get update
           sudo apt-get install zsh
           touch ~/.zshrc
-      - name: Setup Env (fish)
+      - name: Setup env (fish)
         if: matrix.terminal == 'fish'
         run: |
           sudo apt-get update
@@ -123,3 +124,56 @@ jobs:
           node ./scripts/install.js
       - name: Sanity test ${{ matrix.terminal }}
         run: make sanities-${{ matrix.terminal }}
+  release:
+    name: Release yvm
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: cycjimmy/semantic-release-action@v2
+        with:
+          branch: master
+          dry_run: false
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  website:
+    name: Deploy website
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/detect-env
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Restore node modules cache
+        id: node-modules-cache
+        uses: actions/cache@v2
+        with:
+          path: ./website/node_modules
+          key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('./website/yarn.lock') }}
+      - name: Install yvm
+        run: node ./scripts/install.js
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+        working-directory: ./website
+      - name: Build
+        run: yarn build
+        working-directory: ./website
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: ./website/build/yvm
+          CLEAN: true
+          COMMIT_MESSAGE: 'docs: deploying website [skip ci]'
