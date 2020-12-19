@@ -282,13 +282,16 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="http://www.ahmedelkady.xyz"><img src="https://avatars3.githubusercontent.com/u/6837609?v=4" width="100px;" alt=""/><br /><sub><b>Ahmed Elkady</b></sub></a><br /><a href="https://github.com/tophat/yvm/pulls?q=is%3Apr+reviewed-by%3Aaelkady" title="Reviewed Pull Requests">👀</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://noahnu.com"><img src="https://avatars0.githubusercontent.com/u/1297096?v=4" width="100px;" alt=""/><br /><sub><b>Noah</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=noahnu" title="Code">💻</a></td>
+    <td align="center"><a href="https://noahnu.com"><img src="https://avatars0.githubusercontent.com/u/1297096?v=4" width="100px;" alt=""/><br /><sub><b>Noah</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=noahnu" title="Code">💻</a> <a href="#infra-noahnu" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://github.com/derekedelaney"><img src="https://avatars0.githubusercontent.com/u/14036573?v=4" width="100px;" alt=""/><br /><sub><b>Derek Delaney</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=derekedelaney" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/apps/dependabot"><img src="https://avatars0.githubusercontent.com/in/29110?v=4" width="100px;" alt=""/><br /><sub><b>dependabot[bot]</b></sub></a><br /><a href="#infra-dependabot[bot]" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://github.com/apps/allcontributors"><img src="https://avatars0.githubusercontent.com/in/23186?v=4" width="100px;" alt=""/><br /><sub><b>allcontributors[bot]</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=allcontributors[bot]" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/umar-ahmed"><img src="https://avatars1.githubusercontent.com/u/8302959?v=4" width="100px;" alt=""/><br /><sub><b>Umar Ahmed</b></sub></a><br /><a href="https://github.com/tophat/yvm/issues?q=author%3Aumar-ahmed" title="Bug reports">🐛</a></td>
     <td align="center"><a href="http://twitter.com/abi"><img src="https://avatars0.githubusercontent.com/u/50083?v=4" width="100px;" alt=""/><br /><sub><b>Abi Noda</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=abinoda" title="Documentation">📖</a> <a href="#projectManagement-abinoda" title="Project Management">📆</a></td>
     <td align="center"><a href="http://jdbd.nz"><img src="https://avatars2.githubusercontent.com/u/3292124?v=4" width="100px;" alt=""/><br /><sub><b>Josh Dean</b></sub></a><br /><a href="https://github.com/tophat/yvm/commits?author=jdbdnz" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/akeshk"><img src="https://avatars2.githubusercontent.com/u/16065212?v=4" width="100px;" alt=""/><br /><sub><b>akeshk</b></sub></a><br /><a href="#infra-akeshk" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#tool-akeshk" title="Tools">🔧</a> <a href="https://github.com/tophat/yvm/commits?author=akeshk" title="Code">💻</a></td>
   </tr>
 </table>
 
