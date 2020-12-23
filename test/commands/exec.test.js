@@ -64,4 +64,52 @@ describe('exec command', () => {
         expect(log.default).toHaveBeenCalledWith(mockError.message)
         expect(log.info).toHaveBeenCalledWith(mockError.stack)
     })
+
+    describe('nvm integration', () => {
+        const originalEnvVars = {}
+
+        beforeEach(() => {
+            originalEnvVars.YVM_NVM_INTEGRATION =
+                process.env.YVM_NVM_INTEGRATION
+            originalEnvVars.NVM_DIR = process.env.NVM_DIR
+        })
+
+        afterEach(() => {
+            process.env.YVM_NVM_INTEGRATION =
+                originalEnvVars.YVM_NVM_INTEGRATION
+            process.env.NVM_DIR = originalEnvVars.NVM_DIR
+        })
+
+        it('executes yarn via nvm when integration flag enabled', async () => {
+            const mockHomeDir = '/home/test'
+            process.env.YVM_NVM_INTEGRATION = '1'
+            process.env.NVM_DIR = `${mockHomeDir}/.nvm`
+
+            expect(await exec()).toBe(0)
+            expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
+            expect(
+                childProcess.execFileSync,
+            ).toHaveBeenCalledWith(
+                `${mockHomeDir}/.nvm/nvm-exec`,
+                [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
+                { stdio: 'inherit' },
+            )
+        })
+
+        it('does not execute yarn via nvm when integration flag disabled', async () => {
+            const mockHomeDir = '/home/test'
+            process.env.YVM_NVM_INTEGRATION = '0'
+            process.env.NVM_DIR = `${mockHomeDir}/.nvm`
+
+            expect(await exec()).toBe(0)
+            expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
+            expect(
+                childProcess.execFileSync,
+            ).toHaveBeenCalledWith(
+                `${rootPath}/versions/v${rcVersion}/bin/yarn.js`,
+                [],
+                { stdio: 'inherit' },
+            )
+        })
+    })
 })

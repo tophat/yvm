@@ -9,6 +9,21 @@ import { ensureVersionInstalled } from 'commands/install'
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
 
+const getExecutable = (version, rootPath) => {
+    const yarnFilePath = path.resolve(
+        getYarnPath(version, rootPath),
+        'bin/yarn.js',
+    )
+    const isNVMIntegrationEnabled = process.env.YVM_NVM_INTEGRATION === '1'
+
+    if (!isNVMIntegrationEnabled) {
+        return [yarnFilePath]
+    }
+
+    const nvmExec = path.resolve(process.env.NVM_DIR, 'nvm-exec')
+    return [nvmExec, yarnFilePath]
+}
+
 /**
  * __WARNING__
  * When changing this logic ensure that passing of stdio works correctly.
@@ -21,11 +36,11 @@ const getYarnPath = (version, rootPath) =>
  */
 const runYarn = (version, extraArgs, rootPath = yvmPath) => {
     process.argv = ['', ''].concat(extraArgs)
-    const filePath = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
-    const command = `${filePath} ${extraArgs.join(' ')}`
-    log.info(command)
+    const [executable, ...execArgs] = getExecutable(version, rootPath)
+    const args = [...execArgs, ...extraArgs]
+    log.info(`${executable} ${args.join(' ')}`)
     try {
-        execFileSync(filePath, extraArgs, {
+        execFileSync(executable, args, {
             stdio: 'inherit',
         })
     } catch (error) {
