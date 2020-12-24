@@ -65,44 +65,35 @@ describe('exec command', () => {
         expect(log.info).toHaveBeenCalledWith(mockError.stack)
     })
 
-    describe('nvm integration', () => {
+    describe('custom bootstrap executable', () => {
         const originalEnvVars = {}
 
         beforeEach(() => {
-            originalEnvVars.YVM_NVM_INTEGRATION =
-                process.env.YVM_NVM_INTEGRATION
-            originalEnvVars.NVM_DIR = process.env.NVM_DIR
+            originalEnvVars.YVM_BOOTSTRAP_EXEC_PATH =
+                process.env.YVM_BOOTSTRAP_EXEC_PATH
         })
 
         afterEach(() => {
-            process.env.YVM_NVM_INTEGRATION =
-                originalEnvVars.YVM_NVM_INTEGRATION
-            process.env.NVM_DIR = originalEnvVars.NVM_DIR
+            process.env.YVM_BOOTSTRAP_EXEC_PATH =
+                originalEnvVars.YVM_BOOTSTRAP_EXEC_PATH
         })
 
-        it('executes yarn via nvm when integration flag enabled', async () => {
-            const mockHomeDir = '/home/test'
-            process.env.YVM_NVM_INTEGRATION = '1'
-            process.env.NVM_DIR = `${mockHomeDir}/.nvm`
+        it('executes yarn via bootstrap script if one specified', async () => {
+            process.env.YVM_BOOTSTRAP_EXEC_PATH = '/home/test/.nvm/nvm-exec'
 
             expect(await exec()).toBe(0)
             expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-            expect(
-                childProcess.execFileSync,
-            ).toHaveBeenCalledWith(
-                `${mockHomeDir}/.nvm/nvm-exec`,
+            expect(childProcess.execFileSync).toHaveBeenCalledWith(
+                process.env.YVM_BOOTSTRAP_EXEC_PATH,
                 [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
                 { stdio: 'inherit' },
             )
         })
 
-        it('does not execute yarn via nvm when integration flag disabled', async () => {
-            const mockHomeDir = '/home/test'
-            process.env.YVM_NVM_INTEGRATION = '0'
-            process.env.NVM_DIR = `${mockHomeDir}/.nvm`
+        it('executes yarn directly if no bootstrap script specified', async () => {
+            process.env.YVM_BOOTSTRAP_EXEC_PATH = ''
 
             expect(await exec()).toBe(0)
-            expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
             expect(
                 childProcess.execFileSync,
             ).toHaveBeenCalledWith(

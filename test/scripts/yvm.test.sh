@@ -120,3 +120,21 @@ if [[ $test4_output == "1.13.0" ]]; then
 else
     fail "yvm current command failed: $test4_output"
 fi
+
+testing "yvm exec with custom bootstrap"
+bootstrap_exec=$(mktemp -t yvm_bootstrap)
+chmod +x $bootstrap_exec
+cat << EOF > $bootstrap_exec
+#!/usr/bin/env bash
+echo "UNIQUE"
+exec $@
+EOF
+export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
+test5_output=$(yvm exec --version)
+unset YVM_BOOTSTRAP_EXEC_PATH
+rm $bootstrap_exec
+if [[ $test5_output =~ "UNIQUE" ]]; then
+    pass
+else
+    fail "yvm exec did not use custom bootstrap script"
+fi

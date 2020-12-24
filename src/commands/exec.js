@@ -10,18 +10,12 @@ const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
 
 const getExecutable = (version, rootPath) => {
-    const yarnFilePath = path.resolve(
-        getYarnPath(version, rootPath),
-        'bin/yarn.js',
-    )
-    const isNVMIntegrationEnabled = process.env.YVM_NVM_INTEGRATION === '1'
-
-    if (!isNVMIntegrationEnabled) {
-        return [yarnFilePath]
+    const yarnBin = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
+    const yarnBootstrapExec = process.env.YVM_BOOTSTRAP_EXEC_PATH
+    if (yarnBootstrapExec) {
+        return [yarnBootstrapExec, yarnBin]
     }
-
-    const nvmExec = path.resolve(process.env.NVM_DIR, 'nvm-exec')
-    return [nvmExec, yarnFilePath]
+    return [yarnBin]
 }
 
 /**
@@ -30,7 +24,7 @@ const getExecutable = (version, rootPath) => {
  * e.g. user input, arrows keys, etc.
  *
  * __TEST__
- * - `nvm use 8.0.0` (lowest supported node version)
+ * - `nvm use 10.0.0` (lowest supported node version)
  * - `make install`
  * - `yvm exec contributors:add` and go through the steps
  */
