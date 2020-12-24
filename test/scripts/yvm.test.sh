@@ -122,7 +122,7 @@ else
 fi
 
 testing "yvm exec with custom bootstrap"
-bootstrap_exec=$(mktemp -t yvm_bootstrap)
+bootstrap_exec=$(mktemp -t yvm_bootstrap.XXX)
 chmod +x $bootstrap_exec
 cat << EOF > $bootstrap_exec
 #!/usr/bin/env bash
