@@ -138,21 +138,3 @@ if [[ $test5_output =~ "UNIQUE" ]]; then
 else
     fail "yvm exec did not use custom bootstrap script"
 fi
-
-testing "yarn shim with custom bootstrap"
-bootstrap_exec=$(mktemp -t yvm_bootstrap.XXX)
-chmod +x $bootstrap_exec
-cat << EOF > $bootstrap_exec
-#!/usr/bin/env bash
-echo "UNIQUE"
-exec $@
-EOF
-export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
-test6_output=$(yarn --version)
-unset YVM_BOOTSTRAP_EXEC_PATH
-rm $bootstrap_exec
-if [[ $test6_output =~ "UNIQUE" ]]; then
-    pass
-else
-    fail "yarn shim did not use custom bootstrap script"
-fi
