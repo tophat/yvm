@@ -9,15 +9,6 @@ import { ensureVersionInstalled } from 'commands/install'
 const getYarnPath = (version, rootPath) =>
     path.resolve(rootPath, `versions/v${version}`)
 
-const getExecutable = (version, rootPath) => {
-    const yarnBin = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
-    const yarnBootstrapExec = process.env.YVM_BOOTSTRAP_EXEC_PATH
-    if (yarnBootstrapExec) {
-        return [yarnBootstrapExec, yarnBin]
-    }
-    return [yarnBin]
-}
-
 /**
  * __WARNING__
  * When changing this logic ensure that passing of stdio works correctly.
@@ -30,8 +21,9 @@ const getExecutable = (version, rootPath) => {
  */
 const runYarn = (version, extraArgs, rootPath = yvmPath) => {
     process.argv = ['', ''].concat(extraArgs)
-    const [executable, ...execArgs] = getExecutable(version, rootPath)
-    const args = [...execArgs, ...extraArgs]
+    const yarnBin = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
+    const executable = process.env.YVM_BOOTSTRAP_EXEC_PATH || 'node'
+    const args = [yarnBin, ...extraArgs]
     log.info(`${executable} ${args.join(' ')}`)
     try {
         execFileSync(executable, args, {

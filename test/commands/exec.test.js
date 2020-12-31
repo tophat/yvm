@@ -30,11 +30,9 @@ describe('exec command', () => {
         const args = ['extra', 'args']
         expect(await exec(version, args)).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(
-            childProcess.execFileSync,
-        ).toHaveBeenCalledWith(
-            `${rootPath}/versions/v${version}/bin/yarn.js`,
-            args,
+        expect(childProcess.execFileSync).toHaveBeenCalledWith(
+            'node',
+            [`${rootPath}/versions/v${version}/bin/yarn.js`, ...args],
             { stdio: 'inherit' },
         )
     })
@@ -42,11 +40,9 @@ describe('exec command', () => {
     it('executes yarn with correct rcVersion', async () => {
         expect(await exec()).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(
-            childProcess.execFileSync,
-        ).toHaveBeenCalledWith(
-            `${rootPath}/versions/v${rcVersion}/bin/yarn.js`,
-            [],
+        expect(childProcess.execFileSync).toHaveBeenCalledWith(
+            'node',
+            [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
             { stdio: 'inherit' },
         )
     })
@@ -90,15 +86,13 @@ describe('exec command', () => {
             )
         })
 
-        it('executes yarn directly if no bootstrap script specified', async () => {
+        it('executes yarn via node if no bootstrap script specified', async () => {
             process.env.YVM_BOOTSTRAP_EXEC_PATH = ''
 
             expect(await exec()).toBe(0)
-            expect(
-                childProcess.execFileSync,
-            ).toHaveBeenCalledWith(
-                `${rootPath}/versions/v${rcVersion}/bin/yarn.js`,
-                [],
+            expect(childProcess.execFileSync).toHaveBeenCalledWith(
+                'node',
+                [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
                 { stdio: 'inherit' },
             )
         })
