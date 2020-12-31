@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/tophat/yvm/compare/v4.0.1...v4.1.0) (2020-12-31)
+
+
+### Features
+
+* add custom bootstrap script support, close [#900](https://github.com/tophat/yvm/issues/900) ([#901](https://github.com/tophat/yvm/issues/901)) ([70c831a](https://github.com/tophat/yvm/commit/70c831a2904cb16d71100d5f51d14d451d130da5))
+
 ## [4.0.1](https://github.com/tophat/yvm/compare/v4.0.0...v4.0.1) (2020-09-19)
 
 
