@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/tophat/yvm/compare/v4.1.0...v4.1.1) (2020-12-31)
+
+
+### Bug Fixes
+
+* release yvm with build assets ([#908](https://github.com/tophat/yvm/issues/908)) ([d990b7e](https://github.com/tophat/yvm/commit/d990b7e5382bf15968f65a854301b5e3d11c557b))
+
 # [4.1.0](https://github.com/tophat/yvm/compare/v4.0.1...v4.1.0) (2020-12-31)
 
 
