@@ -70,6 +70,7 @@ pass
 testing "yarn shim passes original arguments"
 yarn fake './*.js'
 pass
+rm "./fake.js"
 
 testing "yarn shimmed config"
 test_shim_config_output=$(yarn --version)
@@ -124,11 +125,9 @@ fi
 testing "yvm exec with custom bootstrap"
 bootstrap_exec=$(mktemp -t yvm_bootstrap.XXX)
 chmod +x $bootstrap_exec
-cat << EOF > $bootstrap_exec
-#!/usr/bin/env bash
+echo "#!/usr/bin/env bash
 echo "UNIQUE"
-exec $@
-EOF
+exec $@" > $bootstrap_exec
 export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
 test5_output=$(yvm exec --version)
 unset YVM_BOOTSTRAP_EXEC_PATH
@@ -142,11 +141,9 @@ fi
 testing "yarn shim with custom bootstrap"
 bootstrap_exec=$(mktemp -t yvm_bootstrap.XXX)
 chmod +x $bootstrap_exec
-cat << EOF > $bootstrap_exec
-#!/usr/bin/env bash
+echo "#!/usr/bin/env bash
 echo "UNIQUE"
-exec $@
-EOF
+exec $@" > $bootstrap_exec
 export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
 yvm shim
 test6_output=$(yarn --version)

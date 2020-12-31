@@ -70,6 +70,7 @@ pass
 testing "yarn shim passes original arguments"
 yarn fake './*.js'
 pass
+rm "./fake.js"
 
 testing "yarn shimmed config"
 set test_shim_config_output (yarn --version)
@@ -119,4 +120,37 @@ if test "$test4_output" = "1.13.0"
     pass
 else
     fail "yvm current command failed: $test4_output"
+end
+
+testing "yvm exec with custom bootstrap"
+set bootstrap_exec (mktemp -t yvm_bootstrap.XXX)
+chmod +x $bootstrap_exec
+echo "#!/usr/bin/env fish
+echo "UNIQUE"
+exec $argv" > $bootstrap_exec
+export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
+set test5_output (yvm exec --version)
+unset YVM_BOOTSTRAP_EXEC_PATH
+rm $bootstrap_exec
+if test "$test5_output" = "UNIQUE"
+    pass
+else
+    fail "yvm exec did not use custom bootstrap script"
+end
+
+testing "yarn shim with custom bootstrap"
+set bootstrap_exec (mktemp -t yvm_bootstrap.XXX)
+chmod +x $bootstrap_exec
+echo "#!/usr/bin/env fish
+echo "UNIQUE"
+exec $argv" > $bootstrap_exec
+export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
+yvm shim
+set test6_output (yarn --version)
+unset YVM_BOOTSTRAP_EXEC_PATH
+rm $bootstrap_exec
+if test "$test6_output" = "UNIQUE"
+    pass
+else
+    fail "yarn shim did not use custom bootstrap script"
 end
