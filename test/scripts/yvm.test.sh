@@ -148,6 +148,7 @@ echo "UNIQUE"
 exec $@
 EOF
 export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
+yvm shim
 test6_output=$(yarn --version)
 unset YVM_BOOTSTRAP_EXEC_PATH
 rm $bootstrap_exec
