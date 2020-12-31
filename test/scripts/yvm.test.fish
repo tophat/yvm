@@ -128,9 +128,9 @@ chmod +x $bootstrap_exec
 echo "#!/usr/bin/env fish
 echo "UNIQUE"
 exec $argv" > $bootstrap_exec
-export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
+set -gx YVM_BOOTSTRAP_EXEC_PATH $bootstrap_exec
 set test5_output (yvm exec --version)
-unset YVM_BOOTSTRAP_EXEC_PATH
+set -e YVM_BOOTSTRAP_EXEC_PATH
 rm $bootstrap_exec
 if test "$test5_output" = "UNIQUE"
     pass
@@ -144,10 +144,10 @@ chmod +x $bootstrap_exec
 echo "#!/usr/bin/env fish
 echo "UNIQUE"
 exec $argv" > $bootstrap_exec
-export YVM_BOOTSTRAP_EXEC_PATH=$bootstrap_exec
+set -gx YVM_BOOTSTRAP_EXEC_PATH $bootstrap_exec
 yvm shim
 set test6_output (yarn --version)
-unset YVM_BOOTSTRAP_EXEC_PATH
+set -e YVM_BOOTSTRAP_EXEC_PATH
 rm $bootstrap_exec
 if test "$test6_output" = "UNIQUE"
     pass
