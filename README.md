@@ -175,6 +175,21 @@ yvm --help
 Yvm defaults to using the `yarn` version in your `package.json` `engines`. Otherwise you can create a `.yvmrc` file containing the version number of yarn in your project's root directory. Afterwards, `yvm use`, `yvm install` and `yvm exec` will use the version specified in the config file if no version number is supplied to the command.
 You can also [declare the version using other configuration files](https://yvm.js.org/docs/faq#declare-yvm-version-in-a-configuration-file-where-can-i-place-my-version-number)
 
+### Custom Bootstrapping
+
+When using `yvm exec`, the appropriate `yarn` version is executed using the `node` available in the current context. This can be explicitly specified using the `YVM_BOOTSTRAP_EXEC_PATH` environment variable.
+
+Example: if you are using `nvm`, you can avoid having to execute `nvm use` before using `yvm exec`:
+
+```sh
+export YVM_BOOTSTRAP_EXEC_PATH=~/.nvm/nvm-exec
+yvm exec my-command
+```
+
+You can set this environment variable globally in your preferred shell's setup script (e.g. bashrc/zshrc).
+
+The script referenced via the exec path must be executable. It receives the yarn executable as its first argument, and should forward the remaining arguments to yarn.
+
 <!-- OVERVIEW-DOCS:END -->
 
 ### Additional reference

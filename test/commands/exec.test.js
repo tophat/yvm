@@ -30,11 +30,9 @@ describe('exec command', () => {
         const args = ['extra', 'args']
         expect(await exec(version, args)).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(
-            childProcess.execFileSync,
-        ).toHaveBeenCalledWith(
-            `${rootPath}/versions/v${version}/bin/yarn.js`,
-            args,
+        expect(childProcess.execFileSync).toHaveBeenCalledWith(
+            'node',
+            [`${rootPath}/versions/v${version}/bin/yarn.js`, ...args],
             { stdio: 'inherit' },
         )
     })
@@ -42,11 +40,9 @@ describe('exec command', () => {
     it('executes yarn with correct rcVersion', async () => {
         expect(await exec()).toBe(0)
         expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
-        expect(
-            childProcess.execFileSync,
-        ).toHaveBeenCalledWith(
-            `${rootPath}/versions/v${rcVersion}/bin/yarn.js`,
-            [],
+        expect(childProcess.execFileSync).toHaveBeenCalledWith(
+            'node',
+            [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
             { stdio: 'inherit' },
         )
     })
@@ -63,5 +59,42 @@ describe('exec command', () => {
         )
         expect(log.default).toHaveBeenCalledWith(mockError.message)
         expect(log.info).toHaveBeenCalledWith(mockError.stack)
+    })
+
+    describe('custom bootstrap executable', () => {
+        const originalEnvVars = {}
+
+        beforeEach(() => {
+            originalEnvVars.YVM_BOOTSTRAP_EXEC_PATH =
+                process.env.YVM_BOOTSTRAP_EXEC_PATH
+        })
+
+        afterEach(() => {
+            process.env.YVM_BOOTSTRAP_EXEC_PATH =
+                originalEnvVars.YVM_BOOTSTRAP_EXEC_PATH
+        })
+
+        it('executes yarn via bootstrap script if one specified', async () => {
+            process.env.YVM_BOOTSTRAP_EXEC_PATH = '/home/test/.nvm/nvm-exec'
+
+            expect(await exec()).toBe(0)
+            expect(install.ensureVersionInstalled).toHaveBeenCalledTimes(1)
+            expect(childProcess.execFileSync).toHaveBeenCalledWith(
+                process.env.YVM_BOOTSTRAP_EXEC_PATH,
+                [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
+                { stdio: 'inherit' },
+            )
+        })
+
+        it('executes yarn via node if no bootstrap script specified', async () => {
+            process.env.YVM_BOOTSTRAP_EXEC_PATH = ''
+
+            expect(await exec()).toBe(0)
+            expect(childProcess.execFileSync).toHaveBeenCalledWith(
+                'node',
+                [`${rootPath}/versions/v${rcVersion}/bin/yarn.js`],
+                { stdio: 'inherit' },
+            )
+        })
     })
 })

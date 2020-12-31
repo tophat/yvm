@@ -65,7 +65,7 @@ jobs:
           path: ./node_modules
           key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
       - name: Install yvm
-        run: node ./scripts/install.js
+        run: make install-local
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
@@ -109,7 +109,7 @@ jobs:
           path: ./node_modules
           key: ${{ env.NODE_VERSION }}-${{ env.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
       - name: Install yvm
-        run: node ./scripts/install.js
+        run: make install-local
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: make node_modules
@@ -126,7 +126,7 @@ jobs:
           sudo apt-get install fish
           mkdir -p ~/.config/fish
           touch ~/.config/fish/config.fish
-          node ./scripts/install.js
+          make install-local
       - name: Sanity test ${{ matrix.terminal }}
         run: make sanities-${{ matrix.terminal }}
   release:

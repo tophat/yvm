@@ -15,17 +15,18 @@ const getYarnPath = (version, rootPath) =>
  * e.g. user input, arrows keys, etc.
  *
  * __TEST__
- * - `nvm use 8.0.0` (lowest supported node version)
+ * - `nvm use 10.0.0` (lowest supported node version)
  * - `make install`
  * - `yvm exec contributors:add` and go through the steps
  */
 const runYarn = (version, extraArgs, rootPath = yvmPath) => {
     process.argv = ['', ''].concat(extraArgs)
-    const filePath = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
-    const command = `${filePath} ${extraArgs.join(' ')}`
-    log.info(command)
+    const yarnBin = path.resolve(getYarnPath(version, rootPath), 'bin/yarn.js')
+    const executable = process.env.YVM_BOOTSTRAP_EXEC_PATH || 'node'
+    const args = [yarnBin, ...extraArgs]
+    log.info(`${executable} ${args.join(' ')}`)
     try {
-        execFileSync(filePath, extraArgs, {
+        execFileSync(executable, args, {
             stdio: 'inherit',
         })
     } catch (error) {
