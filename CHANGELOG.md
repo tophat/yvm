@@ -1,3 +1,10 @@
+## [4.1.3](https://github.com/tophat/yvm/compare/v4.1.2...v4.1.3) (2021-02-12)
+
+
+### Bug Fixes
+
+* bump dependencies ([#928](https://github.com/tophat/yvm/issues/928)) ([853622b](https://github.com/tophat/yvm/commit/853622b5cc8058c7de09348f7bb22282d5b532b3))
+
 ## [4.1.2](https://github.com/tophat/yvm/compare/v4.1.1...v4.1.2) (2021-02-12)
 
 
