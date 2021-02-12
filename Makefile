@@ -77,7 +77,7 @@ install: build-production install-local
 
 .PHONY: install-watch
 install-watch: node_modules clean_webpack_build
-	$(WEBPACK_BUILD_DEV_WATCH) --env.INSTALL=true
+	$(WEBPACK_BUILD_DEV_WATCH) --env INSTALL=true
 
 # -------------- Linting --------------
 
