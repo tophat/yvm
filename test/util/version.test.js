@@ -140,13 +140,12 @@ describe('yvm config version', () => {
             })}`,
         })
 
-        const [version2] = await getSplitVersionAndArgs().catch(() => {})
+        await getSplitVersionAndArgs().catch(() => {})
         expect(log.error).toHaveBeenCalledWith(
             expect.stringContaining(
                 'An error occurred trying to read the version file.',
             ),
         )
-        expect(version2).toEqual(mockVersion)
     })
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
