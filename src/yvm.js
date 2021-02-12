@@ -35,13 +35,13 @@ argParser
     .option('-s, --stable', signPosting`install stable`)
     .option('--verify', 'Verifies GPG signature')
     .description(messageOptionalVersion`Install the specified version of Yarn`)
-    .action(async (maybeVersion, command) => {
+    .action(async (maybeVersion, opts) => {
         const { install } = await import('commands/install')
         const exitCode = await install({
-            latest: command.latest,
-            stable: command.stable,
+            latest: opts.latest,
+            stable: opts.stable,
             version: maybeVersion,
-            verifyGPG: command.verify,
+            verifyGPG: opts.verify,
         })
         process.exit(exitCode)
     })
@@ -77,7 +77,7 @@ argParser
 argParser
     .command('current')
     .description('Display current active Yarn version')
-    .action(async command => {
+    .action(async (opts, command) => {
         log.info('Checking Yarn version')
         const { current } = await import('commands/current')
         process.exit(await current(command))
@@ -122,9 +122,9 @@ argParser
     .option('-F, --force', 'Delete even if other aliases will be broken')
     .option('-R, --recursive', 'Delete all dependant aliases as well')
     .description('Deletes the alias named <name>')
-    .action(async (name, { force, recursive }) => {
+    .action(async (name, { force, recursive }, command) => {
         const { unalias } = await import('commands/unalias')
-        process.exit(await unalias({ name, force, recursive }))
+        process.exit(await unalias({ name: command.name(), force, recursive }))
     })
 
 argParser
