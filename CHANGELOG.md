@@ -1,3 +1,10 @@
+## [4.1.2](https://github.com/tophat/yvm/compare/v4.1.1...v4.1.2) (2021-02-12)
+
+
+### Bug Fixes
+
+* exception when reading yvm config fails, close [#926](https://github.com/tophat/yvm/issues/926) ([#927](https://github.com/tophat/yvm/issues/927)) ([d0be0af](https://github.com/tophat/yvm/commit/d0be0af164b4c0e46a1ca1625035035bf061ffe2))
+
 ## [4.1.1](https://github.com/tophat/yvm/compare/v4.1.0...v4.1.1) (2020-12-31)
 
 
