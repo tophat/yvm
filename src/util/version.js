@@ -117,8 +117,7 @@ export const getRcFileVersion = () => {
         return String(result.config)
     } catch (error) {
         log.error('An error occurred trying to read the version file.')
-        log.info(error)
-        return null
+        throw error
     }
 }
 

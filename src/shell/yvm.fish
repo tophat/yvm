@@ -18,7 +18,7 @@ function yvm
         end
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not get new path from yvm"
-            exit 1
+            return 1
         else
             yvm_set_fish_user_paths $NEW_FISH_USER_PATHS
             set -l new_version (yarn --version)
@@ -36,7 +36,7 @@ function yvm
         end
         if [ -z "$NEW_FISH_USER_PATHS" ]
             yvm_err "Could not remove yvm from system path"
-            exit 1
+            return 1
         else
             yvm_set_fish_user_paths $NEW_FISH_USER_PATHS
         end
@@ -76,7 +76,7 @@ function yvm
         if not type -q "node"
             yvm_err "%s\n" "YVM Could not automatically set yarn version."
             yvm_err "%s\n" "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your fish config file"
-            exit 1
+            return 1
         end
         yvm_shim
     end
