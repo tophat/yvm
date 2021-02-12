@@ -35,13 +35,13 @@ argParser
     .option('-s, --stable', signPosting`install stable`)
     .option('--verify', 'Verifies GPG signature')
     .description(messageOptionalVersion`Install the specified version of Yarn`)
-    .action(async (maybeVersion, command) => {
+    .action(async (maybeVersion, opts) => {
         const { install } = await import('commands/install')
         const exitCode = await install({
-            latest: command.latest,
-            stable: command.stable,
+            latest: opts.latest,
+            stable: opts.stable,
             version: maybeVersion,
-            verifyGPG: command.verify,
+            verifyGPG: opts.verify,
         })
         process.exit(exitCode)
     })
@@ -76,11 +76,12 @@ argParser
 
 argParser
     .command('current')
+    .option('--shell [shell]', 'Shell used when getting PATH')
     .description('Display current active Yarn version')
-    .action(async command => {
+    .action(async ({ shell }) => {
         log.info('Checking Yarn version')
         const { current } = await import('commands/current')
-        process.exit(await current(command))
+        process.exit(await current({ shell }))
     })
 
 argParser
@@ -106,16 +107,20 @@ argParser
     .description('Undo effects of `yvm` on current shell')
     .action(() => log(messageSourceYvm))
 
-argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')
-argParser.command(
-    'alias <name> <version>',
-    'Set an alias named <name> pointing to <version>',
-)
-argParser.command('alias', '', { noHelp: true }).action(async () => {
+const aliasAction = async () => {
     const [, , , nameOrPattern, maybeVersion] = process.argv
     const { alias } = await import('commands/alias')
     process.exit(await alias(nameOrPattern, maybeVersion))
-})
+}
+argParser
+    .command('alias [pattern]')
+    .description('Show all aliases matching <pattern>')
+    .action(aliasAction)
+argParser
+    .command('alias <name> <version>')
+    .description('Set an alias named <name> pointing to <version>')
+    .action(aliasAction)
+argParser.command('alias', '', { noHelp: true }).action(aliasAction)
 
 argParser
     .command('unalias <name>')
