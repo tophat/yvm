@@ -76,11 +76,12 @@ argParser
 
 argParser
     .command('current')
+    .option('--shell [shell]', 'Shell used when getting PATH')
     .description('Display current active Yarn version')
-    .action(async (opts, command) => {
+    .action(async ({ shell }) => {
         log.info('Checking Yarn version')
         const { current } = await import('commands/current')
-        process.exit(await current(command))
+        process.exit(await current({ shell }))
     })
 
 argParser
