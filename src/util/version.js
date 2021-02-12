@@ -108,12 +108,17 @@ export const getRcFileVersion = () => {
             '.yarnversion',
         ],
     })
-    const result = explorer.search()
-    if (!result || result.isEmpty || !result.config) {
-        return null
+    try {
+        const result = explorer.search()
+        if (!result || result.isEmpty || !result.config) {
+            return null
+        }
+        log.info(`Found config ${result.filepath}`)
+        return String(result.config)
+    } catch (error) {
+        log.error('An error occurred trying to read the version file.')
+        throw error
     }
-    log.info(`Found config ${result.filepath}`)
-    return String(result.config)
 }
 
 export const getVersionInUse = memoize(async () => {

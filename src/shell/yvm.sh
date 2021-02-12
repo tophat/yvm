@@ -13,7 +13,7 @@ yvm() {
         NEW_PATH=$(yvm_call_node_script get-new-path ${PROVIDED_VERSION})
         if [ -z "${NEW_PATH}" ]; then
             yvm_err "Could not get new path from yvm"
-            exit 1
+            return 1
         else
             yvm_set_user_path $NEW_PATH
             yvm_echo "Now using yarn version $(yarn --version)"
@@ -28,7 +28,7 @@ yvm() {
         NEW_PATH=$(yvm_call_node_script get-old-path)
         if [ -z "${NEW_PATH}" ]; then
             yvm_err "Could not remove yvm from system path"
-            exit 1
+            return 1
         else
             yvm_set_user_path $NEW_PATH
         fi
@@ -68,7 +68,7 @@ yvm() {
         if ! type "node" >/dev/null; then
             yvm_err "YVM Could not find node executable."
             yvm_err "Please ensure your YVM env variables and sourcing are set below sourcing node/nvm in your .zshrc or .bashrc"
-            exit 1
+            return 1
         fi
         yvm_shim
     }

@@ -116,6 +116,37 @@ describe('yvm config version', () => {
             expect.stringContaining('Unable to resolve'),
         )
     })
+    it('Logs error when version discovery fails', async () => {
+        const mockVersion = '1.9.2'
+        vol.fromJSON({ [yvmPath]: {} })
+        await setDefaultVersion({
+            version: mockVersion,
+        })
+
+        jest.spyOn(log, 'error')
+        vol.fromJSON({
+            'package.json': JSON.stringify({
+                engines: { yarn: 'v1.0.0' },
+            }),
+        })
+
+        const [version1] = await getSplitVersionAndArgs()
+        expect(log.error).not.toBeCalled()
+        expect(version1).toEqual('1.0.0')
+
+        vol.fromJSON({
+            'package.json': `corrupted prefix${JSON.stringify({
+                engines: { yarn: 'v1.0.0' },
+            })}`,
+        })
+
+        await getSplitVersionAndArgs().catch(() => {})
+        expect(log.error).toHaveBeenCalledWith(
+            expect.stringContaining(
+                'An error occurred trying to read the version file.',
+            ),
+        )
+    })
     it('Uses default version when no config available', async () => {
         const mockVersion = '1.9.2'
         vol.fromJSON({ [yvmPath]: {} })
