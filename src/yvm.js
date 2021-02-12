@@ -106,16 +106,20 @@ argParser
     .description('Undo effects of `yvm` on current shell')
     .action(() => log(messageSourceYvm))
 
-argParser.command('alias [<pattern>]', 'Show all aliases matching <pattern>')
-argParser.command(
-    'alias <name> <version>',
-    'Set an alias named <name> pointing to <version>',
-)
-argParser.command('alias', '', { noHelp: true }).action(async () => {
+const aliasAction = async () => {
     const [, , , nameOrPattern, maybeVersion] = process.argv
     const { alias } = await import('commands/alias')
     process.exit(await alias(nameOrPattern, maybeVersion))
-})
+}
+argParser
+    .command('alias [pattern]')
+    .description('Show all aliases matching <pattern>')
+    .action(aliasAction)
+argParser
+    .command('alias <name> <version>')
+    .description('Set an alias named <name> pointing to <version>')
+    .action(aliasAction)
+argParser.command('alias', '', { noHelp: true }).action(aliasAction)
 
 argParser
     .command('unalias <name>')
