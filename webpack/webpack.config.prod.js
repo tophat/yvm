@@ -1,6 +1,4 @@
-const path = require('path')
-
-const ZipFilesPlugin = require('webpack-zip-files-plugin')
+const ZipFilesPlugin = require('zip-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const { config, constants } = require('./webpack.config.base')
@@ -10,9 +8,8 @@ module.exports = Object.assign(config, {
         ...config.plugins,
         new LodashModuleReplacementPlugin(),
         new ZipFilesPlugin({
-            entries: [{ src: constants.paths.output, dist: '.' }],
-            output: path.join(constants.paths.artifacts, 'yvm'),
-            format: 'zip',
+            filename: 'yvm.zip',
+            path: constants.paths.artifacts,
         }),
     ],
 })
