@@ -12,7 +12,7 @@
 [![Dependencies](https://img.shields.io/librariesio/github/tophat/yvm)](https://libraries.io/github/tophat/yvm)
 [![Dependabot](https://badgen.net/dependabot/tophat/yvm?icon=dependabot)](https://app.dependabot.com/accounts/tophat/repos/137530684)
 [![All Contributors](https://img.shields.io/badge/all_contributors-27-orange.svg?style=flat-square)](#contributors-)
-[![Slack workspace](https://slackinvite.dev.tophat.com/badge.svg)](https://opensource.tophat.com/slack)
+[![Discord](https://img.shields.io/discord/809577721751142410)](https://discord.gg/YhK3GFcZrk)
 [![Maturity badge - level 3](https://img.shields.io/badge/Maturity-Level%203%20--%20Stable-green.svg)](https://github.com/tophat/getting-started/blob/master/scorecard.md)
 [![Pull Reminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
