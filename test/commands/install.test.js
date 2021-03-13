@@ -1,6 +1,6 @@
-import targz from 'targz'
 import fs from 'fs-extra'
 
+import * as extractUtils from 'util/extract'
 import { resolveStable } from 'util/alias'
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import * as download from 'util/download'
@@ -200,26 +200,28 @@ describe('yvm install', () => {
     it('Logs error on failed targz decompress', async () => {
         const version = '1.7.0'
         const mockError = new Error('mock error')
-        jest.spyOn(targz, 'decompress').mockImplementationOnce((_, callback) =>
-            callback(mockError),
-        )
+        jest.spyOn(extractUtils, 'extract').mockImplementationOnce(() => {
+            throw mockError
+        })
         expect(await install({ version })).toBe(1)
         expect(log.default).toHaveBeenLastCalledWith(mockError.message)
         expect(log.info).toHaveBeenLastCalledWith(mockError.stack)
-        targz.decompress.mockRestore()
+        extractUtils.extract.mockRestore()
     })
 
     it('Handles error if extracted archive does not contain yarn dist', async () => {
         const version = '1.7.0'
         const expectedErrorMessage = 'Unable to locate extracted package'
-        jest.spyOn(targz, 'decompress').mockImplementationOnce(
-            ({ dest }, callback) => {
+
+        const origExtract = extractUtils.extract
+        jest.spyOn(extractUtils, 'extract').mockImplementationOnce(
+            async (...params) => {
+                const dest = await origExtract(...params)
                 fs.emptyDirSync(dest)
-                callback()
             },
         )
         expect(await install({ version })).toBe(1)
         expect(log.default).toHaveBeenLastCalledWith(expectedErrorMessage)
-        targz.decompress.mockRestore()
+        extractUtils.extract.mockRestore()
     })
 })
