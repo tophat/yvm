@@ -1,3 +1,10 @@
+## [4.1.4](https://github.com/tophat/yvm/compare/v4.1.3...v4.1.4) (2021-03-13)
+
+
+### Bug Fixes
+
+* **install:** update targz lib to fix crash extracting versions ([#951](https://github.com/tophat/yvm/issues/951)) ([79e8a6e](https://github.com/tophat/yvm/commit/79e8a6ef1074acbcfe976823f6637f8e5a102bb3))
+
 ## [4.1.3](https://github.com/tophat/yvm/compare/v4.1.2...v4.1.3) (2021-02-12)
 
 
