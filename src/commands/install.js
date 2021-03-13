@@ -1,8 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 
-import targz from 'targz'
-
 import { YARN_RELEASE_TAGS_URL } from 'util/constants'
 import { LATEST, STABLE } from 'util/alias'
 import { downloadFile, getDownloadPath } from 'util/download'
@@ -15,6 +13,7 @@ import {
 } from 'util/utils'
 import { getSplitVersionAndArgs, resolveVersion } from 'util/version'
 import { VerificationError, verifySignature } from 'util/verification'
+import { extract } from 'util/extract'
 
 const isVersionInstalled = (version, rootPath) => {
     const versionPath = getExtractionPath(version, rootPath)
@@ -39,30 +38,20 @@ const extractYarn = async (version, rootPath) => {
     const tmpPath = `${destPath}.tar.gz.tmp`
     const srcPath = getDownloadPath(version, rootPath)
 
-    return new Promise((resolve, reject) => {
-        targz.decompress(
-            {
-                src: srcPath,
-                dest: tmpPath,
-            },
-            err => {
-                if (err) {
-                    return reject(err)
-                }
-                log(`Finished extracting yarn version ${version}`)
-                const [pkgDir] = fs.readdirSync(tmpPath)
-                if (!pkgDir) {
-                    const errorMessage = 'Unable to locate extracted package'
-                    return reject(new Error(errorMessage))
-                }
-                const pkgPath = path.resolve(tmpPath, pkgDir)
-                fs.renameSync(pkgPath, destPath)
-                fs.unlinkSync(srcPath)
-                fs.rmdirSync(tmpPath)
-                return resolve(destPath)
-            },
-        )
-    })
+    await extract({ src: srcPath, dest: tmpPath })
+
+    log(`Finished extracting yarn version ${version}`)
+    const [pkgDir] = fs.readdirSync(tmpPath)
+    if (!pkgDir) {
+        const errorMessage = 'Unable to locate extracted package'
+        throw new Error(errorMessage)
+    }
+
+    const pkgPath = path.resolve(tmpPath, pkgDir)
+    fs.renameSync(pkgPath, destPath)
+    fs.unlinkSync(srcPath)
+    fs.rmdirSync(tmpPath)
+    return destPath
 }
 
 const logVerifyNotice = extraMessage => {
@@ -120,7 +109,6 @@ Please retry with the next available version`)
             throw e
         }
     }
-
     log('Extracting...')
     await extractYarn(version, rootPath)
     log('Installation successful')

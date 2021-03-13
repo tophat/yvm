@@ -19,7 +19,7 @@ if (!process.argv.includes('exec')) {
     argParser.version(yvmInstalledVersion() || messageNoYvm)
     argParser
         .command('*', '', { noHelp: true, isDefault: true })
-        .action(invalidCommand => {
+        .action(async invalidCommand => {
             if (!process.argv.includes('help')) {
                 log(`Invalid command: ${invalidCommand}`)
             }
@@ -59,7 +59,7 @@ argParser
 argParser
     .command('use [version]')
     .description(messageOptionalVersion`Activate specified Yarn version`)
-    .action(() => log(messageSourceYvm))
+    .action(async () => log(messageSourceYvm))
 
 argParser
     .command('exec [version] [args...]')
@@ -105,7 +105,7 @@ argParser
 argParser
     .command('deactivate')
     .description('Undo effects of `yvm` on current shell')
-    .action(() => log(messageSourceYvm))
+    .action(async () => log(messageSourceYvm))
 
 const aliasAction = async () => {
     const [, , , nameOrPattern, maybeVersion] = process.argv
@@ -135,7 +135,7 @@ argParser
 argParser
     .command('unload')
     .description('Unload `yvm` from shell')
-    .action(() => log(messageSourceYvm))
+    .action(async () => log(messageSourceYvm))
 
 argParser
     .command('which [version]')
@@ -149,7 +149,7 @@ argParser
 argParser
     .command('update-self')
     .description('Updates yvm to the latest version')
-    .action(() => log(messageSourceYvm))
+    .action(async () => log(messageSourceYvm))
 
 argParser
     .command('configure-shell', '', { noHelp: true })
@@ -200,7 +200,7 @@ argParser
 argParser
     .command('version')
     .description(signPosting`--version`)
-    .action(() => {
+    .action(async () => {
         const version = yvmInstalledVersion()
         log.capturable(version || messageNoYvm)
         process.exit(version ? 0 : 1)
@@ -227,4 +227,4 @@ argParser
         process.exit(await getDefaultVersion())
     })
 
-argParser.parse(process.argv)
+argParser.parseAsync(process.argv, { from: 'node' })
