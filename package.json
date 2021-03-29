@@ -43,7 +43,7 @@
     "lodash": "^4.17.21",
     "regenerator-runtime": "^0.13.7",
     "request": "^2.88.2",
-    "semver": "^7.3.4",
+    "semver": "^7.3.5",
     "tar-fs": "^2.1.1"
   },
   "devDependencies": {
