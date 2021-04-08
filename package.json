@@ -36,7 +36,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "commander": "^7.1.0",
-    "core-js": "^3.9.1",
+    "core-js": "^3.10.1",
     "cosmiconfig": "^7.0.0",
     "fs-extra": "^9.1.0",
     "kbpgp": "^2.1.15",
