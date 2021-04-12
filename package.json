@@ -72,7 +72,7 @@
     "lodash-webpack-plugin": "^0.11.6",
     "madge": "^4.0.2",
     "marked": "^2.0.1",
-    "memfs": "^3.2.0",
+    "memfs": "^3.2.2",
     "prettier": "^2.2.1",
     "raw-loader": "^4.0.2",
     "terser-webpack-plugin": "^5.1.1",
