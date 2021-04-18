@@ -8,4 +8,4 @@ jobs:
     steps:
     - uses: hmarr/auto-approve-action@v2.0.0
       with:
-        github-token: "${{ secrets.GH_TOKEN }}"
+        github-token: "${{ secrets.TOPHAT_BOT_GH_TOKEN }}"
