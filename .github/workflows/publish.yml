@@ -7,7 +7,7 @@ jobs:
     - name: Update formula
       uses: mislav/bump-homebrew-formula-action@v1.6
       env:
-        COMMITTER_TOKEN: ${{ secrets.GH_TOKEN }}
+        COMMITTER_TOKEN: ${{ secrets.TOPHAT_BOT_GH_TOKEN }}
       if: github.event.action == 'published' && github.event.release.assets && !github.event.release.prerelease
       with:
         homebrew-tap: tophat/homebrew-bar

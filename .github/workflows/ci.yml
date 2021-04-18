@@ -81,7 +81,7 @@ jobs:
         run: make lint-defend-circular
       - name: Release size check
         env:
-          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          BUNDLEWATCH_GITHUB_TOKEN: ${{ secrets.TOPHAT_BOT_GH_TOKEN }}
         run: make bundlewatch
   sanities:
     name: Sanity tests
@@ -151,7 +151,7 @@ jobs:
             @semantic-release/changelog
             @semantic-release/git
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.TOPHAT_BOT_GH_TOKEN }}
   website:
     name: Deploy website
     runs-on: ubuntu-latest
@@ -184,7 +184,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOPHAT_BOT_GH_TOKEN }}
           BRANCH: gh-pages
           FOLDER: ./website/build/yvm
           CLEAN: true
