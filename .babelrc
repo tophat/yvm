@@ -1,4 +1,4 @@
 {
     "plugins": ["dynamic-import-node"],
-    "presets": [["@babel/preset-env", { "targets": { "node": "8.0" } }]]
+    "presets": [["@babel/preset-env", { "targets": { "node": "12.0.0" } }]]
 }

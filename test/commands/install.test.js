@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import fs from 'fs'
 
 import * as extractUtils from 'util/extract'
 import { resolveStable } from 'util/alias'
@@ -28,12 +28,12 @@ const verifySignature = jest.spyOn(verification, 'verifySignature')
 const getSplitVersionAndArgs = jest.spyOn(version, 'getSplitVersionAndArgs')
 
 describe('yvm install', () => {
-    beforeAll(() => {
-        fs.mkdirsSync(rootPath)
+    beforeEach(() => {
+        fs.mkdirSync(rootPath, { recursive: true })
     })
 
     afterEach(() => {
-        fs.removeSync(versionRootPath(rootPath))
+        fs.rmdirSync(rootPath, { recursive: true })
         jest.clearAllMocks()
     })
 
@@ -51,7 +51,11 @@ describe('yvm install', () => {
 
     it('Downloads public key signature if none exist locally', async () => {
         const publicKeyPath = verification.getPublicKeyPath(rootPath)
-        fs.removeSync(publicKeyPath)
+        try {
+            fs.unlinkSync(publicKeyPath)
+        } catch (err) {
+            /* ignore if doesn't exist */
+        }
         const exitCode = await install({ version: '1.8.0' })
         expect(exitCode).toBe(0)
         expect(fs.existsSync(publicKeyPath)).toBeTruthy()
@@ -138,7 +142,7 @@ describe('yvm install', () => {
 
         it('Only attempts installation if version not installed', async () => {
             const version = '1.7.0'
-            fs.removeSync(versionRootPath(rootPath))
+            fs.rmdirSync(versionRootPath(rootPath), { recursive: true })
             await ensureVersionInstalled(version, rootPath)
             expect(
                 fs.statSync(getExtractionPath(version, rootPath)),
@@ -217,7 +221,8 @@ describe('yvm install', () => {
         jest.spyOn(extractUtils, 'extract').mockImplementationOnce(
             async (...params) => {
                 const dest = await origExtract(...params)
-                fs.emptyDirSync(dest)
+                fs.rmdirSync(dest, { recursive: true })
+                fs.mkdirSync(dest, { recursive: true })
             },
         )
         expect(await install({ version })).toBe(1)

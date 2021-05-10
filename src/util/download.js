@@ -1,6 +1,6 @@
 import path from 'path'
+import fs from 'fs'
 
-import fs from 'fs-extra'
 import request from 'request'
 
 import { USER_AGENT } from 'util/constants'
@@ -9,7 +9,9 @@ const isErrorCode = httpStatusCode => httpStatusCode >= 400
 
 export const downloadFile = (url, filePath) =>
     new Promise((resolve, reject) => {
-        fs.ensureFileSync(filePath)
+        fs.mkdirSync(path.dirname(filePath), { recursive: true })
+        fs.writeFileSync(filePath, '')
+        fs.accessSync(filePath)
         const handleError = err => reject(err)
         request
             .get(url, { headers: { 'user-agent': USER_AGENT } })

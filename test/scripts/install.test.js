@@ -1,8 +1,9 @@
 const os = require('os')
 const childProcess = require('child_process')
 const https = require('https')
+const fs = require('fs')
+const path = require('path')
 
-const fs = require('fs-extra')
 const mockProps = require('jest-mock-props')
 
 mockProps.extend(jest)
@@ -62,7 +63,7 @@ jest.setTimeout(10000)
 const n = p => (p ? 'not ' : '')
 expect.extend({
     toBeExistingFile: received => {
-        const pass = fs.pathExistsSync(received)
+        const pass = fs.existsSync(received)
         const message = () => `expected file '${received}' to ${n(pass)}exist`
         return { pass, message }
     },
@@ -186,7 +187,7 @@ describe('install yvm', () => {
         })
 
         it('creates home install directory if does not exist', async () => {
-            fs.removeSync(mockHome)
+            fs.rmdirSync(mockHome, { recursive: true })
             expect(mockHome).not.toBeExistingFile()
             envHomeMock.mockValue(mockHome)
             await run()
@@ -195,7 +196,7 @@ describe('install yvm', () => {
 
         it('creates specified install directory if does not exist', async () => {
             const mockInstallDir = `${mockHome}/.myvm`
-            fs.removeSync(mockHome)
+            fs.rmdirSync(mockHome, { recursive: true })
             const envYvmInstallDir = jest
                 .spyOnProp(process.env, 'YVM_INSTALL_DIR')
                 .mockValue(mockInstallDir)
@@ -226,7 +227,8 @@ describe('install yvm', () => {
         }
         it.each(rcFiles)('configures %s', async (rcFile, yvmScript) => {
             const filePath = `${mockHome}/${rcFile}`
-            fs.outputFileSync(filePath, 'dummy')
+            fs.mkdirSync(path.dirname(filePath), { recursive: true })
+            fs.writeFileSync(filePath, 'dummy')
             await run()
             const content = fs.readFileSync(filePath, 'utf8')
             shConfigs[filePath].forEach(string => {
@@ -242,12 +244,14 @@ describe('install yvm', () => {
     describe('latest version', () => {
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            fs.ensureFile(`${mockHome}/.bashrc`)
-            fs.ensureFile(`${mockHome}/.config/fish/config.fish`)
+            fs.mkdirSync(mockHome, { recursive: true })
+            fs.writeFileSync(`${mockHome}/.bashrc`, '')
+            fs.mkdirSync(`${mockHome}/.config/fish`, { recursive: true })
+            fs.writeFileSync(`${mockHome}/.config/fish/config.fish`, '')
         })
 
         afterAll(() => {
-            fs.removeSync(mockHome)
+            fs.rmdirSync(mockHome, { recursive: true })
         })
 
         it.each([
@@ -287,7 +291,9 @@ describe('install yvm', () => {
             })
 
             // creates version tag
-            const { version } = fs.readJsonSync(`${yvmHome}/.version`)
+            const { version } = JSON.parse(
+                fs.readFileSync(`${yvmHome}/.version`),
+            )
             expect(version).toMatch(/v(\d+.)+\d+/)
         })
     })
@@ -295,12 +301,14 @@ describe('install yvm', () => {
     describe('specified version', () => {
         beforeEach(() => {
             envHomeMock.mockValue(mockHome)
-            fs.ensureFile(`${mockHome}/.bashrc`)
-            fs.ensureFile(`${mockHome}/.config/fish/config.fish`)
+            fs.mkdirSync(mockHome, { recursive: true })
+            fs.writeFileSync(`${mockHome}/.bashrc`, '')
+            fs.mkdirSync(`${mockHome}/.config/fish`, { recursive: true })
+            fs.writeFileSync(`${mockHome}/.config/fish/config.fish`, '')
         })
 
         afterEach(() => {
-            fs.removeSync(mockHome)
+            fs.rmdirSync(mockHome, { recursive: true })
         })
 
         it.each([
@@ -343,7 +351,9 @@ describe('install yvm', () => {
                 })
 
                 // creates version tag
-                const { version } = fs.readJsonSync(`${yvmHome}/.version`)
+                const { version } = JSON.parse(
+                    fs.readFileSync(`${yvmHome}/.version`),
+                )
                 expect(version).toMatch(versionToMatch)
             },
         )
@@ -357,7 +367,7 @@ describe('install yvm', () => {
         })
 
         afterAll(() => {
-            fs.removeSync(mockHome)
+            fs.rmdirSync(mockHome, { recursive: true })
         })
 
         it('indicates invalid version tag', async () => {

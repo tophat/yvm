@@ -6,9 +6,9 @@ import yarnShim from '!!raw-loader!shell/yarn_shim.js'
 
 import os from 'os'
 import path from 'path'
+import fs from 'fs'
 
 import { escapeRegExp } from 'lodash'
-import fs from 'fs-extra'
 
 import log from 'util/log'
 import { yvmPath } from 'util/path'
@@ -20,7 +20,8 @@ import { yvmPath } from 'util/path'
  */
 const unpackShellScript = (content, filename) => {
     if (!fs.existsSync(filename)) {
-        fs.outputFileSync(filename, content, {
+        fs.mkdirSync(path.dirname(filename), { recursive: true })
+        fs.writeFileSync(filename, content, {
             encoding: 'utf8',
             mode: 0o755,
         })
@@ -46,7 +47,8 @@ export async function ensureConfig(configFile, configLines) {
     if (linesAppended.some(a => a)) {
         contents += '\n'
     }
-    fs.writeFileSync(configFile, contents)
+    fs.mkdirSync(path.dirname(configFile), { recursive: true })
+    fs.writeFileSync(configFile, contents, { encoding: 'utf8' })
     log.info(`Configured '${configFile}'`)
     return true
 }

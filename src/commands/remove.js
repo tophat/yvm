@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import fs from 'fs'
 
 import { getExtractionPath } from 'util/utils'
 import { getVersionInUse, resolveVersion } from 'util/version'
@@ -22,7 +22,7 @@ export const remove = async (versionString, rootPath = yvmPath) => {
         if (!fs.existsSync(versionPath)) {
             throw new Error(`Yarn version ${version} not found.`)
         }
-        fs.removeSync(versionPath)
+        fs.rmdirSync(versionPath, { recursive: true })
         log(`Successfully removed yarn v${version}.`)
         return 0
     } catch (err) {
