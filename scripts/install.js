@@ -97,7 +97,7 @@ function httpResponseIsRedirect({ headers: { location } }) {
  * @param {string} destination
  */
 async function httpResponseToFile(response, destination) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         const file = fs.createWriteStream(destination)
         response.pipe(file)
         file.on('finish', () => file.close(resolve))
@@ -109,10 +109,10 @@ async function httpResponseToFile(response, destination) {
  * @param {http.ServerResponse} response
  */
 async function httpResponseToString(response) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
         let output = ''
         response.setEncoding('utf8')
-        response.on('data', chunk => (output += chunk))
+        response.on('data', (chunk) => (output += chunk))
         response.on('end', () => resolve(output))
     })
 }
@@ -151,7 +151,7 @@ async function downloadFile({ source, destination }) {
                 ),
             )
 
-        return https.get(httpRequest(source), response => {
+        return https.get(httpRequest(source), (response) => {
             const { statusCode, headers } = response
             if (statusCode >= 400)
                 return reject(
@@ -178,7 +178,7 @@ async function downloadFile({ source, destination }) {
 async function removeFile(maybeDir, recurse = false) {
     if (!fs.existsSync(maybeDir)) return
     if (fs.lstatSync(maybeDir).isDirectory() && recurse) {
-        fs.readdirSync(maybeDir).forEach(file => {
+        fs.readdirSync(maybeDir).forEach((file) => {
             const maybeFile = path.join(maybeDir, file)
             removeFile(maybeFile, recurse)
         })
@@ -192,9 +192,9 @@ async function cleanYvmDir(yvmPath) {
     const filesNotToRemove = new Set(['versions'])
     const filesToRemove = fs
         .readdirSync(yvmPath)
-        .filter(f => !filesNotToRemove.has(f))
+        .filter((f) => !filesNotToRemove.has(f))
     await Promise.all(
-        filesToRemove.map(file =>
+        filesToRemove.map((file) =>
             removeFile(path.join(yvmPath, file), true).catch(log),
         ),
     )
@@ -220,7 +220,7 @@ async function compatInstall({ paths, version }) {
             )
                 .toString()
                 .split('\n')
-                .forEach(l => log(l))
+                .forEach((l) => log(l))
             return fs.unlinkSync(yvmCompatInstallScript)
         } catch (e) {
             continue
@@ -295,7 +295,7 @@ Open another terminal window to start using, or "${sourceCommand}"`)
 }
 
 if (!module.parent) {
-    run().catch(error => {
+    run().catch((error) => {
         log('yvm installation failed')
         log(error.message)
     })

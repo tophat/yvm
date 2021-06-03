@@ -10,16 +10,16 @@ import {
 } from 'util/constants'
 import log from 'util/log'
 
-export const shimRootPath = rootPath => path.resolve(rootPath, 'shim')
-export const versionRootPath = rootPath => path.resolve(rootPath, 'versions')
+export const shimRootPath = (rootPath) => path.resolve(rootPath, 'shim')
+export const versionRootPath = (rootPath) => path.resolve(rootPath, 'versions')
 
 export const getExtractionPath = (version, rootPath) =>
     path.resolve(rootPath, 'versions', `v${version}`)
 
-export const stripVersionPrefix = tagName =>
+export const stripVersionPrefix = (tagName) =>
     tagName[0] === 'v' ? tagName.substring(1) : tagName
 
-export const getRequest = memoize(async url => {
+export const getRequest = memoize(async (url) => {
     const options = {
         url,
         gzip: true,
@@ -44,11 +44,11 @@ export const getRequest = memoize(async url => {
     })
 })
 
-export const getVersionDownloadUrl = version =>
+export const getVersionDownloadUrl = (version) =>
     `${YARN_DOWNLOAD_URL}/${version}/yarn-v${version}.tar.gz`
 
 export const getReleasesFromTags = memoize(async () => {
-    return getRequest(YARN_RELEASES_API_URL).then(body => {
+    return getRequest(YARN_RELEASES_API_URL).then((body) => {
         return JSON.parse(body).reduce((accumulator, tag) => {
             const version = stripVersionPrefix(tag.name)
             const [major] = version.split('.')

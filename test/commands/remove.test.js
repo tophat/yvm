@@ -12,7 +12,7 @@ const getVersionInUse = jest.spyOn(version, 'getVersionInUse')
 describe('yvm remove', () => {
     const rootPath = '/tmp/yvmRemove'
     const versionRoot = versionRootPath(rootPath)
-    const versionPath = version => path.resolve(versionRoot, `v${version}`)
+    const versionPath = (version) => path.resolve(versionRoot, `v${version}`)
 
     beforeAll(() => {
         jest.spyOn(log, 'default')

@@ -1,7 +1,7 @@
 import log from 'util/log'
 import { getVersionInUse, getYarnVersions, printVersions } from 'util/version'
 
-export const listVersions = async rootPath => {
+export const listVersions = async (rootPath) => {
     const installedVersions = getYarnVersions(rootPath)
     if (installedVersions.length) {
         const versionInUse = await getVersionInUse()

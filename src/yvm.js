@@ -9,8 +9,8 @@ import { yvmInstalledVersion } from 'util/yvmInstalledVersion'
 const messageNoYvm = 'Unable to determine yvm version'
 const messageSourceYvm =
     'You need to source yvm to use this command. run `source ~/.yvm/yvm.sh`'
-const messageOptionalVersion = msg => `${msg}. Uses config file if available.`
-const signPosting = command => `See -> 'yvm ${command}'`
+const messageOptionalVersion = (msg) => `${msg}. Uses config file if available.`
+const signPosting = (command) => `See -> 'yvm ${command}'`
 
 argParser.description('Yarn Version Manager')
 argParser.addImplicitHelpCommand = () => {}
@@ -19,7 +19,7 @@ if (!process.argv.includes('exec')) {
     argParser.version(yvmInstalledVersion() || messageNoYvm)
     argParser
         .command('*', '', { noHelp: true, isDefault: true })
-        .action(async invalidCommand => {
+        .action(async (invalidCommand) => {
             if (!process.argv.includes('help')) {
                 log(`Invalid command: ${invalidCommand}`)
             }
@@ -46,7 +46,7 @@ argParser
         process.exit(exitCode)
     })
 
-const uninstallVersion = async version => {
+const uninstallVersion = async (version) => {
     const { remove } = await import('commands/remove')
     process.exit(await remove(version))
 }
@@ -140,7 +140,7 @@ argParser
 argParser
     .command('which [version]')
     .description(messageOptionalVersion`Display path to Yarn version`)
-    .action(async maybeVersion => {
+    .action(async (maybeVersion) => {
         log.info('Getting path to Yarn version')
         const { which } = await import('commands/which')
         process.exit(await which({ version: maybeVersion }))
@@ -161,7 +161,7 @@ argParser
     .description(
         'Internal command: Configures any shell config files found for loading yvm on startup',
     )
-    .action(async config => {
+    .action(async (config) => {
         const { configureShell } = await import('commands/configureShell')
         process.exit(await configureShell(config))
     })
@@ -214,7 +214,7 @@ argParser
 argParser
     .command('set-default <version>')
     .description(signPosting`alias default <version>`)
-    .action(async version => {
+    .action(async (version) => {
         const { setDefault } = await import('commands/setDefault')
         process.exit(await setDefault(version))
     })

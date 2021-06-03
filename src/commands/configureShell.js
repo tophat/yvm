@@ -33,7 +33,7 @@ const yvmDirVarName = 'YVM_DIR'
 export async function ensureConfig(configFile, configLines) {
     if (!fs.existsSync(configFile)) return false
     let contents = fs.readFileSync(configFile, 'utf8')
-    const linesAppended = configLines.map(string => {
+    const linesAppended = configLines.map((string) => {
         const finalString = `\n${string}`
         if (contents.includes(string)) {
             const matchString = new RegExp(`\n.*${escapeRegExp(string)}.*`)
@@ -43,7 +43,7 @@ export async function ensureConfig(configFile, configLines) {
         contents += finalString
         return true
     })
-    if (linesAppended.some(a => a)) {
+    if (linesAppended.some((a) => a)) {
         contents += '\n'
     }
     fs.writeFileSync(configFile, contents)
@@ -126,13 +126,13 @@ export const configureShell = async ({
             fish: configureFish,
             zsh: configureZsh,
         }
-        const configHandler = sh => configHandlers[sh](config)
+        const configHandler = (sh) => configHandlers[sh](config)
         const configShells = Object.keys(configHandlers)
-        const supportedShells = configShells.filter(sh => sh.includes(shell))
+        const supportedShells = configShells.filter((sh) => sh.includes(shell))
         const updatingShellConfigs = [].concat(
             profile && !shell
                 ? supportedShells.reduce(
-                      (conf, sh) => conf.then(r => r || configHandler(sh)),
+                      (conf, sh) => conf.then((r) => r || configHandler(sh)),
                       Promise.resolve(false),
                   )
                 : supportedShells.map(configHandler),

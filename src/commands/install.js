@@ -54,13 +54,13 @@ const extractYarn = async (version, rootPath) => {
     return destPath
 }
 
-const logVerifyNotice = extraMessage => {
+const logVerifyNotice = (extraMessage) => {
     log.notice(`Unable to verify GPG signature.
 Note, this may happen on older yarn versions if the public key used to sign those versions has expired.`)
     extraMessage && log(extraMessage)
 }
 
-const logHelpful = error => {
+const logHelpful = (error) => {
     if (error instanceof VerificationError) {
         return logVerifyNotice(
             "If you would like to proceed anyway, re-run 'yvm install' without the '--verify' flag",

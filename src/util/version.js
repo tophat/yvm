@@ -27,18 +27,18 @@ export const DEFAULT_VERSION_TEXT = 'Global Default'
 export const VERSION_IN_USE_SYMBOL = '\u2713'
 export const VERSION_INSTALLED_SYMBOL = '\u2192'
 
-export const isValidVersionString = version => valid(version.trim()) !== null
-export const isValidVersionRange = versionRange => {
+export const isValidVersionString = (version) => valid(version.trim()) !== null
+export const isValidVersionRange = (versionRange) => {
     return validRange(versionRange.trim()) !== null
 }
-export const getValidVersionString = version => clean(version)
+export const getValidVersionString = (version) => clean(version)
 
 /**
  * Get the most recent yarn install version in the specified range
  * @param {String} versionRange the bounding yarn version range
  * @throws if no install version can be found for range
  */
-export const getVersionFromRange = memoize(async versionRange => {
+export const getVersionFromRange = memoize(async (versionRange) => {
     const availableVersion =
         maxSatisfying(getYarnVersions(), versionRange) ||
         maxSatisfying(await getVersionsFromTags(), versionRange)
@@ -135,7 +135,9 @@ export const getYarnVersions = memoize((yvmPath = defaultYvmPath) => {
     if (fs.existsSync(versionsPath)) {
         const files = fs.readdirSync(versionsPath)
         return files
-            .filter(name => name.startsWith('v') && isValidVersionString(name))
+            .filter(
+                (name) => name.startsWith('v') && isValidVersionString(name),
+            )
             .map(stripVersionPrefix)
     }
     return []
@@ -148,7 +150,7 @@ export const getSplitVersionAndArgs = async (maybeVersionArg, ...rest) => {
             log.info(`Attempting to resolve ${maybeVersionArg}`)
             const parsedVersionString = await resolveVersion({
                 versionString: maybeVersionArg,
-            }).catch(e => {
+            }).catch((e) => {
                 log.info(e.stack)
             })
             if (parsedVersionString) {
@@ -201,7 +203,7 @@ export const printVersions = async ({
 
     const versionsMap = {}
 
-    list.forEach(versionPadded => {
+    list.forEach((versionPadded) => {
         const version = versionPadded.trim()
         const isCurrent = version === versionInUse
         const isDefault = version === versionDefault

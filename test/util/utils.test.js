@@ -195,8 +195,8 @@ describe('printVersions', () => {
             localVersions,
         })
         localVersions
-            .filter(v => v !== versionInUse)
-            .forEach(v => {
+            .filter((v) => v !== versionInUse)
+            .forEach((v) => {
                 expect(versionsObject[v]).toContain(v)
                 expect(versionsObject[v]).toContain(VERSION_INSTALLED_SYMBOL)
             })
