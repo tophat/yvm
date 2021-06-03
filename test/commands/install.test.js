@@ -43,10 +43,10 @@ describe('yvm install', () => {
 
     const verifyLogPrints = (...expectedPhrases) => {
         const logMessages = log.default.mock.calls
-            .map(args => args.join(' '))
+            .map((args) => args.join(' '))
             .join(';')
             .toLowerCase()
-        expectedPhrases.forEach(s => expect(logMessages).toMatch(s))
+        expectedPhrases.forEach((s) => expect(logMessages).toMatch(s))
     }
 
     it('Downloads public key signature if none exist locally', async () => {
@@ -86,7 +86,7 @@ describe('yvm install', () => {
             install({ version: v1 }),
             install({ version: v2 }),
         ])
-        expect(results.every(v => v === 0)).toBe(true)
+        expect(results.every((v) => v === 0)).toBe(true)
         expect(fs.statSync(getExtractionPath(v1, rootPath))).toBeTruthy()
         expect(fs.statSync(getExtractionPath(v2, rootPath))).toBeTruthy()
     })

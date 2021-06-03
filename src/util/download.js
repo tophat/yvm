@@ -5,16 +5,16 @@ import request from 'request'
 
 import { USER_AGENT } from 'util/constants'
 
-const isErrorCode = httpStatusCode => httpStatusCode >= 400
+const isErrorCode = (httpStatusCode) => httpStatusCode >= 400
 
 export const downloadFile = (url, filePath) =>
     new Promise((resolve, reject) => {
         fs.ensureFileSync(filePath)
-        const handleError = err => reject(err)
+        const handleError = (err) => reject(err)
         request
             .get(url, { headers: { 'user-agent': USER_AGENT } })
             .on('error', handleError)
-            .on('response', r => {
+            .on('response', (r) => {
                 const msg = `HTTP ${r.statusCode} - ${r.statusMessage} (${url})`
                 if (isErrorCode(r.statusCode)) handleError(msg)
             })

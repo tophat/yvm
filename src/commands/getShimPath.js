@@ -2,7 +2,7 @@ import log from 'util/log'
 import { shimRootPath } from 'util/utils'
 import { getNonYvmShimPathEntries, toPathString, yvmPath } from 'util/path'
 
-export const buildShimPath = shell => {
+export const buildShimPath = (shell) => {
     const updatedPath = [
         shimRootPath(yvmPath),
         ...new Set(getNonYvmShimPathEntries(shell)),
@@ -10,7 +10,7 @@ export const buildShimPath = shell => {
     return toPathString({ shell, paths: updatedPath })
 }
 
-export const getShimPath = async shell => {
+export const getShimPath = async (shell) => {
     try {
         log.capturable(buildShimPath(shell))
         return 0

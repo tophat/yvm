@@ -45,7 +45,7 @@ describe('util.path', () => {
     describe('getPathEntries', () => {
         it.each(['bash', 'fish'].map(Array))(
             'gets path entries for %s shell',
-            shell => {
+            (shell) => {
                 expect(getPathEntries(shell)).toEqual(mockPathEntries)
             },
         )

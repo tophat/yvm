@@ -1,7 +1,7 @@
 import log from 'util/log'
 import { setDefaultVersion } from 'util/version'
 
-export const setDefault = async version => {
+export const setDefault = async (version) => {
     try {
         if (!(await setDefaultVersion({ version }))) {
             return 1

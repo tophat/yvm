@@ -12,8 +12,8 @@ import { YARN_STABLE_VERSION_URL } from 'util/constants'
 
 const filterAliasesByName = (pattern, aliases) => {
     return Object.keys(aliases)
-        .filter(name => new RegExp(pattern).test(name))
-        .map(name => ({ name, value: aliases[name] }))
+        .filter((name) => new RegExp(pattern).test(name))
+        .map((name) => ({ name, value: aliases[name] }))
 }
 
 const getAllDependants = ({ name, aliases }) => {
@@ -26,7 +26,7 @@ const getAllDependants = ({ name, aliases }) => {
             continue
         }
         visited.push(aliasName)
-        dependants.push(...aliasNames.filter(d => aliases[d] === aliasName))
+        dependants.push(...aliasNames.filter((d) => aliases[d] === aliasName))
     }
     return visited
 }
@@ -64,7 +64,7 @@ export const resolveSystem = memoize(async ({ shell } = {}) => {
     return NOT_AVAILABLE
 })
 
-export const isReserved = name => RESERVED_NAMES.includes(name)
+export const isReserved = (name) => RESERVED_NAMES.includes(name)
 
 export const resolveReserved = memoize(async (name, args = {}) => {
     const resolver =
@@ -130,7 +130,7 @@ export const unsetAlias = async ({
         let deleted = false
         const aliases = await getUserAliases(yvmPath)
         const aliasNameList = Object.keys(aliases)
-        const dependants = aliasNameList.filter(d => aliases[d] === name)
+        const dependants = aliasNameList.filter((d) => aliases[d] === name)
         if (dependants.length && !force && !recursive) {
             log.notice(`The following aliases will be orphaned: ${dependants}
 Rerun with '--force' to remove just this alias
@@ -167,7 +167,8 @@ export const resolveAlias = memoize(
         yvmPath = defaultYvmPath,
     }) => {
         const chain = visitedAliases.join(', ')
-        const resolveErrorMessage = msg => `${msg}: '${versionString}' ${chain}`
+        const resolveErrorMessage = (msg) =>
+            `${msg}: '${versionString}' ${chain}`
         if (visitedAliases.includes(versionString)) {
             throw new Error(resolveErrorMessage`Cyclic chain detected`)
         }

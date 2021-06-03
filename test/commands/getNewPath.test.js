@@ -93,7 +93,7 @@ describe('buildNewPath', () => {
     })
 
     describe('fish', () => {
-        const toPathString = paths =>
+        const toPathString = (paths) =>
             pathUtils.toPathString({ shell: 'fish', paths })
 
         beforeAll(() => jest.spyOnProp(process.env, 'fish_user_paths'))

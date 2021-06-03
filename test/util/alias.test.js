@@ -225,7 +225,7 @@ describe('alias util', () => {
             })
         })
 
-        it.each(alias.RESERVED_NAMES.map(name => [name]))(
+        it.each(alias.RESERVED_NAMES.map((name) => [name]))(
             'does not override reserved alias %s',
             async () => {
                 expect(
