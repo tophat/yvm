@@ -8,25 +8,3 @@ updates:
     timezone: Canada/Eastern
   open-pull-requests-limit: 2
   versioning-strategy: increase
-  ignore:
-  - dependency-name: core-js
-    versions:
-    - 3.10.0
-  - dependency-name: webpack
-    versions:
-    - 5.18.0
-    - 5.19.0
-    - 5.20.1
-    - 5.20.2
-    - 5.21.2
-    - 5.22.0
-    - 5.23.0
-    - 5.24.0
-    - 5.24.1
-    - 5.24.2
-    - 5.24.3
-    - 5.24.4
-    - 5.25.0
-  - dependency-name: eslint
-    versions:
-    - 7.21.0
