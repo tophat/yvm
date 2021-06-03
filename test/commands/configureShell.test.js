@@ -190,7 +190,7 @@ describe('configureShell', () => {
     it('configures none', async () => {
         vol.reset()
         expect(await configureShell({ home: mockHomeValue })).toBe(1)
-        rcFilePaths.forEach(file => expect(fs.existsSync(file)).toBe(false))
+        rcFilePaths.forEach((file) => expect(fs.existsSync(file)).toBe(false))
         confirmShellConfig()
         expect(log.default.mock.calls).toMatchSnapshot()
     })

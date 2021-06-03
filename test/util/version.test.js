@@ -76,7 +76,7 @@ describe('yvm default version', () => {
 })
 
 describe('yvm config version', () => {
-    const mockRC = versionString => vol.fromJSON({ '.yvmrc': versionString })
+    const mockRC = (versionString) => vol.fromJSON({ '.yvmrc': versionString })
 
     afterEach(() => {
         jest.clearAllMocks()
@@ -131,7 +131,7 @@ describe('yvm config version', () => {
         })
 
         const [version1] = await getSplitVersionAndArgs()
-        expect(log.error).not.toBeCalled()
+        expect(log.error).not.toHaveBeenCalled()
         expect(version1).toEqual('1.0.0')
 
         vol.fromJSON({
@@ -200,7 +200,7 @@ describe('yvm valid version', () => {
 
     it.each([['^0.1.0'], ['~1.0.9'], ['~1.12.4'], ['~1.7.1']])(
         'Does not accept version range %s',
-        async range => {
+        async (range) => {
             try {
                 const version = await getVersionFromRange(range)
                 throw `Should have thrown error for '${range}', got '${version}' instead`

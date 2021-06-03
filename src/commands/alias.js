@@ -3,8 +3,8 @@ import { getFormatter, resolveMatchingAliases, setAlias } from 'util/alias'
 import { getVersionInUse, getYarnVersions, resolveVersion } from 'util/version'
 import { getVersionsFromTags } from 'util/utils'
 
-const safeResolveVersion = async versionString =>
-    resolveVersion({ versionString }).catch(e => log.info(e.message))
+const safeResolveVersion = async (versionString) =>
+    resolveVersion({ versionString }).catch((e) => log.info(e.message))
 
 const setAliasCommand = async ({ name, version }) => {
     const [allVersions, installedVersions, currentVersion] = await Promise.all([

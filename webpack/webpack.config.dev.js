@@ -6,16 +6,16 @@ const { config } = require('./webpack.config.base')
 
 const log = console.log.bind(console) // eslint-disable-line no-console
 const linkCommands = (...cmds) => cmds.join(' && ')
-const fileExists = filePath => `[ -f "${filePath}" ]`
-const handleScript = script => {
+const fileExists = (filePath) => `[ -f "${filePath}" ]`
+const handleScript = (script) => {
     try {
         return execSync(script, { stdio: 'inherit' })
     } catch (e) {
         log(e.message)
     }
 }
-const executeScripts = scripts => scripts.forEach(handleScript)
-const scriptExecutor = scripts => () => executeScripts(scripts)
+const executeScripts = (scripts) => scripts.forEach(handleScript)
+const scriptExecutor = (scripts) => () => executeScripts(scripts)
 
 const yvmDir = '${YVM_DIR}'
 const yvmBinFile = `${yvmDir}/yvm.js`
@@ -54,7 +54,7 @@ const installYVMPlugin = new WebpackCompilerPlugin({
     },
 })
 
-module.exports = env =>
+module.exports = (env) =>
     Object.assign(config, {
         mode: 'development',
         plugins: [

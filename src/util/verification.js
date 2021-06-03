@@ -8,7 +8,7 @@ import { YARN_PUBLIC_KEY_URL } from './constants'
 import { downloadFile, getDownloadPath } from './download'
 import { getVersionDownloadUrl } from './utils'
 
-const getSignatureUrl = version => `${getVersionDownloadUrl(version)}.asc`
+const getSignatureUrl = (version) => `${getVersionDownloadUrl(version)}.asc`
 
 const getSignatureDownloadPath = (version, rootPath) =>
     `${getDownloadPath(version, rootPath)}.asc`
@@ -19,7 +19,7 @@ const downloadSignature = (version, rootPath) => {
     return downloadFile(url, filePath)
 }
 
-const getPublicKey = async rootPath => {
+const getPublicKey = async (rootPath) => {
     const publicKeyPath = getPublicKeyPath(rootPath)
 
     if (fs.existsSync(publicKeyPath)) {
@@ -34,7 +34,8 @@ const getPublicKey = async rootPath => {
 export class VerificationError extends Error {}
 export class PublicKeyImportError extends Error {}
 
-export const getPublicKeyPath = rootPath => path.resolve(rootPath, 'pubkey.gpg')
+export const getPublicKeyPath = (rootPath) =>
+    path.resolve(rootPath, 'pubkey.gpg')
 
 export const verifySignature = async (version, rootPath) => {
     await downloadSignature(version, rootPath)
@@ -65,7 +66,7 @@ export const verifySignature = async (version, rootPath) => {
                 armored: detachedSig,
                 data: file,
             },
-            err => (err ? reject(new VerificationError(err)) : resolve(true)),
+            (err) => (err ? reject(new VerificationError(err)) : resolve(true)),
         )
     })
 }

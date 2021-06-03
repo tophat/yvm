@@ -9,7 +9,7 @@ mockProps.extend(jest)
 const log = jest.spyOn(console, 'log')
 const mockHome = 'install-test-mock-home'
 const actualExecSync = childProcess.execSync
-const execSync = command => {
+const execSync = (command) => {
     return actualExecSync(command, {
         env: { HOME: `./${mockHome}`, PATH: process.env.PATH },
     })
@@ -59,9 +59,9 @@ const mockReleases = [
 ]
 
 jest.setTimeout(10000)
-const n = p => (p ? 'not ' : '')
+const n = (p) => (p ? 'not ' : '')
 expect.extend({
-    toBeExistingFile: received => {
+    toBeExistingFile: (received) => {
         const pass = fs.pathExistsSync(received)
         const message = () => `expected file '${received}' to ${n(pass)}exist`
         return { pass, message }
@@ -150,7 +150,7 @@ describe('install yvm', () => {
     describe('getTagAndUrlFromRelease', () => {
         it.each(mockReleases.map(Array))(
             'gets correct release asset',
-            releaseData => {
+            (releaseData) => {
                 expect(getTagAndUrlFromRelease(releaseData)).toMatchSnapshot()
             },
         )
@@ -176,7 +176,7 @@ describe('install yvm', () => {
                 'yvm successfully installed',
                 `source ${yvmHome}`,
             ]
-            expectedOutput.forEach(output =>
+            expectedOutput.forEach((output) =>
                 expect(log).toHaveBeenCalledWith(
                     expect.stringContaining(output),
                 ),
@@ -229,7 +229,7 @@ describe('install yvm', () => {
             fs.outputFileSync(filePath, 'dummy')
             await run()
             const content = fs.readFileSync(filePath, 'utf8')
-            shConfigs[filePath].forEach(string => {
+            shConfigs[filePath].forEach((string) => {
                 expect(content).toContain(string)
             })
             const yvmShellScript = `${mockHome}/.yvm/${yvmScript}`
@@ -268,7 +268,7 @@ describe('install yvm', () => {
                 'yvm successfully installed',
                 `source ${yvmHome}`,
             ]
-            expectedOutput.forEach(output =>
+            expectedOutput.forEach((output) =>
                 expect(log).toHaveBeenCalledWith(
                     expect.stringContaining(output),
                 ),
@@ -325,7 +325,7 @@ describe('install yvm', () => {
                     'yvm successfully installed',
                     `source ${yvmHome}`,
                 ]
-                expectedOutput.forEach(output =>
+                expectedOutput.forEach((output) =>
                     expect(log).toHaveBeenCalledWith(
                         expect.stringContaining(output),
                     ),
@@ -368,7 +368,7 @@ describe('install yvm', () => {
             expect(`${yvmHome}/.version`).not.toBeExistingFile()
             // should not have extracted files
             const installFiles = ['yvm.sh', 'yvm.js', 'yvm.fish', 'shim/yarn']
-            installFiles.forEach(file => {
+            installFiles.forEach((file) => {
                 const filePath = `${yvmHome}/${file}`
                 expect(filePath).not.toBeExistingFile()
             })
