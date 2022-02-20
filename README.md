@@ -1,4 +1,14 @@
-# Yarn Version Manager (yvm)
+# Yarn Version Manager (yvm) - (deprecated)
+
+> ## ⚠️ Deprecation Notice (2022-02-20) ⚠️
+>
+> yvm has been deprecated in favour of [corepack](https://github.com/nodejs/corepack) which is distributed by default with NodeJS v14, and is available in older versions by installing the corepack npm package globally.
+>
+> With corepack, you specify your package manager and version via the `packageManager` field in your project's package.json file ([see example](https://github.com/tophat/monodeploy/blob/84dbb366ae1699adeb161e38d413c66f92cb33a3/package.json#L107)).
+>
+> _What does it mean to be deprecated?_ yvm will no longer receive updates (except for critical security vulnerabilities) and the repository will eventually be archived.
+
+---
 
 <span><img align="right" width="200" height="200" src="https://raw.githubusercontent.com/tophat/yvm/master/website/static/img/yarn.png" alt="Logo"></span>
 
