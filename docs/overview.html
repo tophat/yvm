@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Overview · Yarn Version Manager</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;!-- BADGES:START --&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Overview · Yarn Version Manager"/><meta property="og:type" content="website"/><meta property="og:url" content="https://yvm.js.org/"/><meta property="og:description" content="&lt;!-- BADGES:START --&gt;"/><meta property="og:image" content="https://yvm.js.org/img/yarn.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://yvm.js.org/img/yarn.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Overview · Yarn Version Manager (deprecated)</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;!-- BADGES:START --&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Overview · Yarn Version Manager"/><meta property="og:type" content="website"/><meta property="og:url" content="https://yvm.js.org/"/><meta property="og:description" content="&lt;!-- BADGES:START --&gt;"/><meta property="og:image" content="https://yvm.js.org/img/yarn.png"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://yvm.js.org/img/yarn.png"/><link rel="shortcut icon" href="/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script>
               (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
               (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
               m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -62,7 +62,45 @@
                 };
               }
             });
-        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Overview</h1></header><article><div><span><!-- BADGES:START -->
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Overview</h1></header><article>
+  <div>
+    <div>
+    <h1 id="sample-markdown">Sample Markdown</h1>
+<p>This is some basic, sample markdown.</p>
+<blockquote>
+<h2 id="-deprecation-notice-2022-02-20-">⚠️ Deprecation Notice (2022-02-20) ⚠️</h2>
+<p>yvm has been deprecated in favour of <a href="https://github.com/nodejs/corepack">corepack</a> which is distributed by default with NodeJS v14, and is available in older versions by installing the corepack npm package globally.</p>
+<p>With corepack, you specify your package manager and version via the <code>packageManager</code> field in your project&#39;s package.json file (<a href="https://github.com/tophat/monodeploy/blob/84dbb366ae1699adeb161e38d413c66f92cb33a3/package.json#L107">see example</a>).</p>
+<p><em>What does it mean to be deprecated?</em> yvm will no longer receive updates (except for critical security vulnerabilities) and the repository will eventually be archived.</p>
+<h2 id="second-heading">Second Heading</h2>
+</blockquote>
+<ul>
+<li>Unordered lists, and:<ol>
+<li>One</li>
+<li>Two</li>
+<li>Three</li>
+</ol>
+</li>
+<li>More</li>
+</ul>
+<blockquote>
+<p>Blockquote</p>
+</blockquote>
+<p>And <strong>bold</strong>, <em>italics</em>, and even <em>italics and later <strong>bold</strong></em>. Even <del>strikethrough</del>. <a href="https://markdowntohtml.com">A link</a> to somewhere.</p>
+<p>And code highlighting:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">var</span> foo = <span class="hljs-string">'bar'</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">baz</span><span class="hljs-params">(s)</span> </span>{
+   <span class="hljs-keyword">return</span> foo + <span class="hljs-string">':'</span> + s;
+}
+</code></pre>
+<p>Or inline code like <code>var foo = &#39;bar&#39;;</code>.</p>
+<p>Or an image of bears</p>
+<p><img src="http://placebear.com/200/200" alt="bears"></p>
+<p>The end ...</p>
+
+    </div>
+    <span><!-- BADGES:START -->
 <p><a href="https://github.com/tophat/yvm/releases"><img src="https://img.shields.io/github/release/tophat/yvm.svg" alt="YVM Latest Version"></a>
 <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D%2010-brightgreen.svg" alt="Minimum Node Version"></a>
 <a href="https://github.com/tophat/yvm/actions"><img src="https://github.com/tophat/yvm/workflows/Continuous%20Integration/badge.svg" alt="Builds"></a>
